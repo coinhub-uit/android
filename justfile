@@ -1,12 +1,16 @@
-default: run
+default: run-hot
 
-alias r := run
+alias r := run-hot
+alias rd := refresh-dependencies
 alias b := build
 
 gradlew := if os() == 'windows' { './gradlew.bat' } else { './gradlew' }
 
+refresh-dependencies:
+  {{gradlew}} --refresh-dependencies
+
 build:
   {{gradlew}} build
 
-run:
-  {{gradlew}} run
+run-hot:
+  {{gradlew}} runHot
