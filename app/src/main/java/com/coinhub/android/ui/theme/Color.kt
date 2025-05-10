@@ -1,4 +1,4 @@
-package com.coinhub.coinhub.ui.theme
+package com.coinhub.android.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

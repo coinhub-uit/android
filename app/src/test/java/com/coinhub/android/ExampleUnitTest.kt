@@ -1,4 +1,4 @@
-package com.coinhub.coinhub
+package com.coinhub.android
 
 import org.junit.Test
 

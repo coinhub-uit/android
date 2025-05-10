@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.coinhub.coinhub"
+    namespace = "com.coinhub.android"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.coinhub.coinhub"
+        applicationId = "com.coinhub.android"
         minSdk = 31
         targetSdk = 35
         versionCode = 1
