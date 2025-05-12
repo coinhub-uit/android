@@ -9,6 +9,7 @@ lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.1"
 composeBom = "2024.09.00"
 composeHotReload = "1.0.0-alpha09"
+supabase = "3.1.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -25,6 +26,14 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+
+postgrest-kt = { group = "io.github.jan-tennert.supabase", name = "postgrest-kt" }
+supabase-bom = { group = "io.github.jan-tennert.supabase", name = "bom" , version.ref = "supabase"}
+auth-kt = { group = "io.github.jan-tennert.supabase", name = "auth-kt" ,version.ref = "supabase" }
+realtime-kt = { group = "io.github.jan-tennert.supabase", name = "realtime-kt",version.ref = "supabase" }
+
+androidx-credential = { group = "androidx.credentials", name = "credentials" , version = "1.6.0-alpha01"}
+googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version = "1.1.1"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
