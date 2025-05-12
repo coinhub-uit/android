@@ -1,0 +1,13 @@
+root = true
+
+[*]
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[app/**/*.xml]
+indent_size = 4
+
+[*.{kts,kt}]
+indent_size = 4

@@ -1,0 +1,4 @@
+[tools]
+java = "17.0.2"
+gradle = "8.11.1"
+kotlin = "2.0.21"
