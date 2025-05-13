@@ -89,4 +89,5 @@ dependencies {
     implementation(libs.realtime.kt)
     implementation(libs.gotrue.kt)
     implementation(libs.ktor.client)
+    implementation(libs.compose.auth)
 }

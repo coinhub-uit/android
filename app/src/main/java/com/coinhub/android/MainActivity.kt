@@ -31,6 +31,10 @@ import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.Google
 import io.github.jan.supabase.auth.providers.builtin.IDToken
+import io.github.jan.supabase.compose.auth.ComposeAuth
+import io.github.jan.supabase.compose.auth.composable.rememberSignInWithGoogle
+import io.github.jan.supabase.compose.auth.composeAuth
+import io.github.jan.supabase.compose.auth.googleNativeLogin
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
 import kotlinx.coroutines.launch
@@ -43,6 +47,9 @@ var supabase = createSupabaseClient(
 ) {
     install(Auth)
     install(Postgrest)
+    install(ComposeAuth) {
+        googleNativeLogin(serverClientId = BuildConfig.oAuthGoogleAndroidClient)
+    }
 }
 
 class MainActivity : ComponentActivity() {
@@ -85,47 +92,10 @@ fun GoogleSignInButton() {
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
-    val onClick: () -> Unit = {
-        val credentialManager = CredentialManager.create(context)
-
-        val rawNonce = UUID.randomUUID()
-            .toString()
-        val bytes = rawNonce.toString().toByteArray()
-        val md = MessageDigest.getInstance("SHA-256")
-        val digest = md.digest(bytes)
-        val hashedNonce =
-            digest.fold("") { str, it -> str + "%02x".format(it) }
-
-
-        val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
-            .setFilterByAuthorizedAccounts(false)
-            .setServerClientId(BuildConfig.oAuthGoogleAndroidClient)
-            .setNonce(hashedNonce)
-            .build()
-
-        val request: GetCredentialRequest = GetCredentialRequest.Builder()
-            .addCredentialOption(googleIdOption)
-            .build()
-
-        coroutineScope.launch {
-            val result = credentialManager.getCredential(
-                request = request,
-                context = context
-            )
-
-            val googleIdTokenCredential = GoogleIdTokenCredential
-                .createFrom(result.credential.data)
-            supabase.auth.signInWith(IDToken) {
-                idToken = googleIdTokenCredential.idToken
-                provider = Google
-                nonce = rawNonce
-            }
-            Toast.makeText(context, "Sign in", Toast.LENGTH_SHORT).show()
-        }
-    }
+    val action = supabase.composeAuth.rememberSignInWithGoogle()
 
     Button(
-        onClick = onClick,
+        onClick = { action.startFlow() },
     ) {
         Text("Sign in with Google")
     }
