@@ -1,7 +1,16 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    kotlin("plugin.serialization") version "1.9.0"
+}
+
+var localProps = Properties()
+var localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProps.load(localPropertiesFile.inputStream())
 }
 
 android {
@@ -14,8 +23,22 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField(
+            "String",
+            "oAuthGoogleAndroidClient",
+            "\"${localProps.getProperty("OAUTH_GOOGLE_ANDROID_CLIENT")}\""
+        )
+        buildConfigField(
+            "String",
+            "supabaseUrl",
+            "\"${localProps.getProperty("SUPABASE_URL")}\""
+        )
+        buildConfigField(
+            "String",
+            "supabaseAnonKey",
+            "\"${localProps.getProperty("SUPABASE_ANON_KEY")}\""
+        )
     }
 
     buildTypes {
@@ -36,11 +59,12 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
 dependencies {
-    implementation(libs.googleid)
+    implementation(libs.google.id)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -50,6 +74,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.credential)
+    implementation(libs.androidx.credential.play.service.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -62,4 +87,6 @@ dependencies {
     implementation(libs.auth.kt)
     implementation(libs.postgrest.kt)
     implementation(libs.realtime.kt)
+    implementation(libs.gotrue.kt)
+    implementation(libs.ktor.client)
 }

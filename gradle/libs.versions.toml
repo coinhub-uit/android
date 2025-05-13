@@ -10,6 +10,7 @@ activityCompose = "1.10.1"
 composeBom = "2024.09.00"
 composeHotReload = "1.0.0-alpha09"
 supabase = "3.1.4"
+ktor = "3.1.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -28,12 +29,15 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 
 postgrest-kt = { group = "io.github.jan-tennert.supabase", name = "postgrest-kt" }
-supabase-bom = { group = "io.github.jan-tennert.supabase", name = "bom" , version.ref = "supabase"}
-auth-kt = { group = "io.github.jan-tennert.supabase", name = "auth-kt" ,version.ref = "supabase" }
-realtime-kt = { group = "io.github.jan-tennert.supabase", name = "realtime-kt",version.ref = "supabase" }
+supabase-bom = { group = "io.github.jan-tennert.supabase", name = "bom", version.ref = "supabase" }
+auth-kt = { group = "io.github.jan-tennert.supabase", name = "auth-kt", version.ref = "supabase" }
+realtime-kt = { group = "io.github.jan-tennert.supabase", name = "realtime-kt", version.ref = "supabase" }
+gotrue-kt = { group = "io.github.jan-tennert.supabase", name = "gotrue-kt", version = "2.6.1" }
+ktor-client = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
 
-androidx-credential = { group = "androidx.credentials", name = "credentials" , version = "1.6.0-alpha01"}
-googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version = "1.1.1"}
+androidx-credential-play-service-auth = { group = "androidx.credentials", name = "credentials-play-services-auth", version = "1.5.0" }
+androidx-credential = { group = "androidx.credentials", name = "credentials", version = "1.6.0-alpha01" }
+google-id = { module = "com.google.android.libraries.identity.googleid:googleid", version = "1.1.1" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

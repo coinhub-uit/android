@@ -2,6 +2,7 @@ package com.coinhub.android
 
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -26,9 +27,23 @@ import androidx.credentials.GetCredentialRequest
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import io.github.jan.supabase.auth.Auth
+import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.auth.providers.Google
+import io.github.jan.supabase.auth.providers.builtin.IDToken
+import io.github.jan.supabase.createSupabaseClient
+import io.github.jan.supabase.postgrest.Postgrest
 import kotlinx.coroutines.launch
 import java.security.MessageDigest
 import java.util.UUID
+
+var supabase = createSupabaseClient(
+    supabaseUrl = BuildConfig.supabaseUrl,
+    supabaseKey = BuildConfig.supabaseAnonKey
+) {
+    install(Auth)
+    install(Postgrest)
+}
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,7 +99,7 @@ fun GoogleSignInButton() {
 
         val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
             .setFilterByAuthorizedAccounts(false)
-            .setServerClientId("")
+            .setServerClientId(BuildConfig.oAuthGoogleAndroidClient)
             .setNonce(hashedNonce)
             .build()
 
@@ -95,14 +110,16 @@ fun GoogleSignInButton() {
         coroutineScope.launch {
             val result = credentialManager.getCredential(
                 request = request,
-                context = context,
+                context = context
             )
 
             val googleIdTokenCredential = GoogleIdTokenCredential
                 .createFrom(result.credential.data)
-
-            val googleIdToken = googleIdTokenCredential.idToken
-
+            supabase.auth.signInWith(IDToken) {
+                idToken = googleIdTokenCredential.idToken
+                provider = Google
+                nonce = rawNonce
+            }
             Toast.makeText(context, "Sign in", Toast.LENGTH_SHORT).show()
         }
     }
