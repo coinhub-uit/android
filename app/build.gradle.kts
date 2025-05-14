@@ -75,6 +75,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.credential)
     implementation(libs.androidx.credential.play.service.auth)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -87,7 +88,7 @@ dependencies {
     implementation(libs.auth.kt)
     implementation(libs.postgrest.kt)
     implementation(libs.realtime.kt)
-    implementation(libs.gotrue.kt)
     implementation(libs.ktor.client)
     implementation(libs.compose.auth)
+    implementation(libs.compose.auth.ui)
 }
