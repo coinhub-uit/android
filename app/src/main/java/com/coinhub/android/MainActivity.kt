@@ -99,7 +99,7 @@ fun MainScreen(viewModel: SupabaseViewModel = viewModel()) {
         TextField(
             value = userPassword,
             placeholder = {
-                Text(text = "Enter Email")
+                Text(text = "Enter Password")
             },
             onValueChange = {
                 userPassword = it

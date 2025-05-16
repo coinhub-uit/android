@@ -1,6 +1,7 @@
 package com.coinhub.android.authentication
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -114,7 +115,10 @@ class SupabaseViewModel : ViewModel() {
                 _userState.value = UserState.Success("Signed with google successfully")
             }
 
-            is NativeSignInResult.ClosedByUser -> {}
+            is NativeSignInResult.ClosedByUser -> {
+
+            }
+
             is NativeSignInResult.Error -> {
                 _userState.value = UserState.Error(result.message)
             }

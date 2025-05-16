@@ -76,6 +76,7 @@ dependencies {
     implementation(libs.androidx.credential)
     implementation(libs.androidx.credential.play.service.auth)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.animation.core.lint)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
