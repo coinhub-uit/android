@@ -93,4 +93,5 @@ dependencies {
     implementation(libs.compose.auth)
     implementation(libs.compose.auth.ui)
     implementation(libs.androidx.material.icon)
+    implementation(libs.androidx.navigation.compose)
 }

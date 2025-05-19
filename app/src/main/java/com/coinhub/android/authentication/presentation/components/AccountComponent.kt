@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -27,13 +28,22 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.coinhub.android.R
+import androidx.compose.ui.text.withStyle
 
 @Composable
 fun AccountComponent(
+    textQuery: String,
+    textClickable: String,
     action: String,
+    navController: NavHostController,
+    onButtonClick: () -> Unit,
+    onGoogleButtionClick: () -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -44,7 +54,7 @@ fun AccountComponent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Button(
-                onClick = { /*TODO*/ },
+                onClick = onButtonClick,
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(Color.Transparent)
             ) {
@@ -97,7 +107,7 @@ fun AccountComponent(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = {  },
                     colors = ButtonDefaults.buttonColors(Color.Transparent),
                     modifier = Modifier
                         .padding(4.dp)
@@ -116,6 +126,41 @@ fun AccountComponent(
                 }
             }
             Spacer(modifier = Modifier.height(15.dp))
+            AccountQueryComponent(textQuery, textClickable, navController)
         }
     }
+}
+
+
+@Composable
+fun AccountQueryComponent(
+    textQuery: String,
+    textClickable: String,
+    navController: NavHostController
+) {
+    val annonatedString = buildAnnotatedString {
+        withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.tertiary, fontSize = 15.sp)) {
+            append(textQuery)
+        }
+        withStyle(
+            style = SpanStyle(
+                color = MaterialTheme.colorScheme.secondary,
+                fontSize = 15.sp
+            )
+        ) {
+            pushStringAnnotation(tag = textClickable, annotation = textClickable)
+            append(textClickable)
+        }
+    }
+
+    ClickableText(text = annonatedString, onClick = {
+        annonatedString.getStringAnnotations(it, it)
+            .firstOrNull()?.also { annonation ->
+                if (annonation.item == "Login") {
+                    navController.navigate("login")
+                } else if (annonation.item == "Register") {
+                    navController.navigate("signup")
+                }
+            }
+    })
 }

@@ -30,18 +30,18 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 
 @Composable
-fun MyTextFieldComponent(labelValue: String, icon: ImageVector) {
-    var textValue by remember {
-        mutableStateOf("")
-    }
+fun MyTextFieldComponent(
+    labelValue: String,
+    icon: ImageVector,
+    text: String,
+    onTextChange: (String) -> Unit
+) {
     OutlinedTextField(
         label = {
             Text(text = labelValue)
         },
-        value = textValue,
-        onValueChange = {
-            textValue = it
-        },
+        value = text,
+        onValueChange = onTextChange,
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = MaterialTheme.colorScheme.onTertiary,
             focusedLabelColor = MaterialTheme.colorScheme.onTertiary,
@@ -63,11 +63,7 @@ fun MyTextFieldComponent(labelValue: String, icon: ImageVector) {
 }
 
 @Composable
-fun PasswordTextFieldComponent(labelValue: String, icon: ImageVector) {
-    var password by remember {
-        mutableStateOf("")
-    }
-
+fun PasswordTextFieldComponent(labelValue: String, icon: ImageVector, passwordText: String, onPasswordChange: (String) -> Unit) {
     var isPasswordVisible by remember {
         mutableStateOf(false)
     }
@@ -76,10 +72,8 @@ fun PasswordTextFieldComponent(labelValue: String, icon: ImageVector) {
         label = {
             Text(text = labelValue)
         },
-        value = password,
-        onValueChange = {
-            password = it
-        },
+        value = passwordText,
+        onValueChange = onPasswordChange,
         colors = TextFieldDefaults.colors(
             focusedLabelColor = MaterialTheme.colorScheme.tertiary,
             cursorColor = MaterialTheme.colorScheme.primary,
