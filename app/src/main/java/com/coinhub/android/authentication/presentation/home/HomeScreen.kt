@@ -1,16 +1,27 @@
 package com.coinhub.android.authentication.presentation.home
 
+import android.content.Context
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import com.coinhub.android.authentication.SupabaseViewModel
 
 @Composable
-fun HomeScreen (){
+fun HomeScreen(
+    navController: NavController,
+    supabaseViewModel: SupabaseViewModel,
+    context: Context
+) {
     Text("This is HomeScreen")
+    Button(onClick = {
+        supabaseViewModel.signOut(
+            navController = navController,
+            context = context
+        )
+    }) {
+        Text("Sign Out")
+    }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewHomeScreen() {
-    HomeScreen()
-}
+

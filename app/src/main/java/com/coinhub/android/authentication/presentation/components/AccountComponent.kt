@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -27,8 +26,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -141,25 +143,27 @@ fun AccountQueryComponent(
         withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.tertiary, fontSize = 15.sp)) {
             append(textQuery)
         }
-        withStyle(
-            style = SpanStyle(
-                color = MaterialTheme.colorScheme.secondary,
-                fontSize = 15.sp
+        withLink(
+            link = LinkAnnotation.Clickable(
+                styles = TextLinkStyles(
+                    style = SpanStyle(
+                        color = MaterialTheme.colorScheme.secondary,
+                        fontSize = 15.sp
+                    )
+                ),
+                tag = textClickable,
+                linkInteractionListener = {
+                    if (textClickable == "Login") {
+                        navController.navigate("login")
+                    } else {
+                        navController.navigate("signup")
+                    }
+                }
             )
         ) {
-            pushStringAnnotation(tag = textClickable, annotation = textClickable)
             append(textClickable)
         }
     }
 
-    ClickableText(text = annonatedString, onClick = {
-        annonatedString.getStringAnnotations(it, it)
-            .firstOrNull()?.also { annonation ->
-                if (annonation.item == "Login") {
-                    navController.navigate("login")
-                } else if (annonation.item == "Register") {
-                    navController.navigate("signup")
-                }
-            }
-    })
+    Text(text = annonatedString)
 }

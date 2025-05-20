@@ -47,7 +47,11 @@ fun AuthenticationNavigation(supabaseViewModel: SupabaseViewModel = viewModel())
             )
         }
         composable("home") {
-            HomeScreen()
+            HomeScreen(
+                navController = navController,
+                supabaseViewModel = supabaseViewModel,
+                context = context
+            )
         }
         composable("signup") {
             SignupScreen(
