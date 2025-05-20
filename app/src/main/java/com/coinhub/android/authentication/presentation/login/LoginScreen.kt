@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.coinhub.android.authentication.TestViewModel
+import com.coinhub.android.authentication.SupabaseViewModel
 import com.coinhub.android.authentication.presentation.components.AccountComponent
 import com.coinhub.android.authentication.presentation.components.HeadingTextComponent
 import com.coinhub.android.authentication.presentation.components.MyTextFieldComponent
@@ -31,7 +31,7 @@ import io.github.jan.supabase.compose.auth.composable.NativeSignInState
 @Composable
 fun LoginScreen(
     navController: NavHostController,
-    supabaseViewModel: TestViewModel,
+    supabaseViewModel: SupabaseViewModel,
     context: Context,
     supabaseGoogleAction: NativeSignInState
 ) {

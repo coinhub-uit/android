@@ -15,11 +15,17 @@ import io.github.jan.supabase.compose.auth.composable.rememberSignInWithGoogle
 import io.github.jan.supabase.compose.auth.composeAuth
 
 @Composable
-fun AuthenticationNavigation(supabaseViewModel: TestViewModel = viewModel()) {
+fun AuthenticationNavigation(supabaseViewModel: SupabaseViewModel = viewModel()) {
     val context = LocalContext.current
     val navController = rememberNavController()
     val supabaseAction = SupabaseClient.client.composeAuth.rememberSignInWithGoogle(
-        onResult = { result -> supabaseViewModel.checkGoogleLoginStatus(context, result) },
+        onResult = { result ->
+            supabaseViewModel.checkGoogleLoginStatus(
+                context,
+                result,
+                navController = navController
+            )
+        },
         fallback = {}
     )
 
