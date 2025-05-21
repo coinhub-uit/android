@@ -10,6 +10,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.coinhub.android.authentication.data.model.UserState
 import com.coinhub.android.authentication.data.network.SupabaseClient.client
+import com.coinhub.android.authentication.utils.Home
+import com.coinhub.android.authentication.utils.Login
 import com.coinhub.android.authentication.utils.SharedPreferenceHelper
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
@@ -51,7 +53,7 @@ class SupabaseViewModel() : ViewModel() {
                 }
                 saveToken(context)
                 _userState.value = UserState.Success("Registered user successfully")
-                navController.navigate("home")
+                navController.navigate(Home)
             } catch (e: Exception) {
                 isUserLoggedIn = false
                 _userState.value = UserState.Error("${e.message}")
@@ -75,7 +77,7 @@ class SupabaseViewModel() : ViewModel() {
                 }
                 saveToken(context)
                 _userState.value = UserState.Success("Signed in successfully")
-                navController.navigate("home")
+                navController.navigate(Home)
             } catch (e: Exception) {
                 isUserLoggedIn = false
                 _userState.value = UserState.Error("${e.message}")
@@ -92,7 +94,7 @@ class SupabaseViewModel() : ViewModel() {
                 client.auth.signOut()
                 sharedPref.clearPreferences()
                 _userState.value = UserState.Success("Signed out successfully")
-                navController.navigate("login")
+                navController.navigate(Login)
             } catch (e: Exception) {
                 isUserLoggedIn = false
                 _userState.value = UserState.Error("${e.message}")
@@ -134,7 +136,7 @@ class SupabaseViewModel() : ViewModel() {
                 saveToken(context)
                 _userState.value = UserState.Success("Signed with google successfully")
                 isUserLoggedIn = true
-                navController.navigate("home")
+                navController.navigate(Home)
             }
 
             is NativeSignInResult.ClosedByUser -> {

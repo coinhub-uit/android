@@ -11,6 +11,9 @@ import com.coinhub.android.authentication.data.network.SupabaseClient
 import com.coinhub.android.authentication.presentation.home.HomeScreen
 import com.coinhub.android.authentication.presentation.login.LoginScreen
 import com.coinhub.android.authentication.presentation.signup.SignupScreen
+import com.coinhub.android.authentication.utils.Home
+import com.coinhub.android.authentication.utils.Login
+import com.coinhub.android.authentication.utils.SignUp
 import io.github.jan.supabase.compose.auth.composable.rememberSignInWithGoogle
 import io.github.jan.supabase.compose.auth.composeAuth
 
@@ -18,7 +21,7 @@ import io.github.jan.supabase.compose.auth.composeAuth
 fun AuthenticationNavigation(supabaseViewModel: SupabaseViewModel = viewModel()) {
     val context = LocalContext.current
     val navController = rememberNavController()
-    val supabaseAction = SupabaseClient.client.composeAuth.rememberSignInWithGoogle(
+    val supabaseGoogleAction = SupabaseClient.client.composeAuth.rememberSignInWithGoogle(
         onResult = { result ->
             supabaseViewModel.checkGoogleLoginStatus(
                 context,
@@ -35,30 +38,30 @@ fun AuthenticationNavigation(supabaseViewModel: SupabaseViewModel = viewModel())
 
     NavHost(
         navController = navController,
-        startDestination = if (supabaseViewModel.isUserLoggedIn) "home" else "login"
+        startDestination = if (supabaseViewModel.isUserLoggedIn) Home else Login
     )
     {
-        composable("login") {
+        composable<Login> {
             LoginScreen(
                 navController = navController,
                 supabaseViewModel = supabaseViewModel,
                 context = context,
-                supabaseGoogleAction = supabaseAction
+                supabaseGoogleAction = supabaseGoogleAction
             )
         }
-        composable("home") {
+        composable<Home> {
             HomeScreen(
                 navController = navController,
                 supabaseViewModel = supabaseViewModel,
                 context = context
             )
         }
-        composable("signup") {
+        composable<SignUp> {
             SignupScreen(
                 navController = navController,
                 supabaseViewModel = supabaseViewModel,
                 context = context,
-                supabaseGoogleAction = supabaseAction
+                supabaseGoogleAction = supabaseGoogleAction
             )
         }
     }

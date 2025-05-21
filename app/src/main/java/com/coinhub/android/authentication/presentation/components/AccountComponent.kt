@@ -36,6 +36,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.coinhub.android.R
+import com.coinhub.android.authentication.utils.Login
+import com.coinhub.android.authentication.utils.SignUp
 
 @Composable
 fun AccountComponent(
@@ -154,9 +156,9 @@ fun AccountQueryComponent(
                 tag = textClickable,
                 linkInteractionListener = {
                     if (textClickable == "Login") {
-                        navController.navigate("login")
+                        navController.navigate(Login)
                     } else {
-                        navController.navigate("signup")
+                        navController.navigate(SignUp)
                     }
                 }
             )
