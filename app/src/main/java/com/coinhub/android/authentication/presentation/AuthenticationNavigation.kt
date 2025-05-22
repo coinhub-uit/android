@@ -67,7 +67,8 @@ fun AuthenticationNavigation(
                 navController = navController,
                 supabaseViewModel = supabaseViewModel,
                 context = context,
-                supabaseGoogleAction = supabaseGoogleAction
+                supabaseGoogleAction = supabaseGoogleAction,
+                apiServerViewModel = apiServerViewModel
             )
         }
     }

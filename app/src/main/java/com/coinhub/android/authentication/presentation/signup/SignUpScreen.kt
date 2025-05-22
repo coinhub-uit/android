@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Cake
+import androidx.compose.material.icons.outlined.CreditCard
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Person
@@ -41,8 +43,9 @@ fun SignupScreen(
     supabaseGoogleAction: NativeSignInState,
     apiServerViewModel: ApiServerViewModel
 ) {
-    var firstNameText by remember { mutableStateOf("") }
-    var lastNameText by remember { mutableStateOf("") }
+    var fullNameText by remember { mutableStateOf("") }
+    var birthDateText by remember { mutableStateOf("") }
+    var citizenId by remember { mutableStateOf("") }
     var emailText by remember { mutableStateOf("") }
     var passwordText by remember { mutableStateOf("") }
 
@@ -62,17 +65,24 @@ fun SignupScreen(
 
             Column {
                 MyTextFieldComponent(
-                    labelValue = "First Name",
+                    labelValue = "Full Name",
                     icon = Icons.Outlined.Person,
-                    text = firstNameText,
-                    onTextChange = { firstNameText = it }
+                    text = fullNameText,
+                    onTextChange = { fullNameText = it }
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 MyTextFieldComponent(
-                    labelValue = "Last Name",
-                    icon = Icons.Outlined.Person,
-                    text = lastNameText,
-                    onTextChange = { lastNameText = it }
+                    labelValue = "BirthDate",
+                    icon = Icons.Outlined.Cake,
+                    text = birthDateText,
+                    onTextChange = { birthDateText = it }
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                MyTextFieldComponent(
+                    labelValue = "Citizen ID",
+                    icon = Icons.Outlined.CreditCard,
+                    text = citizenId,
+                    onTextChange = { citizenId = it }
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 MyTextFieldComponent(
@@ -103,10 +113,10 @@ fun SignupScreen(
                         )
                         apiServerViewModel.registerProfile(
                             CreateUserDto(
-                                birthDate = Date(),
-                                citizenId = "",
-                                id = "",
-                                fullName = ""
+                                birthDate = Date(birthDateText),
+                                citizenId = citizenId,
+                                id = "${supabaseViewModel.userId.value}",
+                                fullName = fullNameText
                             )
                         )
                     },
