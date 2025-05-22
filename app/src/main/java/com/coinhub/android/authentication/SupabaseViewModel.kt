@@ -1,6 +1,7 @@
 package com.coinhub.android.authentication
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.coinhub.android.authentication.data.model.UserState
+import com.coinhub.android.authentication.data.network.ApiServerClient
 import com.coinhub.android.authentication.data.network.SupabaseClient.client
 import com.coinhub.android.authentication.utils.Home
 import com.coinhub.android.authentication.utils.Login
@@ -19,6 +21,9 @@ import io.github.jan.supabase.compose.auth.composable.NativeSignInResult
 import kotlinx.coroutines.launch
 
 class SupabaseViewModel() : ViewModel() {
+    private val _userId = mutableStateOf<String?>(null)
+    val userId: State<String?> = _userId
+
     private val _userState = mutableStateOf<UserState>(UserState.Loading)
     val userState: State<UserState> = _userState
     var isUserLoggedIn by mutableStateOf(false)
@@ -37,6 +42,20 @@ class SupabaseViewModel() : ViewModel() {
         return sharedPref.getStringData("accessToken")
     }
 
+    private fun retrieveUserId(context: Context) {
+        viewModelScope.launch {
+            try {
+                val accessToken = getToken(context);
+                if (accessToken.isNullOrEmpty()) {
+                    return@launch
+                }
+                _userId.value = client.auth.retrieveUser(accessToken).id;
+            } catch (e: Exception) {
+                Log.d("TAG", "${e.message}")
+            }
+        }
+    }
+
     fun signUp(
         context: Context,
         userEmail: String,
@@ -53,6 +72,11 @@ class SupabaseViewModel() : ViewModel() {
                 }
                 saveToken(context)
                 _userState.value = UserState.Success("Registered user successfully")
+                val token = getToken(context)
+                if (token.isNullOrEmpty()) {
+                    return@launch
+                }
+                ApiServerClient.setToken(token)
                 navController.navigate(Home)
             } catch (e: Exception) {
                 isUserLoggedIn = false
@@ -77,6 +101,12 @@ class SupabaseViewModel() : ViewModel() {
                 }
                 saveToken(context)
                 _userState.value = UserState.Success("Signed in successfully")
+                val token = getToken(context)
+                if (token.isNullOrEmpty()) {
+                    return@launch
+                }
+                retrieveUserId(context)
+                ApiServerClient.setToken(token)
                 navController.navigate(Home)
             } catch (e: Exception) {
                 isUserLoggedIn = false
@@ -94,7 +124,9 @@ class SupabaseViewModel() : ViewModel() {
                 client.auth.signOut()
                 sharedPref.clearPreferences()
                 _userState.value = UserState.Success("Signed out successfully")
+                retrieveUserId(context)
                 navController.navigate(Login)
+                ApiServerClient.unsetToken()
             } catch (e: Exception) {
                 isUserLoggedIn = false
                 _userState.value = UserState.Error("${e.message}")

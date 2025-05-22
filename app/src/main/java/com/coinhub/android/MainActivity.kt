@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.coinhub.android.authentication.AuthenticationNavigation
+import com.coinhub.android.authentication.presentation.AuthenticationNavigation
 import com.coinhub.android.ui.theme.CoinhubTheme
 
 class MainActivity : ComponentActivity() {

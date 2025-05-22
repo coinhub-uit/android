@@ -1,4 +1,4 @@
-package com.coinhub.android.authentication
+package com.coinhub.android.authentication.presentation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -7,6 +7,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.coinhub.android.authentication.ApiServerViewModel
+import com.coinhub.android.authentication.SupabaseViewModel
 import com.coinhub.android.authentication.data.network.SupabaseClient
 import com.coinhub.android.authentication.presentation.home.HomeScreen
 import com.coinhub.android.authentication.presentation.login.LoginScreen
@@ -18,7 +20,10 @@ import io.github.jan.supabase.compose.auth.composable.rememberSignInWithGoogle
 import io.github.jan.supabase.compose.auth.composeAuth
 
 @Composable
-fun AuthenticationNavigation(supabaseViewModel: SupabaseViewModel = viewModel()) {
+fun AuthenticationNavigation(
+    supabaseViewModel: SupabaseViewModel = viewModel(),
+    apiServerViewModel: ApiServerViewModel = viewModel()
+) {
     val context = LocalContext.current
     val navController = rememberNavController()
     val supabaseGoogleAction = SupabaseClient.client.composeAuth.rememberSignInWithGoogle(
@@ -53,7 +58,8 @@ fun AuthenticationNavigation(supabaseViewModel: SupabaseViewModel = viewModel())
             HomeScreen(
                 navController = navController,
                 supabaseViewModel = supabaseViewModel,
-                context = context
+                context = context,
+                apiServerViewModel = apiServerViewModel
             )
         }
         composable<SignUp> {

@@ -21,7 +21,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.coinhub.android.authentication.ApiServerViewModel
 import com.coinhub.android.authentication.SupabaseViewModel
+import com.coinhub.android.authentication.data.dtos.CreateUserDto
 import com.coinhub.android.authentication.presentation.components.AccountComponent
 import com.coinhub.android.authentication.presentation.components.CheckboxComponent
 import com.coinhub.android.authentication.presentation.components.HeadingTextComponent
@@ -29,13 +31,15 @@ import com.coinhub.android.authentication.presentation.components.MyTextFieldCom
 import com.coinhub.android.authentication.presentation.components.NormalTextComponent
 import com.coinhub.android.authentication.presentation.components.PasswordTextFieldComponent
 import io.github.jan.supabase.compose.auth.composable.NativeSignInState
+import java.util.Date
 
 @Composable
 fun SignupScreen(
     navController: NavHostController,
     supabaseViewModel: SupabaseViewModel,
     context: Context,
-    supabaseGoogleAction: NativeSignInState
+    supabaseGoogleAction: NativeSignInState,
+    apiServerViewModel: ApiServerViewModel
 ) {
     var firstNameText by remember { mutableStateOf("") }
     var lastNameText by remember { mutableStateOf("") }
@@ -96,6 +100,14 @@ fun SignupScreen(
                             userPassword = passwordText,
                             userEmail = emailText,
                             navController = navController
+                        )
+                        apiServerViewModel.registerProfile(
+                            CreateUserDto(
+                                birthDate = Date(),
+                                citizenId = "",
+                                id = "",
+                                fullName = ""
+                            )
                         )
                     },
                     onGoogleButtionClick = {

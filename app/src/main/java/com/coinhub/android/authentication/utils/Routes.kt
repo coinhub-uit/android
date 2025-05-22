@@ -10,4 +10,4 @@ object SignUp
 
 //TODO: Define it later as dataclass to fetch data
 @Serializable
-object Home
+data class Home(val id: String)
