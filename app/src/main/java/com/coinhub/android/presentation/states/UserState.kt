@@ -1,4 +1,4 @@
-package com.coinhub.android.authentication.data.model
+package com.coinhub.android.presentation.states
 
 sealed class UserState {
     data object Loading : UserState()

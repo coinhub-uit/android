@@ -1,9 +1,12 @@
-package com.coinhub.android.authentication.data.model
+package com.coinhub.android.data.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import java.util.Date
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
+@Parcelize
 data class User @OptIn(ExperimentalUuidApi::class) constructor(
     val id: Uuid,
     val fullName: String,
@@ -13,4 +16,4 @@ data class User @OptIn(ExperimentalUuidApi::class) constructor(
     val address: String?,
     val createdAt: Date,
     val deletedAt: Date?
-)
+): Parcelable

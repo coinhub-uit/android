@@ -1,13 +1,13 @@
-package com.coinhub.android.authentication.data.api
+package com.coinhub.android.data.api_service
 
-import com.coinhub.android.authentication.data.dtos.CreateUserDto
-import com.coinhub.android.authentication.data.model.User
+import com.coinhub.android.data.dtos.CreateUserDto
+import com.coinhub.android.data.models.User
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 
-interface AuthApiService {
+interface UserApiService {
     @GET("users/{id}")
     suspend fun getUserById(@Path("id") userId: String): User?
 

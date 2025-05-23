@@ -1,4 +1,4 @@
-package com.coinhub.android.authentication.presentation.signup
+package com.coinhub.android.presentation.screens.sign_up
 
 import android.content.Context
 import androidx.compose.foundation.background
@@ -23,9 +23,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.coinhub.android.authentication.ApiServerViewModel
+import com.coinhub.android.presentation.viewmodels.AuthViewModel
 import com.coinhub.android.authentication.SupabaseViewModel
-import com.coinhub.android.authentication.data.dtos.CreateUserDto
+import com.coinhub.android.data.dtos.CreateUserDto
 import com.coinhub.android.authentication.presentation.components.AccountComponent
 import com.coinhub.android.authentication.presentation.components.CheckboxComponent
 import com.coinhub.android.authentication.presentation.components.HeadingTextComponent
@@ -41,7 +41,7 @@ fun SignupScreen(
     supabaseViewModel: SupabaseViewModel,
     context: Context,
     supabaseGoogleAction: NativeSignInState,
-    apiServerViewModel: ApiServerViewModel
+    apiServerViewModel: AuthViewModel
 ) {
     var fullNameText by remember { mutableStateOf("") }
     var birthDateText by remember { mutableStateOf("") }

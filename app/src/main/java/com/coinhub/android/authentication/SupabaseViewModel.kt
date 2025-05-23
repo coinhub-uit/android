@@ -9,12 +9,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.coinhub.android.authentication.data.model.UserState
 import com.coinhub.android.authentication.data.network.ApiServerClient
 import com.coinhub.android.authentication.data.network.SupabaseClient.client
-import com.coinhub.android.authentication.utils.Home
-import com.coinhub.android.authentication.utils.Login
 import com.coinhub.android.authentication.utils.SharedPreferenceHelper
+import com.coinhub.android.navigation.Home
+import com.coinhub.android.navigation.Login
+import com.coinhub.android.presentation.states.UserState
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.compose.auth.composable.NativeSignInResult

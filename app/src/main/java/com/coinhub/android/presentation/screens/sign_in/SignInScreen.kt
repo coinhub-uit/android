@@ -1,4 +1,4 @@
-package com.coinhub.android.authentication.presentation.login
+package com.coinhub.android.presentation.screens.sign_in
 
 import android.content.Context
 import androidx.compose.foundation.background
@@ -29,7 +29,7 @@ import com.coinhub.android.authentication.presentation.components.PasswordTextFi
 import io.github.jan.supabase.compose.auth.composable.NativeSignInState
 
 @Composable
-fun LoginScreen(
+fun SignInScreen(
     navController: NavHostController,
     supabaseViewModel: SupabaseViewModel,
     context: Context,

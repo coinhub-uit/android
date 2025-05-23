@@ -36,8 +36,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.coinhub.android.R
-import com.coinhub.android.authentication.utils.Login
-import com.coinhub.android.authentication.utils.SignUp
+import com.coinhub.android.navigation.Login
+import com.coinhub.android.navigation.SignUp
 
 @Composable
 fun AccountComponent(
