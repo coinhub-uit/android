@@ -4,7 +4,10 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    kotlin("plugin.serialization") version "1.9.0"
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.android.hilt)
+    alias(libs.plugins.google.ksp)
 }
 
 var localProps = Properties()
@@ -75,7 +78,6 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.credential)
     implementation(libs.androidx.credential.play.service.auth)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.animation.core.lint)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -93,4 +95,12 @@ dependencies {
     implementation(libs.compose.auth)
     implementation(libs.compose.auth.ui)
     implementation(libs.androidx.material.icon)
+    implementation(libs.androidx.navigation.compose)
+
+    implementation(libs.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
+    ksp(libs.hilt.compiler)
+
+    implementation(libs.squareup.retrofit)
+    implementation(libs.squareup.gson)
 }

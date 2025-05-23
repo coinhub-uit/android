@@ -1,21 +1,19 @@
 package com.coinhub.android.authentication.presentation.components
 
-import android.util.Log
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -54,7 +52,7 @@ fun HeadingTextComponent(value: String) {
 }
 
 @Composable
-fun ClickableTextComponent() {
+fun PrivacyTextComponent() {
     val initialText = "By continuing you accept our "
     val privacyPolicyText = "Privacy Policy"
     val andText = " and "
@@ -78,10 +76,5 @@ fun ClickableTextComponent() {
         append(".")
     }
 
-    ClickableText(text = annotatedString, onClick = {
-        annotatedString.getStringAnnotations(it, it)
-            .firstOrNull()?.also { annotation ->
-                Log.d("ClickableTextComponent", "You have Clicked ${annotation.tag}")
-            }
-    })
+    Text(text = annotatedString)
 }
