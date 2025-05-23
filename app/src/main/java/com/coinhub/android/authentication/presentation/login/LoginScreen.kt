@@ -79,7 +79,7 @@ fun LoginScreen(
                         navController = navController
                     )
                 },
-                onGoogleButtionClick = {
+                onGoogleButtonClick = {
                     supabaseGoogleAction.startFlow()
                 }
             )

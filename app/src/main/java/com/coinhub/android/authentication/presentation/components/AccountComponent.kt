@@ -46,7 +46,7 @@ fun AccountComponent(
     action: String,
     navController: NavHostController,
     onButtonClick: () -> Unit,
-    onGoogleButtionClick: () -> Unit
+    onGoogleButtonClick: () -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -89,7 +89,6 @@ fun AccountComponent(
                         .fillMaxWidth()
                         .weight(1f),
                     thickness = 1.dp,
-                    color = Color.Gray
                 )
                 Text(
                     text = "Or",
@@ -101,7 +100,6 @@ fun AccountComponent(
                         .fillMaxWidth()
                         .weight(1f),
                     thickness = 1.dp,
-                    color = Color.Gray
                 )
             }
             Row(
@@ -110,7 +108,7 @@ fun AccountComponent(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Button(
-                    onClick = onGoogleButtionClick,
+                    onClick = onGoogleButtonClick,
                     colors = ButtonDefaults.buttonColors(Color.Transparent),
                     modifier = Modifier
                         .padding(4.dp)

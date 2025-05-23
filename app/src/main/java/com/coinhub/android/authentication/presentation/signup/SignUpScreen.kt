@@ -120,7 +120,7 @@ fun SignupScreen(
                             )
                         )
                     },
-                    onGoogleButtionClick = {
+                    onGoogleButtonClick = {
                         supabaseGoogleAction.startFlow()
                     }
                 )
