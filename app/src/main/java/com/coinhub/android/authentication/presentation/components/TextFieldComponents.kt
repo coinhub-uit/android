@@ -2,13 +2,8 @@ package com.coinhub.android.authentication.presentation.components
 
 
 import androidx.compose.foundation.layout.fillMaxWidth
-
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Check
-import androidx.compose.material.icons.outlined.Clear
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.Icon
@@ -63,7 +58,12 @@ fun MyTextFieldComponent(
 }
 
 @Composable
-fun PasswordTextFieldComponent(labelValue: String, icon: ImageVector, passwordText: String, onPasswordChange: (String) -> Unit) {
+fun PasswordTextFieldComponent(
+    labelValue: String,
+    icon: ImageVector,
+    passwordText: String,
+    onPasswordChange: (String) -> Unit
+) {
     var isPasswordVisible by remember {
         mutableStateOf(false)
     }
