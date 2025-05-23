@@ -9,7 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.coinhub.android.authentication.data.network.ApiServerClient
+import com.coinhub.android.authentication.aata.network.ApiServerClient
 import com.coinhub.android.authentication.data.network.SupabaseClient.client
 import com.coinhub.android.authentication.utils.SharedPreferenceHelper
 import com.coinhub.android.navigation.Home

@@ -1,6 +1,7 @@
 package com.coinhub.android.navigation
 
 import com.coinhub.android.data.models.User
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -10,4 +11,4 @@ object SignIn
 object SignUp
 
 @Serializable
-data class Home(val user: User)
+data class Home(@Contextual val user: User)

@@ -7,9 +7,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.coinhub.android.presentation.screens.AuthScreen
 import com.coinhub.android.presentation.screens.HomeScreen
+import com.coinhub.android.presentation.screens.sign_in.SignInScreen
 
 @Composable
-fun Navigation() {
+fun NavGraph() {
     val context = LocalContext.current
     val navController = rememberNavController()
 
@@ -18,8 +19,8 @@ fun Navigation() {
         startDestination = if (true) Home else Auth
     )
     {
-        composable<Sigin> {
-            AuthScreen(
+        composable<SignIn> {
+            SignInScreen(
                 navController = navController,
             )
         }

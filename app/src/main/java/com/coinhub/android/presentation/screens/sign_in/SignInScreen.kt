@@ -1,70 +1,58 @@
 package com.coinhub.android.presentation.screens.sign_in
 
-import android.content.Context
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.coinhub.android.authentication.SupabaseViewModel
 import com.coinhub.android.authentication.presentation.components.AccountComponent
-import com.coinhub.android.authentication.presentation.components.HeadingTextComponent
 import com.coinhub.android.authentication.presentation.components.MyTextFieldComponent
-import com.coinhub.android.authentication.presentation.components.NormalTextComponent
 import com.coinhub.android.authentication.presentation.components.PasswordTextFieldComponent
-import io.github.jan.supabase.compose.auth.composable.NativeSignInState
+import com.coinhub.android.presentation.components.AuthHeader
+import com.coinhub.android.presentation.viewmodels.SignInViewModel
+import com.coinhub.android.ui.theme.CoinhubTheme
 
 @Composable
 fun SignInScreen(
-    navController: NavHostController,
-    supabaseViewModel: SupabaseViewModel,
-    context: Context,
-    supabaseGoogleAction: NativeSignInState
+    onRegisterClick: () -> Unit = {},
+    viewModel: SignInViewModel = hiltViewModel(),
 ) {
-    var emailText by remember { mutableStateOf("") }
-    var passwordText by remember { mutableStateOf("") }
+    val email by viewModel.email.collectAsState()
+    val password by viewModel.password.collectAsState()
 
     Surface(
-        color = Color.White,
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
-            .padding(28.dp)
     ) {
+        AuthHeader(modifier = Modifier.fillMaxWidth())
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            Column {
-                NormalTextComponent(value = "Hey, there")
-                HeadingTextComponent(value = "Welcome Back")
-            }
             Spacer(modifier = Modifier.height(25.dp))
             Column {
                 MyTextFieldComponent(
                     labelValue = "Email",
                     icon = Icons.Outlined.Email,
-                    text = emailText,
-                    onTextChange = { emailText = it })
+                    text = email,
+                    onTextChange = { viewModel.setEmail(it) })
                 Spacer(modifier = Modifier.height(10.dp))
                 PasswordTextFieldComponent(
                     labelValue = "Password",
                     icon = Icons.Outlined.Lock,
-                    passwordText = passwordText,
-                    onPasswordChange = { passwordText = it })
+                    passwordText = password,
+                    onPasswordChange = { viewModel.setPassword(it) })
             }
             AccountComponent(
                 textQuery = "Don't have an account? ",
@@ -87,4 +75,10 @@ fun SignInScreen(
     }
 }
 
-
+@Preview()
+@Composable
+fun SignInScreenPreview() {
+    CoinhubTheme {
+        SignInScreen()
+    }
+}
