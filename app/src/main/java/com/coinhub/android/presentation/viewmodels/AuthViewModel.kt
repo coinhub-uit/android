@@ -5,8 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import com.coinhub.android.utils.validateEmail as _validateEmail
@@ -14,7 +17,7 @@ import com.coinhub.android.utils.validateEmail as _validateEmail
 const val PASSWORD_MIN_LENGTH = 4
 
 @HiltViewModel
-class AuthViewModel @Inject constructor(): ViewModel() {
+class AuthViewModel @Inject constructor() : ViewModel() {
     private val _isSignUp = MutableStateFlow(false)
     val isSignUp: StateFlow<Boolean> = _isSignUp.asStateFlow()
 
@@ -42,7 +45,13 @@ class AuthViewModel @Inject constructor(): ViewModel() {
     private val _supportingConfirmPasswordText = MutableStateFlow("")
     val supportingConfirmPasswordText: StateFlow<String> = _supportingConfirmPasswordText.asStateFlow()
 
-    fun setSignUp(isSignUp: Boolean) {
+    val isFormValid: StateFlow<Boolean> = combine(
+        _isEmailError, _isPasswordError, _isConfirmPasswordError
+    ) { isEmailError, isPasswordError, isConfirmPasswordError ->
+        !isEmailError && !isPasswordError && !isConfirmPasswordError
+    }.stateIn(viewModelScope, SharingStarted.Lazily, false)
+
+    fun setIsSignUp(isSignUp: Boolean) {
         _isSignUp.value = isSignUp
     }
 

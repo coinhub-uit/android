@@ -10,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.coinhub.android.presentation.components.EmailInputBox
 import com.coinhub.android.presentation.components.PasswordInputBox
 import com.coinhub.android.presentation.viewmodels.AuthViewModel
@@ -17,9 +18,10 @@ import com.coinhub.android.presentation.viewmodels.AuthViewModel
 @Composable
 fun CredentialInput(
     modifier: Modifier = Modifier,
-    isSignUp: Boolean,
-    viewModel: AuthViewModel,
+    viewModel: AuthViewModel = hiltViewModel(),
 ) {
+    val isSignUp by viewModel.isSignUp.collectAsState()
+
     Column(modifier = modifier) {
         // Email
         val email by viewModel.email.collectAsState()
