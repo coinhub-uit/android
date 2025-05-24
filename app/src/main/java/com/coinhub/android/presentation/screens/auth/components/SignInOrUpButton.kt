@@ -1,4 +1,4 @@
-package com.coinhub.android.presentation.screens.auth
+package com.coinhub.android.presentation.screens.auth.components
 
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text

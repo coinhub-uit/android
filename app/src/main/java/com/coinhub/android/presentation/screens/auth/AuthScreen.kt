@@ -13,6 +13,7 @@ import com.coinhub.android.presentation.screens.auth.components.AuthHeader
 import com.coinhub.android.presentation.screens.auth.components.CredentialInput
 import com.coinhub.android.presentation.screens.auth.components.OAuth
 import com.coinhub.android.presentation.screens.auth.components.OrDivider
+import com.coinhub.android.presentation.screens.auth.components.SignInOrUpButton
 import com.coinhub.android.presentation.screens.auth.components.SignInOrUpPrompt
 import com.coinhub.android.ui.theme.CoinhubTheme
 
