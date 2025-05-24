@@ -1,4 +1,4 @@
-package com.coinhub.android.presentation.components
+package com.coinhub.android.presentation.screens.auth.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box

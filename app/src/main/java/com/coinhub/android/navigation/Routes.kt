@@ -5,10 +5,7 @@ import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 
 @Serializable
-object SignIn
-
-@Serializable
-object SignUp
+object Auth
 
 @Serializable
 data class Home(@Contextual val user: User)
