@@ -10,11 +10,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.coinhub.android.presentation.screens.auth.components.AuthHeader
-import com.coinhub.android.presentation.screens.auth.components.CredentialInput
-import com.coinhub.android.presentation.screens.auth.components.OAuth
-import com.coinhub.android.presentation.screens.auth.components.OrDivider
-import com.coinhub.android.presentation.screens.auth.components.SignInOrUpButton
-import com.coinhub.android.presentation.screens.auth.components.SignInOrUpPrompt
+import com.coinhub.android.presentation.screens.auth.components.AuthCredentialInput
+import com.coinhub.android.presentation.screens.auth.components.AuthOAuth
+import com.coinhub.android.presentation.screens.auth.components.AuthOrDivider
+import com.coinhub.android.presentation.screens.auth.components.AuthSignInOrUpButton
+import com.coinhub.android.presentation.screens.auth.components.AuthSignInOrUpPrompt
 import com.coinhub.android.ui.theme.CoinhubTheme
 
 // TODO: The params name, check them. Or... let hilt do the job?
@@ -28,15 +28,15 @@ fun AuthScreen(
     ) {
         AuthHeader(modifier = Modifier.fillMaxWidth())
         Spacer(modifier = Modifier.height(25.dp))
-        CredentialInput(modifier = Modifier.fillMaxWidth())
-        SignInOrUpButton(modifier = Modifier.fillMaxWidth(), onSignIn = onSignIn, onSignUp = onSignUp)
+        AuthCredentialInput(modifier = Modifier.fillMaxWidth())
+        AuthSignInOrUpButton(modifier = Modifier.fillMaxWidth(), onSignIn = onSignIn, onSignUp = onSignUp)
         Spacer(modifier = Modifier.height(16.dp))
-        SignInOrUpPrompt(modifier = Modifier.fillMaxWidth())
+        AuthSignInOrUpPrompt(modifier = Modifier.fillMaxWidth())
         Spacer(modifier = Modifier.height(24.dp))
-        OrDivider(modifier = Modifier.fillMaxWidth())
+        AuthOrDivider(modifier = Modifier.fillMaxWidth())
         Spacer(modifier = Modifier.height(24.dp))
         // TODO: @NTGNguyen - Passing things?
-        OAuth()
+        AuthOAuth()
     }
 }
 

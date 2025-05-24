@@ -10,7 +10,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.coinhub.android.presentation.viewmodels.AuthViewModel
 
 @Composable
-fun SignInOrUpButton(
+fun AuthSignInOrUpButton(
     modifier: Modifier = Modifier,
     onSignIn: () -> Unit,
     onSignUp: () -> Unit,

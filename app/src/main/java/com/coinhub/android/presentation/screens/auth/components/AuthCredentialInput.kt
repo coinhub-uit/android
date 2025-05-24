@@ -16,7 +16,7 @@ import com.coinhub.android.presentation.components.PasswordInputBox
 import com.coinhub.android.presentation.viewmodels.AuthViewModel
 
 @Composable
-fun CredentialInput(
+fun AuthCredentialInput(
     modifier: Modifier = Modifier,
     viewModel: AuthViewModel = hiltViewModel(),
 ) {

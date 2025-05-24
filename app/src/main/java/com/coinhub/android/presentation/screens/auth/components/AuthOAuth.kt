@@ -2,7 +2,6 @@ package com.coinhub.android.presentation.screens.auth.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -14,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.coinhub.android.R
 
 @Composable
-fun OAuth(modifier: Modifier = Modifier) {
+fun AuthOAuth(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .padding(horizontal = 24.dp),
