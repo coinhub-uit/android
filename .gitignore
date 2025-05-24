@@ -307,3 +307,8 @@ obj/
 !/gradle/wrapper/gradle-wrapper.jar
 
 # End of https://www.toptal.com/developers/gitignore/api/jetbrains,androidstudio,android,kotlin,java
+
+# Override some idea file
+
+!.idea/codeStyles/
+!.idea/codeStyles/*
