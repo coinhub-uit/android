@@ -12,7 +12,7 @@ import androidx.navigation.NavController
 import com.coinhub.android.authentication.aata.network.ApiServerClient
 import com.coinhub.android.authentication.data.network.SupabaseClient.client
 import com.coinhub.android.authentication.utils.SharedPreferenceHelper
-import com.coinhub.android.navigation.Home
+import com.coinhub.android.presentation.navigation.Home
 import com.coinhub.android.navigation.Login
 import com.coinhub.android.presentation.states.UserState
 import io.github.jan.supabase.auth.auth

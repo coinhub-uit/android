@@ -1,4 +1,4 @@
-package com.coinhub.android.navigation
+package com.coinhub.android.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost

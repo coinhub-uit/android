@@ -2,7 +2,6 @@ package com.coinhub.android.presentation.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Lock
@@ -23,9 +22,7 @@ fun EmailInputBox(
     modifier: Modifier = Modifier,
     email: String,
     onEmailChange: (String) -> Unit,
-    validateEmail: () -> Unit = {},
     isError: Boolean = false,
-    setIsError: (Boolean) -> Unit = {},
     imeAction: ImeAction = ImeAction.Default,
 ) {
     OutlinedTextField(
@@ -33,9 +30,8 @@ fun EmailInputBox(
         value = email,
         onValueChange = {
             onEmailChange(it)
-            setIsError(false)
         },
-        label = { Text(if (isError) "Email*" else "Email") },
+        label = { Text("Email") },
         supportingText = {
             if (isError)
                 Row {
@@ -56,8 +52,5 @@ fun EmailInputBox(
             autoCorrectEnabled = false,
             imeAction = imeAction,
         ),
-        keyboardActions = KeyboardActions(
-            onDone = { validateEmail() }
-        )
     )
 }

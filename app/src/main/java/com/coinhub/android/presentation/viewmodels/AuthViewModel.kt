@@ -3,16 +3,17 @@ package com.coinhub.android.presentation.viewmodels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.coinhub.android.utils.isValidEmail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import com.coinhub.android.utils.validateEmail as _validateEmail
 
 const val PASSWORD_MIN_LENGTH = 4
 
@@ -24,14 +25,16 @@ class AuthViewModel @Inject constructor() : ViewModel() {
     private val _email = MutableStateFlow("")
     val email: StateFlow<String> = _email.asStateFlow()
 
-    private val _isEmailError = MutableStateFlow(false)
-    val isEmailError: StateFlow<Boolean> = _isEmailError.asStateFlow()
+    val isEmailError: StateFlow<Boolean> = _email
+        .map { !it.isValidEmail() }
+        .stateIn(viewModelScope, SharingStarted.Lazily, false)
 
     private val _password = MutableStateFlow("")
     val password: StateFlow<String> = _password.asStateFlow()
 
-    private val _isPasswordError = MutableStateFlow(false)
-    val isPasswordError: StateFlow<Boolean> = _isPasswordError.asStateFlow()
+    val isPasswordError: StateFlow<Boolean> = _password
+        .map { it.length < PASSWORD_MIN_LENGTH }
+        .stateIn(viewModelScope, SharingStarted.Lazily, false)
 
     private val _supportingPasswordText = MutableStateFlow("")
     val supportingPasswordText: StateFlow<String> = _supportingPasswordText.asStateFlow()
@@ -39,14 +42,15 @@ class AuthViewModel @Inject constructor() : ViewModel() {
     private val _confirmPassword = MutableStateFlow("")
     val confirmPassword: StateFlow<String> = _confirmPassword.asStateFlow()
 
-    private val _isConfirmPasswordError = MutableStateFlow(false)
-    val isConfirmPasswordError: StateFlow<Boolean> = _isConfirmPasswordError.asStateFlow()
+    val isConfirmPasswordError: StateFlow<Boolean> = _confirmPassword
+        .map { it != _password.value }
+        .stateIn(viewModelScope, SharingStarted.Lazily, false)
 
     private val _supportingConfirmPasswordText = MutableStateFlow("")
     val supportingConfirmPasswordText: StateFlow<String> = _supportingConfirmPasswordText.asStateFlow()
 
     val isFormValid: StateFlow<Boolean> = combine(
-        _isEmailError, _isPasswordError, _isConfirmPasswordError
+        isEmailError, isPasswordError, isConfirmPasswordError
     ) { isEmailError, isPasswordError, isConfirmPasswordError ->
         !isEmailError && !isPasswordError && !isConfirmPasswordError
     }.stateIn(viewModelScope, SharingStarted.Lazily, false)
@@ -57,14 +61,6 @@ class AuthViewModel @Inject constructor() : ViewModel() {
 
     fun setEmail(email: String) {
         _email.value = email
-    }
-
-    fun setIsEmailError(isError: Boolean) {
-        _isEmailError.value = isError
-    }
-
-    fun validateEmail(email: String) {
-        _isEmailError.value = _validateEmail(email)
     }
 
     // TODO: This is not optimise? setting 2 state at the same time
@@ -81,10 +77,6 @@ class AuthViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun setIsPasswordError(isError: Boolean) {
-        _isPasswordError.value = isError
-    }
-
     fun setConfirmPassword(confirmPassword: String) {
         _confirmPassword.value = confirmPassword
         _supportingConfirmPasswordText.value = ""
@@ -96,10 +88,6 @@ class AuthViewModel @Inject constructor() : ViewModel() {
         } else {
             _supportingConfirmPasswordText.value = ""
         }
-    }
-
-    fun setIsConfirmPasswordError(isError: Boolean) {
-        _isConfirmPasswordError.value = isError
     }
 
     fun registerProfile() {

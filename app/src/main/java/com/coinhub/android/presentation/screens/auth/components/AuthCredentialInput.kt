@@ -30,9 +30,7 @@ fun AuthCredentialInput(
         EmailInputBox(
             email = email,
             onEmailChange = { viewModel.setEmail(it) },
-            validateEmail = { viewModel.validateEmail(email) },
             isError = isEmailError,
-            setIsError = { viewModel.setIsEmailError(it) },
             imeAction = ImeAction.Next,
             modifier = Modifier.fillMaxWidth(),
         )
@@ -49,7 +47,6 @@ fun AuthCredentialInput(
             onPasswordChange = { viewModel.setPassword(it) },
             validatePassword = { viewModel.validatePassword() },
             isError = isPasswordError,
-            setIsError = { viewModel.setIsPasswordError(it) },
             supportingText = supportingPasswordText,
             imeAction = if (isSignUp) ImeAction.Next else ImeAction.Done,
             modifier = Modifier.fillMaxWidth(),
@@ -68,7 +65,6 @@ fun AuthCredentialInput(
                 onPasswordChange = { viewModel.setConfirmPassword(it) },
                 validatePassword = { viewModel.validateConfirmPassword() },
                 isError = isConfirmPasswordError,
-                setIsError = { viewModel.setIsConfirmPasswordError(it) },
                 supportingText = supportingConfirmPasswordText,
                 label = "Confirm Password",
                 imeAction = ImeAction.Done,

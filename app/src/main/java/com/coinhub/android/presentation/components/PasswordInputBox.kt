@@ -31,7 +31,6 @@ fun PasswordInputBox(
     onPasswordChange: (String) -> Unit = {},
     validatePassword: (String) -> Unit = {},
     isError: Boolean = false,
-    setIsError: (Boolean) -> Unit = {},
     supportingText: String = "",
     label: String = "Password",
     contentType: ContentType = ContentType.Password,
@@ -46,7 +45,6 @@ fun PasswordInputBox(
         value = password,
         onValueChange = {
             onPasswordChange(it)
-            setIsError(false)
         },
         label = {
             Text(if (isError) "${label}*" else label)

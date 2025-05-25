@@ -1,4 +1,4 @@
-package com.coinhub.android.navigation
+package com.coinhub.android.presentation.navigation
 
 import com.coinhub.android.data.models.User
 import kotlinx.serialization.Contextual
