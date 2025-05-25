@@ -20,8 +20,8 @@ import com.coinhub.android.ui.theme.CoinhubTheme
 // TODO: The params name, check them. Or... let hilt do the job?
 @Composable
 fun AuthScreen(
-    onSignIn: () -> Unit = {},
-    onSignUp: () -> Unit = {},
+    navigateAfterSignedIn: () -> Unit,
+    navigateAfterSignedUp: () -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -29,7 +29,7 @@ fun AuthScreen(
         AuthHeader(modifier = Modifier.fillMaxWidth())
         Spacer(modifier = Modifier.height(25.dp))
         AuthCredentialInput(modifier = Modifier.fillMaxWidth())
-        AuthSignInOrUpButton(modifier = Modifier.fillMaxWidth(), onSignIn = onSignIn, onSignUp = onSignUp)
+        AuthSignInOrUpButton(modifier = Modifier.fillMaxWidth(), onSignIn = navigateAfterSignedIn, onSignUp = navigateAfterSignedUp)
         Spacer(modifier = Modifier.height(16.dp))
         AuthSignInOrUpPrompt(modifier = Modifier.fillMaxWidth())
         Spacer(modifier = Modifier.height(24.dp))
@@ -44,6 +44,6 @@ fun AuthScreen(
 @Composable
 fun SignInScreenPreview() {
     CoinhubTheme {
-        AuthScreen()
+        AuthScreen(navigateAfterSignedIn = {}, navigateAfterSignedUp = {})
     }
 }

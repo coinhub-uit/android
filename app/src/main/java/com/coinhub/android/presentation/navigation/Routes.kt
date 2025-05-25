@@ -1,11 +1,21 @@
 package com.coinhub.android.presentation.navigation
 
-import com.coinhub.android.data.models.User
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
+
+@Serializable
+object AuthGraph
 
 @Serializable
 object Auth
 
 @Serializable
-data class Home(@Contextual val user: User)
+object ConfirmAccount
+
+@Serializable
+object CreateProfile
+
+@Serializable
+object HomeGraph
+
+@Serializable
+object Home

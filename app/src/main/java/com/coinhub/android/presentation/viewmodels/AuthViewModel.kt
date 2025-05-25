@@ -6,9 +6,9 @@ import androidx.lifecycle.viewModelScope
 import com.coinhub.android.domain.use_cases.ValidateConfirmPasswordUseCase
 import com.coinhub.android.domain.use_cases.ValidateEmailUseCase
 import com.coinhub.android.domain.use_cases.ValidatePasswordUseCase
-import com.coinhub.android.presentation.states.auth.AuthConfirmPasswordState
-import com.coinhub.android.presentation.states.auth.AuthEmailState
-import com.coinhub.android.presentation.states.auth.AuthPasswordState
+import com.coinhub.android.presentation.states.auth.ConfirmPasswordState
+import com.coinhub.android.presentation.states.auth.EmailState
+import com.coinhub.android.presentation.states.auth.PasswordState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -16,10 +16,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-const val PASSWORD_MIN_LENGTH = 4
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
@@ -30,13 +29,13 @@ class AuthViewModel @Inject constructor(
     private val _isSignUp = MutableStateFlow(false)
     val isSignUp: StateFlow<Boolean> = _isSignUp.asStateFlow()
 
-    private val _emailState = MutableStateFlow(AuthEmailState())
+    private val _emailState = MutableStateFlow(EmailState())
     val emailState = _emailState.asStateFlow()
 
-    private val _passwordState = MutableStateFlow(AuthPasswordState())
+    private val _passwordState = MutableStateFlow(PasswordState())
     val passwordState = _passwordState.asStateFlow()
 
-    private val _confirmPasswordState = MutableStateFlow(AuthConfirmPasswordState())
+    private val _confirmPasswordState = MutableStateFlow(ConfirmPasswordState())
     val confirmPasswordState = _confirmPasswordState.asStateFlow()
 
     val isFormValid: StateFlow<Boolean> = combine(
@@ -45,7 +44,7 @@ class AuthViewModel @Inject constructor(
         confirmPasswordState,
         isSignUp
     ) { email, password, confirmPassword, isSignup ->
-        email.isValid && password.isValid && (isSignup && confirmPassword.isValid)
+        email.errorMessage == null && password.errorMessage == null && (isSignup && confirmPassword.errorMessage == null)
     }.stateIn(viewModelScope, SharingStarted.Lazily, false)
 
     fun setIsSignUp(isSignUp: Boolean) {
@@ -54,39 +53,43 @@ class AuthViewModel @Inject constructor(
 
     fun onEmailChange(email: String) {
         viewModelScope.launch {
-            val result = validateEmailUseCase(ValidateEmailUseCase.Input(email))
-            _emailState.value = AuthEmailState(
-                email = email,
-                isValid = result.isValid,
-                errorMessage = result.errorMessage
-            )
+            val result = validateEmailUseCase(email)
+            _emailState.update {
+                it.copy(
+                    email = email,
+                    isValid = result is ValidateEmailUseCase.Result.Success,
+                    errorMessage = if (result is ValidateEmailUseCase.Result.Error) result.message else null,
+                )
+            }
         }
     }
 
     fun onPasswordChange(password: String) {
         viewModelScope.launch {
-            val result = validatePasswordUseCase(ValidatePasswordUseCase.Input(password))
-            _passwordState.value = AuthPasswordState(
-                password = password,
-                isValid = result.isValid,
-                errorMessage = result.errorMessage
-            )
+            val result = validatePasswordUseCase(password)
+            _passwordState.update {
+                it.copy(
+                    password = password,
+                    isValid = result is ValidatePasswordUseCase.Result.Success,
+                    errorMessage = if (result is ValidatePasswordUseCase.Result.Error) result.message else null,
+                )
+            }
         }
     }
 
     fun onConfirmPasswordChange(confirmPassword: String) {
         viewModelScope.launch {
             val result = validateConfirmPasswordUseCase(
-                ValidateConfirmPasswordUseCase.Input(
-                    _passwordState.value.password,
-                    confirmPassword
+                _passwordState.value.password,
+                confirmPassword
+            )
+            _confirmPasswordState.update {
+                it.copy(
+                    confirmPassword = confirmPassword,
+                    isValid = result is ValidateConfirmPasswordUseCase.Result.Success,
+                    errorMessage = if (result is ValidateConfirmPasswordUseCase.Result.Error) result.message else null,
                 )
-            )
-            _confirmPasswordState.value = AuthConfirmPasswordState(
-                confirmPassword = confirmPassword,
-                isValid = result.isValid,
-                errorMessage = result.errorMessage
-            )
+            }
         }
     }
 

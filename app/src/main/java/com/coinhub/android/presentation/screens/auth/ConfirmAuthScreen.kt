@@ -16,22 +16,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+// TODO: Redirect or click on button to check
 @Composable
 fun ConfirmAccountScreen() {
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        contentAlignment = Alignment.Center
+        modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
     ) {
-        Column (
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Confirm Your Account",
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold
+                text = "Confirm Your Account", fontSize = 22.sp, fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
