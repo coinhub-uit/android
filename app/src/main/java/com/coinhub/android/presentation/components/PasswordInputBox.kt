@@ -1,6 +1,5 @@
 package com.coinhub.android.presentation.components
 
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Lock
@@ -29,9 +28,8 @@ fun PasswordInputBox(
     modifier: Modifier = Modifier,
     password: String = "",
     onPasswordChange: (String) -> Unit = {},
-    validatePassword: (String) -> Unit = {},
-    isError: Boolean = false,
-    supportingText: String = "",
+    isValid: Boolean = false,
+    errorMessage: String?,
     label: String = "Password",
     contentType: ContentType = ContentType.Password,
     imeAction: ImeAction = ImeAction.Default,
@@ -47,12 +45,12 @@ fun PasswordInputBox(
             onPasswordChange(it)
         },
         label = {
-            Text(if (isError) "${label}*" else label)
+            Text(if (isValid) "${label}*" else label)
         },
         supportingText = {
-            Text(supportingText)
+            if (errorMessage != null) Text(errorMessage)
         },
-        isError = isError,
+        isError = isValid,
         leadingIcon = {
             Icon(
                 imageVector = Icons.Outlined.Lock, contentDescription = "profile"
@@ -74,9 +72,5 @@ fun PasswordInputBox(
             autoCorrectEnabled = false,
             imeAction = imeAction,
         ),
-        keyboardActions = KeyboardActions(
-            onDone = {
-                validatePassword(password)
-            })
     )
 }

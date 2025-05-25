@@ -24,50 +24,45 @@ fun AuthCredentialInput(
 
     Column(modifier = modifier) {
         // Email
-        val email by viewModel.email.collectAsState()
-        val isEmailError by viewModel.isEmailError.collectAsState()
+        val emailState by viewModel.emailState.collectAsState()
 
         EmailInputBox(
-            email = email,
-            onEmailChange = { viewModel.setEmail(it) },
-            isError = isEmailError,
+            email = emailState.email,
+            onEmailChange = { viewModel.onEmailChange(it) },
+            isValid = emailState.isValid,
+            errorMessage = emailState.errorMessage,
             imeAction = ImeAction.Next,
             modifier = Modifier.fillMaxWidth(),
         )
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        val password by viewModel.password.collectAsState()
-        val isPasswordError by viewModel.isPasswordError.collectAsState()
-        val supportingPasswordText by viewModel.supportingPasswordText.collectAsState()
+        val passwordState by viewModel.passwordState.collectAsState()
 
         // Password
         PasswordInputBox(
-            password = password,
-            onPasswordChange = { viewModel.setPassword(it) },
-            validatePassword = { viewModel.validatePassword() },
-            isError = isPasswordError,
-            supportingText = supportingPasswordText,
+            password = passwordState.password,
+            onPasswordChange = { viewModel.onPasswordChange(it) },
+            isValid = passwordState.isValid,
+            errorMessage = passwordState.errorMessage,
             imeAction = if (isSignUp) ImeAction.Next else ImeAction.Done,
             modifier = Modifier.fillMaxWidth(),
         )
 
         // Confirm Password
         if (isSignUp) {
-            val confirmPassword by viewModel.confirmPassword.collectAsState()
-            val isConfirmPasswordError by viewModel.isConfirmPasswordError.collectAsState()
-            val supportingConfirmPasswordText by viewModel.supportingConfirmPasswordText.collectAsState()
+            val confirmPasswordState by viewModel.confirmPasswordState.collectAsState()
 
             Spacer(modifier = Modifier.height(10.dp))
 
             PasswordInputBox(
-                password = confirmPassword,
-                onPasswordChange = { viewModel.setConfirmPassword(it) },
-                validatePassword = { viewModel.validateConfirmPassword() },
-                isError = isConfirmPasswordError,
-                supportingText = supportingConfirmPasswordText,
-                label = "Confirm Password",
+                password = confirmPasswordState.confirmPassword,
+                onPasswordChange = { viewModel.onPasswordChange(it) },
+                isValid = confirmPasswordState.isValid,
+                errorMessage = confirmPasswordState.errorMessage,
                 imeAction = ImeAction.Done,
+                label = "Confirm Password",
+                modifier = Modifier.fillMaxWidth(),
             )
         }
     }

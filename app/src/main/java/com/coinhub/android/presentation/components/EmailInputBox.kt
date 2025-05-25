@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ContactMail
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
@@ -22,7 +23,8 @@ fun EmailInputBox(
     modifier: Modifier = Modifier,
     email: String,
     onEmailChange: (String) -> Unit,
-    isError: Boolean = false,
+    isValid: Boolean = false,
+    errorMessage: String?,
     imeAction: ImeAction = ImeAction.Default,
 ) {
     OutlinedTextField(
@@ -33,18 +35,12 @@ fun EmailInputBox(
         },
         label = { Text("Email") },
         supportingText = {
-            if (isError)
-                Row {
-                    Text(
-                        "Please enter a valid email address.",
-                        Modifier.clearAndSetSemantics {})
-                    Spacer(Modifier.weight(1f))
-                }
+            if (errorMessage != null) Text(errorMessage)
         },
-        isError = isError,
+        isError = isValid,
         leadingIcon = {
             Icon(
-                imageVector = Icons.Outlined.Lock, contentDescription = "profile"
+                imageVector = Icons.Outlined.ContactMail, contentDescription = "Email"
             )
         },
         keyboardOptions = KeyboardOptions(

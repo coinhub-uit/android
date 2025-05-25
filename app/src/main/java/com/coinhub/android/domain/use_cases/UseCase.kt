@@ -1,5 +1,5 @@
-package com.coinhub.android.data.use_cases
+package com.coinhub.android.domain.use_cases
 
 interface UseCase<InputT, OutputT> {
-    suspend fun execute(input: InputT): OutputT
+    suspend operator fun invoke(input: InputT): OutputT
 }
