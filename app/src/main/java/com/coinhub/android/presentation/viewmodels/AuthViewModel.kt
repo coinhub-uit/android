@@ -1,15 +1,21 @@
 package com.coinhub.android.presentation.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.coinhub.android.data.models.GoogleNavigateResult
+import com.coinhub.android.domain.use_cases.HandleResultOnSignInWithGoogleUseCase
+import com.coinhub.android.domain.use_cases.RegisterProfileUseCase
+import com.coinhub.android.domain.use_cases.SignInWithCredentialUseCase
+import com.coinhub.android.domain.use_cases.SignUpWithCredentialUseCase
 import com.coinhub.android.domain.use_cases.ValidateConfirmPasswordUseCase
 import com.coinhub.android.domain.use_cases.ValidateEmailUseCase
 import com.coinhub.android.domain.use_cases.ValidatePasswordUseCase
+import com.coinhub.android.presentation.states.auth.AuthState
 import com.coinhub.android.presentation.states.auth.ConfirmPasswordState
 import com.coinhub.android.presentation.states.auth.EmailState
 import com.coinhub.android.presentation.states.auth.PasswordState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.jan.supabase.compose.auth.composable.NativeSignInResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -25,6 +31,10 @@ class AuthViewModel @Inject constructor(
     private val validateEmailUseCase: ValidateEmailUseCase,
     private val validatePasswordUseCase: ValidatePasswordUseCase,
     private val validateConfirmPasswordUseCase: ValidateConfirmPasswordUseCase,
+    private val signInWithCredentialUseCase: SignInWithCredentialUseCase,
+    private val signUpWithCredentialUseCase: SignUpWithCredentialUseCase,
+    private val registerProfileUseCase: RegisterProfileUseCase,
+    private val handleResultOnSignInWithGoogleUseCase: HandleResultOnSignInWithGoogleUseCase,
 ) : ViewModel() {
     private val _isSignUp = MutableStateFlow(false)
     val isSignUp: StateFlow<Boolean> = _isSignUp.asStateFlow()
@@ -93,12 +103,42 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun registerProfile() {
+    fun signInWithCredential(onNavigateToHomeScreen: (String) -> Unit) {
         viewModelScope.launch {
-            try {
-                // TODO: @NTGNguyen handle this. Take the email password bla bla
-            } catch (e: Exception) {
-                Log.d("TAG", "${e.message}") // TODO: tag??
+            val result = signInWithCredentialUseCase(emailState.value.email, passwordState.value.password)
+            if (result is AuthState.Success) {
+                onNavigateToHomeScreen(result.data)
+            }
+            //TODO: Maybe Handle State to do....
+        }
+    }
+
+    fun signUpWithCredential(onNavigateToRegisterProfile: () -> Unit) {
+        viewModelScope.launch {
+            val result = signUpWithCredentialUseCase(emailState.value.email, passwordState.value.password)
+            if (result is AuthState.Success) {
+                onNavigateToRegisterProfile()
+            }
+            //TODO: Maybe Handle State to do....
+        }
+    }
+
+    fun handleResultOnSignInWithGoogle(
+        result: NativeSignInResult,
+        onNavigateToHomeScreen: (String) -> Unit,
+        onNavigateToRegisterProfile: () -> Unit,
+    ) {
+        viewModelScope.launch {
+            when (val resultUseCase = handleResultOnSignInWithGoogleUseCase(result)) {
+                is AuthState.Error -> TODO()
+                AuthState.Loading -> TODO()
+                is AuthState.Success<GoogleNavigateResult> -> {
+                    if (resultUseCase.data.isUserRegisterProfile) {
+                        onNavigateToHomeScreen(resultUseCase.data.userI)
+                    } else {
+                        onNavigateToRegisterProfile()
+                    }
+                }
             }
         }
     }
