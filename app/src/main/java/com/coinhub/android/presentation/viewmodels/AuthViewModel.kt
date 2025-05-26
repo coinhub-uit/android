@@ -134,7 +134,7 @@ class AuthViewModel @Inject constructor(
                 AuthState.Loading -> TODO()
                 is AuthState.Success<GoogleNavigateResult> -> {
                     if (resultUseCase.data.isUserRegisterProfile) {
-                        onNavigateToHomeScreen(resultUseCase.data.userI)
+                        onNavigateToHomeScreen(resultUseCase.data.userId)
                     } else {
                         onNavigateToRegisterProfile()
                     }
