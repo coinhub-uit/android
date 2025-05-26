@@ -1,5 +1,6 @@
 package com.coinhub.android.di
 
+import com.coinhub.android.data.repository.AuthRepositoryImpl
 import com.coinhub.android.domain.use_cases.HandleResultOnSignInWithGoogleUseCase
 import com.coinhub.android.domain.use_cases.RegisterProfileUseCase
 import com.coinhub.android.domain.use_cases.SignInWithCredentialUseCase
@@ -7,32 +8,49 @@ import com.coinhub.android.domain.use_cases.SignUpWithCredentialUseCase
 import com.coinhub.android.domain.use_cases.ValidateConfirmPasswordUseCase
 import com.coinhub.android.domain.use_cases.ValidateEmailUseCase
 import com.coinhub.android.domain.use_cases.ValidatePasswordUseCase
-import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class UseCaseModule {
-    @Binds
-    abstract fun provideValidateEmailUseCase(impl: ValidateEmailUseCase): ValidateEmailUseCase
+object UseCaseModule {
+    @Provides
+    @Singleton
+    fun provideValidateEmailUseCase() = ValidateEmailUseCase()
 
-    @Binds
-    abstract fun provideValidatePasswordUseCase(impl: ValidatePasswordUseCase): ValidatePasswordUseCase
+    @Provides
+    @Singleton
+    fun provideValidatePasswordUseCase() = ValidatePasswordUseCase()
 
-    @Binds
-    abstract fun provideValidateConfirmPasswordUseCase(impl: ValidateConfirmPasswordUseCase): ValidateConfirmPasswordUseCase
+    @Provides
+    @Singleton
+    fun provideValidateConfirmPasswordUseCase() = ValidateConfirmPasswordUseCase()
 
-    @Binds
-    abstract fun provideSignInWithCredentialUseCase(impl: SignInWithCredentialUseCase): SignInWithCredentialUseCase
+    @Provides
+    @Singleton
+    fun provideSignInWithCredentialUseCase(authRepositoryImpl: AuthRepositoryImpl) =
+        SignInWithCredentialUseCase(authRepositoryImpl = authRepositoryImpl)
 
-    @Binds
-    abstract fun provideSignUpWithCredentialUseCase(impl: SignUpWithCredentialUseCase): SignUpWithCredentialUseCase
+    @Provides
+    @Singleton
+    fun provideSignUpWithCredentialUseCase(authRepositoryImpl: AuthRepositoryImpl) = SignUpWithCredentialUseCase(
+        authRepositoryImpl = authRepositoryImpl
+    )
 
-    @Binds
-    abstract fun provideHandleResultOnSignInWithGoogleUseCase(impl: HandleResultOnSignInWithGoogleUseCase): HandleResultOnSignInWithGoogleUseCase
+    @Provides
+    @Singleton
+    fun provideHandleResultOnSignInWithGoogleUseCase(authRepositoryImpl: AuthRepositoryImpl) =
+        HandleResultOnSignInWithGoogleUseCase(
+            authRepositoryImpl = authRepositoryImpl
+        )
 
-    @Binds
-    abstract fun provideRegisterProfileUseCase(impl: RegisterProfileUseCase): RegisterProfileUseCase
+    @Provides
+    @Singleton
+    fun provideRegisterProfileUseCase(authRepositoryImpl: AuthRepositoryImpl) = RegisterProfileUseCase(
+        authRepositoryImpl =
+            authRepositoryImpl
+    )
 }
