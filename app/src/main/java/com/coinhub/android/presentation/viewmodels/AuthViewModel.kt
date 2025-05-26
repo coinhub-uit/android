@@ -105,11 +105,11 @@ class AuthViewModel @Inject constructor(
 
     fun signInWithCredential(onNavigateToHomeScreen: (String) -> Unit) {
         viewModelScope.launch {
-            val result = signInWithCredentialUseCase(emailState.value.email, passwordState.value.password)
-            if (result is AuthState.Success) {
-                onNavigateToHomeScreen(result.data)
+            when (val result = signInWithCredentialUseCase(emailState.value.email, passwordState.value.password)) {
+                is AuthState.Error -> TODO()
+                is AuthState.Loading -> TODO()
+                is AuthState.Success -> onNavigateToHomeScreen(result.data)
             }
-            //TODO: Maybe Handle State to do....
         }
     }
 
@@ -124,17 +124,17 @@ class AuthViewModel @Inject constructor(
     }
 
     fun handleResultOnSignInWithGoogle(
-        result: NativeSignInResult,
+        signInResult: NativeSignInResult,
         onNavigateToHomeScreen: (String) -> Unit,
         onNavigateToRegisterProfile: () -> Unit,
     ) {
         viewModelScope.launch {
-            when (val resultUseCase = handleResultOnSignInWithGoogleUseCase(result)) {
+            when (val result = handleResultOnSignInWithGoogleUseCase(signInResult)) {
                 is AuthState.Error -> TODO()
                 AuthState.Loading -> TODO()
                 is AuthState.Success<GoogleNavigateResult> -> {
-                    if (resultUseCase.data.isUserRegisterProfile) {
-                        onNavigateToHomeScreen(resultUseCase.data.userId)
+                    if (result.data.isUserRegisterProfile) {
+                        onNavigateToHomeScreen(result.data.userId)
                     } else {
                         onNavigateToRegisterProfile()
                     }

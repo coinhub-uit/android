@@ -22,14 +22,14 @@ fun NavGraph() {
         ) {
             composable<Auth> {
                 AuthScreen(
-                    navigateAfterSignedIn = {
+                    onSignIn = {
                         navController.navigate(Home) {
                             popUpTo(AuthGraph) {
                                 inclusive = true
                             }
                         }
                     },
-                    navigateAfterSignedUp = { navController.navigate(ConfirmAccount) }
+                    onSignUp = { navController.navigate(ConfirmAccount) }
                 )
             }
             composable<ConfirmAccount> {
