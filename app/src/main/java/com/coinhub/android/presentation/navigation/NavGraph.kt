@@ -5,10 +5,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.coinhub.android.presentation.screens.auth.AuthScreen
-import com.coinhub.android.presentation.screens.auth.ConfirmAccountScreen
-import com.coinhub.android.presentation.screens.create_profile.CreateProfileScreen
-import com.coinhub.android.presentation.screens.home.HomeScreen
+import com.coinhub.android.presentation.auth.AuthScreen
+import com.coinhub.android.presentation.confirm_auth.ConfirmAccountScreen
+import com.coinhub.android.presentation.create_profile.CreateProfileScreen
+import com.coinhub.android.presentation.home.HomeScreen
 
 @Composable
 fun NavGraph() {
@@ -22,21 +22,25 @@ fun NavGraph() {
         ) {
             composable<Auth> {
                 AuthScreen(
-                    onSignIn = {
-                        navController.navigate(Home) {
+                    onSignedIn = {
+                        navController.navigate(HomeGraph) {
                             popUpTo(AuthGraph) {
                                 inclusive = true
                             }
                         }
                     },
-                    onSignUp = { navController.navigate(ConfirmAccount) }
+                    onSignedUp = { navController.navigate(ConfirmAccount) }
                 )
             }
             composable<ConfirmAccount> {
                 ConfirmAccountScreen()
             }
             composable<CreateProfile> {
-                CreateProfileScreen()
+                CreateProfileScreen(
+                    onProfileCreated = {
+                        navController.navigate(HomeGraph)
+                    }
+                )
             }
         }
         navigation<HomeGraph>(

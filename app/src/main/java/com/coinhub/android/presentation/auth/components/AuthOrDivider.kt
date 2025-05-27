@@ -1,4 +1,4 @@
-package com.coinhub.android.presentation.screens.auth.components
+package com.coinhub.android.presentation.auth.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.HorizontalDivider

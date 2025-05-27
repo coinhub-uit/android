@@ -1,4 +1,4 @@
-package com.coinhub.android.presentation.screens.home
+package com.coinhub.android.presentation.home
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

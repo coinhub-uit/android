@@ -1,4 +1,4 @@
-package com.coinhub.android.presentation.components
+package com.coinhub.android.presentation.common.components
 
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons

@@ -1,4 +1,4 @@
-package com.coinhub.android.presentation.screens.auth.components
+package com.coinhub.android.presentation.auth.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -6,20 +6,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.coinhub.android.presentation.viewmodels.AuthViewModel
 
 @Composable
 fun AuthSignInOrUpPrompt(
     modifier: Modifier = Modifier,
-    viewModel : AuthViewModel = hiltViewModel(),
+    isSignUp : Boolean,
+    setIsSignUp: (Boolean) -> Unit,
 ) {
-    val isSignUp by viewModel.isSignUp.collectAsState()
-
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.Center,
@@ -30,7 +25,7 @@ fun AuthSignInOrUpPrompt(
             style = MaterialTheme.typography.bodyMedium
         )
         TextButton(
-            onClick = { viewModel.setIsSignUp(!isSignUp) },
+            onClick = { setIsSignUp(!isSignUp) },
         ) {
             Text(
                 text = if (isSignUp) "Sign In" else "Create one",

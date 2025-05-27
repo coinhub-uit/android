@@ -1,4 +1,4 @@
-package com.coinhub.android.presentation.components
+package com.coinhub.android.presentation.common.components
 
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
