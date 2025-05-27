@@ -2,20 +2,28 @@ package com.coinhub.android.domain.use_cases
 
 import com.coinhub.android.data.models.GoogleNavigateResult
 import com.coinhub.android.data.repository.AuthRepositoryImpl
-import com.coinhub.android.presentation.states.auth.AuthState
 import io.github.jan.supabase.compose.auth.composable.NativeSignInResult
 import javax.inject.Inject
 
 class HandleResultOnSignInWithGoogleUseCase @Inject constructor(private val authRepositoryImpl: AuthRepositoryImpl) {
-    suspend operator fun invoke(result: NativeSignInResult): AuthState<GoogleNavigateResult> {
+    suspend operator fun invoke(result: NativeSignInResult): Result {
         return when (result) {
-            NativeSignInResult.ClosedByUser -> AuthState.Error("")
-            is NativeSignInResult.Error -> AuthState.Error("")
-            is NativeSignInResult.NetworkError -> AuthState.Error("")
+            NativeSignInResult.ClosedByUser -> Result.Error("")
+            is NativeSignInResult.Error -> Result.Error("")
+            is NativeSignInResult.NetworkError -> Result.Error("")
             NativeSignInResult.Success -> {
-                val googleNavigateResult = authRepositoryImpl.handleNavigateResult()
-                AuthState.Success(googleNavigateResult)
+                try {
+                    val googleNavigateResult = authRepositoryImpl.handleNavigateResult()
+                    Result.Success(googleNavigateResult)
+                } catch (e: Exception) {
+                    Result.Error(e.message ?: "")
+                }
             }
         }
+    }
+
+    sealed class Result {
+        data class Success(val googleNavigateResult: GoogleNavigateResult) : Result()
+        data class Error(val message: String) : Result()
     }
 }
