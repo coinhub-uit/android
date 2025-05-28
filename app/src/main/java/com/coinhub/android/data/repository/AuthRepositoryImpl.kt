@@ -47,4 +47,8 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun refreshSession() {
         supabaseService.refreshSession()
     }
+
+    override suspend fun observeAndSaveToken(saveToken: (String, String) -> Unit) {
+        supabaseService.observeAndSaveSession(saveToken)
+    }
 }

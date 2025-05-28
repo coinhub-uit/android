@@ -17,6 +17,8 @@ class CheckUserSignedInUseCase @Inject constructor(
             } else {
                 authRepositoryImpl.getUserIdWithToken(token)
                 authRepositoryImpl.refreshSession()
+                val newToken = authRepositoryImpl.getToken()
+                sharedPreferenceRepositoryImpl.saveStringData(ACCESS_TOKEN_KEY, newToken)
                 Result.Success(isSignedIn = true)
             }
         } catch (e: Exception) {

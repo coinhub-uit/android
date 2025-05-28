@@ -18,4 +18,6 @@ interface AuthRepository {
     suspend fun getUserIdWithToken(token: String): String
 
     suspend fun refreshSession()
+
+    suspend fun observeAndSaveToken(saveToken: (String, String) -> Unit)
 }
