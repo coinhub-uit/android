@@ -9,7 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class HandleResultOnSignInWithGoogleUseCase @Inject constructor(
+class SignInWithGoogleUseCase @Inject constructor(
     private val authRepositoryImpl: AuthRepositoryImpl,
     private val sharedPreferenceRepositoryImpl: SharedPreferenceRepositoryImpl,
 ) {

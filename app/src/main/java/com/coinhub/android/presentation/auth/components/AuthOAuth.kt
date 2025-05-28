@@ -13,8 +13,8 @@ import androidx.compose.ui.unit.dp
 import com.coinhub.android.R
 
 @Composable
-fun AuthOAuth(modifier: Modifier = Modifier, onGoogleSignIn: () -> Unit) {
-    Button(modifier = modifier, onClick = { /* TODO: Handle Google Sign-In */ }) {
+fun AuthOAuth(modifier: Modifier = Modifier, onClick: () -> Unit) {
+    Button(modifier = modifier, onClick = onClick) {
         Image(
             imageVector = ImageVector.vectorResource(R.drawable.google_svg),
             contentDescription = "Google"

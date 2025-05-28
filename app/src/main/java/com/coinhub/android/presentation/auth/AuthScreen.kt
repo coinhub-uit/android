@@ -26,13 +26,17 @@ import com.coinhub.android.presentation.auth.components.AuthSignInOrUpButton
 import com.coinhub.android.presentation.auth.components.AuthSignInOrUpPrompt
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
-import io.github.jan.supabase.compose.auth.ComposeAuth
+import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.compose.auth.composable.NativeSignInState
+import io.github.jan.supabase.compose.auth.composable.rememberSignInWithGoogle
+import io.github.jan.supabase.compose.auth.composeAuth
 import kotlinx.coroutines.launch
 
 @Composable
 fun AuthScreen(
     onSignedIn: () -> Unit,
     onSignedUp: () -> Unit,
+    supabaseClient: SupabaseClient,
     viewModel: AuthViewModel = hiltViewModel(),
 ) {
     val isSignUp = viewModel.isSignUp.collectAsStateWithLifecycle().value
@@ -50,6 +54,17 @@ fun AuthScreen(
     val message = viewModel.message // WARN: Check this, will it be updated?
     val signUpWithCredential = viewModel::signUpWithCredential
     val signInWithCredential = viewModel::signInWithCredential
+    val onSignInWithGoogle = viewModel::onSignInWithGoogle
+
+    val googleSignInState = supabaseClient.composeAuth.rememberSignInWithGoogle(
+        onResult = { signInResult ->
+            onSignInWithGoogle(
+                signInResult,
+                onSignedIn,
+                onSignedUp
+            )
+        }
+    )
 
     AuthScreen(
         isSignUp = isSignUp,
@@ -68,7 +83,8 @@ fun AuthScreen(
         signInWithCredential = signInWithCredential,
         onSignedIn = onSignedIn,
         onSignedUp = onSignedUp,
-        message = message
+        message = message,
+        googleSignInState = googleSignInState
     )
 }
 
@@ -91,12 +107,11 @@ private fun AuthScreen(
     onSignedIn: () -> Unit,
     onSignedUp: () -> Unit,
     message: String,
+    googleSignInState: NativeSignInState?,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
     val coroutineScope = rememberCoroutineScope()
-
-    val googleAction = ComposeAuth
 
     fun showSnackbar() {
         coroutineScope.launch {
@@ -156,9 +171,12 @@ private fun AuthScreen(
                 )
                 // TODO: @NTGNguyen - Passing things?
                 AuthOAuth(
+                    onClick = {
+                        googleSignInState?.startFlow()
+                    },
                     modifier = Modifier.width(
                         80.dp
-                    )
+                    ),
                 )
             }
         }
@@ -189,6 +207,7 @@ fun SignInScreenPreview() {
             onSignedUp = {},
             signInWithCredential = { _, _ -> },
             signUpWithCredential = { _, _ -> },
+            googleSignInState = null
         )
     }
 }

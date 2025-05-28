@@ -84,6 +84,7 @@ dependencies {
     implementation(libs.androidx.credential)
     implementation(libs.androidx.credential.play.service.auth)
     implementation(libs.androidx.animation.core.lint)
+    implementation(libs.accompanist.permissions)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

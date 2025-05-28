@@ -9,38 +9,46 @@ import com.coinhub.android.presentation.auth.AuthScreen
 import com.coinhub.android.presentation.confirm_auth.ConfirmAccountScreen
 import com.coinhub.android.presentation.create_profile.CreateProfileScreen
 import com.coinhub.android.presentation.main.HomeScreen
+import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.compose.auth.composable.NativeSignInState
 
 @Composable
-fun NavGraph() {
+fun NavGraph(
+    isSignIn: Boolean,
+    supabaseClient: SupabaseClient,
+) {
     val navController = rememberNavController()
 
+    // TODO: Split these like,...
+    // https://github.com/android/compose-samples/blob/73b3a51e06a6520efb5b4931e71b771d257bf1dd/Jetsnack/app/src/main/java/com/example/jetsnack/ui/home/Home.kt#L130 this?
     NavHost(
-        navController = navController, startDestination = AuthGraph
+        navController = navController, startDestination = NavigationDestinations.AuthGraph
     ) {
         // Auth
-        navigation<AuthGraph>(
-            startDestination = Auth,
+        navigation<NavigationDestinations.AuthGraph>(
+            startDestination = if (isSignIn) NavigationDestinations.MainGraph else NavigationDestinations.Auth,
         ) {
-            composable<Auth> {
+            composable<NavigationDestinations.Auth> {
                 AuthScreen(
                     onSignedIn = {
-                        navController.navigate(MainGraph) {
-                            popUpTo(AuthGraph) {
+                        navController.navigate(NavigationDestinations.MainGraph) {
+                            popUpTo(NavigationDestinations.AuthGraph) {
                                 inclusive = true
                             }
                         }
                     },
-                    onSignedUp = { navController.navigate(ConfirmAccount) }
+                    onSignedUp = { navController.navigate(NavigationDestinations.ConfirmAccount) },
+                    supabaseClient = supabaseClient
                 )
             }
-            composable<ConfirmAccount> {
+            composable<NavigationDestinations.ConfirmAccount> {
                 ConfirmAccountScreen()
             }
-            composable<CreateProfile> {
+            composable<NavigationDestinations.CreateProfile> {
                 CreateProfileScreen(
                     onProfileCreated = {
-                        navController.navigate(MainGraph) {
-                            popUpTo(AuthGraph) {
+                        navController.navigate(NavigationDestinations.MainGraph) {
+                            popUpTo(NavigationDestinations.AuthGraph) {
                                 inclusive = true
                             }
 
@@ -51,13 +59,12 @@ fun NavGraph() {
         }
 
         // Main
-        navigation<MainGraph>(
-            startDestination = Home
+        navigation<NavigationDestinations.MainGraph>(
+            startDestination = NavigationDestinations.Home
         ) {
-            composable<Home> {
+            composable<NavigationDestinations.Home> {
                 HomeScreen()
             }
         }
     }
 }
-

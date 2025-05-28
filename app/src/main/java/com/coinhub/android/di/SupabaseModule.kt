@@ -1,6 +1,7 @@
 package com.coinhub.android.di
 
 import com.coinhub.android.BuildConfig
+import com.coinhub.android.data.remote.SupabaseService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,7 +15,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object SupabaseClientModule {
+object SupabaseModule {
     private const val SUPABASE_URL = BuildConfig.supabaseUrl
     private const val SUPABASE_KEY = BuildConfig.supabaseAnonKey
 
@@ -33,4 +34,8 @@ object SupabaseClientModule {
         }
         return client
     }
+
+    @Singleton
+    @Provides
+    fun provideSupabaseService(supabaseClient: SupabaseClient) = SupabaseService(supabaseClient)
 }

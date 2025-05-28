@@ -3,8 +3,8 @@ package com.coinhub.android.presentation.auth
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.domain.use_cases.CheckUserSignedInUseCase
-import com.coinhub.android.domain.use_cases.HandleResultOnSignInWithGoogleUseCase
 import com.coinhub.android.domain.use_cases.SignInWithCredentialUseCase
+import com.coinhub.android.domain.use_cases.SignInWithGoogleUseCase
 import com.coinhub.android.domain.use_cases.SignUpWithCredentialUseCase
 import com.coinhub.android.domain.use_cases.ValidateConfirmPasswordUseCase
 import com.coinhub.android.domain.use_cases.ValidateEmailUseCase
@@ -17,7 +17,6 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
@@ -33,7 +32,7 @@ class AuthViewModel @Inject constructor(
     private val validateConfirmPasswordUseCase: ValidateConfirmPasswordUseCase,
     private val signInWithCredentialUseCase: SignInWithCredentialUseCase,
     private val signUpWithCredentialUseCase: SignUpWithCredentialUseCase,
-    private val handleResultOnSignInWithGoogleUseCase: HandleResultOnSignInWithGoogleUseCase,
+    private val signInWithGoogleUseCase: SignInWithGoogleUseCase,
     private val checkUserSignedInUseCase: CheckUserSignedInUseCase,
 ) : ViewModel() {
     var message = "" // WARN: This is for snackbar to popup, I don't know which name is better for this
@@ -157,25 +156,23 @@ class AuthViewModel @Inject constructor(
     }
 
     // FIXME: WTF args?
-    fun handleResultOnSignInWithGoogle(
+    fun onSignInWithGoogle(
         signInResult: NativeSignInResult,
-        onNavigateToHomeScreen: (String) -> Unit,
-        onNavigateToRegisterProfile: () -> Unit,
-        onError: () -> Unit,
+        onSignedIn: () -> Unit,
+        onSignedUp: () -> Unit,
     ) {
         viewModelScope.launch {
-            when (val result = handleResultOnSignInWithGoogleUseCase(signInResult)) {
-                is HandleResultOnSignInWithGoogleUseCase.Result.Error -> {
+            when (val result = signInWithGoogleUseCase(signInResult)) {
+                is SignInWithGoogleUseCase.Result.Error -> {
                     message = result.message
-                    onError()
                     TODO()
                 }
 
-                is HandleResultOnSignInWithGoogleUseCase.Result.Success -> {
+                is SignInWithGoogleUseCase.Result.Success -> {
                     if (result.googleNavigateResult.isUserRegisterProfile) {
-                        onNavigateToHomeScreen(result.googleNavigateResult.userId)
+                        onSignedIn()
                     } else {
-                        onNavigateToRegisterProfile()
+                        onSignedUp()
                     }
                 }
             }

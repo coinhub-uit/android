@@ -3,7 +3,7 @@ package com.coinhub.android.di
 import com.coinhub.android.data.repository.AuthRepositoryImpl
 import com.coinhub.android.data.repository.SharedPreferenceRepositoryImpl
 import com.coinhub.android.domain.use_cases.CheckUserSignedInUseCase
-import com.coinhub.android.domain.use_cases.HandleResultOnSignInWithGoogleUseCase
+import com.coinhub.android.domain.use_cases.SignInWithGoogleUseCase
 import com.coinhub.android.domain.use_cases.RegisterProfileUseCase
 import com.coinhub.android.domain.use_cases.SignInWithCredentialUseCase
 import com.coinhub.android.domain.use_cases.SignUpWithCredentialUseCase
@@ -57,7 +57,7 @@ object UseCaseModule {
         authRepositoryImpl: AuthRepositoryImpl,
         sharedPreferenceRepositoryImpl: SharedPreferenceRepositoryImpl,
     ) =
-        HandleResultOnSignInWithGoogleUseCase(
+        SignInWithGoogleUseCase(
             authRepositoryImpl = authRepositoryImpl,
             sharedPreferenceRepositoryImpl = sharedPreferenceRepositoryImpl
         )

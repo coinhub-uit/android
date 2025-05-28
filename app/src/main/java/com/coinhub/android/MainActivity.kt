@@ -1,6 +1,5 @@
 package com.coinhub.android
 
-
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,9 +13,13 @@ import androidx.compose.ui.Modifier
 import com.coinhub.android.presentation.navigation.NavGraph
 import com.coinhub.android.ui.theme.CoinhubTheme
 import dagger.hilt.android.AndroidEntryPoint
+import io.github.jan.supabase.SupabaseClient
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @Inject lateinit var supabaseClient: SupabaseClient
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -27,7 +30,7 @@ class MainActivity : ComponentActivity() {
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        NavGraph()
+                        NavGraph(true, supabaseClient = supabaseClient)
                     }
                 }
             }

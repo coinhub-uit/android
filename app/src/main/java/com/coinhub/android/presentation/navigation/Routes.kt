@@ -2,31 +2,59 @@ package com.coinhub.android.presentation.navigation
 
 import kotlinx.serialization.Serializable
 
-// Auth
-@Serializable
-object AuthGraph
+sealed class NavigationDestinations {
+    // Auth
+    @Serializable
+    data object AuthGraph : NavigationDestinations()
 
-@Serializable
-object Auth
+    @Serializable
+    data object Auth : NavigationDestinations()
 
-@Serializable
-object ConfirmAccount
+    @Serializable
+    data object ConfirmAccount : NavigationDestinations()
 
-@Serializable
-object CreateProfile
+    @Serializable
+    data object CreateProfile : NavigationDestinations()
 
-// Main
+    // Main
+    @Serializable
+    data object MainGraph : NavigationDestinations()
 
-@Serializable
-object MainGraph
+    @Serializable
+    data object Home : NavigationDestinations()
 
-@Serializable
-object Home
+    @Serializable
+    data object Vault : NavigationDestinations()
 
-@Serializable
-object Tickets
+    @Serializable
+    data object Profile : NavigationDestinations()
 
-@Serializable
-object Settings
+    @Serializable
+    data object Notifications : NavigationDestinations()
 
-// Other
+    @Serializable
+    data object AiChat : NavigationDestinations()
+
+// --- //
+
+    // Home
+    @Serializable
+    data object CreateSource : NavigationDestinations()
+
+    @Serializable
+    data object CreateTicket : NavigationDestinations()
+
+    // Vault
+    @Serializable
+    data object EditSource : NavigationDestinations()
+
+    @Serializable
+    data object EditTicket : NavigationDestinations()
+
+    // Profile
+    @Serializable
+    data object EditProfile : NavigationDestinations()
+
+    @Serializable
+    data object Settings : NavigationDestinations()
+}
