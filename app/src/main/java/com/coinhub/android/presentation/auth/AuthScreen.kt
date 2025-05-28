@@ -1,17 +1,20 @@
 package com.coinhub.android.presentation.auth
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,6 +27,7 @@ import com.coinhub.android.presentation.auth.components.AuthOrDivider
 import com.coinhub.android.presentation.auth.components.AuthSignInOrUpButton
 import com.coinhub.android.presentation.auth.components.AuthSignInOrUpPrompt
 import com.coinhub.android.ui.theme.CoinhubTheme
+import com.coinhub.android.utils.PreviewDeviceSpecs
 import kotlinx.coroutines.launch
 
 @Composable
@@ -101,64 +105,77 @@ private fun AuthScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(), snackbarHost = { SnackbarHost(snackbarHostState) }) { paddingValues ->
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 16.dp),
+            contentAlignment = Alignment.Center
         ) {
-            AuthHeader(modifier = Modifier.fillMaxWidth())
-            Spacer(modifier = Modifier.height(25.dp))
-            AuthCredentialInput(
-                modifier = Modifier.fillMaxWidth(),
-                isSignUp = isSignUp,
-                email = email,
-                onEmailChange = onEmailChange,
-                emailCheckState = emailCheckState,
-                password = password,
-                onPasswordChange = onPasswordChange,
-                passwordCheckState = passwordCheckState,
-                confirmPassword = confirmPassword,
-                onConfirmPasswordChange = onConfirmPasswordChange,
-                confirmPasswordCheckState = confirmPasswordCheckState
-            )
-            AuthSignInOrUpButton(
-                modifier = Modifier.fillMaxWidth(),
-                isSignUp = isSignUp,
-                onSignUp = {
-                    signUpWithCredential(onSignedUp) { showSnackbar() }
-                }, onSignIn = {
-                    signInWithCredential(onSignedIn) { showSnackbar() }
-                }, isFormValid = isFormValid
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            AuthSignInOrUpPrompt(
-                modifier = Modifier.fillMaxWidth(),
-                isSignUp = isSignUp,
-                setIsSignUp = setIsSignUp,
-            )
-            Spacer(modifier = Modifier.height(24.dp))
-            AuthOrDivider(modifier = Modifier.fillMaxWidth())
-            Spacer(modifier = Modifier.height(24.dp))
-            // TODO: @NTGNguyen - Passing things?
-            AuthOAuth()
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                AuthHeader(
+                    modifier = Modifier
+                        .width(128.dp)
+                        .padding(bottom = 64.dp)
+                )
+                AuthCredentialInput(
+                    modifier = Modifier.fillMaxWidth(),
+                    isSignUp = isSignUp,
+                    email = email,
+                    onEmailChange = onEmailChange,
+                    emailCheckState = emailCheckState,
+                    password = password,
+                    onPasswordChange = onPasswordChange,
+                    passwordCheckState = passwordCheckState,
+                    confirmPassword = confirmPassword,
+                    onConfirmPasswordChange = onConfirmPasswordChange,
+                    confirmPasswordCheckState = confirmPasswordCheckState
+                )
+                AuthSignInOrUpButton(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    isSignUp = isSignUp,
+                    onSignUp = {
+                        signUpWithCredential(onSignedUp) { showSnackbar() }
+                    }, onSignIn = {
+                        signInWithCredential(onSignedIn) { showSnackbar() }
+                    }, isFormValid = isFormValid
+                )
+                AuthSignInOrUpPrompt(
+                    modifier = Modifier.fillMaxWidth(),
+                    isSignUp = isSignUp,
+                    setIsSignUp = setIsSignUp,
+                )
+                AuthOrDivider(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp, bottom = 16.dp))
+                // TODO: @NTGNguyen - Passing things?
+                AuthOAuth(
+                    modifier = Modifier.width(
+                        80.dp
+                    )
+                )
+            }
         }
     }
 }
 
-@Preview
+@Preview(device = PreviewDeviceSpecs.DEVICE)
 @Composable
 fun SignInScreenPreview() {
     CoinhubTheme {
         AuthScreen(
             isSignUp = true,
             setIsSignUp = {},
-            email = "kevinnitro@duck.comj",
+            email = "kevinnitro@duck.com",
             onEmailChange = {},
             emailCheckState = AuthStates.EmailCheckState(isValid = false, errorMessage = "Bad"),
             password = "LookMe!",
             onPasswordChange = {},
             passwordCheckState = AuthStates.PasswordCheckState(isValid = false, errorMessage = "Bad"),
-            confirmPassword = "Bad again",
+            confirmPassword = "GlanceMe?",
             onConfirmPasswordChange = {},
             confirmPasswordCheckState = AuthStates.ConfirmPasswordCheckState(
                 isValid = false, errorMessage = "bad"

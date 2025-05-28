@@ -1,10 +1,14 @@
 package com.coinhub.android.presentation.auth.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -27,18 +31,21 @@ fun AuthCredentialInput(
     confirmPasswordCheckState: AuthStates.ConfirmPasswordCheckState,
 ) {
 
-    Column(modifier = modifier) {
+    var showPassword by remember { mutableStateOf(true) }
 
+    fun setShowPassword(show: Boolean) {
+        showPassword = show
+    }
+
+    Column(modifier = modifier) {
         EmailInputBox(
             email = email,
             onEmailChange = { onEmailChange(it) },
             isValid = emailCheckState.isValid,
             errorMessage = emailCheckState.errorMessage,
             imeAction = ImeAction.Next,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp),
         )
-
-        Spacer(modifier = Modifier.height(10.dp))
 
         // Password
         PasswordInputBox(
@@ -46,22 +53,25 @@ fun AuthCredentialInput(
             onPasswordChange = { onPasswordChange(it) },
             isValid = passwordCheckState.isValid,
             errorMessage = passwordCheckState.errorMessage,
+            showPassword = showPassword,
+            setShowPassword = ::setShowPassword,
             imeAction = if (isSignUp) ImeAction.Next else ImeAction.Done,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp),
         )
 
-        // Confirm Password
-        if (isSignUp) {
-            Spacer(modifier = Modifier.height(10.dp))
-
+        AnimatedVisibility(
+            visible = isSignUp,
+        ) {
             PasswordInputBox(
                 password = confirmPassword,
                 onPasswordChange = { onConfirmPasswordChange(it) },
                 isValid = confirmPasswordCheckState.isValid,
                 errorMessage = confirmPasswordCheckState.errorMessage,
+                showPassword = showPassword,
+                setShowPassword = ::setShowPassword,
                 imeAction = ImeAction.Done,
                 label = "Confirm Password",
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp),
             )
         }
     }

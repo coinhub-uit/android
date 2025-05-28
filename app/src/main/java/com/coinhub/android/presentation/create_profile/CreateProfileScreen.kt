@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coinhub.android.ui.theme.CoinhubTheme
+import com.coinhub.android.utils.PreviewDeviceSpecs
 import com.coinhub.android.utils.datePattern
 import com.coinhub.android.utils.toDateString
 import kotlinx.coroutines.launch
@@ -98,6 +99,7 @@ private fun CreateProfileScreen(
         floatingActionButton = {
             if (isFormValid) {
                 ExtendedFloatingActionButton(
+                    modifier = Modifier.padding(16.dp),
                     onClick = {
                         onCreateProfile(
                             onProfileCreated
@@ -158,7 +160,7 @@ private fun CreateProfileScreen(
     }
 }
 
-@Preview
+@Preview(device = PreviewDeviceSpecs.DEVICE)
 @Composable
 fun CreateProfileScreenPreview() {
     CoinhubTheme {

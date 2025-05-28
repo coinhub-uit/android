@@ -2,6 +2,7 @@ package com.coinhub.android.presentation.navigation
 
 import kotlinx.serialization.Serializable
 
+// Auth
 @Serializable
 object AuthGraph
 
@@ -14,8 +15,18 @@ object ConfirmAccount
 @Serializable
 object CreateProfile
 
+// Main
+
 @Serializable
-object HomeGraph
+object MainGraph
 
 @Serializable
 object Home
+
+@Serializable
+object Tickets
+
+@Serializable
+object Settings
+
+// Other

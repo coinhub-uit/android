@@ -21,7 +21,7 @@ fun AuthSignInOrUpPrompt(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = if (isSignUp) "Don't have an account? " else "Already have an account? ",
+            text = if (isSignUp) "Don't have an account?" else "Already have an account?",
             style = MaterialTheme.typography.bodyMedium
         )
         TextButton(

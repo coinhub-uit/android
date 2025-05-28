@@ -31,11 +31,11 @@ fun PasswordInputBox(
     isValid: Boolean = false,
     errorMessage: String?,
     label: String = "Password",
+    showPassword: Boolean,
+    setShowPassword: (Boolean) -> Unit,
     contentType: ContentType = ContentType.Password,
     imeAction: ImeAction = ImeAction.Default,
 ) {
-    var showPassword by remember { mutableStateOf(false) }
-
     OutlinedTextField(
         modifier = modifier.semantics {
             this.contentType = contentType
@@ -58,15 +58,15 @@ fun PasswordInputBox(
         },
         trailingIcon = {
             val iconImage =
-                if (showPassword) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility
-            val description = if (showPassword) "Hide Password" else "Show Password"
+                if (showPassword) Icons.Outlined.Visibility else Icons.Outlined.VisibilityOff
+            val description = if (showPassword) "Show Password" else "Hide Password"
             IconButton(onClick = {
-                showPassword = !showPassword
+                setShowPassword(!showPassword)
             }) {
                 Icon(imageVector = iconImage, contentDescription = description)
             }
         },
-        visualTransformation = if (showPassword) PasswordVisualTransformation() else VisualTransformation.None,
+        visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation() ,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Password,
             autoCorrectEnabled = false,
