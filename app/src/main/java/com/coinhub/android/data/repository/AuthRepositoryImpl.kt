@@ -14,11 +14,13 @@ class AuthRepositoryImpl @Inject constructor(
 ) :
     AuthRepository {
     override suspend fun signInWithCredential(email: String, password: String): String {
-        return supabaseService.getUserIdOnSignIn(email, password)
+        supabaseService.signIn(email, password)
+        return supabaseService.getCurrentUserId()
     }
 
     override suspend fun signUpWithCredential(email: String, password: String): String {
-        return supabaseService.getUserIdOnSignUp(email, password)
+        supabaseService.signUp(email, password)
+        return supabaseService.getCurrentUserId()
     }
 
     override suspend fun registerProfile(createUserDto: CreateUserDto): User {

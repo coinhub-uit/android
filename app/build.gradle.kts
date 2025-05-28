@@ -42,6 +42,11 @@ android {
             "supabaseAnonKey",
             "\"${localProps.getProperty("SUPABASE_ANON_KEY")}\""
         )
+        buildConfigField(
+            "String",
+            "apiServerUrl",
+            "\"${localProps.getProperty("API_SERVER_URL")}\""
+        )
     }
 
     buildTypes {

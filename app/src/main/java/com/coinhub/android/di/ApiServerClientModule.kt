@@ -1,11 +1,11 @@
 package com.coinhub.android.di
 
+import com.coinhub.android.BuildConfig
 import com.coinhub.android.data.api_service.UserApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import io.github.jan.supabase.BuildConfig
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

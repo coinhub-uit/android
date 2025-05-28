@@ -1,14 +1,18 @@
 package com.coinhub.android.domain.use_cases
 
 import com.coinhub.android.data.repository.AuthRepositoryImpl
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class SignInWithCredentialUseCase @Inject constructor(private val authRepositoryImpl: AuthRepositoryImpl) {
     suspend operator fun invoke(email: String, password: String): Result {
-        return try {
-            Result.Success(authRepositoryImpl.signInWithCredential(email = email, password = password))
-        } catch (e: Exception) {
-            Result.Error(e.message ?: "")
+        return withContext(Dispatchers.IO) {
+            try {
+                Result.Success(authRepositoryImpl.signInWithCredential(email = email, password = password))
+            } catch (e: Exception) {
+                Result.Error(e.message ?: "")
+            }
         }
     }
 

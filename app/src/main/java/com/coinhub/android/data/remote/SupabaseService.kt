@@ -6,24 +6,26 @@ import io.github.jan.supabase.auth.providers.builtin.Email
 import javax.inject.Inject
 
 class SupabaseService @Inject constructor(private val supabaseClient: SupabaseClient) {
-    suspend fun getUserIdOnSignIn(email: String, password: String): String {
+    suspend fun signIn(email: String, password: String) {
         supabaseClient.auth.signInWith(Email) {
             this.email = email
             this.password = password
         }
-        return getCurrentUserId()
     }
 
-    suspend fun getUserIdOnSignUp(email: String, password: String): String {
+    suspend fun signUp(email: String, password: String) {
         supabaseClient.auth.signUpWith(Email) {
             this.email = email
             this.password = password
         }
-        return getCurrentUserId()
     }
 
     suspend fun getCurrentUserId(): String {
         val token = supabaseClient.auth.currentAccessTokenOrNull() ?: throw Exception("")
         return supabaseClient.auth.retrieveUser(token).id
+    }
+
+    suspend fun getToken(): String? {
+        return supabaseClient.auth.currentAccessTokenOrNull()
     }
 }
