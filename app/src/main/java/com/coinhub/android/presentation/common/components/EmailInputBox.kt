@@ -37,7 +37,7 @@ fun EmailInputBox(
         supportingText = {
             if (errorMessage != null) Text(errorMessage)
         },
-        isError = isValid,
+        isError = !isValid,
         leadingIcon = {
             Icon(
                 imageVector = Icons.Outlined.ContactMail, contentDescription = "Email"

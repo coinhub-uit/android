@@ -16,6 +16,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
@@ -80,8 +81,8 @@ class AuthViewModel @Inject constructor(
     val isFormValid: StateFlow<Boolean> = combine(
         emailCheckState, passwordCheckState, confirmPasswordCheckState, isSignUp
     ) { emailCheckState, passwordCheckState, confirmPasswordCheckState, isSignup ->
-        emailCheckState.isValid && passwordCheckState.isValid && (isSignup && confirmPasswordCheckState.isValid)
-    }.stateIn(viewModelScope, SharingStarted.Lazily, false)
+        emailCheckState.isValid && passwordCheckState.isValid && (!isSignup or confirmPasswordCheckState.isValid)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     fun setIsSignUp(isSignUp: Boolean) {
         _isSignUp.value = isSignUp

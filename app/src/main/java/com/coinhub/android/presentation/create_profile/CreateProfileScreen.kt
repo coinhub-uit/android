@@ -1,24 +1,42 @@
 package com.coinhub.android.presentation.create_profile
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.SensorOccupied
 import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.ContentType
+import androidx.compose.ui.semantics.contentType
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.coinhub.android.presentation.common.components.DatePickerModal
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
 import com.coinhub.android.utils.datePattern
@@ -84,6 +102,7 @@ private fun CreateProfileScreen(
     onProfileCreated: () -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
+    var isDatePickerShowed by remember { mutableStateOf(false) }
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -119,17 +138,28 @@ private fun CreateProfileScreen(
         ) {
             OutlinedTextField(
                 value = fullName,
-                onValueChange = { onFullNameChange(it) },
+                onValueChange = onFullNameChange,
                 label = { Text("Full Name") },
                 isError = !fullNameCheckState.isValid,
                 supportingText = {
                     fullNameCheckState.errorMessage?.let { Text(it) }
                 },
-                modifier = Modifier.padding(bottom = 8.dp) // TODO: Space?
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Person,
+                        contentDescription = "Full Name"
+                    )
+                },
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .semantics {
+                        contentType = ContentType.PersonFullName
+                    }
             )
             OutlinedTextField(
                 value = birthDateInMillis.toDateString(),
-                onValueChange = { onBirthDateInMillisChange(0L) }, // TODO: This add picker
+                onValueChange = {},
+                readOnly = true,
                 label = { Text("Birth Date") },
                 placeholder = { Text(datePattern) },
                 isError = !birthDateCheckState.isValid,
@@ -138,25 +168,64 @@ private fun CreateProfileScreen(
                         Text(it)
                     }
                 },
+                trailingIcon = {
+                    IconButton(onClick = { isDatePickerShowed = true }) {
+                        Icon(
+                            imageVector = Icons.Default.DateRange, contentDescription = "Select date"
+                        )
+                    }
+                },
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             OutlinedTextField(
                 value = citizenId,
-                onValueChange = { onCitizenIdChange(it) },
+                onValueChange = onCitizenIdChange,
                 label = { Text("Citizen ID") },
                 isError = !citizenIdCheckState.isValid,
                 supportingText = {
                     citizenIdCheckState.errorMessage?.let { Text(it) }
                 },
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.SensorOccupied,
+                        contentDescription = "Citizen ID"
+                    )
+                },
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             OutlinedTextField(
                 value = address,
-                onValueChange = { onAddressChange(it) },
+                onValueChange = onAddressChange,
                 label = { Text("Address (Optional)") },
-                modifier = Modifier.padding(bottom = 8.dp)
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Home,
+                        contentDescription = "Address"
+                    )
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done,
+                ),
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .semantics {
+                        contentType = ContentType.AddressStreet
+                    }
             )
+
         }
+    }
+
+    // TODO: Do we need this?
+    AnimatedVisibility(
+        visible = isDatePickerShowed,
+    ) {
+        DatePickerModal(
+            onDateSelected = onBirthDateInMillisChange,
+            onDismiss = { isDatePickerShowed = false },
+            selectedDate = birthDateInMillis
+        )
     }
 }
 

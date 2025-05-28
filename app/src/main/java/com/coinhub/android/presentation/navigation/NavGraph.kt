@@ -17,6 +17,7 @@ fun NavGraph() {
     NavHost(
         navController = navController, startDestination = AuthGraph
     ) {
+        // Auth
         navigation<AuthGraph>(
             startDestination = Auth,
         ) {
@@ -38,11 +39,18 @@ fun NavGraph() {
             composable<CreateProfile> {
                 CreateProfileScreen(
                     onProfileCreated = {
-                        navController.navigate(MainGraph)
+                        navController.navigate(MainGraph) {
+                            popUpTo(AuthGraph) {
+                                inclusive = true
+                            }
+
+                        }
                     }
                 )
             }
         }
+
+        // Main
         navigation<MainGraph>(
             startDestination = Home
         ) {

@@ -10,10 +10,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.semantics.contentType
@@ -45,12 +41,12 @@ fun PasswordInputBox(
             onPasswordChange(it)
         },
         label = {
-            Text(if (isValid) "${label}*" else label)
+            Text(label)
         },
         supportingText = {
             if (errorMessage != null) Text(errorMessage)
         },
-        isError = isValid,
+        isError = !isValid,
         leadingIcon = {
             Icon(
                 imageVector = Icons.Outlined.Lock, contentDescription = "profile"
@@ -66,7 +62,7 @@ fun PasswordInputBox(
                 Icon(imageVector = iconImage, contentDescription = description)
             }
         },
-        visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation() ,
+        visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Password,
             autoCorrectEnabled = false,

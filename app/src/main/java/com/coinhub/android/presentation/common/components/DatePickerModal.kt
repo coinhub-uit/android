@@ -14,14 +14,16 @@ import java.time.ZoneId
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePickerModal(
-    onDateSelected: (Long?) -> Unit,
+    onDateSelected: (Long) -> Unit,
     onDismiss: () -> Unit,
     selectedDate: Long = LocalDate.now(ZoneId.systemDefault()).toMillis(),
 ) {
     val datePickerState = rememberDatePickerState(initialSelectedDateMillis = selectedDate)
     DatePickerDialog(onDismissRequest = onDismiss, confirmButton = {
         TextButton(onClick = {
-            onDateSelected(datePickerState.selectedDateMillis)
+            datePickerState.selectedDateMillis?.let { selectedMillis ->
+                onDateSelected(selectedMillis)
+            }
             onDismiss()
         }) {
             Text("OK")
