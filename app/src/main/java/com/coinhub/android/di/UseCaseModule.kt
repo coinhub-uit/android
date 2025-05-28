@@ -1,6 +1,8 @@
 package com.coinhub.android.di
 
 import com.coinhub.android.data.repository.AuthRepositoryImpl
+import com.coinhub.android.data.repository.SharedPreferenceRepositoryImpl
+import com.coinhub.android.domain.use_cases.CheckUserSignedInUseCase
 import com.coinhub.android.domain.use_cases.HandleResultOnSignInWithGoogleUseCase
 import com.coinhub.android.domain.use_cases.RegisterProfileUseCase
 import com.coinhub.android.domain.use_cases.SignInWithCredentialUseCase
@@ -31,21 +33,44 @@ object UseCaseModule {
 
     @Provides
     @Singleton
-    fun provideSignInWithCredentialUseCase(authRepositoryImpl: AuthRepositoryImpl) =
-        SignInWithCredentialUseCase(authRepositoryImpl = authRepositoryImpl)
+    fun provideSignInWithCredentialUseCase(
+        authRepositoryImpl: AuthRepositoryImpl,
+        sharedPreferenceRepositoryImpl: SharedPreferenceRepositoryImpl,
+    ) =
+        SignInWithCredentialUseCase(
+            authRepositoryImpl = authRepositoryImpl,
+            sharedPreferenceRepositoryImpl = sharedPreferenceRepositoryImpl
+        )
 
     @Provides
     @Singleton
-    fun provideSignUpWithCredentialUseCase(authRepositoryImpl: AuthRepositoryImpl) = SignUpWithCredentialUseCase(
-        authRepositoryImpl = authRepositoryImpl
+    fun provideSignUpWithCredentialUseCase(
+        authRepositoryImpl: AuthRepositoryImpl, sharedPreferenceRepositoryImpl: SharedPreferenceRepositoryImpl,
+    ) = SignUpWithCredentialUseCase(
+        authRepositoryImpl = authRepositoryImpl,
+        sharedPreferenceRepositoryImpl = sharedPreferenceRepositoryImpl
     )
 
     @Provides
     @Singleton
-    fun provideHandleResultOnSignInWithGoogleUseCase(authRepositoryImpl: AuthRepositoryImpl) =
+    fun provideHandleResultOnSignInWithGoogleUseCase(
+        authRepositoryImpl: AuthRepositoryImpl,
+        sharedPreferenceRepositoryImpl: SharedPreferenceRepositoryImpl,
+    ) =
         HandleResultOnSignInWithGoogleUseCase(
-            authRepositoryImpl = authRepositoryImpl
+            authRepositoryImpl = authRepositoryImpl,
+            sharedPreferenceRepositoryImpl = sharedPreferenceRepositoryImpl
         )
+
+    @Provides
+    @Singleton
+    fun provideCheckUserSignedInUseCase(
+        authRepositoryImpl: AuthRepositoryImpl,
+        sharedPreferenceRepositoryImpl: SharedPreferenceRepositoryImpl,
+    ) = CheckUserSignedInUseCase(
+        authRepositoryImpl = authRepositoryImpl,
+        sharedPreferenceRepositoryImpl = sharedPreferenceRepositoryImpl
+    )
 
     @Provides
     @Singleton

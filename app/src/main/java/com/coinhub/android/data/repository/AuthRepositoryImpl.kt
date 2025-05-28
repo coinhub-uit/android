@@ -13,12 +13,12 @@ class AuthRepositoryImpl @Inject constructor(
     private val supabaseService: SupabaseService,
 ) :
     AuthRepository {
-    override suspend fun signInWithCredential(email: String, password: String): String {
+    override suspend fun getUserOnSignInWithCredential(email: String, password: String): String {
         supabaseService.signIn(email, password)
         return supabaseService.getCurrentUserId()
     }
 
-    override suspend fun signUpWithCredential(email: String, password: String): String {
+    override suspend fun getUserOnSignUpWithCredential(email: String, password: String): String {
         supabaseService.signUp(email, password)
         return supabaseService.getCurrentUserId()
     }
@@ -27,8 +27,24 @@ class AuthRepositoryImpl @Inject constructor(
         return userApiService.registerProfile(createUserDto)
     }
 
-    override suspend fun handleNavigateResult(): GoogleNavigateResult {
+    override suspend fun getUserOnSignInWithGoogle(): GoogleNavigateResult {
         val userId = supabaseService.getCurrentUserId()
         return GoogleNavigateResult(isUserRegisterProfile = userApiService.getUserById(userId) != null, userId = userId)
+    }
+
+    override suspend fun getToken(): String {
+        val token = supabaseService.getToken()
+        if (token.isNullOrEmpty()) {
+            throw Exception("")
+        }
+        return token
+    }
+
+    override suspend fun getUserIdWithToken(token: String): String {
+        return supabaseService.getUserIdWithToken(token)
+    }
+
+    override suspend fun refreshSession() {
+        supabaseService.refreshSession()
     }
 }

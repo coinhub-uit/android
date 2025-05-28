@@ -5,11 +5,17 @@ import com.coinhub.android.data.models.GoogleNavigateResult
 import com.coinhub.android.data.models.User
 
 interface AuthRepository {
-    suspend fun signInWithCredential(email: String, password: String): String
+    suspend fun getUserOnSignInWithCredential(email: String, password: String): String
 
-    suspend fun signUpWithCredential(email: String, password: String): String
+    suspend fun getUserOnSignUpWithCredential(email: String, password: String): String
 
     suspend fun registerProfile(createUserDto: CreateUserDto): User
 
-    suspend fun handleNavigateResult(): GoogleNavigateResult
+    suspend fun getUserOnSignInWithGoogle(): GoogleNavigateResult
+
+    suspend fun getToken(): String?
+
+    suspend fun getUserIdWithToken(token: String): String
+
+    suspend fun refreshSession()
 }

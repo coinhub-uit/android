@@ -25,7 +25,15 @@ class SupabaseService @Inject constructor(private val supabaseClient: SupabaseCl
         return supabaseClient.auth.retrieveUser(token).id
     }
 
-    suspend fun getToken(): String? {
+    suspend fun getUserIdWithToken(token: String): String {
+        return supabaseClient.auth.retrieveUser(token).id
+    }
+
+    fun getToken(): String? {
         return supabaseClient.auth.currentAccessTokenOrNull()
+    }
+
+    suspend fun refreshSession() {
+        supabaseClient.auth.refreshCurrentSession()
     }
 }

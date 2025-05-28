@@ -2,6 +2,7 @@ package com.coinhub.android.presentation.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.coinhub.android.domain.use_cases.CheckUserSignedInUseCase
 import com.coinhub.android.domain.use_cases.HandleResultOnSignInWithGoogleUseCase
 import com.coinhub.android.domain.use_cases.SignInWithCredentialUseCase
 import com.coinhub.android.domain.use_cases.SignUpWithCredentialUseCase
@@ -33,12 +34,16 @@ class AuthViewModel @Inject constructor(
     private val signInWithCredentialUseCase: SignInWithCredentialUseCase,
     private val signUpWithCredentialUseCase: SignUpWithCredentialUseCase,
     private val handleResultOnSignInWithGoogleUseCase: HandleResultOnSignInWithGoogleUseCase,
+    private val checkUserSignedInUseCase: CheckUserSignedInUseCase,
 ) : ViewModel() {
     var message = "" // WARN: This is for snackbar to popup, I don't know which name is better for this
         private set
 
     private val _isSignUp = MutableStateFlow(false)
     val isSignUp: StateFlow<Boolean> = _isSignUp.asStateFlow()
+
+    private val _isUserSignedIn = MutableStateFlow(false)
+    val isUserSignedIn: StateFlow<Boolean> = _isUserSignedIn.asStateFlow()
 
     private val _email = MutableStateFlow("")
     val email = _email.asStateFlow()
@@ -98,6 +103,21 @@ class AuthViewModel @Inject constructor(
 
     fun onConfirmPasswordChange(confirmPassword: String) {
         _confirmPassword.value = confirmPassword
+    }
+
+    fun checkUserSignedIn() {
+        viewModelScope.launch {
+            when (val result = checkUserSignedInUseCase()) {
+                is CheckUserSignedInUseCase.Result.Error -> {
+                    message = result.message
+                    _isUserSignedIn.value = false
+                }
+
+                is CheckUserSignedInUseCase.Result.Success -> {
+                    _isUserSignedIn.value = result.isSignedIn
+                }
+            }
+        }
     }
 
     fun signInWithCredential(

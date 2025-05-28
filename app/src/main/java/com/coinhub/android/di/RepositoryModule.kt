@@ -18,5 +18,7 @@ object RepositoryModule {
     fun provideAuthRepositoryImpl(supabaseService: SupabaseService, userApiService: UserApiService) =
         AuthRepositoryImpl(supabaseService = supabaseService, userApiService = userApiService)
 
+    @Singleton
+    @Provides
     fun provideSharedPreferencesRepository() = SharedPreferenceRepositoryImpl()
 }
