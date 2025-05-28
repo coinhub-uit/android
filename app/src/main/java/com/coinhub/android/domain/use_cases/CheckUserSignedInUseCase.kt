@@ -2,6 +2,7 @@ package com.coinhub.android.domain.use_cases
 
 import com.coinhub.android.data.repository.AuthRepositoryImpl
 import com.coinhub.android.data.repository.SharedPreferenceRepositoryImpl
+import com.coinhub.android.utils.ACCESS_TOKEN_KEY
 import javax.inject.Inject
 
 class CheckUserSignedInUseCase @Inject constructor(
@@ -10,7 +11,7 @@ class CheckUserSignedInUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(): Result {
         return try {
-            val token = sharedPreferenceRepositoryImpl.getStringData("accessToken")
+            val token = sharedPreferenceRepositoryImpl.getStringData(ACCESS_TOKEN_KEY)
             if (token.isNullOrEmpty()) {
                 Result.Success(isSignedIn = false)
             } else {

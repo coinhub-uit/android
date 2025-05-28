@@ -2,10 +2,8 @@ package com.coinhub.android.presentation.auth
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Scaffold
@@ -28,6 +26,7 @@ import com.coinhub.android.presentation.auth.components.AuthSignInOrUpButton
 import com.coinhub.android.presentation.auth.components.AuthSignInOrUpPrompt
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
+import io.github.jan.supabase.compose.auth.ComposeAuth
 import kotlinx.coroutines.launch
 
 @Composable
@@ -97,6 +96,8 @@ private fun AuthScreen(
 
     val coroutineScope = rememberCoroutineScope()
 
+    val googleAction = ComposeAuth
+
     fun showSnackbar() {
         coroutineScope.launch {
             snackbarHostState.showSnackbar(message)
@@ -148,9 +149,11 @@ private fun AuthScreen(
                     isSignUp = isSignUp,
                     setIsSignUp = setIsSignUp,
                 )
-                AuthOrDivider(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp, bottom = 16.dp))
+                AuthOrDivider(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp, bottom = 16.dp)
+                )
                 // TODO: @NTGNguyen - Passing things?
                 AuthOAuth(
                     modifier = Modifier.width(

@@ -22,10 +22,8 @@ object SupabaseClientModule {
     @Provides
     fun provideSupabaseClient(): SupabaseClient {
         val client = createSupabaseClient(
-            supabaseUrl = SUPABASE_URL,
-            supabaseKey = SUPABASE_KEY
-        )
-        {
+            supabaseUrl = SUPABASE_URL, supabaseKey = SUPABASE_KEY
+        ) {
             install(Auth);
             install(ComposeAuth) {
                 googleNativeLogin(serverClientId = BuildConfig.oAuthGoogleAndroidClient)
