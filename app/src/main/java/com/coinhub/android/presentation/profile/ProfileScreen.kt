@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coinhub.android.presentation.common.components.DatePickerModal
+import com.coinhub.android.presentation.navigation.app.components.AvatarPicker
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
 import com.coinhub.android.utils.datePattern
@@ -139,6 +140,7 @@ private fun ProfileScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            AvatarPicker()
             OutlinedTextField(
                 value = fullName,
                 onValueChange = onFullNameChange,

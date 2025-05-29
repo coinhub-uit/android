@@ -51,6 +51,7 @@ compose-auth = { group = "io.github.jan-tennert.supabase", name = "compose-auth"
 compose-auth-ui = { group = "io.github.jan-tennert.supabase", name = "compose-auth-ui", version.ref = "supabase" }
 ktor-client = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
 
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version = "2.5.0" }
 androidx-credential-play-service-auth = { group = "androidx.credentials", name = "credentials-play-services-auth", version = "1.5.0" }
 androidx-credential = { group = "androidx.credentials", name = "credentials", version = "1.6.0-alpha01" }
 google-id = { module = "com.google.android.libraries.identity.googleid:googleid", version = "1.1.1" }
