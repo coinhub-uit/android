@@ -217,10 +217,7 @@ private fun CreateProfileScreen(
         }
     }
 
-    // TODO: Do we need this?
-    AnimatedVisibility(
-        visible = isDatePickerShowed,
-    ) {
+    if (isDatePickerShowed) {
         DatePickerModal(
             onDateSelected = onBirthDateInMillisChange,
             onDismiss = { isDatePickerShowed = false },

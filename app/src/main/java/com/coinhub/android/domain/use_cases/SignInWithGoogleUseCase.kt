@@ -15,19 +15,16 @@ class SignInWithGoogleUseCase @Inject constructor(
     suspend operator fun invoke(result: NativeSignInResult): Result {
         return withContext(Dispatchers.IO) {
             when (result) {
-                NativeSignInResult.ClosedByUser -> {
-                    Result.Error("")
-                }
-
-                is NativeSignInResult.Error -> Result.Error("")
-                is NativeSignInResult.NetworkError -> Result.Error("")
+                NativeSignInResult.ClosedByUser -> Result.Error("Closed by user")
+                is NativeSignInResult.Error -> Result.Error(result.message)
+                is NativeSignInResult.NetworkError -> Result.Error(result.message)
                 NativeSignInResult.Success -> {
                     try {
                         val googleNavigateResult =
                             authRepositoryImpl.getUserOnSignInWithGoogle(sharedPreferenceRepositoryImpl::saveStringData)
                         Result.Success(googleNavigateResult)
                     } catch (e: Exception) {
-                        Result.Error(e.message ?: "")
+                        Result.Error(e.message ?: "Error during sign-in with Google")
                     }
                 }
             }

@@ -1,9 +1,9 @@
 package com.coinhub.android.presentation.notification
 
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 
 @Composable
-fun NotificationScreen(modifier: Modifier = Modifier) {
-
+fun NotificationScreen() {
+    Text("Notification Screen")
 }

@@ -24,7 +24,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 
 @SuppressLint("RestrictedApi")
 @Composable
-fun BottomBar(modifier: Modifier = Modifier, navController: NavHostController) {
+fun BottomBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 

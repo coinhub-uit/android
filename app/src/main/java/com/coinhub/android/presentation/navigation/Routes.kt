@@ -21,6 +21,9 @@ sealed class NavigationDestinations {
     data object MainGraph : NavigationDestinations()
 
     @Serializable
+    data object Main : NavigationDestinations()
+
+    @Serializable
     data object Home : NavigationDestinations()
 
     @Serializable
@@ -30,21 +33,44 @@ sealed class NavigationDestinations {
     data object Profile : NavigationDestinations()
 
     @Serializable
-    data object Notifications : NavigationDestinations()
+    data object Notification : NavigationDestinations()
 
     @Serializable
     data object AiChat : NavigationDestinations()
 
 // --- //
 
-    // Home
+    // Create Source
+    @Serializable
+    data object CreateSourceGraph : NavigationDestinations()
+
     @Serializable
     data object CreateSource : NavigationDestinations()
+
+    // Top Up
+    @Serializable
+    data object TopUpGraph : NavigationDestinations()
+
+    @Serializable
+    data object TopUp : NavigationDestinations()
+
+    @Serializable
+    data object TopUpResult : NavigationDestinations()
+
+    // Create Ticket
+    @Serializable
+    data object CreateTicketGraph : NavigationDestinations()
 
     @Serializable
     data object CreateTicket : NavigationDestinations()
 
+    @Serializable
+    data object ConfirmCreateTicket : NavigationDestinations()
+
     // Vault
+    @Serializable
+    data object VaultGraph : NavigationDestinations()
+
     @Serializable
     data object EditSource : NavigationDestinations()
 
@@ -52,6 +78,9 @@ sealed class NavigationDestinations {
     data object EditTicket : NavigationDestinations()
 
     // Profile
+    @Serializable
+    data object ProfileGraph : NavigationDestinations()
+
     @Serializable
     data object EditProfile : NavigationDestinations()
 

@@ -12,7 +12,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.coinhub.android.data.remote.SupabaseService
-import com.coinhub.android.presentation.navigation.NavGraph
+import com.coinhub.android.presentation.navigation.AppNavGraph
 import com.coinhub.android.ui.theme.CoinhubTheme
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.jan.supabase.SupabaseClient
@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        NavGraph(isSignIn = isSignedIn, supabaseClient = supabaseClient)
+                        AppNavGraph(isSignIn = isSignedIn, supabaseClient = supabaseClient)
                     }
                 }
             }
