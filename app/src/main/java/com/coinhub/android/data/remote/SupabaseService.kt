@@ -1,5 +1,6 @@
 package com.coinhub.android.data.remote
 
+import com.coinhub.android.data.repository.SharedPreferenceRepositoryImpl
 import com.coinhub.android.utils.ACCESS_TOKEN_KEY
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
@@ -8,7 +9,10 @@ import io.github.jan.supabase.auth.status.SessionStatus
 import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
-class SupabaseService @Inject constructor(private val supabaseClient: SupabaseClient) {
+class SupabaseService @Inject constructor(
+    private val supabaseClient: SupabaseClient,
+    private val sharedPreferenceRepositoryImpl: SharedPreferenceRepositoryImpl,
+) {
     suspend fun signIn(email: String, password: String) {
         supabaseClient.auth.signInWith(Email) {
             this.email = email
@@ -58,6 +62,23 @@ class SupabaseService @Inject constructor(private val supabaseClient: SupabaseCl
                     }
                 }
             }
+        }
+    }
+
+    suspend fun isUserSignedIn(): Boolean {
+        try {
+            val token = sharedPreferenceRepositoryImpl.getStringData(ACCESS_TOKEN_KEY)
+            if (token.isNullOrEmpty()) {
+                return false
+            } else {
+                getUserIdWithToken(token)
+                refreshSession()
+                val newToken = getToken()!!
+                sharedPreferenceRepositoryImpl.saveStringData(ACCESS_TOKEN_KEY, newToken)
+                return true
+            }
+        } catch (e: Exception) {
+            return false
         }
     }
 }

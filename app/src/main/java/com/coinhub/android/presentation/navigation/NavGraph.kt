@@ -10,7 +10,6 @@ import com.coinhub.android.presentation.confirm_auth.ConfirmAccountScreen
 import com.coinhub.android.presentation.create_profile.CreateProfileScreen
 import com.coinhub.android.presentation.main.HomeScreen
 import io.github.jan.supabase.SupabaseClient
-import io.github.jan.supabase.compose.auth.composable.NativeSignInState
 
 @Composable
 fun NavGraph(

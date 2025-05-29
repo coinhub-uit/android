@@ -5,6 +5,7 @@ import com.coinhub.android.data.repository.SharedPreferenceRepositoryImpl
 import com.coinhub.android.utils.ACCESS_TOKEN_KEY
 import javax.inject.Inject
 
+//WARN: Maybe dont use this use case, but rather check the token directly in the view model, get it directly from supabase service
 class CheckUserSignedInUseCase @Inject constructor(
     private val authRepositoryImpl: AuthRepositoryImpl,
     private val sharedPreferenceRepositoryImpl: SharedPreferenceRepositoryImpl,

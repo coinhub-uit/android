@@ -2,6 +2,7 @@ package com.coinhub.android.di
 
 import com.coinhub.android.BuildConfig
 import com.coinhub.android.data.remote.SupabaseService
+import com.coinhub.android.data.repository.SharedPreferenceRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -37,5 +38,8 @@ object SupabaseModule {
 
     @Singleton
     @Provides
-    fun provideSupabaseService(supabaseClient: SupabaseClient) = SupabaseService(supabaseClient)
+    fun provideSupabaseService(
+        supabaseClient: SupabaseClient,
+        sharedPreferenceRepositoryImpl: SharedPreferenceRepositoryImpl,
+    ) = SupabaseService(supabaseClient, sharedPreferenceRepositoryImpl)
 }
