@@ -3,6 +3,7 @@ package com.coinhub.android.domain.repository
 import com.coinhub.android.data.dtos.CreateUserDto
 import com.coinhub.android.data.models.GoogleNavigateResult
 import com.coinhub.android.data.models.User
+import kotlin.reflect.KSuspendFunction2
 
 interface AuthRepository {
     suspend fun getUserOnSignInWithCredential(email: String, password: String): String
@@ -11,7 +12,7 @@ interface AuthRepository {
 
     suspend fun registerProfile(createUserDto: CreateUserDto): User
 
-    suspend fun getUserOnSignInWithGoogle(): GoogleNavigateResult
+    suspend fun getUserOnSignInWithGoogle(saveToken: KSuspendFunction2<String, String, Unit>): GoogleNavigateResult
 
     suspend fun getToken(): String?
 

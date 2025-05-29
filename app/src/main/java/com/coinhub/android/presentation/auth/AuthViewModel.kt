@@ -1,5 +1,6 @@
 package com.coinhub.android.presentation.auth
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.domain.use_cases.CheckUserSignedInUseCase
@@ -127,7 +128,6 @@ class AuthViewModel @Inject constructor(
                 is SignInWithCredentialUseCase.Result.Error -> {
                     message = result.message
                     onError()
-                    TODO()
                 }
 
                 is SignInWithCredentialUseCase.Result.Success -> {
@@ -145,7 +145,6 @@ class AuthViewModel @Inject constructor(
                 is SignUpWithCredentialUseCase.Result.Error -> {
                     message = result.message
                     onError()
-                    TODO()
                 }
 
                 is SignUpWithCredentialUseCase.Result.Success -> {
@@ -165,10 +164,10 @@ class AuthViewModel @Inject constructor(
             when (val result = signInWithGoogleUseCase(signInResult)) {
                 is SignInWithGoogleUseCase.Result.Error -> {
                     message = result.message
-                    TODO()
                 }
 
                 is SignInWithGoogleUseCase.Result.Success -> {
+                    Log.d("hehehehehhe", "onSignInWithGoogle: aklhdwsjxwkh")
                     if (result.googleNavigateResult.isUserRegisterProfile) {
                         onSignedIn()
                     } else {

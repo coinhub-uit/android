@@ -2,6 +2,8 @@ package com.coinhub.android.di
 
 import com.coinhub.android.BuildConfig
 import com.coinhub.android.data.api_service.UserApiService
+import com.coinhub.android.data.repository.SharedPreferenceRepositoryImpl
+import com.coinhub.android.utils.ACCESS_TOKEN_KEY
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,10 +20,14 @@ object ApiServerClientModule {
 
     @Singleton
     @Provides
-    fun provideHttpClient() = OkHttpClient.Builder()
+    fun provideHttpClient(sharedPreferenceRepositoryImpl: SharedPreferenceRepositoryImpl) = OkHttpClient.Builder()
         .addInterceptor { chain ->
+            var token = sharedPreferenceRepositoryImpl.getStringData(ACCESS_TOKEN_KEY)
+            if (token.isNullOrEmpty()) {
+                token = ""
+            }
             val request = chain.request().newBuilder()
-                .addHeader("Authorization", "Bearer token") // FIXME: token here
+                .addHeader("Authorization", "Bearer $token") // FIXME: token here
                 .build()
             chain.proceed(request)
         }

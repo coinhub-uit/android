@@ -20,7 +20,7 @@ class SharedPreferenceRepositoryImpl() : SharedPreferenceRepository {
         sharedPreferences.edit { putString(key, value) }
     }
 
-    override suspend fun getStringData(key: String): String? {
+    override fun getStringData(key: String): String? {
         return sharedPreferences.getString(key, null)
     }
 

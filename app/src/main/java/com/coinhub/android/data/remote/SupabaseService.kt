@@ -56,9 +56,9 @@ class SupabaseService @Inject constructor(
                             )
                         }
 
-                        SessionStatus.Initializing -> TODO()
-                        is SessionStatus.NotAuthenticated -> TODO()
-                        is SessionStatus.RefreshFailure -> TODO()
+                        SessionStatus.Initializing -> {}
+                        is SessionStatus.NotAuthenticated -> {}
+                        is SessionStatus.RefreshFailure -> {}
                     }
                 }
             }
