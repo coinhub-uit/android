@@ -1,6 +1,5 @@
-package com.coinhub.android.presentation.create_profile
+package com.coinhub.android.presentation.profile
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -44,9 +43,9 @@ import com.coinhub.android.utils.toDateString
 import kotlinx.coroutines.launch
 
 @Composable
-fun CreateProfileScreen(
-    onProfileCreated: () -> Unit,
-    viewModel: CreateProfileViewModel = hiltViewModel(),
+fun ProfileScreen(
+    onSuccess: () -> Unit,
+    viewModel: ProfileViewModel = hiltViewModel(),
 ) {
     val fullName = viewModel.fullName.collectAsStateWithLifecycle().value
     val onFullNameChange = viewModel::onFullNameChange
@@ -64,7 +63,7 @@ fun CreateProfileScreen(
 
     val message = viewModel.message // WARN: Check this, will it be updated?
 
-    CreateProfileScreen(
+    ProfileScreen(
         fullName = fullName,
         onFullNameChange = onFullNameChange,
         fullNameCheckState = fullNameCheckState,
@@ -79,21 +78,21 @@ fun CreateProfileScreen(
         isFormValid = isFormValid,
         message = message,
         onCreateProfile = onCreateProfile,
-        onProfileCreated = onProfileCreated,
+        onProfileCreated = onSuccess,
     )
 }
 
 @Composable
-private fun CreateProfileScreen(
+private fun ProfileScreen(
     fullName: String,
     onFullNameChange: (String) -> Unit,
-    fullNameCheckState: CreateProfileStates.FullNameCheckState,
+    fullNameCheckState: ProfileStates.FullNameCheckState,
     birthDateInMillis: Long,
     onBirthDateInMillisChange: (Long) -> Unit,
-    birthDateCheckState: CreateProfileStates.BirthDateCheckState,
+    birthDateCheckState: ProfileStates.BirthDateCheckState,
     citizenId: String,
     onCitizenIdChange: (String) -> Unit,
-    citizenIdCheckState: CreateProfileStates.CitizenIdCheckState,
+    citizenIdCheckState: ProfileStates.CitizenIdCheckState,
     address: String,
     onAddressChange: (String) -> Unit,
     isFormValid: Boolean,
@@ -191,6 +190,10 @@ private fun CreateProfileScreen(
                         contentDescription = "Citizen ID"
                     )
                 },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done,
+                ),
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             OutlinedTextField(
@@ -203,10 +206,6 @@ private fun CreateProfileScreen(
                         contentDescription = "Address"
                     )
                 },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Done,
-                ),
                 modifier = Modifier
                     .padding(bottom = 8.dp)
                     .semantics {
@@ -230,20 +229,20 @@ private fun CreateProfileScreen(
 @Composable
 fun CreateProfileScreenPreview() {
     CoinhubTheme {
-        CreateProfileScreen(
+        ProfileScreen(
             fullName = "KevinNitro",
             onFullNameChange = {},
-            fullNameCheckState = CreateProfileStates.FullNameCheckState(
+            fullNameCheckState = ProfileStates.FullNameCheckState(
                 isValid = false, errorMessage = "Bad"
             ),
             birthDateInMillis = 10000L,
             onBirthDateInMillisChange = {},
-            birthDateCheckState = CreateProfileStates.BirthDateCheckState(
+            birthDateCheckState = ProfileStates.BirthDateCheckState(
                 isValid = false, errorMessage = "Cool"
             ),
             citizenId = "123",
             onCitizenIdChange = {},
-            citizenIdCheckState = CreateProfileStates.CitizenIdCheckState(
+            citizenIdCheckState = ProfileStates.CitizenIdCheckState(
                 isValid = false, errorMessage = "Less"
             ),
             address = "",

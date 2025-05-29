@@ -4,11 +4,15 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.coinhub.android.data.remote.SupabaseService
 import com.coinhub.android.presentation.navigation.auth.AuthNavGraph
 import com.coinhub.android.presentation.navigation.app.AppNavGraph
@@ -25,14 +29,14 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var supabaseService: SupabaseService
 
-    private var isSignedIn: Boolean? = null
+    private var isSignedIn: Boolean? = true // TODO: Handle if connect fails? nah use enum
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             LaunchedEffect(Unit) {
-                isSignedIn = supabaseService.isUserSignedIn()
+                isSignedIn = supabaseService.isUserSignedIn() // FIXME: Collect state
             }
             CoinhubTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
@@ -46,7 +50,9 @@ class MainActivity : ComponentActivity() {
                         }
 
                         null -> {
-                            CircularProgressIndicator()
+                            Box(contentAlignment = Alignment.Center) {
+                                CircularProgressIndicator(modifier = Modifier.width(32.dp))
+                            }
                         }
                     }
                 }

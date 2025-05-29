@@ -5,8 +5,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 
 @Composable
-fun TopUpResultScreen(onNavigateToMain: () -> Unit) {
-    Button(onClick = onNavigateToMain) {
+fun TopUpResultScreen(navigateToMain: () -> Unit) {
+    Button(onClick = navigateToMain) {
         Text("Navigate to Main Screen")
     }
 }

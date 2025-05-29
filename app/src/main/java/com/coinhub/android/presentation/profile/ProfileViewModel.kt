@@ -1,4 +1,4 @@
-package com.coinhub.android.presentation.create_profile
+package com.coinhub.android.presentation.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,14 +17,15 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
-class CreateProfileViewModel @Inject constructor(
+class ProfileViewModel @Inject constructor(
     private val validateFullNameUseCase: ValidateFullNameUseCase,
     private val validateBirthDateUseCase: ValidateBirthDateUseCase,
     private val validateCitizenIdUseCase: ValidateCitizenIdUseCase,
@@ -36,45 +37,45 @@ class CreateProfileViewModel @Inject constructor(
     private val _fullName = MutableStateFlow("")
     val fullName = _fullName.asStateFlow()
 
-    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-    val fullNameCheckState = _fullName.debounce(DEBOUNCE_TYPING).mapLatest {
+    @OptIn(FlowPreview::class)
+    val fullNameCheckState = _fullName.drop(1).debounce(DEBOUNCE_TYPING).map {
         val result = validateFullNameUseCase(it)
-        CreateProfileStates.FullNameCheckState(
+        ProfileStates.FullNameCheckState(
             isValid = result is ValidateFullNameUseCase.Result.Success,
             errorMessage = if (result is ValidateFullNameUseCase.Result.Error) result.message else null
         )
     }.stateIn(
-        viewModelScope, SharingStarted.WhileSubscribed(5000), CreateProfileStates.FullNameCheckState(
+        viewModelScope, SharingStarted.WhileSubscribed(5000), ProfileStates.FullNameCheckState(
         )
     )
 
     private val _birthDateInMillis = MutableStateFlow(LocalDate.now().toMillis())
     val birthDateInMillis = _birthDateInMillis.asStateFlow()
 
-    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-    val birthDateCheckState = _birthDateInMillis.debounce(DEBOUNCE_TYPING).mapLatest {
+    @OptIn(FlowPreview::class)
+    val birthDateCheckState = _birthDateInMillis.drop(1).debounce(DEBOUNCE_TYPING).map {
         val result = validateBirthDateUseCase(it)
-        CreateProfileStates.BirthDateCheckState(
+        ProfileStates.BirthDateCheckState(
             isValid = result is ValidateBirthDateUseCase.Result.Success,
             errorMessage = if (result is ValidateBirthDateUseCase.Result.Error) result.message else null
         )
     }.stateIn(
-        viewModelScope, SharingStarted.WhileSubscribed(5000), CreateProfileStates.BirthDateCheckState(
+        viewModelScope, SharingStarted.WhileSubscribed(5000), ProfileStates.BirthDateCheckState(
         )
     )
 
     private val _citizenId = MutableStateFlow("")
     val citizenId = _citizenId.asStateFlow()
 
-    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-    val citizenIdCheckState = _citizenId.debounce(DEBOUNCE_TYPING).mapLatest {
+    @OptIn(FlowPreview::class)
+    val citizenIdCheckState = _citizenId.drop(1).debounce(DEBOUNCE_TYPING).map {
         val result = validateCitizenIdUseCase(it)
-        CreateProfileStates.CitizenIdCheckState(
+        ProfileStates.CitizenIdCheckState(
             isValid = result is ValidateCitizenIdUseCase.Result.Success,
             errorMessage = if (result is ValidateCitizenIdUseCase.Result.Error) result.message else null
         )
     }.stateIn(
-        viewModelScope, SharingStarted.WhileSubscribed(5000), CreateProfileStates.CitizenIdCheckState()
+        viewModelScope, SharingStarted.WhileSubscribed(5000), ProfileStates.CitizenIdCheckState()
     )
 
     private val _address = MutableStateFlow("")
@@ -88,7 +89,7 @@ class CreateProfileViewModel @Inject constructor(
         viewModelScope, SharingStarted.WhileSubscribed(5000), false
     )
 
-    private val _createProfileStatus = MutableStateFlow(CreateProfileStates.CreateProfileStatus.Ready)
+    private val _createProfileStatus = MutableStateFlow(ProfileStates.ProfileStatus.Ready)
     val createProfileStatus = _createProfileStatus.asStateFlow()
 
     fun onFullNameChange(fullName: String) {

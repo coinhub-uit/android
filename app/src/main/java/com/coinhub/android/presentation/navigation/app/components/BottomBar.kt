@@ -1,11 +1,12 @@
-package com.coinhub.android.presentation.main.components
+package com.coinhub.android.presentation.navigation.app.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.Wallet
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -43,11 +44,14 @@ fun BottomBar(navController: NavHostController) {
                     }
                 },
                 icon = {
-                    if (isSelected) {
-                        bottomNavItem.selectedIcon
-                    } else {
-                        bottomNavItem.unselectedIcon
-                    }
+                    Image(
+                        imageVector = if (isSelected) {
+                            bottomNavItem.selectedIcon
+                        } else {
+                            bottomNavItem.unselectedIcon
+                        },
+                        contentDescription = bottomNavItem.label
+                    )
                 },
                 label = { Text(bottomNavItem.label) },
             )
@@ -65,7 +69,5 @@ data class BottomNavItem(
 val bottomNavItems = listOf(
     BottomNavItem("Home", AppNavDestinations.Home, Icons.Outlined.Home, Icons.Default.Home),
     BottomNavItem("Vault", AppNavDestinations.Vault, Icons.Outlined.Wallet, Icons.Default.Wallet),
-    BottomNavItem("Profile", AppNavDestinations.Profile, Icons.Outlined.Person, Icons.Default.Person)
+    BottomNavItem("Menu", AppNavDestinations.Menu, Icons.Outlined.Menu, Icons.Default.Menu)
 )
-
-

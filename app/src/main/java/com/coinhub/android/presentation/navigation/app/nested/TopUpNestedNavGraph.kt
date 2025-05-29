@@ -11,12 +11,14 @@ import com.coinhub.android.presentation.top_up_result.TopUpResultScreen
 fun NavGraphBuilder.topUpNestedGraph(navController: NavHostController) {
     navigation<AppNavDestinations.TopUpGraph>(startDestination = AppNavDestinations.TopUp) {
         composable<AppNavDestinations.TopUp> {
-            TopUpScreen()
+            TopUpScreen(
+                navigateToTopUpResult = { navController.navigate(AppNavDestinations.TopUpResult) }
+            )
         }
         composable<AppNavDestinations.TopUpResult> {
             // TODO: Does it need args here?
-            TopUpResultScreen(onNavigateToMain = {
-                navController.navigate(AppNavDestinations.Main) {
+            TopUpResultScreen(navigateToMain = {
+                navController.navigate(AppNavDestinations.MainGraph) {
                     popUpTo(AppNavDestinations.TopUp) {
                         inclusive = true
                     }

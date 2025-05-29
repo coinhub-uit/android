@@ -6,7 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.coinhub.android.presentation.auth.AuthScreen
 import com.coinhub.android.presentation.confirm_auth.ConfirmAccountScreen
-import com.coinhub.android.presentation.create_profile.CreateProfileScreen
+import com.coinhub.android.presentation.profile.ProfileScreen
 import com.coinhub.android.presentation.navigation.AppNavDestinations
 import io.github.jan.supabase.SupabaseClient
 
@@ -32,8 +32,8 @@ fun AuthNavGraph(
         }
 
         composable<AppNavDestinations.CreateProfile> {
-            CreateProfileScreen(
-                onProfileCreated = {
+            ProfileScreen(
+                onSuccess = {
                     // TODO: Call the set isSign to true to call the flow change
                 }
             )
