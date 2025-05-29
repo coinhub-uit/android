@@ -102,6 +102,8 @@ dependencies {
     implementation(libs.compose.auth.ui)
     implementation(libs.androidx.material.icon)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.activity)
+
 
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)

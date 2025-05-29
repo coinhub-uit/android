@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.Wallet
+import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
@@ -44,7 +45,7 @@ fun AppBottomBar(navController: NavHostController) {
                     }
                 },
                 icon = {
-                    Image(
+                    Icon(
                         imageVector = if (isSelected) {
                             bottomNavItem.selectedIcon
                         } else {
