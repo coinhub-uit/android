@@ -1,3 +1,4 @@
+
 <vector xmlns:aapt="http://schemas.android.com/aapt"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:autoMirrored="true"
@@ -5,7 +6,11 @@
     android:viewportHeight="316"
     android:viewportWidth="321"
     android:width="160dp">
-    <group>
+    <group
+        android:scaleX="0.6"
+        android:scaleY="0.6"
+        android:translateX="60"
+        android:translateY="60">
         <path
             android:fillColor="#000000"
             android:pathData="M321,148.8C321,230.98 235.06,316 147.87,316C60.68,316 0,275.67 0,193.49C0,111.31 75.94,0 163.13,0C250.32,0 321,66.62 321,148.8Z" />
