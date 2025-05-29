@@ -85,7 +85,7 @@ class ProfileViewModel @Inject constructor(
         fullNameCheckState, birthDateCheckState, citizenIdCheckState
     ) { fullNameCheckState, birthDateCheckState, citizenIdState ->
         fullNameCheckState.isValid && birthDateCheckState.isValid && citizenIdState.isValid
-    }.stateIn(
+    }.drop(1).stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(5000), false
     )
 

@@ -21,6 +21,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -49,7 +51,7 @@ class AuthViewModel @Inject constructor(
     val email = _email.asStateFlow()
 
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-    val emailCheckState = email.debounce(DEBOUNCE_TYPING).mapLatest {
+    val emailCheckState = email.drop(1).debounce(DEBOUNCE_TYPING).map {
         val result = validateEmailUseCase(it)
         AuthStates.EmailCheckState(
             isValid = result is ValidateEmailUseCase.Result.Success,
@@ -61,7 +63,7 @@ class AuthViewModel @Inject constructor(
     val password = _password.asStateFlow()
 
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-    val passwordCheckState = password.debounce(DEBOUNCE_TYPING).mapLatest {
+    val passwordCheckState = password.drop(1).debounce(DEBOUNCE_TYPING).map {
         val result = validatePasswordUseCase(it)
         AuthStates.PasswordCheckState(
             isValid = result is ValidatePasswordUseCase.Result.Success,
@@ -73,7 +75,7 @@ class AuthViewModel @Inject constructor(
     val confirmPassword = _confirmPassword.asStateFlow()
 
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-    val confirmPasswordCheckState = confirmPassword.debounce(DEBOUNCE_TYPING).mapLatest {
+    val confirmPasswordCheckState = confirmPassword.drop(1).debounce(DEBOUNCE_TYPING).map {
         val result = validateConfirmPasswordUseCase(
             _password.value, it
         )
@@ -87,7 +89,7 @@ class AuthViewModel @Inject constructor(
         emailCheckState, passwordCheckState, confirmPasswordCheckState, isSignUp
     ) { emailCheckState, passwordCheckState, confirmPasswordCheckState, isSignup ->
         emailCheckState.isValid && passwordCheckState.isValid && (!isSignup or confirmPasswordCheckState.isValid)
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+    }.drop(1).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     fun setIsSignUp(isSignUp: Boolean) {
         _isSignUp.value = isSignUp

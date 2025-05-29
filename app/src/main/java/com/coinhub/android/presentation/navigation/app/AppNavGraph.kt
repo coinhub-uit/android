@@ -8,14 +8,19 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.coinhub.android.presentation.ai_chat.AiChatScreen
 import com.coinhub.android.presentation.common.permission_requests.RequestNotificationPermissionDialog
-import com.coinhub.android.presentation.navigation.app.components.BottomBar
 import com.coinhub.android.presentation.navigation.AppNavDestinations
+import com.coinhub.android.presentation.navigation.app.components.BottomBar
+import com.coinhub.android.presentation.navigation.app.components.bottomNavItems
 import com.coinhub.android.presentation.navigation.app.nested.createSourceNestedGraph
 import com.coinhub.android.presentation.navigation.app.nested.createTicketNestedGraph
 import com.coinhub.android.presentation.navigation.app.nested.mainNestedNavGraph
@@ -32,13 +37,27 @@ fun AppNavGraph() {
 
     val navController = rememberNavController()
 
-    Scaffold(bottomBar = {
-        BottomBar(navController)
-    }, floatingActionButton = {
-        FloatingActionButton(
-            onClick = { navController.navigate(AppNavDestinations.AiChat) }) {
-            Icon(Icons.AutoMirrored.Default.Message, "AI Chat")
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+
+    val mainGraphDestinations = bottomNavItems.map { it.route }
+
+    val isInMainGraph = currentDestination?.hierarchy?.any { navDestination ->
+        mainGraphDestinations.any {
+            navDestination.hasRoute(it::class)
         }
+    } == true
+
+
+    Scaffold(bottomBar = {
+        if (isInMainGraph)
+            BottomBar(navController)
+    }, floatingActionButton = {
+        if (isInMainGraph)
+            FloatingActionButton(
+                onClick = { navController.navigate(AppNavDestinations.AiChat) }) {
+                Icon(Icons.AutoMirrored.Default.Message, "AI Chat")
+            }
     }) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             NavHost(navController = navController, startDestination = AppNavDestinations.MainGraph) {
@@ -68,8 +87,7 @@ fun AppNavGraph() {
 
                 composable<AppNavDestinations.EditProfile> {
                     ProfileScreen(
-                        onSuccess = { navController.navigateUp() }
-                    )
+                        onSuccess = { navController.navigateUp() })
                 }
 
                 composable<AppNavDestinations.Settings> {

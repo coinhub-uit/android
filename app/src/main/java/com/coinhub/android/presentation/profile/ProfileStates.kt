@@ -10,17 +10,17 @@ sealed class ProfileStates {
     }
 
     data class FullNameCheckState(
-        val isValid: Boolean = false,
+        val isValid: Boolean = true,
         val errorMessage: String? = null,
     ) : ProfileStates()
 
     data class BirthDateCheckState(
-        val isValid: Boolean = false,
+        val isValid: Boolean = true,
         val errorMessage: String? = null,
     ) : ProfileStates()
 
     data class CitizenIdCheckState(
-        val isValid: Boolean = false,
+        val isValid: Boolean = true,
         val errorMessage: String? = null,
     ) : ProfileStates()
 }
