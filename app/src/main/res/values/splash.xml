@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.SplashScreen.CoinHub" parent="Theme.SplashScreen.IconBackground">
+        <item name="windowSplashScreenBackground">#121212</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/coinhub_splash</item>
+        <item name="windowSplashScreenIconBackgroundColor">#121212</item>
+        <item name="postSplashScreenTheme">@style/Theme.CoinHub</item>
+    </style>
+</resources>
