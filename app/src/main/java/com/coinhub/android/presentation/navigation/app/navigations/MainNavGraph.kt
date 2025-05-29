@@ -1,4 +1,4 @@
-package com.coinhub.android.presentation.navigation.app.nested
+package com.coinhub.android.presentation.navigation.app.navigations
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -9,9 +9,10 @@ import com.coinhub.android.presentation.menu.MenuScreen
 import com.coinhub.android.presentation.vault.VaultScreen
 import com.coinhub.android.presentation.navigation.AppNavDestinations
 
-fun NavGraphBuilder.mainNestedNavGraph(navController: NavHostController) {
+fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
     navigation<AppNavDestinations.MainGraph>(startDestination = AppNavDestinations.Home) {
-        composable<AppNavDestinations.Home> {
+        composable<AppNavDestinations.Home>(
+        ) {
             HomeScreen(
                 navigateToCreateSource = { navController.navigate(AppNavDestinations.CreateSourceGraph) },
                 // TODO: May contains args here

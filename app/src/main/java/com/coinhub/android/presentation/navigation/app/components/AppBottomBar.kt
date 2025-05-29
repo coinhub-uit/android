@@ -22,7 +22,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.coinhub.android.presentation.navigation.AppNavDestinations
 
 @Composable
-fun BottomBar(navController: NavHostController) {
+fun AppBottomBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 

@@ -19,12 +19,18 @@ import androidx.navigation.compose.rememberNavController
 import com.coinhub.android.presentation.ai_chat.AiChatScreen
 import com.coinhub.android.presentation.common.permission_requests.RequestNotificationPermissionDialog
 import com.coinhub.android.presentation.navigation.AppNavDestinations
-import com.coinhub.android.presentation.navigation.app.components.BottomBar
+import com.coinhub.android.presentation.navigation.app.components.AppBottomBar
 import com.coinhub.android.presentation.navigation.app.components.bottomNavItems
-import com.coinhub.android.presentation.navigation.app.nested.createSourceNestedGraph
-import com.coinhub.android.presentation.navigation.app.nested.createTicketNestedGraph
-import com.coinhub.android.presentation.navigation.app.nested.mainNestedNavGraph
-import com.coinhub.android.presentation.navigation.app.nested.topUpNestedGraph
+import com.coinhub.android.presentation.navigation.app.navigations.aiChatNav
+import com.coinhub.android.presentation.navigation.app.navigations.createSourceGraph
+import com.coinhub.android.presentation.navigation.app.navigations.createTicketGraph
+import com.coinhub.android.presentation.navigation.app.navigations.editProfileNav
+import com.coinhub.android.presentation.navigation.app.navigations.mainNavGraph
+import com.coinhub.android.presentation.navigation.app.navigations.notificationNav
+import com.coinhub.android.presentation.navigation.app.navigations.settingNav
+import com.coinhub.android.presentation.navigation.app.navigations.sourceDetailNav
+import com.coinhub.android.presentation.navigation.app.navigations.ticketDetailNav
+import com.coinhub.android.presentation.navigation.app.navigations.topUpGraph
 import com.coinhub.android.presentation.notification.NotificationScreen
 import com.coinhub.android.presentation.profile.ProfileScreen
 import com.coinhub.android.presentation.settings.SettingsScreen
@@ -49,50 +55,41 @@ fun AppNavGraph() {
     } == true
 
 
-    Scaffold(bottomBar = {
-        if (isInMainGraph)
-            BottomBar(navController)
-    }, floatingActionButton = {
-        if (isInMainGraph)
-            FloatingActionButton(
-                onClick = { navController.navigate(AppNavDestinations.AiChat) }) {
-                Icon(Icons.AutoMirrored.Default.Message, "AI Chat")
-            }
-    }) { innerPadding ->
+    Scaffold(
+        topBar = {
+
+        },
+        bottomBar = {
+            if (isInMainGraph)
+                AppBottomBar(navController)
+        }, floatingActionButton = {
+            if (isInMainGraph)
+                FloatingActionButton(
+                    onClick = { navController.navigate(AppNavDestinations.AiChat) }) {
+                    Icon(Icons.AutoMirrored.Default.Message, "AI Chat")
+                }
+        }) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             NavHost(navController = navController, startDestination = AppNavDestinations.MainGraph) {
-                mainNestedNavGraph(navController = navController)
+                mainNavGraph(navController = navController)
 
-                createSourceNestedGraph()
+                createSourceGraph()
 
-                topUpNestedGraph(navController = navController)
+                topUpGraph(navController = navController)
 
-                composable<AppNavDestinations.SourceDetail> {
-                    SourceDetailScreen()
-                }
+                sourceDetailNav()
 
-                createTicketNestedGraph()
+                createTicketGraph()
 
-                composable<AppNavDestinations.TicketDetail> {
-                    TicketDetailScreen()
-                }
+                ticketDetailNav()
 
-                composable<AppNavDestinations.Notification> {
-                    NotificationScreen()
-                }
+                notificationNav()
 
-                composable<AppNavDestinations.AiChat> {
-                    AiChatScreen()
-                }
+                aiChatNav()
 
-                composable<AppNavDestinations.EditProfile> {
-                    ProfileScreen(
-                        onSuccess = { navController.navigateUp() })
-                }
+                editProfileNav(navController = navController)
 
-                composable<AppNavDestinations.Settings> {
-                    SettingsScreen()
-                }
+                settingNav()
             }
         }
     }

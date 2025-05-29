@@ -1,4 +1,4 @@
-package com.coinhub.android.presentation.navigation.app.nested
+package com.coinhub.android.presentation.navigation.app.navigations
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -8,7 +8,7 @@ import com.coinhub.android.presentation.navigation.AppNavDestinations
 import com.coinhub.android.presentation.top_up.TopUpScreen
 import com.coinhub.android.presentation.top_up_result.TopUpResultScreen
 
-fun NavGraphBuilder.topUpNestedGraph(navController: NavHostController) {
+fun NavGraphBuilder.topUpGraph(navController: NavHostController) {
     navigation<AppNavDestinations.TopUpGraph>(startDestination = AppNavDestinations.TopUp) {
         composable<AppNavDestinations.TopUp> {
             TopUpScreen(
