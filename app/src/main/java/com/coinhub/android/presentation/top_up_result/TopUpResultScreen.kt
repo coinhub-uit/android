@@ -1,4 +1,4 @@
-package com.coinhub.android.top_up_result
+package com.coinhub.android.presentation.top_up_result
 
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text

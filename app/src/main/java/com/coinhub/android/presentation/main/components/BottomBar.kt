@@ -1,6 +1,5 @@
 package com.coinhub.android.presentation.main.components
 
-import android.annotation.SuppressLint
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
@@ -13,16 +12,14 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.coinhub.android.presentation.navigation.NavigationDestinations
-import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.NavGraph.Companion.findStartDestination
+import com.coinhub.android.presentation.navigation.AppNavDestinations
 
-@SuppressLint("RestrictedApi")
 @Composable
 fun BottomBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -60,15 +57,15 @@ fun BottomBar(navController: NavHostController) {
 
 data class BottomNavItem(
     val label: String,
-    val route: NavigationDestinations,
+    val route: AppNavDestinations,
     val unselectedIcon: ImageVector,
     val selectedIcon: ImageVector,
 )
 
 val bottomNavItems = listOf(
-    BottomNavItem("Home", NavigationDestinations.Home, Icons.Outlined.Home, Icons.Default.Home),
-    BottomNavItem("Vault", NavigationDestinations.Vault, Icons.Outlined.Wallet, Icons.Default.Wallet),
-    BottomNavItem("Profile", NavigationDestinations.Profile, Icons.Outlined.Person, Icons.Default.Person)
+    BottomNavItem("Home", AppNavDestinations.Home, Icons.Outlined.Home, Icons.Default.Home),
+    BottomNavItem("Vault", AppNavDestinations.Vault, Icons.Outlined.Wallet, Icons.Default.Wallet),
+    BottomNavItem("Profile", AppNavDestinations.Profile, Icons.Outlined.Person, Icons.Default.Person)
 )
 
 

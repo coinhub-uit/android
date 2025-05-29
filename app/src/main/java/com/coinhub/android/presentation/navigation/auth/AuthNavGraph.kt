@@ -1,0 +1,42 @@
+package com.coinhub.android.presentation.navigation.auth
+
+import androidx.compose.runtime.Composable
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.coinhub.android.presentation.auth.AuthScreen
+import com.coinhub.android.presentation.confirm_auth.ConfirmAccountScreen
+import com.coinhub.android.presentation.create_profile.CreateProfileScreen
+import com.coinhub.android.presentation.navigation.AppNavDestinations
+import io.github.jan.supabase.SupabaseClient
+
+@Composable
+fun AuthNavGraph(
+    supabaseClient: SupabaseClient,
+) {
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = AppNavDestinations.Auth) {
+        composable<AppNavDestinations.Auth> {
+            AuthScreen(
+                onSignedIn = {
+                    // TODO: Call the set isSign to true to call the flow change
+                },
+                onSignedUp = { navController.navigate(AppNavDestinations.ConfirmAccount) },
+                supabaseClient = supabaseClient
+            )
+        }
+
+        composable<AppNavDestinations.ConfirmAccount> {
+            // TODO: Button to check and navigate to CreateProfileScreen
+            ConfirmAccountScreen()
+        }
+
+        composable<AppNavDestinations.CreateProfile> {
+            CreateProfileScreen(
+                onProfileCreated = {
+                    // TODO: Call the set isSign to true to call the flow change
+                }
+            )
+        }
+    }
+}
