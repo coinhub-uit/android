@@ -36,11 +36,11 @@ open class AppNavDestinations {
     @Serializable
     data object TopUpGraph : AppNavDestinations()
 
-    // App - Main Graph - Home - Top Up
+    // App - Main Graph - Home - Top Up Graph - Top Up
     @Serializable
     data object TopUp : AppNavDestinations()
 
-    // App - Main Graph - Home - Top Up - Top Up Result
+    // App - Main Graph - Home - Top Up Graph - Top Up - Top Up Result
     @Serializable
     data object TopUpResult : AppNavDestinations()
 
@@ -56,15 +56,15 @@ open class AppNavDestinations {
     @Serializable
     data object CreateTicketGraph : AppNavDestinations()
 
-    // App - Main Graph - Vault - Create Ticket
+    // App - Main Graph - Vault - Create Ticket Graph - Create Ticket
     @Serializable
     data object CreateTicket : AppNavDestinations()
 
-    // App - Main Graph - Vault - Create Ticket - Confirm Create Ticket
+    // App - Main Graph - Vault - Create Ticket Graph - Create Ticket - Confirm Create Ticket
     @Serializable
     data object ConfirmCreateTicket : AppNavDestinations()
 
-    // App - Main Graph - Vault - Ticket Details
+    // App - Main Graph - Vault - Create Ticket Graph - Ticket Details
     @Serializable
     data object TicketDetail : AppNavDestinations()
 
