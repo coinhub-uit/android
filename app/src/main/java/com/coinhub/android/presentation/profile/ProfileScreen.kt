@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
@@ -27,6 +28,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.contentType
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
@@ -105,6 +108,7 @@ private fun ProfileScreen(
 
     val coroutineScope = rememberCoroutineScope()
 
+    val focusManager = LocalFocusManager.current
     fun showSnackbar() {
         coroutineScope.launch {
             snackbarHostState.showSnackbar(message)
@@ -113,21 +117,21 @@ private fun ProfileScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-        floatingActionButton = {
-            if (isFormValid) {
-                ExtendedFloatingActionButton(
-                    modifier = Modifier.padding(16.dp),
-                    onClick = {
-                        onCreateProfile(
-                            onProfileCreated
-                        ) { showSnackbar() }
-                    },
-                ) {
-                    Text("Next")
-                }
-            }
-        }) { paddingValues ->
+             snackbarHost = { SnackbarHost(snackbarHostState) },
+             floatingActionButton = {
+                 if (isFormValid) {
+                     ExtendedFloatingActionButton(
+                         modifier = Modifier.padding(16.dp),
+                         onClick = {
+                             onCreateProfile(
+                                 onProfileCreated
+                             ) { showSnackbar() }
+                         },
+                     ) {
+                         Text("Next")
+                     }
+                 }
+             }) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -139,42 +143,45 @@ private fun ProfileScreen(
                 value = fullName,
                 onValueChange = onFullNameChange,
                 label = { Text("Full Name") },
+                singleLine = true,
                 isError = !fullNameCheckState.isValid,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text, imeAction = ImeAction.Next
+                ),
+                keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Next) }),
                 supportingText = {
                     fullNameCheckState.errorMessage?.let { Text(it) }
                 },
                 trailingIcon = {
                     Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = "Full Name"
+                        imageVector = Icons.Default.Person, contentDescription = "Full Name"
                     )
                 },
                 modifier = Modifier
                     .padding(bottom = 8.dp)
                     .semantics {
                         contentType = ContentType.PersonFullName
-                    }
-            )
+                    })
             OutlinedTextField(
                 value = birthDateInMillis.toDateString(),
-                onValueChange = {},
-                readOnly = true,
-                label = { Text("Birth Date") },
-                placeholder = { Text(datePattern) },
-                isError = !birthDateCheckState.isValid,
-                supportingText = {
-                    birthDateCheckState.errorMessage?.let {
-                        Text(it)
-                    }
-                },
-                trailingIcon = {
-                    IconButton(onClick = { isDatePickerShowed = true }) {
-                        Icon(
-                            imageVector = Icons.Default.DateRange, contentDescription = "Select date"
-                        )
-                    }
-                },
-                modifier = Modifier.padding(bottom = 8.dp)
+                              onValueChange = {},
+                              readOnly = true,
+                              label = { Text("Birth Date") },
+                              placeholder = { Text(datePattern) },
+                              isError = !birthDateCheckState.isValid,
+                              supportingText = {
+                                  birthDateCheckState.errorMessage?.let {
+                                      Text(it)
+                                  }
+                              },
+                              trailingIcon = {
+                                  IconButton(onClick = { isDatePickerShowed = true }) {
+                                      Icon(
+                                          imageVector = Icons.Default.DateRange, contentDescription = "Select date"
+                                      )
+                                  }
+                              },
+                              modifier = Modifier.padding(bottom = 8.dp)
             )
             OutlinedTextField(
                 value = citizenId,
@@ -186,8 +193,7 @@ private fun ProfileScreen(
                 },
                 trailingIcon = {
                     Icon(
-                        imageVector = Icons.Default.SensorOccupied,
-                        contentDescription = "Citizen ID"
+                        imageVector = Icons.Default.SensorOccupied, contentDescription = "Citizen ID"
                     )
                 },
                 keyboardOptions = KeyboardOptions(
@@ -198,20 +204,18 @@ private fun ProfileScreen(
             )
             OutlinedTextField(
                 value = address,
-                onValueChange = onAddressChange,
-                label = { Text("Address (Optional)") },
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Home,
-                        contentDescription = "Address"
-                    )
-                },
-                modifier = Modifier
-                    .padding(bottom = 8.dp)
-                    .semantics {
-                        contentType = ContentType.AddressStreet
-                    }
-            )
+                              onValueChange = onAddressChange,
+                              label = { Text("Address (Optional)") },
+                              trailingIcon = {
+                                  Icon(
+                                      imageVector = Icons.Default.Home, contentDescription = "Address"
+                                  )
+                              },
+                              modifier = Modifier
+                                  .padding(bottom = 8.dp)
+                                  .semantics {
+                                      contentType = ContentType.AddressStreet
+                                  })
 
         }
     }
