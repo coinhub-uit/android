@@ -1,5 +1,6 @@
 package com.coinhub.android.presentation.profile
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,6 +37,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coinhub.android.presentation.common.components.DatePickerModal
@@ -45,12 +47,15 @@ import com.coinhub.android.utils.PreviewDeviceSpecs
 import com.coinhub.android.utils.datePattern
 import com.coinhub.android.utils.toDateString
 import kotlinx.coroutines.launch
+import java.net.URI
 
 @Composable
 fun ProfileScreen(
     onSuccess: () -> Unit,
     viewModel: ProfileViewModel = hiltViewModel(),
 ) {
+    val avatarUri = viewModel.avatarUri.collectAsStateWithLifecycle().value
+    val onAvatarUriChange = viewModel::onAvatarUriChange
     val fullName = viewModel.fullName.collectAsStateWithLifecycle().value
     val onFullNameChange = viewModel::onFullNameChange
     val fullNameCheckState = viewModel.fullNameCheckState.collectAsStateWithLifecycle().value
@@ -68,6 +73,8 @@ fun ProfileScreen(
     val message = viewModel.message // WARN: Check this, will it be updated?
 
     ProfileScreen(
+        avatarUri = avatarUri,
+        onAvatarUriChange = onAvatarUriChange,
         fullName = fullName,
         onFullNameChange = onFullNameChange,
         fullNameCheckState = fullNameCheckState,
@@ -88,6 +95,8 @@ fun ProfileScreen(
 
 @Composable
 private fun ProfileScreen(
+    avatarUri: Uri,
+    onAvatarUriChange: (Uri) -> Unit,
     fullName: String,
     onFullNameChange: (String) -> Unit,
     fullNameCheckState: ProfileStates.FullNameCheckState,
@@ -118,21 +127,21 @@ private fun ProfileScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-             snackbarHost = { SnackbarHost(snackbarHostState) },
-             floatingActionButton = {
-                 if (isFormValid) {
-                     ExtendedFloatingActionButton(
-                         modifier = Modifier.padding(16.dp),
-                         onClick = {
-                             onCreateProfile(
-                                 onProfileCreated
-                             ) { showSnackbar() }
-                         },
-                     ) {
-                         Text("Next")
-                     }
-                 }
-             }) { paddingValues ->
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        floatingActionButton = {
+            if (isFormValid) {
+                ExtendedFloatingActionButton(
+                    modifier = Modifier.padding(16.dp),
+                    onClick = {
+                        onCreateProfile(
+                            onProfileCreated
+                        ) { showSnackbar() }
+                    },
+                ) {
+                    Text("Next")
+                }
+            }
+        }) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -140,7 +149,7 @@ private fun ProfileScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            AvatarPicker()
+            AvatarPicker(avatarUri = avatarUri, onAvatarUriChange=onAvatarUriChange)
             OutlinedTextField(
                 value = fullName,
                 onValueChange = onFullNameChange,
@@ -166,24 +175,24 @@ private fun ProfileScreen(
                     })
             OutlinedTextField(
                 value = birthDateInMillis.toDateString(),
-                              onValueChange = {},
-                              readOnly = true,
-                              label = { Text("Birth Date") },
-                              placeholder = { Text(datePattern) },
-                              isError = !birthDateCheckState.isValid,
-                              supportingText = {
-                                  birthDateCheckState.errorMessage?.let {
-                                      Text(it)
-                                  }
-                              },
-                              trailingIcon = {
-                                  IconButton(onClick = { isDatePickerShowed = true }) {
-                                      Icon(
-                                          imageVector = Icons.Default.DateRange, contentDescription = "Select date"
-                                      )
-                                  }
-                              },
-                              modifier = Modifier.padding(bottom = 8.dp)
+                onValueChange = {},
+                readOnly = true,
+                label = { Text("Birth Date") },
+                placeholder = { Text(datePattern) },
+                isError = !birthDateCheckState.isValid,
+                supportingText = {
+                    birthDateCheckState.errorMessage?.let {
+                        Text(it)
+                    }
+                },
+                trailingIcon = {
+                    IconButton(onClick = { isDatePickerShowed = true }) {
+                        Icon(
+                            imageVector = Icons.Default.DateRange, contentDescription = "Select date"
+                        )
+                    }
+                },
+                modifier = Modifier.padding(bottom = 8.dp)
             )
             OutlinedTextField(
                 value = citizenId,
@@ -206,18 +215,18 @@ private fun ProfileScreen(
             )
             OutlinedTextField(
                 value = address,
-                              onValueChange = onAddressChange,
-                              label = { Text("Address (Optional)") },
-                              trailingIcon = {
-                                  Icon(
-                                      imageVector = Icons.Default.Home, contentDescription = "Address"
-                                  )
-                              },
-                              modifier = Modifier
-                                  .padding(bottom = 8.dp)
-                                  .semantics {
-                                      contentType = ContentType.AddressStreet
-                                  })
+                onValueChange = onAddressChange,
+                label = { Text("Address (Optional)") },
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Home, contentDescription = "Address"
+                    )
+                },
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .semantics {
+                        contentType = ContentType.AddressStreet
+                    })
 
         }
     }
@@ -257,6 +266,8 @@ fun CreateProfileScreenPreview() {
             message = "Wow",
             onCreateProfile = { _, _ -> },
             onProfileCreated = {},
+            avatarUri = "https://placehold.co/150".toUri(),
+            onAvatarUriChange =  {}
         )
     }
 }

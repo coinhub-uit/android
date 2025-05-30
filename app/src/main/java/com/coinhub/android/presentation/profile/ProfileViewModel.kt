@@ -1,5 +1,6 @@
 package com.coinhub.android.presentation.profile
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.domain.use_cases.CreateProfileUseCase
@@ -9,7 +10,6 @@ import com.coinhub.android.domain.use_cases.ValidateFullNameUseCase
 import com.coinhub.android.utils.DEBOUNCE_TYPING
 import com.coinhub.android.utils.toMillis
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
+import androidx.core.net.toUri
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
@@ -33,6 +34,10 @@ class ProfileViewModel @Inject constructor(
 ) : ViewModel() {
     var message = "" // WARN: Again check
         private set
+
+    private val _avatarUri = MutableStateFlow(
+        "https://via.placeholder.com/150".toUri())
+    val avatarUri = _avatarUri.asStateFlow()
 
     private val _fullName = MutableStateFlow("")
     val fullName = _fullName.asStateFlow()
@@ -91,6 +96,10 @@ class ProfileViewModel @Inject constructor(
 
     private val _createProfileStatus = MutableStateFlow(ProfileStates.ProfileStatus.Ready)
     val createProfileStatus = _createProfileStatus.asStateFlow()
+
+    fun onAvatarUriChange(uri: Uri) {
+        _avatarUri.value = uri
+    }
 
     fun onFullNameChange(fullName: String) {
         _fullName.value = fullName
