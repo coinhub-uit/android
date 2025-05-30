@@ -1,16 +1,14 @@
 package com.coinhub.android.presentation.navigation.app
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.NavHost
@@ -19,7 +17,6 @@ import androidx.navigation.compose.rememberNavController
 import com.coinhub.android.presentation.common.permission_requests.RequestNotificationPermissionDialog
 import com.coinhub.android.presentation.navigation.AppNavDestinations
 import com.coinhub.android.presentation.navigation.app.components.AppBottomBar
-import com.coinhub.android.presentation.navigation.app.components.AppTopBar
 import com.coinhub.android.presentation.navigation.app.components.bottomNavItems
 import com.coinhub.android.presentation.navigation.app.navigations.aiChatNav
 import com.coinhub.android.presentation.navigation.app.navigations.createSourceGraph
@@ -32,6 +29,8 @@ import com.coinhub.android.presentation.navigation.app.navigations.sourceDetailN
 import com.coinhub.android.presentation.navigation.app.navigations.ticketDetailNav
 import com.coinhub.android.presentation.navigation.app.navigations.topUpGraph
 
+// The inner padding of scaffold isn't needed.. grammar
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AppNavGraph() {
     RequestNotificationPermissionDialog()
@@ -49,9 +48,7 @@ fun AppNavGraph() {
         }
     } == true
 
-    Scaffold(topBar = {
-        if (isInMainGraph) AppTopBar(navController = navController)
-    }, bottomBar = {
+    Scaffold(bottomBar = {
         AnimatedVisibility(
             visible = isInMainGraph,
             enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
@@ -59,20 +56,21 @@ fun AppNavGraph() {
         ) {
             AppBottomBar(navController = navController)
         }
-    }) { innerPadding ->
-        Box(modifier = Modifier.padding(innerPadding)) {
-            NavHost(navController = navController, startDestination = AppNavDestinations.MainGraph) {
-                mainNavGraph(navController = navController)
-                createSourceGraph()
-                topUpGraph(navController = navController)
-                sourceDetailNav()
-                createTicketGraph()
-                ticketDetailNav()
-                notificationNav()
-                aiChatNav()
-                editProfileNav(navController = navController)
-                settingNav()
-            }
+    }) {
+        NavHost(
+            navController = navController,
+            startDestination = AppNavDestinations.MainGraph,
+        ) {
+            mainNavGraph(navController = navController)
+            createSourceGraph()
+            topUpGraph(navController = navController)
+            sourceDetailNav()
+            createTicketGraph()
+            ticketDetailNav()
+            notificationNav()
+            aiChatNav()
+            editProfileNav(navController = navController)
+            settingNav()
         }
     }
 }
