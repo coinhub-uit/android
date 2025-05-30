@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -37,7 +38,6 @@ fun HomeFeatures(
     navigateToCreateSource: () -> Unit,
     navigateToTransferMoney: () -> Unit,
 ) {
-    // Create a list of action items
     val homeFeatureCardItems = listOf(
         HomeFeatureCardItem("Top Up", Icons.Default.Payments, navigateToTopUp),
         HomeFeatureCardItem("Create Source", Icons.Default.Add, navigateToCreateSource),
@@ -56,11 +56,9 @@ fun HomeFeatures(
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             contentPadding = PaddingValues(bottom = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(240.dp) // Adjust height to accommodate two rows
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.wrapContentSize()
         ) {
             items(homeFeatureCardItems) { item ->
                 HomeFeatureCard(

@@ -1,5 +1,7 @@
 package com.coinhub.android.presentation.home.components
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +14,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.CardDefaults
@@ -27,16 +30,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.coinhub.android.data.models.SourceModel
+import com.coinhub.android.ui.theme.CoinhubTheme
 
 @Composable
 fun HomeListSource(
     sourceModels: List<SourceModel>,
-    navigateToSourceDetail: () -> Unit) {
+    navigateToSourceDetail: () -> Unit,
+    copySourceIdToClipboard: (context: Context, sourceId: String) -> Unit,
+) {
 
     val pagerState = rememberPagerState { sourceModels.size }
 
@@ -56,20 +63,29 @@ fun HomeListSource(
         HomeSourceCard(
             sourceModel = sourceModels[page],
             onSourceClick = navigateToSourceDetail,
+            copySourceIdToClipboard = copySourceIdToClipboard
         )
     }
-
 }
 
 @Composable
-private fun HomeSourceCard(sourceModel: SourceModel, onSourceClick: () -> Unit) {
-    var isBalanceVisible by remember { mutableStateOf(true) }
+private fun HomeSourceCard(
+    sourceModel: SourceModel,
+    onSourceClick: () -> Unit,
+    copySourceIdToClipboard: (context: Context, sourceId: String) -> Unit,
+) {
+    var isBalanceVisible by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight(),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.elevatedCardColors(
+            containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.onSecondary
+        ),
         onClick = onSourceClick
     ) {
         Box(
@@ -81,25 +97,36 @@ private fun HomeSourceCard(sourceModel: SourceModel, onSourceClick: () -> Unit) 
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.CenterStart)
-                    .padding(end = 48.dp), // Add padding to prevent text overlap with the icon
+                    .padding(end = 64.dp),
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
                     text = sourceModel.id,
-                    style = MaterialTheme.typography.headlineLarge,
+                    style = MaterialTheme.typography.titleLarge,
                     maxLines = 1,
-                    fontSize = 24.sp,
                     overflow = TextOverflow.Ellipsis
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(48.dp))
 
                 Text(
                     text = "${if (isBalanceVisible) sourceModel.balance else "******"} VNĐ",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.primary,
                     overflow = TextOverflow.Ellipsis
+                )
+            }
+
+            IconButton(
+                onClick = {
+                    copySourceIdToClipboard(context, sourceModel.id)
+                    Toast.makeText(context, "Source ID copied", Toast.LENGTH_SHORT).show()
+                },
+                modifier = Modifier.align(Alignment.BottomEnd)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ContentCopy,
+                    contentDescription = "Copy Source ID",
                 )
             }
 
@@ -110,9 +137,24 @@ private fun HomeSourceCard(sourceModel: SourceModel, onSourceClick: () -> Unit) 
                 Icon(
                     imageVector = if (isBalanceVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
                     contentDescription = if (isBalanceVisible) "Hide Balance" else "Show Balance",
-                    tint = MaterialTheme.colorScheme.primary
                 )
             }
         }
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun HomeListSourcePreview() {
+    CoinhubTheme {
+        HomeListSource(
+            sourceModels = listOf(
+                SourceModel("01123142213512521", 9999999999999999),
+                SourceModel("00", 1200000),
+                SourceModel("KevinNitroSourceId", 0),
+            ),
+            navigateToSourceDetail = {},
+            copySourceIdToClipboard = { _, _ -> }
+        )
     }
 }

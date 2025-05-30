@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.coinhub.android.data.models.SourceModel
 import com.coinhub.android.data.models.UserModel
 import com.coinhub.android.presentation.home.components.HomeFeatures
@@ -31,6 +32,7 @@ fun HomeScreen(
     navigateToTransferMoney: () -> Unit,
     navigateToNotification: () -> Unit,
     navigateToAiChat: () -> Unit,
+    viewModel: HomeViewModel = hiltViewModel(),
 ) {
     // Mock user data
     val sourceModels = listOf(
@@ -50,6 +52,8 @@ fun HomeScreen(
         address = null
     )
 
+    val copySourceIdToClipboard = viewModel::copySourceIdToClipboard
+
     Scaffold(
         topBar = {
             HomeTopBar(
@@ -66,7 +70,11 @@ fun HomeScreen(
         ) {
             HomeGreeting(userModel = userModel)
             Spacer(modifier = Modifier.height(32.dp))
-            HomeListSource(sourceModels = sourceModels, navigateToSourceDetail = navigateToSourceDetail)
+            HomeListSource(
+                sourceModels = sourceModels,
+                navigateToSourceDetail = navigateToSourceDetail,
+                copySourceIdToClipboard =copySourceIdToClipboard
+            )
             Spacer(modifier = Modifier.height(16.dp))
             HomeFeatures(
                 navigateToTopUp = navigateToTopUp,
