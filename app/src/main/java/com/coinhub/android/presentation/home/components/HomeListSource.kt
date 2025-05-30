@@ -2,9 +2,7 @@ package com.coinhub.android.presentation.home.components
 
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -91,38 +89,34 @@ private fun HomeSourceCard(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(22.dp),
+                .height(128.dp)
+                .padding(16.dp),
         ) {
-            Column(
+            Text(
+                text = sourceModel.id,
+                style = MaterialTheme.typography.titleLarge,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.CenterStart)
-                    .padding(end = 64.dp),
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = sourceModel.id,
-                    style = MaterialTheme.typography.titleLarge,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                    .align(Alignment.TopStart)
+                    .padding(start = 8.dp, top = 8.dp)
+            )
 
-                Spacer(modifier = Modifier.height(48.dp))
-
-                Text(
-                    text = "${if (isBalanceVisible) sourceModel.balance else "******"} VNĐ",
-                    style = MaterialTheme.typography.bodyMedium,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
+            Text(
+                text = "${if (isBalanceVisible) sourceModel.balance else "******"} VNĐ",
+                style = MaterialTheme.typography.bodyMedium,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(start = 8.dp, bottom = 12.dp)
+            )
 
             IconButton(
                 onClick = {
                     copySourceIdToClipboard(context, sourceModel.id)
                     Toast.makeText(context, "Source ID copied", Toast.LENGTH_SHORT).show()
                 },
-                modifier = Modifier.align(Alignment.BottomEnd)
+                modifier = Modifier.align(Alignment.TopEnd)
             ) {
                 Icon(
                     imageVector = Icons.Default.ContentCopy,
@@ -132,7 +126,7 @@ private fun HomeSourceCard(
 
             IconButton(
                 onClick = { isBalanceVisible = !isBalanceVisible },
-                modifier = Modifier.align(Alignment.TopEnd)
+                modifier = Modifier.align(Alignment.BottomEnd)
             ) {
                 Icon(
                     imageVector = if (isBalanceVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
