@@ -1,7 +1,6 @@
 package com.coinhub.android.data.models
 
-data class GoogleNavigateResult(
+data class GoogleNavigateResultModel(
     val userId: String,
     val isUserRegisterProfile: Boolean,
 )
-

@@ -1,6 +1,6 @@
 package com.coinhub.android.domain.use_cases
 
-import com.coinhub.android.data.models.GoogleNavigateResult
+import com.coinhub.android.data.models.GoogleNavigateResultModel
 import com.coinhub.android.data.repository.AuthRepositoryImpl
 import com.coinhub.android.data.repository.SharedPreferenceRepositoryImpl
 import io.github.jan.supabase.compose.auth.composable.NativeSignInResult
@@ -32,7 +32,7 @@ class SignInWithGoogleUseCase @Inject constructor(
     }
 
     sealed class Result {
-        data class Success(val googleNavigateResult: GoogleNavigateResult) : Result()
+        data class Success(val googleNavigateResultModel: GoogleNavigateResultModel) : Result()
         data class Error(val message: String) : Result()
     }
 }

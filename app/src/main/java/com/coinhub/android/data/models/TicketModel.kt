@@ -2,7 +2,7 @@ package com.coinhub.android.data.models
 
 import java.util.Date
 
-data class Ticket(
+data class TicketModel(
     val id: String,
     val openedAt: Date,
     val closedAt: Date?,
@@ -12,8 +12,8 @@ data class Ticket(
 
 enum class TicketStatus(s: String) {
     ACTIVE("active"),
-    EARLYWITHDRAWN("earlyWithdrawn"),
-    MATUREDWITHDRAWN("maturedWithdrawn"),
+    EARLY_WITH_DRAWN("earlyWithdrawn"),
+    MATURED_WITH_DRAWN("maturedWithdrawn"),
 }
 
 enum class MethodEnum(s: String) {

@@ -28,6 +28,7 @@ import com.coinhub.android.presentation.navigation.app.navigations.settingNav
 import com.coinhub.android.presentation.navigation.app.navigations.sourceDetailNav
 import com.coinhub.android.presentation.navigation.app.navigations.ticketDetailNav
 import com.coinhub.android.presentation.navigation.app.navigations.topUpGraph
+import com.coinhub.android.presentation.navigation.app.navigations.transferMoneyGraph
 
 // The inner padding of scaffold isn't needed.. grammar
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -65,6 +66,7 @@ fun AppNavGraph() {
             createSourceGraph()
             topUpGraph(navController = navController)
             sourceDetailNav()
+            transferMoneyGraph()
             createTicketGraph()
             ticketDetailNav()
             notificationNav()

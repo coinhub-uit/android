@@ -2,8 +2,8 @@ package com.coinhub.android.data.repository
 
 import com.coinhub.android.data.api_service.UserApiService
 import com.coinhub.android.data.dtos.CreateUserDto
-import com.coinhub.android.data.models.GoogleNavigateResult
-import com.coinhub.android.data.models.User
+import com.coinhub.android.data.models.GoogleNavigateResultModel
+import com.coinhub.android.data.models.UserModel
 import com.coinhub.android.data.remote.SupabaseService
 import com.coinhub.android.domain.repository.AuthRepository
 import com.coinhub.android.utils.ACCESS_TOKEN_KEY
@@ -25,13 +25,13 @@ class AuthRepositoryImpl @Inject constructor(
         return supabaseService.getCurrentUserId()
     }
 
-    override suspend fun registerProfile(createUserDto: CreateUserDto): User {
+    override suspend fun registerProfile(createUserDto: CreateUserDto): UserModel {
         return userApiService.registerProfile(createUserDto)
     }
 
     override suspend fun getUserOnSignInWithGoogle(
         saveToken: KSuspendFunction2<String, String, Unit>,
-    ): GoogleNavigateResult {
+    ): GoogleNavigateResultModel {
         val token = supabaseService.getToken()!!
         saveToken(ACCESS_TOKEN_KEY, token)
         val userId = supabaseService.getCurrentUserId()
@@ -40,7 +40,7 @@ class AuthRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             null
         }
-        return GoogleNavigateResult(isUserRegisterProfile = user != null, userId = userId)
+        return GoogleNavigateResultModel(isUserRegisterProfile = user != null, userId = userId)
     }
 
     override suspend fun getToken(): String {

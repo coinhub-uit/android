@@ -148,7 +148,7 @@ class AuthViewModel @Inject constructor(
                 }
 
                 is SignInWithGoogleUseCase.Result.Success -> {
-                    if (result.googleNavigateResult.isUserRegisterProfile) {
+                    if (result.googleNavigateResultModel.isUserRegisterProfile) {
                         onSignedIn()
                     } else {
                         onSignedUp()

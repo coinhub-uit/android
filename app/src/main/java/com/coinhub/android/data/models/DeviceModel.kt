@@ -1,7 +1,6 @@
 package com.coinhub.android.data.models
 
-data class Source(
+data class DeviceModel(
     val id: String,
-    val balance: Number,
+    val fcmToken: String,
 )
-

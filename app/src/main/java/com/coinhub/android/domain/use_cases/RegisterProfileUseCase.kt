@@ -1,7 +1,5 @@
 package com.coinhub.android.domain.use_cases
 
-import com.coinhub.android.data.dtos.CreateUserDto
-import com.coinhub.android.data.models.User
 import com.coinhub.android.data.repository.AuthRepositoryImpl
 import javax.inject.Inject
 

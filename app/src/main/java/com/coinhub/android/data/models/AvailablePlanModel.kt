@@ -1,6 +1,6 @@
 package com.coinhub.android.data.models
 
-data class AvailablePlan(
+data class AvailablePlanModel(
     val planHistoryId: String,
     val rate: Number,
     val planId: String,

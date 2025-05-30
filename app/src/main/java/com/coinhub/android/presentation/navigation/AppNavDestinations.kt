@@ -48,6 +48,18 @@ open class AppNavDestinations {
     @Serializable
     data object SourceDetail : AppNavDestinations()
 
+    // App - Main Graph - Home - Transfer Money Graph
+    @Serializable
+    data object TransferMoneyGraph : AppNavDestinations()
+
+    // App - Main Graph - Home - Transfer Money Graph - Transfer Money
+    @Serializable
+    data object TransferMoney : AppNavDestinations()
+
+    // App - Main Graph - Home - Transfer Money Graph - Transfer Money - Transfer Money Result
+    @Serializable
+    data object TransferMoneyResult : AppNavDestinations()
+
     // App - Main Graph - Vault
     @Serializable
     data object Vault : AppNavDestinations()

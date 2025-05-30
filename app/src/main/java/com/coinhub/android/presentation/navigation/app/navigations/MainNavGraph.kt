@@ -9,6 +9,7 @@ import androidx.navigation.compose.navigation
 import com.coinhub.android.presentation.home.HomeScreen
 import com.coinhub.android.presentation.menu.MenuScreen
 import com.coinhub.android.presentation.navigation.AppNavDestinations
+import com.coinhub.android.presentation.transfer_money.TransferMoneyScreen
 import com.coinhub.android.presentation.vault.VaultScreen
 
 fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
@@ -23,7 +24,8 @@ fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
                 navigateToSourceDetail = { navController.navigate(AppNavDestinations.SourceDetail) },
                 navigateToTopUp = { navController.navigate(AppNavDestinations.TopUpGraph) },
                 navigateToNotification = { navController.navigate(AppNavDestinations.Notification) },
-                navigateToAiChat = { navController.navigate(AppNavDestinations.AiChat) })
+                navigateToAiChat = { navController.navigate(AppNavDestinations.AiChat) },
+                navigateToTransferMoney = { navController.navigate(AppNavDestinations.TransferMoneyGraph) })
         }
         composable<AppNavDestinations.Vault>(
             enterTransition = { fadeIn() },
