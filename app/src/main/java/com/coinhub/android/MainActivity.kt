@@ -35,6 +35,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             CoinhubTheme {
                 val isUserSignedIn = supabaseService.isUserSignedIn.collectAsStateWithLifecycle().value
+//                val isUserSignedIn = true
                 Surface(modifier = Modifier.fillMaxSize()) {
                     when (isUserSignedIn) {
                         true -> {

@@ -12,7 +12,8 @@ fun NavGraphBuilder.topUpGraph(navController: NavHostController) {
     navigation<AppNavDestinations.TopUpGraph>(startDestination = AppNavDestinations.TopUp) {
         composable<AppNavDestinations.TopUp> {
             TopUpScreen(
-                navigateToTopUpResult = { navController.navigate(AppNavDestinations.TopUpResult) }
+                navigateToTopUpResult = { navController.navigate(AppNavDestinations.TopUpResult) },
+                navigateUp = { navController.navigateUp() }
             )
         }
         composable<AppNavDestinations.TopUpResult> {

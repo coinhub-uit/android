@@ -11,8 +11,8 @@ data class TopUpModel(
 )
 
 enum class TopUpProviderEnum(s: String) {
-    MOMO("momo"),
     VNPAY("vnpay"),
+    MOMO("momo"),
     ZALOPAY("zalopay")
 }
 

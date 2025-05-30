@@ -1,4 +1,4 @@
-package com.coinhub.android.presentation.vault.components
+package com.coinhub.android.presentation.menu.components
 
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -7,8 +7,8 @@ import androidx.compose.runtime.Composable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun VaultTopBar() {
+fun MenuTopBar() {
     CenterAlignedTopAppBar(title = {
-        Text("Vault", maxLines = 1)
+        Text("Menu", maxLines = 1)
     })
 }
