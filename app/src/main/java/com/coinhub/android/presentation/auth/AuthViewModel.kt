@@ -1,9 +1,7 @@
 package com.coinhub.android.presentation.auth
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.coinhub.android.domain.use_cases.CheckUserSignedInUseCase
 import com.coinhub.android.domain.use_cases.SignInWithCredentialUseCase
 import com.coinhub.android.domain.use_cases.SignInWithGoogleUseCase
 import com.coinhub.android.domain.use_cases.SignUpWithCredentialUseCase
@@ -13,7 +11,6 @@ import com.coinhub.android.domain.use_cases.ValidatePasswordUseCase
 import com.coinhub.android.utils.DEBOUNCE_TYPING
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.jan.supabase.compose.auth.composable.NativeSignInResult
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,7 +20,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -36,21 +32,14 @@ class AuthViewModel @Inject constructor(
     private val signInWithCredentialUseCase: SignInWithCredentialUseCase,
     private val signUpWithCredentialUseCase: SignUpWithCredentialUseCase,
     private val signInWithGoogleUseCase: SignInWithGoogleUseCase,
-    private val checkUserSignedInUseCase: CheckUserSignedInUseCase,
 ) : ViewModel() {
-    var message = "" // WARN: This is for snackbar to popup, I don't know which name is better for this
-        private set
-
     private val _isSignUp = MutableStateFlow(false)
     val isSignUp: StateFlow<Boolean> = _isSignUp.asStateFlow()
-
-    private val _isUserSignedIn = MutableStateFlow(false)
-    val isUserSignedIn: StateFlow<Boolean> = _isUserSignedIn.asStateFlow()
 
     private val _email = MutableStateFlow("")
     val email = _email.asStateFlow()
 
-    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
+    @OptIn(FlowPreview::class)
     val emailCheckState = email.drop(1).debounce(DEBOUNCE_TYPING).map {
         val result = validateEmailUseCase(it)
         AuthStates.EmailCheckState(
@@ -62,7 +51,7 @@ class AuthViewModel @Inject constructor(
     private val _password = MutableStateFlow("")
     val password = _password.asStateFlow()
 
-    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
+    @OptIn(FlowPreview::class)
     val passwordCheckState = password.drop(1).debounce(DEBOUNCE_TYPING).map {
         val result = validatePasswordUseCase(it)
         AuthStates.PasswordCheckState(
@@ -74,7 +63,7 @@ class AuthViewModel @Inject constructor(
     private val _confirmPassword = MutableStateFlow("")
     val confirmPassword = _confirmPassword.asStateFlow()
 
-    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
+    @OptIn(FlowPreview::class)
     val confirmPasswordCheckState = confirmPassword.drop(1).debounce(DEBOUNCE_TYPING).map {
         val result = validateConfirmPasswordUseCase(
             _password.value, it
@@ -90,6 +79,9 @@ class AuthViewModel @Inject constructor(
     ) { emailCheckState, passwordCheckState, confirmPasswordCheckState, isSignup ->
         emailCheckState.isValid && passwordCheckState.isValid && (!isSignup or confirmPasswordCheckState.isValid)
     }.drop(1).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+
+    private val _snackbarMessage = MutableStateFlow<String?>(null)
+    var snackbarMessage = _snackbarMessage.asStateFlow()
 
     fun setIsSignUp(isSignUp: Boolean) {
         _isSignUp.value = isSignUp
@@ -107,29 +99,17 @@ class AuthViewModel @Inject constructor(
         _confirmPassword.value = confirmPassword
     }
 
-    fun checkUserSignedIn() {
-        viewModelScope.launch {
-            when (val result = checkUserSignedInUseCase()) {
-                is CheckUserSignedInUseCase.Result.Error -> {
-                    message = result.message
-                    _isUserSignedIn.value = false
-                }
-
-                is CheckUserSignedInUseCase.Result.Success -> {
-                    _isUserSignedIn.value = result.isSignedIn
-                }
-            }
-        }
+    fun clearSnackbarMessage() {
+        _snackbarMessage.value = null
     }
 
     fun signInWithCredential(
-        onSuccess: () -> Unit, onError: () -> Unit,
+        onSuccess: () -> Unit,
     ) {
         viewModelScope.launch {
             when (val result = signInWithCredentialUseCase(email = _email.value, password = _password.value)) {
                 is SignInWithCredentialUseCase.Result.Error -> {
-                    message = result.message
-                    onError()
+                    _snackbarMessage.value = result.message
                 }
 
                 is SignInWithCredentialUseCase.Result.Success -> {
@@ -140,13 +120,12 @@ class AuthViewModel @Inject constructor(
     }
 
     fun signUpWithCredential(
-        onSuccess: () -> Unit, onError: () -> Unit,
+        onSuccess: () -> Unit,
     ) {
         viewModelScope.launch {
             when (val result = signUpWithCredentialUseCase(email = _email.value, password = _password.value)) {
                 is SignUpWithCredentialUseCase.Result.Error -> {
-                    message = result.message
-                    onError()
+                    _snackbarMessage.value = result.message
                 }
 
                 is SignUpWithCredentialUseCase.Result.Success -> {
@@ -165,11 +144,10 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = signInWithGoogleUseCase(signInResult)) {
                 is SignInWithGoogleUseCase.Result.Error -> {
-                    message = result.message
+                    _snackbarMessage.value = result.message
                 }
 
                 is SignInWithGoogleUseCase.Result.Success -> {
-                    Log.d("hehehehehhe", "onSignInWithGoogle: aklhdwsjxwkh")
                     if (result.googleNavigateResult.isUserRegisterProfile) {
                         onSignedIn()
                     } else {
