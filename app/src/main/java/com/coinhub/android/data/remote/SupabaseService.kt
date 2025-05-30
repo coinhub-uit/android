@@ -46,6 +46,16 @@ class SupabaseService @Inject constructor(
         }
     }
 
+    suspend fun signOut() {
+        try {
+            supabaseClient.auth.signOut()
+            sharedPreferenceRepositoryImpl.clearPreferences()
+            _isUserSignedIn.value = false
+        } catch (e: Exception) {
+            throw Exception("Failed to sign out: ${e.message}")
+        }
+    }
+
     suspend fun getCurrentUserId(): String {
         val token = supabaseClient.auth.currentAccessTokenOrNull() ?: throw Exception("")
         return supabaseClient.auth.retrieveUser(token).id
