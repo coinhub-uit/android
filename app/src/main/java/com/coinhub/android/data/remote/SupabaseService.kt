@@ -1,18 +1,37 @@
 package com.coinhub.android.data.remote
 
 import com.coinhub.android.data.repository.SharedPreferenceRepositoryImpl
+import com.coinhub.android.di.IoDispatcher
 import com.coinhub.android.utils.ACCESS_TOKEN_KEY
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.auth.status.SessionStatus
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SupabaseService @Inject constructor(
     private val supabaseClient: SupabaseClient,
     private val sharedPreferenceRepositoryImpl: SharedPreferenceRepositoryImpl,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) {
+    private val supabaseServiceScope = CoroutineScope(SupervisorJob() + ioDispatcher)
+
+    init {
+        supabaseServiceScope.launch {
+            checkUserSignedIn()
+        }
+    }
+
+    private var _isUserSignedIn = MutableStateFlow<Boolean?>(null)
+    val isUserSignedIn = _isUserSignedIn.asStateFlow()
+
     suspend fun signIn(email: String, password: String) {
         supabaseClient.auth.signInWith(Email) {
             this.email = email
@@ -65,20 +84,20 @@ class SupabaseService @Inject constructor(
         }
     }
 
-    suspend fun isUserSignedIn(): Boolean {
+    private suspend fun checkUserSignedIn() {
         try {
             val token = sharedPreferenceRepositoryImpl.getStringData(ACCESS_TOKEN_KEY)
             if (token.isNullOrEmpty()) {
-                return false
+                _isUserSignedIn.value = false
             } else {
                 getUserIdWithToken(token)
                 refreshSession()
                 val newToken = getToken()!!
                 sharedPreferenceRepositoryImpl.saveStringData(ACCESS_TOKEN_KEY, newToken)
-                return true
+                _isUserSignedIn.value = true
             }
         } catch (e: Exception) {
-            return false
+            _isUserSignedIn.value = false
         }
     }
 }
