@@ -47,7 +47,7 @@ fun HomeFeatures(
     Column {
         Text(
             text = "Features",
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.SemiBold
         )
 
@@ -95,7 +95,7 @@ private fun HomeFeatureCard(
                 imageVector = icon,
                 contentDescription = title,
                 tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(24.dp)
             )
 
             Spacer(modifier = Modifier.height(8.dp))

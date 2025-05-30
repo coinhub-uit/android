@@ -47,7 +47,7 @@ fun HomeListSource(
 
     Text(
         text = "Your Sources",
-        style = MaterialTheme.typography.titleMedium,
+        style = MaterialTheme.typography.headlineSmall,
         fontWeight = FontWeight.SemiBold
     )
 

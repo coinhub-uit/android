@@ -30,7 +30,7 @@ fun HomeGreeting(userModel: UserModel) {
 
     Text(
         text = "$greeting, ${userModel.fullName}",
-        style = MaterialTheme.typography.headlineMedium,
+        style = MaterialTheme.typography.displaySmall,
         fontWeight = FontWeight.Bold,
         softWrap = true
     )
