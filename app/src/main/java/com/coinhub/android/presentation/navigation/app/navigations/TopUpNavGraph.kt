@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
+import com.coinhub.android.BuildConfig
 import com.coinhub.android.presentation.navigation.AppNavDestinations
 import com.coinhub.android.presentation.top_up.TopUpScreen
 import com.coinhub.android.presentation.top_up_result.TopUpResultScreen
@@ -20,7 +21,7 @@ fun NavGraphBuilder.topUpGraph(navController: NavHostController) {
         composable<AppNavDestinations.TopUpResult>(
             deepLinks = listOf(
                 navDeepLink<AppNavDestinations.TopUpResult>(
-                    basePath = "coinhub://vnpaycallback/ReturnUrl"
+                    basePath = BuildConfig.vnpayReturnUrl
                 )
             )
         ) { backStackEntry ->
