@@ -135,7 +135,6 @@ private fun ProfileScreen(
         floatingActionButton = {
             if (isFormValid) {
                 ExtendedFloatingActionButton(
-                    modifier = Modifier.padding(16.dp),
                     onClick = {
                         onCreateProfile(
                             onProfileCreated

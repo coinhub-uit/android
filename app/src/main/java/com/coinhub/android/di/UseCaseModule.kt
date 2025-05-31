@@ -9,6 +9,7 @@ import com.coinhub.android.domain.use_cases.SignUpWithCredentialUseCase
 import com.coinhub.android.domain.use_cases.ValidateConfirmPasswordUseCase
 import com.coinhub.android.domain.use_cases.ValidateEmailUseCase
 import com.coinhub.android.domain.use_cases.ValidatePasswordUseCase
+import com.coinhub.android.domain.use_cases.ValidateSourceIdUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,6 +30,10 @@ object UseCaseModule {
     @Provides
     @Singleton
     fun provideValidateConfirmPasswordUseCase() = ValidateConfirmPasswordUseCase()
+
+    @Provides
+    @Singleton
+    fun provideSourceIdUseCase() = ValidateSourceIdUseCase()
 
     @Provides
     @Singleton

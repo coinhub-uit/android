@@ -64,7 +64,7 @@ fun AppNavGraph(supabaseService: SupabaseService) {
             startDestination = AppNavDestinations.MainGraph,
         ) {
             mainNavGraph(navController = navController, supabaseService = supabaseService)
-            createSourceGraph()
+            createSourceGraph(navController = navController)
             topUpGraph(navController = navController)
             sourceDetailNav()
             transferMoneyGraph()
