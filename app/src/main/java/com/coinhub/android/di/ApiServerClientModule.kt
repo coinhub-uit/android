@@ -1,6 +1,11 @@
 package com.coinhub.android.di
 
 import com.coinhub.android.BuildConfig
+import com.coinhub.android.data.api_services.PaymentApiService
+import com.coinhub.android.data.api_services.PlanApiService
+import com.coinhub.android.data.api_services.SourceApiService
+import com.coinhub.android.data.api_services.TicketApiService
+import com.coinhub.android.data.api_services.TopUpApiService
 import com.coinhub.android.data.api_services.UserApiService
 import com.coinhub.android.data.repositories.SharedPreferenceRepositoryImpl
 import com.coinhub.android.utils.ACCESS_TOKEN_KEY
@@ -36,10 +41,40 @@ object ApiServerClientModule {
     // TODO: https://freedium.cfd/https://medium.com/@ramadan123sayed/retrofit-with-hilt-in-kotlin-f1046ae9b2be
     @Singleton
     @Provides
-    fun provideUserApiService(okHttpClient: OkHttpClient): UserApiService = Retrofit.Builder()
-        .baseUrl(API_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .client(okHttpClient)
-        .build()
-        .create(UserApiService::class.java)
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit =
+        Retrofit.Builder()
+            .baseUrl(API_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient)
+            .build()
+
+    @Singleton
+    @Provides
+    fun provideUserApiService(retrofit: Retrofit): UserApiService =
+        retrofit.create(UserApiService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideSourceApiService(retrofit: Retrofit): SourceApiService =
+        retrofit.create(SourceApiService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideTopUpApiService(retrofit: Retrofit): TopUpApiService =
+        retrofit.create(TopUpApiService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideTicketApiService(retrofit: Retrofit): TicketApiService =
+        retrofit.create(TicketApiService::class.java)
+
+    @Singleton
+    @Provides
+    fun providePlanApiService(retrofit: Retrofit): PlanApiService =
+        retrofit.create(PlanApiService::class.java)
+
+    @Singleton
+    @Provides
+    fun providePaymentApiService(retrofit: Retrofit): PaymentApiService =
+        retrofit.create(PaymentApiService::class.java)
 }

@@ -3,9 +3,8 @@ package com.coinhub.android.di
 import com.coinhub.android.data.repositories.AuthRepositoryImpl
 import com.coinhub.android.data.repositories.SharedPreferenceRepositoryImpl
 import com.coinhub.android.domain.use_cases.CheckUserSignedInUseCase
-import com.coinhub.android.domain.use_cases.SignInWithGoogleUseCase
-import com.coinhub.android.domain.use_cases.RegisterProfileUseCase
 import com.coinhub.android.domain.use_cases.SignInWithCredentialUseCase
+import com.coinhub.android.domain.use_cases.SignInWithGoogleUseCase
 import com.coinhub.android.domain.use_cases.SignUpWithCredentialUseCase
 import com.coinhub.android.domain.use_cases.ValidateConfirmPasswordUseCase
 import com.coinhub.android.domain.use_cases.ValidateEmailUseCase
@@ -70,12 +69,5 @@ object UseCaseModule {
     ) = CheckUserSignedInUseCase(
         authRepositoryImpl = authRepositoryImpl,
         sharedPreferenceRepositoryImpl = sharedPreferenceRepositoryImpl
-    )
-
-    @Provides
-    @Singleton
-    fun provideRegisterProfileUseCase(authRepositoryImpl: AuthRepositoryImpl) = RegisterProfileUseCase(
-        authRepositoryImpl =
-            authRepositoryImpl
     )
 }

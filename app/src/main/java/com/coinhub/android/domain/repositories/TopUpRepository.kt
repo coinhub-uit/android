@@ -1,9 +1,9 @@
 package com.coinhub.android.domain.repositories
 
-import com.coinhub.android.data.models.TopUpModel
+import com.coinhub.android.data.dtos.CreateTopUpDto
 
 interface TopUpRepository {
-    suspend fun getTopUp(
-        sourceId: String
-    ): TopUpModel
+    suspend fun createTopUp(
+        createTopUpDto: CreateTopUpDto,
+    ): String
 }
