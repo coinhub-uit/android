@@ -14,6 +14,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.coinhub.android.data.remote.SupabaseService
 import com.coinhub.android.presentation.common.permission_requests.RequestNotificationPermissionDialog
 import com.coinhub.android.presentation.navigation.AppNavDestinations
 import com.coinhub.android.presentation.navigation.app.components.AppBottomBar
@@ -33,7 +34,7 @@ import com.coinhub.android.presentation.navigation.app.navigations.transferMoney
 // The inner padding of scaffold isn't needed.. grammar
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun AppNavGraph() {
+fun AppNavGraph(supabaseService: SupabaseService) {
     RequestNotificationPermissionDialog()
 
     val navController = rememberNavController()
@@ -62,7 +63,7 @@ fun AppNavGraph() {
             navController = navController,
             startDestination = AppNavDestinations.MainGraph,
         ) {
-            mainNavGraph(navController = navController)
+            mainNavGraph(navController = navController, supabaseService = supabaseService)
             createSourceGraph()
             topUpGraph(navController = navController)
             sourceDetailNav()

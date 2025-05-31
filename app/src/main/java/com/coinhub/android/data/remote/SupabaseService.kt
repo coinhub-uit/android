@@ -1,5 +1,6 @@
 package com.coinhub.android.data.remote
 
+import android.util.Log
 import com.coinhub.android.data.repository.SharedPreferenceRepositoryImpl
 import com.coinhub.android.di.IoDispatcher
 import com.coinhub.android.utils.ACCESS_TOKEN_KEY
@@ -26,6 +27,7 @@ class SupabaseService @Inject constructor(
     init {
         supabaseServiceScope.launch {
             checkUserSignedIn()
+            Log.d("SOMETHIGN", "$_isUserSignedIn")
         }
     }
 
@@ -46,13 +48,15 @@ class SupabaseService @Inject constructor(
         }
     }
 
-    suspend fun signOut() {
-        try {
-            supabaseClient.auth.signOut()
-            sharedPreferenceRepositoryImpl.clearPreferences()
-            _isUserSignedIn.value = false
-        } catch (e: Exception) {
-            throw Exception("Failed to sign out: ${e.message}")
+    fun signOut() {
+        supabaseServiceScope.launch {
+            try {
+                supabaseClient.auth.signOut()
+                sharedPreferenceRepositoryImpl.clearPreferences()
+                _isUserSignedIn.value = false
+            } catch (e: Exception) {
+                throw Exception("Failed to sign out: ${e.message}")
+            }
         }
     }
 
