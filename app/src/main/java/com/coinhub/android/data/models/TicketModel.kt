@@ -1,11 +1,9 @@
 package com.coinhub.android.data.models
 
-import java.util.Date
-
 data class TicketModel(
     val id: String,
-    val openedAt: Date,
-    val closedAt: Date?,
+    val openedAt: String,
+    val closedAt: String?,
     val status: TicketStatus,
     val method: MethodEnum,
 )

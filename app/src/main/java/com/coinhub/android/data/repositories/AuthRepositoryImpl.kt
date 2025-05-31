@@ -1,5 +1,6 @@
 package com.coinhub.android.data.repositories
 
+import android.util.Log
 import com.coinhub.android.data.api_services.UserApiService
 import com.coinhub.android.data.dtos.CreateUserDto
 import com.coinhub.android.data.models.GoogleNavigateResultModel
@@ -68,7 +69,7 @@ class AuthRepositoryImpl @Inject constructor(
         try {
             Log.d("TEST", "logUserById: ${userApiService.getUserById(userId)}")
         } catch (e: Exception) {
-            Log.e("TEST", "logUserById: Error fetching user by ID: ${e.message}")
+            Log.d("TEST", "logUserById: Error fetching user by ID: ${e.message}")
             throw e
         }
     }
