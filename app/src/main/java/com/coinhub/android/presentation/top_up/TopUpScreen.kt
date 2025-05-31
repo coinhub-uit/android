@@ -1,6 +1,10 @@
 package com.coinhub.android.presentation.top_up
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.FloatingActionButton
@@ -8,11 +12,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.coinhub.android.data.dtos.CreateTopUpDto
 import com.coinhub.android.presentation.top_up.components.TopUpTopBar
 import com.coinhub.android.presentation.top_up.components.TopUpSelectSource
 import com.coinhub.android.presentation.top_up.components.TopUpSelectProvider
@@ -23,22 +28,22 @@ import com.coinhub.android.data.models.TopUpProviderEnum
 
 @Composable
 fun TopUpScreen(
-    navigateToTopUpResult: () -> Unit,
-    navigateUp: () -> Unit,
+    onTopUpResult: (CreateTopUpDto) -> Unit,
+    onBack: () -> Unit,
     viewModel: TopUpViewModel = hiltViewModel(),
 ) {
-    val selectedSourceId by viewModel.selectedSourceId
-    val isSourceBottomSheetVisible by viewModel.isSourceBottomSheetVisible
-    val sourceModels by viewModel.sourceModels
-    val selectedProvider by viewModel.selectedProvider
-    val amountText by viewModel.amountText
-    val isFormValid by viewModel.isFormValid
+    val sourceId = viewModel.sourceId.collectAsStateWithLifecycle().value
+    val isSourceBottomSheetVisible = viewModel.isSourceBottomSheetVisible.collectAsStateWithLifecycle().value
+    val sourceModels = viewModel.sourceModels.collectAsStateWithLifecycle().value
+    val topUpProvider = viewModel.topUpProvider.collectAsStateWithLifecycle().value
+    val amountText = viewModel.amountText.collectAsStateWithLifecycle().value
+    val isFormValid = viewModel.isFormValid.collectAsStateWithLifecycle().value
 
     TopUpScreen(
-        selectedSourceId = selectedSourceId,
+        selectedSourceId = sourceId,
         isSourceBottomSheetVisible = isSourceBottomSheetVisible,
         sourceModels = sourceModels,
-        selectedProvider = selectedProvider,
+        selectedProvider = topUpProvider,
         amountText = amountText,
         isFormValid = isFormValid,
         setShowBottomSheet = viewModel::setShowSourceBottomSheet,
@@ -46,8 +51,8 @@ fun TopUpScreen(
         onSelectProvider = viewModel::selectProvider,
         onAmountChange = viewModel::updateAmount,
         onPresetAmountClick = viewModel::setPresetAmount,
-        navigateToTopUpResult = navigateToTopUpResult,
-        navigateUp = navigateUp
+        onTopUpResult = { onTopUpResult(viewModel.getCreateTopUpDto()) },
+        onBack = onBack
     )
 }
 
@@ -64,19 +69,19 @@ private fun TopUpScreen(
     onSelectProvider: (TopUpProviderEnum) -> Unit,
     onAmountChange: (String) -> Unit,
     onPresetAmountClick: (String) -> Unit,
-    navigateToTopUpResult: () -> Unit,
-    navigateUp: () -> Unit,
+    onTopUpResult: () -> Unit,
+    onBack: () -> Unit,
 ) {
     Scaffold(
         topBar = {
             TopUpTopBar(
-                navigateUp = navigateUp,
+                onBack = onBack,
             )
         },
         floatingActionButton = {
             if (isFormValid) {
                 FloatingActionButton(
-                    onClick = navigateToTopUpResult
+                    onClick = onTopUpResult,
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowForward,
@@ -135,8 +140,8 @@ fun TopUpScreenPreview() {
                 onSelectProvider = {},
                 onAmountChange = {},
                 onPresetAmountClick = {},
-                navigateToTopUpResult = {},
-                navigateUp = {}
+                onTopUpResult = {},
+                onBack = {}
             )
         }
     }

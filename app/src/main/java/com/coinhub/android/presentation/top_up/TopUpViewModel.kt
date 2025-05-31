@@ -1,50 +1,58 @@
 package com.coinhub.android.presentation.top_up
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.coinhub.android.data.dtos.CreateTopUpDto
 import com.coinhub.android.data.models.SourceModel
 import com.coinhub.android.data.models.TopUpProviderEnum
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
 class TopUpViewModel @Inject constructor() : ViewModel() {
-    private val _selectedSourceId = mutableStateOf<String?>(null)
-    val selectedSourceId: State<String?> = _selectedSourceId
-
-    private val _isSourceBottomSheetVisible = mutableStateOf(false)
-    val isSourceBottomSheetVisible: State<Boolean> = _isSourceBottomSheetVisible
-
-    private val _sourceModels = mutableStateOf(
+    private val _sourceModels = MutableStateFlow(
         listOf(
             SourceModel("1", 1000000), SourceModel("2", 500000), SourceModel("3", 750000)
         )
     )
-    val sourceModels: State<List<SourceModel>> = _sourceModels
+    val sourceModels = _sourceModels.asStateFlow()
 
-    private val _selectedProvider = mutableStateOf<TopUpProviderEnum?>(null)
-    val selectedProvider: State<TopUpProviderEnum?> = _selectedProvider
+    private val _sourceId = MutableStateFlow<String?>(null)
+    val sourceId = _sourceId.asStateFlow()
 
-    private val _amountText = mutableStateOf("")
-    val amountText: State<String> = _amountText
+    private val _isSourceBottomSheetVisible = MutableStateFlow(false)
+    val isSourceBottomSheetVisible = _isSourceBottomSheetVisible.asStateFlow()
 
-    val isFormValid: State<Boolean> = derivedStateOf {
-        selectedSourceId.value != null && selectedProvider.value != null && amountText.value.isNotEmpty()
-    }
+    private val _topUpProvider = MutableStateFlow<TopUpProviderEnum?>(null)
+    val topUpProvider = _topUpProvider.asStateFlow()
+
+    private val _amountText = MutableStateFlow("")
+    val amountText = _amountText.asStateFlow()
+
+    val isFormValid = combine(
+        sourceId,
+        topUpProvider,
+        amountText
+    ) { selectedSourceId, selectedProvider, amountText ->
+        selectedSourceId != null && selectedProvider != null && amountText.isNotEmpty()
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     fun setShowSourceBottomSheet(show: Boolean) {
         _isSourceBottomSheetVisible.value = show
     }
 
     fun selectSource(sourceId: String) {
-        _selectedSourceId.value = sourceId
+        _sourceId.value = sourceId
         _isSourceBottomSheetVisible.value = false
     }
 
     fun selectProvider(provider: TopUpProviderEnum) {
-        _selectedProvider.value = provider
+        _topUpProvider.value = provider
     }
 
     fun updateAmount(amount: String) {
@@ -55,5 +63,15 @@ class TopUpViewModel @Inject constructor() : ViewModel() {
 
     fun setPresetAmount(amount: String) {
         _amountText.value = amount.replace(".", "")
+    }
+
+    fun getCreateTopUpDto(): CreateTopUpDto {
+        return CreateTopUpDto(
+            provider = _topUpProvider.value!!,
+            returnUrl = "coinhub://topUp/result",
+            sourceDestinationId = _sourceId.value!!,
+            ipAddress = "192.168.1.1",
+            amount = _amountText.value.toLong()
+        )
     }
 }

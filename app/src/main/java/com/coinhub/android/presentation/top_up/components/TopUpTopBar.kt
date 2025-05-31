@@ -13,14 +13,14 @@ import com.coinhub.android.ui.theme.CoinhubTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopUpTopBar(navigateUp: () -> Unit) {
+fun TopUpTopBar(onBack: () -> Unit) {
     TopAppBar(
         title = {
             Text("Top Up", maxLines = 1)
         },
         navigationIcon = {
             IconButton(
-                onClick = navigateUp
+                onClick = onBack
             ) {
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowBack,
@@ -35,6 +35,6 @@ fun TopUpTopBar(navigateUp: () -> Unit) {
 @Composable
 fun TopUpTopBarPreview(){
     CoinhubTheme {
-        TopUpTopBar(navigateUp = {})
+        TopUpTopBar(onBack = {})
     }
 }
