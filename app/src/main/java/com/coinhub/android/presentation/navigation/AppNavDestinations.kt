@@ -1,5 +1,6 @@
 package com.coinhub.android.presentation.navigation
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 open class AppNavDestinations {
@@ -41,9 +42,11 @@ open class AppNavDestinations {
     data object TopUp : AppNavDestinations()
 
     // App - Main Graph - Home - Top Up Graph - Top Up - Top Up Result
+    //TODO: Parse all fields from the response
     @Serializable
     data class TopUpResult(
-        val sourceId: String,
+        @SerialName("vnp_ResponseCode")
+        val vnpResponseCode: String,
     ) : AppNavDestinations()
 
     // App - Main Graph - Home - Source Detail

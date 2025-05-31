@@ -50,7 +50,7 @@ fun TopUpResultScreen(
     val context = LocalContext.current
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.checkTopUpStatus(sourceId = topUp.sourceId)
+        //viewModel.checkTopUpStatus(sourceId = topUp.sourceId)
     }
 
     if (message != null) {
@@ -62,7 +62,9 @@ fun TopUpResultScreen(
     TopUpResultScreen(
         topUpModel = topUpModel,
         isLoading = isLoading,
-        onRetry = { viewModel.checkTopUpStatus(sourceId = topUp.sourceId) },
+        onRetry = {
+            //viewModel.checkTopUpStatus(sourceId = topUp.)
+        },
         onMain = onMain
     )
 }
@@ -85,7 +87,9 @@ fun TopUpResultScreen(
     }
 
     Box(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
         Card(

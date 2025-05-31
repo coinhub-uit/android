@@ -17,14 +17,14 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.coinhub.android.presentation.top_up.components.TopUpTopBar
-import com.coinhub.android.presentation.top_up.components.TopUpSelectSource
-import com.coinhub.android.presentation.top_up.components.TopUpSelectProvider
-import com.coinhub.android.presentation.top_up.components.TopUpEnterAmount
-import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.data.models.SourceModel
 import com.coinhub.android.data.models.TopUpProviderEnum
 import com.coinhub.android.presentation.navigation.AppNavDestinations
+import com.coinhub.android.presentation.top_up.components.TopUpEnterAmount
+import com.coinhub.android.presentation.top_up.components.TopUpSelectProvider
+import com.coinhub.android.presentation.top_up.components.TopUpSelectSource
+import com.coinhub.android.presentation.top_up.components.TopUpTopBar
+import com.coinhub.android.ui.theme.CoinhubTheme
 
 @Composable
 fun TopUpScreen(
@@ -32,7 +32,7 @@ fun TopUpScreen(
     onBack: () -> Unit,
     viewModel: TopUpViewModel = hiltViewModel(),
 ) {
-    val sourceId = viewModel.sourceId.collectAsStateWithLifecycle().value
+    val sourceId = viewModel.vnpResponseCode.collectAsStateWithLifecycle().value
     val isSourceBottomSheetVisible = viewModel.isSourceBottomSheetVisible.collectAsStateWithLifecycle().value
     val sourceModels = viewModel.sourceModels.collectAsStateWithLifecycle().value
     val topUpProvider = viewModel.topUpProvider.collectAsStateWithLifecycle().value

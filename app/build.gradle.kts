@@ -47,6 +47,11 @@ android {
             "apiServerUrl",
             "\"${localProps.getProperty("API_SERVER_URL")}\""
         )
+        buildConfigField(
+            "String",
+            "vnpayReturnUrl",
+            "\"${localProps.getProperty("VNPAY_RETURN_URL")}\""
+        )
     }
 
     buildTypes {

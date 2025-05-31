@@ -4,6 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
 import com.coinhub.android.presentation.navigation.AppNavDestinations
 import com.coinhub.android.presentation.top_up.TopUpScreen
@@ -13,10 +14,16 @@ fun NavGraphBuilder.topUpGraph(navController: NavHostController) {
     navigation<AppNavDestinations.TopUpGraph>(startDestination = AppNavDestinations.TopUp) {
         composable<AppNavDestinations.TopUp> {
             TopUpScreen(onTopUpResult = { topUp: AppNavDestinations.TopUpResult ->
-                navController.navigate(AppNavDestinations.TopUpResult(sourceId = topUp.sourceId))
+                navController.navigate(AppNavDestinations.TopUpResult(vnpResponseCode = topUp.vnpResponseCode))
             }, onBack = { navController.navigateUp() })
         }
-        composable<AppNavDestinations.TopUpResult> { backStackEntry ->
+        composable<AppNavDestinations.TopUpResult>(
+            deepLinks = listOf(
+                navDeepLink<AppNavDestinations.TopUpResult>(
+                    basePath = "coinhub://vnpaycallback/ReturnUrl"
+                )
+            )
+        ) { backStackEntry ->
             val topUp = backStackEntry.toRoute<AppNavDestinations.TopUpResult>()
             TopUpResultScreen(
                 onMain = {

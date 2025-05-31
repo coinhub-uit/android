@@ -23,8 +23,8 @@ class TopUpViewModel @Inject constructor() : ViewModel() {
     )
     val sourceModels = _sourceModels.asStateFlow()
 
-    private val _sourceId = MutableStateFlow<String?>(null)
-    val sourceId = _sourceId.asStateFlow()
+    private val _vnpResponseCode = MutableStateFlow<String?>(null)
+    val vnpResponseCode = _vnpResponseCode.asStateFlow()
 
     private val _isSourceBottomSheetVisible = MutableStateFlow(false)
     val isSourceBottomSheetVisible = _isSourceBottomSheetVisible.asStateFlow()
@@ -36,7 +36,7 @@ class TopUpViewModel @Inject constructor() : ViewModel() {
     val amountText = _amountText.asStateFlow()
 
     val isFormValid = combine(
-        sourceId,
+        vnpResponseCode,
         topUpProvider,
         amountText
     ) { selectedSourceId, selectedProvider, amountText ->
@@ -48,7 +48,7 @@ class TopUpViewModel @Inject constructor() : ViewModel() {
     }
 
     fun selectSource(sourceId: String) {
-        _sourceId.value = sourceId
+        _vnpResponseCode.value = sourceId
         _isSourceBottomSheetVisible.value = false
     }
 
@@ -71,15 +71,15 @@ class TopUpViewModel @Inject constructor() : ViewModel() {
         return CreateTopUpDto(
             provider = _topUpProvider.value!!,
             returnUrl = "coinhub://topUp/result",
-            sourceDestinationId = _sourceId.value!!,
+            sourceDestinationId = _vnpResponseCode.value!!,
             ipAddress = "192.168.1.1",
             amount = _amountText.value.toLong()
         )
     }
 
-    fun getTopUpResult() : AppNavDestinations.TopUpResult {
+    fun getTopUpResult(): AppNavDestinations.TopUpResult {
         return AppNavDestinations.TopUpResult(
-            sourceId = _sourceId.value!!,
+            vnpResponseCode = vnpResponseCode.value!!
         )
     }
 }
