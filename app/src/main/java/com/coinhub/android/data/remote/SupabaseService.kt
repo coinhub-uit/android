@@ -1,6 +1,6 @@
 package com.coinhub.android.data.remote
 
-import com.coinhub.android.data.repository.SharedPreferenceRepositoryImpl
+import com.coinhub.android.data.repositories.SharedPreferenceRepositoryImpl
 import com.coinhub.android.di.IoDispatcher
 import com.coinhub.android.utils.ACCESS_TOKEN_KEY
 import io.github.jan.supabase.SupabaseClient

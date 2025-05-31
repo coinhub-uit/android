@@ -1,4 +1,4 @@
-package com.coinhub.android.domain.repository
+package com.coinhub.android.domain.repositories
 
 import com.coinhub.android.data.dtos.CreateUserDto
 import com.coinhub.android.data.models.GoogleNavigateResultModel

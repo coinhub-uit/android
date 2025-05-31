@@ -1,10 +1,10 @@
-package com.coinhub.android.data.repository
+package com.coinhub.android.data.repositories
 
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import com.coinhub.android.CoinHubApplication.Companion.appContext
-import com.coinhub.android.domain.repository.SharedPreferenceRepository
+import com.coinhub.android.domain.repositories.SharedPreferenceRepository
 
 class SharedPreferenceRepositoryImpl() : SharedPreferenceRepository {
 

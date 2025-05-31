@@ -1,8 +1,8 @@
 package com.coinhub.android.di
 
 import com.coinhub.android.BuildConfig
-import com.coinhub.android.data.api_service.UserApiService
-import com.coinhub.android.data.repository.SharedPreferenceRepositoryImpl
+import com.coinhub.android.data.api_services.UserApiService
+import com.coinhub.android.data.repositories.SharedPreferenceRepositoryImpl
 import com.coinhub.android.utils.ACCESS_TOKEN_KEY
 import dagger.Module
 import dagger.Provides

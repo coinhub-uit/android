@@ -66,6 +66,7 @@ class TopUpViewModel @Inject constructor() : ViewModel() {
         _amountText.value = amount.replace(".", "")
     }
 
+    // TODO: @NTGNguyen use use case to pass down props. Naming the fun again
     fun getCreateTopUpDto(): CreateTopUpDto {
         return CreateTopUpDto(
             provider = _topUpProvider.value!!,
@@ -78,9 +79,7 @@ class TopUpViewModel @Inject constructor() : ViewModel() {
 
     fun getTopUpResult() : AppNavDestinations.TopUpResult {
         return AppNavDestinations.TopUpResult(
-            provider = _topUpProvider.value!!,
-            sourceDestinationId = _sourceId.value!!,
-            amount = _amountText.value.toLong()
+            sourceId = _sourceId.value!!,
         )
     }
 }

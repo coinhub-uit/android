@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Password
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
@@ -33,6 +34,7 @@ import com.coinhub.android.utils.PreviewDeviceSpecs
 fun MenuScreen(
     onEditProfile: () -> Unit,
     onSettings: () -> Unit,
+    onCredentialChange: () -> Unit,
     onSignOut: () -> Unit,
     viewModel: MenuViewModel = hiltViewModel(),
 ) {
@@ -41,6 +43,7 @@ fun MenuScreen(
     MenuScreen(
         onEditProfile = onEditProfile,
         onSettings = onSettings,
+        onCredentialChange = onCredentialChange,
         onSignOut = onSignOut,
         userModel = userModel
     )
@@ -51,6 +54,7 @@ private fun MenuScreen(
     onEditProfile: () -> Unit,
     onSettings: () -> Unit,
     onSignOut: () -> Unit,
+    onCredentialChange: () -> Unit,
     userModel: UserModel,
 ) {
     val menuItems = listOf(
@@ -63,6 +67,11 @@ private fun MenuScreen(
             icon = Icons.Default.Settings,
             text = "Settings",
             onClick = onSettings
+        ),
+        MenuEntry(
+            icon = Icons.Default.Password,
+            text = "Credentials",
+            onClick = onCredentialChange
         )
     )
     Scaffold(
@@ -81,7 +90,7 @@ private fun MenuScreen(
             MenuAvatar(userModel = userModel)
 
             Spacer(modifier = Modifier.height(16.dp))
-            HorizontalDivider(modifier = Modifier.padding(horizontal = 64.dp))
+            HorizontalDivider(modifier = Modifier.padding(horizontal = 32.dp))
             Spacer(modifier = Modifier.height(16.dp))
 
             // Menu items
@@ -117,6 +126,7 @@ fun MenuScreenPreview() {
         MenuScreen(
             onEditProfile = {},
             onSettings = {},
+            onCredentialChange = {},
             onSignOut = {},
         )
     }

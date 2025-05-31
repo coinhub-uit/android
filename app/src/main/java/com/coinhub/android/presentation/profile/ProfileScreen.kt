@@ -42,6 +42,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coinhub.android.presentation.common.components.DatePickerModal
 import com.coinhub.android.presentation.navigation.app.components.AvatarPicker
+import com.coinhub.android.presentation.profile.components.ProfileTopBar
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
 import com.coinhub.android.utils.datePattern
@@ -50,6 +51,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ProfileScreen(
+    isEdit: Boolean,
     onSuccess: () -> Unit,
     viewModel: ProfileViewModel = hiltViewModel(),
 ) {
@@ -72,6 +74,7 @@ fun ProfileScreen(
     val message = viewModel.message // WARN: Check this, will it be updated?
 
     ProfileScreen(
+        isEdit = isEdit,
         avatarUri = avatarUri,
         onAvatarUriChange = onAvatarUriChange,
         fullName = fullName,
@@ -94,6 +97,7 @@ fun ProfileScreen(
 
 @Composable
 private fun ProfileScreen(
+    isEdit: Boolean,
     avatarUri: Uri,
     onAvatarUriChange: (Uri) -> Unit,
     fullName: String,
@@ -126,6 +130,7 @@ private fun ProfileScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        topBar = { ProfileTopBar(isEdit = isEdit) },
         snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
             if (isFormValid) {
@@ -148,7 +153,7 @@ private fun ProfileScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            AvatarPicker(avatarUri = avatarUri, onAvatarUriChange=onAvatarUriChange)
+            AvatarPicker(avatarUri = avatarUri, onAvatarUriChange = onAvatarUriChange)
             OutlinedTextField(
                 value = fullName,
                 onValueChange = onFullNameChange,
@@ -244,6 +249,7 @@ private fun ProfileScreen(
 fun CreateProfileScreenPreview() {
     CoinhubTheme {
         ProfileScreen(
+            isEdit = true,
             fullName = "KevinNitro",
             onFullNameChange = {},
             fullNameCheckState = ProfileStates.FullNameCheckState(
@@ -266,7 +272,7 @@ fun CreateProfileScreenPreview() {
             onCreateProfile = { _, _ -> },
             onProfileCreated = {},
             avatarUri = "https://placehold.co/150".toUri(),
-            onAvatarUriChange =  {}
+            onAvatarUriChange = {}
         )
     }
 }

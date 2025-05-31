@@ -1,4 +1,4 @@
-package com.coinhub.android.data.api_service
+package com.coinhub.android.data.api_services
 
 import com.coinhub.android.data.dtos.CreateUserDto
 import com.coinhub.android.data.dtos.RegisterDeviceDto

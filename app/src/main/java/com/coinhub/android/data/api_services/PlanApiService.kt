@@ -1,4 +1,4 @@
-package com.coinhub.android.data.api_service
+package com.coinhub.android.data.api_services
 
 import com.coinhub.android.data.models.AvailablePlanModel
 import retrofit2.http.GET

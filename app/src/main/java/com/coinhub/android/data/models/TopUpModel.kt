@@ -10,15 +10,15 @@ data class TopUpModel(
     val createdAt: Date,
 )
 
-enum class TopUpProviderEnum(s: String) {
-    VNPAY("vnpay"),
-    MOMO("momo"),
-    ZALOPAY("zalopay")
+enum class TopUpProviderEnum {
+    VNPAY,
+    MOMO,
+    ZALOPAY
 }
 
-enum class TopUpStatusEnum(s: String) {
-    PROCESSING("processing"),
-    SUCCESS("success"),
-    DECLINED("declined"),
-    OVERDUE("overdue"),
+enum class TopUpStatusEnum {
+    PROCESSING,
+    SUCCESS,
+    DECLINED,
+    OVERDUE,
 }

@@ -42,7 +42,7 @@ fun NavGraphBuilder.mainNavGraph(navController: NavHostController, supabaseServi
             MenuScreen(
                 onEditProfile = { navController.navigate(AppNavDestinations.EditProfile) },
                 onSettings = { navController.navigate(AppNavDestinations.Settings) },
-                // TODO: @NTGNguyen add sign out here
+                onCredentialChange = { navController.navigate(AppNavDestinations.CredentialChange) },
                 onSignOut = { supabaseService.signOut() }
             )
         }

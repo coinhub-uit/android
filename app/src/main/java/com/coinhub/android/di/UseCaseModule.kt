@@ -1,7 +1,7 @@
 package com.coinhub.android.di
 
-import com.coinhub.android.data.repository.AuthRepositoryImpl
-import com.coinhub.android.data.repository.SharedPreferenceRepositoryImpl
+import com.coinhub.android.data.repositories.AuthRepositoryImpl
+import com.coinhub.android.data.repositories.SharedPreferenceRepositoryImpl
 import com.coinhub.android.domain.use_cases.CheckUserSignedInUseCase
 import com.coinhub.android.domain.use_cases.SignInWithGoogleUseCase
 import com.coinhub.android.domain.use_cases.RegisterProfileUseCase

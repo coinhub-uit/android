@@ -2,7 +2,7 @@ package com.coinhub.android.di
 
 import com.coinhub.android.BuildConfig
 import com.coinhub.android.data.remote.SupabaseService
-import com.coinhub.android.data.repository.SharedPreferenceRepositoryImpl
+import com.coinhub.android.data.repositories.SharedPreferenceRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

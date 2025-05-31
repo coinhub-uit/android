@@ -1,12 +1,11 @@
-package com.coinhub.android.data.repository
+package com.coinhub.android.data.repositories
 
-import android.util.Log
-import com.coinhub.android.data.api_service.UserApiService
+import com.coinhub.android.data.api_services.UserApiService
 import com.coinhub.android.data.dtos.CreateUserDto
 import com.coinhub.android.data.models.GoogleNavigateResultModel
 import com.coinhub.android.data.models.UserModel
 import com.coinhub.android.data.remote.SupabaseService
-import com.coinhub.android.domain.repository.AuthRepository
+import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.utils.ACCESS_TOKEN_KEY
 import javax.inject.Inject
 import kotlin.reflect.KSuspendFunction2

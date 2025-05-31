@@ -35,6 +35,7 @@ fun AuthNavGraph(
 
         composable<AppNavDestinations.CreateProfile> {
             ProfileScreen(
+                isEdit = false,
                 onSuccess = {
                     // TODO: Call the set isSign to true to call the flow change
                 }

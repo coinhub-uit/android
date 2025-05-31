@@ -32,7 +32,7 @@ import kotlin.uuid.Uuid
 fun MenuAvatar(
     userModel: UserModel,
 ) {
-    val avatarSize = 32.dp
+    val avatarSize = 128.dp
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
