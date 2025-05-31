@@ -64,15 +64,15 @@ private fun MenuScreen(
             onClick = onEditProfile
         ),
         MenuEntry(
+            icon = Icons.Default.Password,
+            text = "Credentials",
+            onClick = onCredentialChange
+        ),
+        MenuEntry(
             icon = Icons.Default.Settings,
             text = "Settings",
             onClick = onSettings
         ),
-        MenuEntry(
-            icon = Icons.Default.Password,
-            text = "Credentials",
-            onClick = onCredentialChange
-        )
     )
     Scaffold(
         topBar = { MenuTopBar(onSignOut = onSignOut) }
