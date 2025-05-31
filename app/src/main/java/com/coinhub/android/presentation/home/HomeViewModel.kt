@@ -19,10 +19,10 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     @OptIn(ExperimentalUuidApi::class)
     private val _userModel = MutableStateFlow(
         UserModel(
-            id = Uuid.random(),
-            birthDate = LocalDate.now(),
+            id = Uuid.random().toString(),
+            birthDate = LocalDate.now().toString(),
             citizenId = "1234567890123",
-            createdAt = Date(),
+            createdAt = Date().toString(),
             deletedAt = null,
             avatar = "https://avatars.githubusercontent.com/u/86353526?v=4",
             fullName = "NTGNguyen",

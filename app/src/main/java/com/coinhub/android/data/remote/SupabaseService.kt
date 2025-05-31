@@ -1,6 +1,5 @@
 package com.coinhub.android.data.remote
 
-import android.util.Log
 import com.coinhub.android.data.repository.SharedPreferenceRepositoryImpl
 import com.coinhub.android.di.IoDispatcher
 import com.coinhub.android.utils.ACCESS_TOKEN_KEY
@@ -27,12 +26,15 @@ class SupabaseService @Inject constructor(
     init {
         supabaseServiceScope.launch {
             checkUserSignedIn()
-            Log.d("SOMETHIGN", "$_isUserSignedIn")
         }
     }
 
     private var _isUserSignedIn = MutableStateFlow<Boolean?>(null)
     val isUserSignedIn = _isUserSignedIn.asStateFlow()
+
+    fun setIsUserSignedIn(isSignedIn: Boolean) {
+        _isUserSignedIn.value = isSignedIn
+    }
 
     suspend fun signIn(email: String, password: String) {
         supabaseClient.auth.signInWith(Email) {

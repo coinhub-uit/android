@@ -1,5 +1,6 @@
 package com.coinhub.android.data.repository
 
+import android.util.Log
 import com.coinhub.android.data.api_service.UserApiService
 import com.coinhub.android.data.dtos.CreateUserDto
 import com.coinhub.android.data.models.GoogleNavigateResultModel
@@ -61,5 +62,15 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun observeAndSaveToken(saveToken: (String, String) -> Unit) {
         supabaseService.observeAndSaveSession(saveToken)
+    }
+
+    //Which func not overridden just for testing purposes
+    suspend fun logUserById(userId: String) {
+        try {
+            Log.d("TEST", "logUserById: ${userApiService.getUserById(userId)}")
+        } catch (e: Exception) {
+            Log.e("TEST", "logUserById: Error fetching user by ID: ${e.message}")
+            throw e
+        }
     }
 }

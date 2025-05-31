@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
                         }
 
                         false -> {
-                            AuthNavGraph(supabaseClient = supabaseClient)
+                            AuthNavGraph(supabaseClient = supabaseClient, supabaseService = supabaseService)
                         }
 
                         null -> {
