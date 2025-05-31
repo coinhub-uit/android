@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.coinhub.android.data.dtos.CreateTopUpDto
 import com.coinhub.android.data.models.SourceModel
 import com.coinhub.android.data.models.TopUpProviderEnum
+import com.coinhub.android.presentation.navigation.AppNavDestinations
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -71,6 +72,14 @@ class TopUpViewModel @Inject constructor() : ViewModel() {
             returnUrl = "coinhub://topUp/result",
             sourceDestinationId = _sourceId.value!!,
             ipAddress = "192.168.1.1",
+            amount = _amountText.value.toLong()
+        )
+    }
+
+    fun getTopUpResult() : AppNavDestinations.TopUpResult {
+        return AppNavDestinations.TopUpResult(
+            provider = _topUpProvider.value!!,
+            sourceDestinationId = _sourceId.value!!,
             amount = _amountText.value.toLong()
         )
     }

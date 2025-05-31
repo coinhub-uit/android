@@ -5,7 +5,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.toRoute
-import com.coinhub.android.data.dtos.CreateTopUpDto
 import com.coinhub.android.presentation.navigation.AppNavDestinations
 import com.coinhub.android.presentation.top_up.TopUpScreen
 import com.coinhub.android.presentation.top_up_result.TopUpResultScreen
@@ -14,10 +13,12 @@ fun NavGraphBuilder.topUpGraph(navController: NavHostController) {
     navigation<AppNavDestinations.TopUpGraph>(startDestination = AppNavDestinations.TopUp) {
         composable<AppNavDestinations.TopUp> {
             TopUpScreen(
-                onTopUpResult = { createTopUpDto: CreateTopUpDto ->
+                onTopUpResult = { topUp: AppNavDestinations.TopUpResult ->
                     navController.navigate(
                         AppNavDestinations.TopUpResult(
-                            createTopUpDto
+                            provider = topUp.provider,
+                            sourceDestinationId = topUp.sourceDestinationId,
+                            amount = topUp.amount
                         )
                     )
                 },
@@ -25,7 +26,7 @@ fun NavGraphBuilder.topUpGraph(navController: NavHostController) {
             )
         }
         composable<AppNavDestinations.TopUpResult> { backStackEntry ->
-            val createTopUpDto = backStackEntry.toRoute<AppNavDestinations.TopUpResult>()
+            val topUp = backStackEntry.toRoute<AppNavDestinations.TopUpResult>()
             TopUpResultScreen(
                 onMain = {
                     navController.navigate(AppNavDestinations.MainGraph) {
@@ -34,7 +35,7 @@ fun NavGraphBuilder.topUpGraph(navController: NavHostController) {
                         }
                     }
                 },
-                createTopUpDto = createTopUpDto.createTopUpDto
+                topUp = topUp
             )
         }
     }
