@@ -17,10 +17,9 @@ fun NavGraphBuilder.topUpGraph(navController: NavHostController) {
             )
         }
         composable<AppNavDestinations.TopUpResult> {
-            // TODO: Does it need args here?
-            TopUpResultScreen(navigateToMain = {
+            TopUpResultScreen(onMain = {
                 navController.navigate(AppNavDestinations.MainGraph) {
-                    popUpTo(AppNavDestinations.TopUp) {
+                    popUpTo(AppNavDestinations.TopUpGraph) {
                         inclusive = true
                     }
                 }

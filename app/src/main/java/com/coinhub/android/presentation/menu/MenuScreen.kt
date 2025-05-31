@@ -1,7 +1,7 @@
 package com.coinhub.android.presentation.menu
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -90,7 +90,7 @@ private fun MenuScreen(
                     .padding(horizontal = 32.dp)
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                contentPadding = PaddingValues(vertical = 0.dp)
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
                 items(menuItems) { item ->
                     MenuItem(
@@ -98,7 +98,6 @@ private fun MenuScreen(
                         text = item.text,
                         onClick = item.onClick
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
                 }
             }
         }

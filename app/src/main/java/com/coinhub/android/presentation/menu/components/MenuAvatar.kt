@@ -109,7 +109,6 @@ private fun InitialAvatar(
 @Composable
 fun MenuAvatarPreview() {
     CoinhubTheme {
-        // User with avatar
         MenuAvatar(
             userModel = UserModel(
                 id = Uuid.random(),

@@ -1,5 +1,6 @@
 package com.coinhub.android.presentation.navigation
 
+import com.coinhub.android.data.dtos.CreateTopUpDto
 import kotlinx.serialization.Serializable
 
 open class AppNavDestinations {
@@ -42,7 +43,9 @@ open class AppNavDestinations {
 
     // App - Main Graph - Home - Top Up Graph - Top Up - Top Up Result
     @Serializable
-    data object TopUpResult : AppNavDestinations()
+    data class TopUpResult(
+        val createTopUpDto: CreateTopUpDto
+    ) : AppNavDestinations()
 
     // App - Main Graph - Home - Source Detail
     @Serializable

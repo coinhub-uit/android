@@ -40,7 +40,10 @@ fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
         ) {
             MenuScreen(
                 onEditProfile = { navController.navigate(AppNavDestinations.EditProfile) },
-                onSettings = { navController.navigate(AppNavDestinations.Settings) })
+                onSettings = { navController.navigate(AppNavDestinations.Settings) },
+                // TODO: @NTGNguyen add sign out here
+                onSignOut = {}
+            )
         }
     }
 }
