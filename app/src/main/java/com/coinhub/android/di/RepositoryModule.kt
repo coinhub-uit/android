@@ -32,8 +32,8 @@ import javax.inject.Singleton
 object RepositoryModule {
     @Singleton
     @Provides
-    fun provideAuthRepositoryImpl(supabaseService: SupabaseService, userApiService: UserApiService) =
-        AuthRepositoryImpl(supabaseService = supabaseService, userApiService = userApiService)
+    fun provideAuthRepositoryImpl(supabaseService: SupabaseService, userRepository: UserRepositoryImpl) =
+        AuthRepositoryImpl(supabaseService = supabaseService, userRepository = userRepository)
 
     @Singleton
     @Provides

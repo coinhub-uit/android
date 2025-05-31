@@ -1,10 +1,7 @@
 package com.coinhub.android.data.repositories
 
 import android.util.Log
-import com.coinhub.android.data.api_services.UserApiService
-import com.coinhub.android.data.dtos.CreateUserDto
 import com.coinhub.android.data.models.GoogleNavigateResultModel
-import com.coinhub.android.data.models.UserModel
 import com.coinhub.android.data.remote.SupabaseService
 import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.utils.ACCESS_TOKEN_KEY
@@ -12,7 +9,7 @@ import javax.inject.Inject
 import kotlin.reflect.KSuspendFunction2
 
 class AuthRepositoryImpl @Inject constructor(
-    private val userApiService: UserApiService,
+    private val userRepository: UserRepositoryImpl,
     private val supabaseService: SupabaseService,
 ) :
     AuthRepository {
@@ -26,10 +23,6 @@ class AuthRepositoryImpl @Inject constructor(
         return supabaseService.getCurrentUserId()
     }
 
-    override suspend fun registerProfile(createUserDto: CreateUserDto): UserModel {
-        return userApiService.registerProfile(createUserDto)
-    }
-
     override suspend fun getUserOnSignInWithGoogle(
         saveToken: KSuspendFunction2<String, String, Unit>,
     ): GoogleNavigateResultModel {
@@ -37,7 +30,7 @@ class AuthRepositoryImpl @Inject constructor(
         saveToken(ACCESS_TOKEN_KEY, token)
         val userId = supabaseService.getCurrentUserId()
         val user = try {
-            userApiService.getUserById(userId)
+            userRepository.getUserById(userId)
         } catch (e: Exception) {
             null
         }
@@ -67,7 +60,7 @@ class AuthRepositoryImpl @Inject constructor(
     //Which func not overridden just for testing purposes
     suspend fun logUserById(userId: String) {
         try {
-            Log.d("TEST", "logUserById: ${userApiService.getUserById(userId)}")
+            Log.d("TEST", "logUserById: ${userRepository.getUserById(userId)}")
         } catch (e: Exception) {
             Log.d("TEST", "logUserById: Error fetching user by ID: ${e.message}")
             throw e
