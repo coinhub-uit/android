@@ -6,16 +6,17 @@ data class TicketModel(
     val closedAt: String?,
     val status: TicketStatus,
     val method: MethodEnum,
+    val ticketHistory: List<TicketHistoryModel>,
 )
 
-enum class TicketStatus(s: String) {
-    ACTIVE("active"),
-    EARLY_WITH_DRAWN("earlyWithdrawn"),
-    MATURED_WITH_DRAWN("maturedWithdrawn"),
+enum class TicketStatus {
+    ACTIVE,
+    EARLY_WITH_DRAWN,
+    MATURED_WITH_DRAWN,
 }
 
-enum class MethodEnum(s: String) {
-    NR("NR"),
-    PR("PR"),
-    PIR("PIR"),
+enum class MethodEnum {
+    NR,
+    PR,
+    PIR,
 }

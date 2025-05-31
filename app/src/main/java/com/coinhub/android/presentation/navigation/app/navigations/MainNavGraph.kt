@@ -31,9 +31,11 @@ fun NavGraphBuilder.mainNavGraph(navController: NavHostController, supabaseServi
             exitTransition = { fadeOut() },
         ) {
             VaultScreen(
-                navigateToCreateTicket = { navController.navigate(AppNavDestinations.CreateTicketGraph) },
+                onCreateTicket = { navController.navigate(AppNavDestinations.CreateTicketGraph) },
                 // TODO: May contains args here
-                navigateToTicketDetail = { navController.navigate((AppNavDestinations.TicketDetail)) })
+                onTicketDetail = { ticketId ->
+                    navController.navigate(AppNavDestinations.TicketDetail(ticketId = ticketId))
+                })
         }
         composable<AppNavDestinations.Menu>(
             enterTransition = { fadeIn() },
@@ -43,8 +45,7 @@ fun NavGraphBuilder.mainNavGraph(navController: NavHostController, supabaseServi
                 onEditProfile = { navController.navigate(AppNavDestinations.EditProfile) },
                 onSettings = { navController.navigate(AppNavDestinations.Settings) },
                 onCredentialChange = { navController.navigate(AppNavDestinations.CredentialChange) },
-                onSignOut = { supabaseService.signOut() }
-            )
+                onSignOut = { supabaseService.signOut() })
         }
     }
 }

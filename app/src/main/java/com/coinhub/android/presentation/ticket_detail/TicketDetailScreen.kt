@@ -4,6 +4,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 
 @Composable
-fun TicketDetailScreen() {
-    Text("This is the Ticket Detail Screen")
+fun TicketDetailScreen(ticketId: String, onBack: () -> Unit) {
+    Text("This is the Ticket Detail Screen for ticket ID: $ticketId")
 }

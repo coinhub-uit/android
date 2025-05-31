@@ -6,5 +6,5 @@ data class CreateTicketDto(
     val sourceId: String,
     val methodEnum: MethodEnum,
     val planHistoryId: String,
-    val amount: Number,
+    val amount: Long,
 )

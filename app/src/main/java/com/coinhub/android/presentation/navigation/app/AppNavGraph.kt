@@ -69,7 +69,7 @@ fun AppNavGraph(supabaseService: SupabaseService) {
             sourceDetailNav()
             transferMoneyGraph()
             createTicketGraph()
-            ticketDetailNav()
+            ticketDetailNav(navController = navController)
             notificationNav()
             aiChatNav()
             editProfileNav(navController = navController)
