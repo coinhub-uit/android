@@ -1,13 +1,13 @@
 package com.coinhub.android.data.models
 
-import java.util.Date
+import java.time.LocalDate
 
 data class TopUpModel(
     val id: String,
     val provider: TopUpProviderEnum,
-    val amount: Number,
+    val amount: Long,
     val status: TopUpStatusEnum,
-    val createdAt: Date,
+    val createdAt: LocalDate,
 )
 
 enum class TopUpProviderEnum {
