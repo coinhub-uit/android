@@ -34,14 +34,14 @@ import com.coinhub.android.ui.theme.CoinhubTheme
 
 @Composable
 fun HomeFeatures(
-    navigateToTopUp: () -> Unit,
-    navigateToCreateSource: () -> Unit,
-    navigateToTransferMoney: () -> Unit,
+    onTopUp: () -> Unit,
+    onCreateSource: () -> Unit,
+    onTransferMoney: () -> Unit,
 ) {
     val homeFeatureCardItems = listOf(
-        HomeFeatureCardItem("Top Up", Icons.Default.Payments, navigateToTopUp),
-        HomeFeatureCardItem("Create Source", Icons.Default.Add, navigateToCreateSource),
-        HomeFeatureCardItem("Transfer", Icons.Default.SwapHoriz, navigateToTransferMoney)
+        HomeFeatureCardItem("Top Up", Icons.Default.Payments, onTopUp),
+        HomeFeatureCardItem("Create Source", Icons.Default.Add, onCreateSource),
+        HomeFeatureCardItem("Transfer", Icons.Default.SwapHoriz, onTransferMoney)
     )
 
     Column {
@@ -115,9 +115,9 @@ fun HomeFeaturesPreview() {
     Surface {
         CoinhubTheme {
             HomeFeatures(
-                navigateToTopUp = {},
-                navigateToCreateSource = {},
-                navigateToTransferMoney = {}
+                onTopUp = {},
+                onCreateSource = {},
+                onTransferMoney = {}
             )
         }
     }

@@ -47,7 +47,6 @@ import com.coinhub.android.utils.PreviewDeviceSpecs
 import com.coinhub.android.utils.datePattern
 import com.coinhub.android.utils.toDateString
 import kotlinx.coroutines.launch
-import java.net.URI
 
 @Composable
 fun ProfileScreen(

@@ -9,7 +9,6 @@ import androidx.navigation.compose.navigation
 import com.coinhub.android.presentation.home.HomeScreen
 import com.coinhub.android.presentation.menu.MenuScreen
 import com.coinhub.android.presentation.navigation.AppNavDestinations
-import com.coinhub.android.presentation.transfer_money.TransferMoneyScreen
 import com.coinhub.android.presentation.vault.VaultScreen
 
 fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
@@ -19,13 +18,12 @@ fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
             exitTransition = { fadeOut() },
         ) {
             HomeScreen(
-                navigateToCreateSource = { navController.navigate(AppNavDestinations.CreateSourceGraph) },
-                // TODO: May contains args here
-                navigateToSourceDetail = { navController.navigate(AppNavDestinations.SourceDetail) },
-                navigateToTopUp = { navController.navigate(AppNavDestinations.TopUpGraph) },
-                navigateToNotification = { navController.navigate(AppNavDestinations.Notification) },
-                navigateToAiChat = { navController.navigate(AppNavDestinations.AiChat) },
-                navigateToTransferMoney = { navController.navigate(AppNavDestinations.TransferMoneyGraph) })
+                onCreateSource = { navController.navigate(AppNavDestinations.CreateSourceGraph) },
+                onToSourceDetail = { navController.navigate(AppNavDestinations.SourceDetail) },
+                onTopUp = { navController.navigate(AppNavDestinations.TopUpGraph) },
+                onNotification = { navController.navigate(AppNavDestinations.Notification) },
+                onAiChat = { navController.navigate(AppNavDestinations.AiChat) },
+                onTransferMoney = { navController.navigate(AppNavDestinations.TransferMoneyGraph) })
         }
         composable<AppNavDestinations.Vault>(
             enterTransition = { fadeIn() },
@@ -41,8 +39,8 @@ fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
             exitTransition = { fadeOut() },
         ) {
             MenuScreen(
-                navigateToEditProfile = { navController.navigate(AppNavDestinations.EditProfile) },
-                navigateToSettings = { navController.navigate(AppNavDestinations.Settings) })
+                onEditProfile = { navController.navigate(AppNavDestinations.EditProfile) },
+                onSettings = { navController.navigate(AppNavDestinations.Settings) })
         }
     }
 }

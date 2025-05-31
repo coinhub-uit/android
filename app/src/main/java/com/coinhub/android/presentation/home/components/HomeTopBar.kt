@@ -25,7 +25,7 @@ import com.coinhub.android.ui.theme.CoinhubTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeTopBar(navigateToNotification: () -> Unit, navigateToAiChat: () -> Unit) {
+fun HomeTopBar(onNotification: () -> Unit, onAiChat: () -> Unit) {
     TopAppBar(title = {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -40,13 +40,13 @@ fun HomeTopBar(navigateToNotification: () -> Unit, navigateToAiChat: () -> Unit)
         }
     }, actions = {
         IconButton(
-            onClick = navigateToNotification
+            onClick = onNotification
         ) {
             // TODO: May add badge count here
             Icon(Icons.Outlined.Notifications, "Notifications")
         }
         IconButton(
-            onClick = navigateToAiChat
+            onClick = onAiChat
         ) {
             Icon(Icons.AutoMirrored.Outlined.Message, "AI Chat")
         }
@@ -58,8 +58,8 @@ fun HomeTopBar(navigateToNotification: () -> Unit, navigateToAiChat: () -> Unit)
 fun HomeTopBarPreview() {
     CoinhubTheme {
         HomeTopBar(
-            navigateToNotification = {},
-            navigateToAiChat = {}
+            onNotification = {},
+            onAiChat = {}
         )
     }
 }

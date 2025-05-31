@@ -1,10 +1,7 @@
-package com.coinhub.android.presentation.home
+package com.coinhub.android.presentation.menu
 
-import android.content.Context
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import com.coinhub.android.data.models.UserModel
-import com.coinhub.android.utils.copyToClipboard
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,7 +12,7 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @HiltViewModel
-class HomeViewModel @Inject constructor() : ViewModel() {
+class MenuViewModel @Inject constructor() : ViewModel() {
     @OptIn(ExperimentalUuidApi::class)
     private val _userModel = MutableStateFlow(
         UserModel(
@@ -30,9 +27,4 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         )
     )
     val userModel = _userModel.asStateFlow()
-
-    fun copySourceIdToClipboard(context: Context, sourceId: String) {
-        copyToClipboard(context, sourceId, label = "Source ID")
-        Toast.makeText(context, "Source ID copied", Toast.LENGTH_SHORT).show()
-    }
 }

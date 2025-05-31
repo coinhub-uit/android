@@ -1,7 +1,10 @@
-package com.coinhub.android.presentation.common.components
+package com.coinhub.android.presentation.menu.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
@@ -15,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import com.coinhub.android.data.models.UserModel
@@ -25,20 +29,34 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @Composable
-fun HomeAvatar(
+fun MenuAvatar(
     userModel: UserModel,
-    modifier: Modifier,
 ) {
-    if (userModel.avatar != null) {
-        AvatarImage(
-            avatarUrl = userModel.avatar,
-            fullName = userModel.fullName,
-            modifier = modifier
-        )
-    } else {
-        InitialAvatar(
-            fullName = userModel.fullName,
-            modifier = modifier
+    val avatarSize = 32.dp
+    Column (
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ){
+        if (userModel.avatar != null) {
+            AvatarImage(
+                avatarUrl = userModel.avatar,
+                fullName = userModel.fullName,
+                avatarSize = avatarSize,
+            )
+        } else {
+            InitialAvatar(
+                fullName = userModel.fullName,
+                avatarSize = avatarSize,
+            )
+        }
+        Text(
+            text = userModel.fullName,
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+            softWrap = true,
+            modifier = Modifier
+                .padding(top = 4.dp)
+                .align(Alignment.CenterHorizontally)
         )
     }
 }
@@ -47,7 +65,7 @@ fun HomeAvatar(
 private fun AvatarImage(
     avatarUrl: String,
     fullName: String,
-    modifier: Modifier = Modifier,
+    avatarSize: Dp
 ) {
     SubcomposeAsyncImage(
         model = avatarUrl,
@@ -59,7 +77,7 @@ private fun AvatarImage(
                 color = MaterialTheme.colorScheme.primary
             )
         },
-        modifier = modifier
+        modifier = Modifier.size(avatarSize)
             .clip(CircleShape)
     )
 }
@@ -67,12 +85,12 @@ private fun AvatarImage(
 @Composable
 private fun InitialAvatar(
     fullName: String,
-    modifier: Modifier = Modifier,
+    avatarSize: Dp
 ) {
     val initial = fullName.first().toString()
 
     Box(
-        modifier = modifier
+        modifier = Modifier.size(avatarSize)
             .clip(CircleShape)
             .background(MaterialTheme.colorScheme.secondary),
         contentAlignment = Alignment.Center
@@ -89,10 +107,10 @@ private fun InitialAvatar(
 @OptIn(ExperimentalUuidApi::class)
 @PreviewLightDark
 @Composable
-fun HomeAvatarPreview() {
+fun MenuAvatarPreview() {
     CoinhubTheme {
         // User with avatar
-        HomeAvatar(
+        MenuAvatar(
             userModel = UserModel(
                 id = Uuid.random(),
                 birthDate = LocalDate.now(),
@@ -103,7 +121,6 @@ fun HomeAvatarPreview() {
                 fullName = "NTGNguyen",
                 address = null
             ),
-            modifier = Modifier.size(32.dp)
         )
     }
 }
@@ -111,10 +128,9 @@ fun HomeAvatarPreview() {
 @OptIn(ExperimentalUuidApi::class)
 @PreviewLightDark
 @Composable
-fun HomeAvatarNoImagePreview() {
+fun MenuAvatarNoImagePreview() {
     CoinhubTheme {
-        // User without avatar
-        HomeAvatar(
+        MenuAvatar(
             userModel = UserModel(
                 id = Uuid.random(),
                 birthDate = LocalDate.now(),
@@ -125,7 +141,6 @@ fun HomeAvatarNoImagePreview() {
                 fullName = "NTGNguyen",
                 address = null
             ),
-            modifier = Modifier.size(32.dp)
         )
     }
 }

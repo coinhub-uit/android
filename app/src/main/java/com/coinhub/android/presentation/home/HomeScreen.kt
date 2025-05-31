@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coinhub.android.data.models.SourceModel
 import com.coinhub.android.data.models.UserModel
 import com.coinhub.android.presentation.home.components.HomeFeatures
@@ -20,20 +21,15 @@ import com.coinhub.android.presentation.home.components.HomeListSource
 import com.coinhub.android.presentation.home.components.HomeTopBar
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
-import java.time.LocalDate
-import java.util.Date
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 @Composable
 fun HomeScreen(
-    navigateToSourceDetail: () -> Unit,
-    navigateToTopUp: () -> Unit,
-    navigateToCreateSource: () -> Unit,
-    navigateToTransferMoney: () -> Unit,
-    navigateToNotification: () -> Unit,
-    navigateToAiChat: () -> Unit,
+    onToSourceDetail: () -> Unit,
+    onTopUp: () -> Unit,
+    onCreateSource: () -> Unit,
+    onTransferMoney: () -> Unit,
+    onNotification: () -> Unit,
+    onAiChat: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     // TODO: Replace with real state from viewModel when available
@@ -42,27 +38,18 @@ fun HomeScreen(
         SourceModel("00", 1200000),
         SourceModel("KevinNitroSourceId", 0),
     )
-    val userModel = UserModel(
-        id = Uuid.random(),
-        birthDate = LocalDate.now(),
-        citizenId = "1234567890123",
-        createdAt = Date(),
-        deletedAt = null,
-        avatar = "https://avatars.githubusercontent.com/u/86353526?v=4",
-        fullName = "NTGNguyen",
-        address = null
-    )
+    val userModel = viewModel.userModel.collectAsStateWithLifecycle().value
     val copySourceIdToClipboard = viewModel::copySourceIdToClipboard
 
     HomeScreen(
         userModel = userModel,
         sourceModels = sourceModels,
-        navigateToSourceDetail = navigateToSourceDetail,
-        navigateToTopUp = navigateToTopUp,
-        navigateToCreateSource = navigateToCreateSource,
-        navigateToTransferMoney = navigateToTransferMoney,
-        navigateToNotification = navigateToNotification,
-        navigateToAiChat = navigateToAiChat,
+        onToSourceDetail = onToSourceDetail,
+        onTopUp = onTopUp,
+        onCreateSource = onCreateSource,
+        onTransferMoney = onTransferMoney,
+        onNotification = onNotification,
+        onAiChat = onAiChat,
         copySourceIdToClipboard = copySourceIdToClipboard
     )
 }
@@ -71,19 +58,19 @@ fun HomeScreen(
 private fun HomeScreen(
     userModel: UserModel,
     sourceModels: List<SourceModel>,
-    navigateToSourceDetail: () -> Unit,
-    navigateToTopUp: () -> Unit,
-    navigateToCreateSource: () -> Unit,
-    navigateToTransferMoney: () -> Unit,
-    navigateToNotification: () -> Unit,
-    navigateToAiChat: () -> Unit,
+    onToSourceDetail: () -> Unit,
+    onTopUp: () -> Unit,
+    onCreateSource: () -> Unit,
+    onTransferMoney: () -> Unit,
+    onNotification: () -> Unit,
+    onAiChat: () -> Unit,
     copySourceIdToClipboard: (Context, String) -> Unit,
 ) {
     Scaffold(
         topBar = {
             HomeTopBar(
-                navigateToNotification = navigateToNotification,
-                navigateToAiChat = navigateToAiChat
+                onNotification = onNotification,
+                onAiChat = onAiChat
             )
         }
     ) { innerPadding ->
@@ -97,14 +84,14 @@ private fun HomeScreen(
             Spacer(modifier = Modifier.height(32.dp))
             HomeListSource(
                 sourceModels = sourceModels,
-                navigateToSourceDetail = navigateToSourceDetail,
+                onToSourceDetail = onToSourceDetail,
                 copySourceIdToClipboard = copySourceIdToClipboard
             )
             Spacer(modifier = Modifier.height(16.dp))
             HomeFeatures(
-                navigateToTopUp = navigateToTopUp,
-                navigateToCreateSource = navigateToCreateSource,
-                navigateToTransferMoney = navigateToTransferMoney
+                onTopUp = onTopUp,
+                onCreateSource = onCreateSource,
+                onTransferMoney = onTransferMoney
             )
         }
     }
@@ -115,12 +102,12 @@ private fun HomeScreen(
 fun HomeScreenPreview() {
     CoinhubTheme {
         HomeScreen(
-            navigateToCreateSource = {},
-            navigateToSourceDetail = {},
-            navigateToTopUp = {},
-            navigateToNotification = {},
-            navigateToAiChat = {},
-            navigateToTransferMoney = {}
+            onCreateSource = {},
+            onToSourceDetail = {},
+            onTopUp = {},
+            onNotification = {},
+            onAiChat = {},
+            onTransferMoney = {}
         )
     }
 }

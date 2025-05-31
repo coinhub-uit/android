@@ -39,7 +39,7 @@ import com.coinhub.android.ui.theme.CoinhubTheme
 @Composable
 fun HomeListSource(
     sourceModels: List<SourceModel>,
-    navigateToSourceDetail: () -> Unit,
+    onToSourceDetail: () -> Unit,
     copySourceIdToClipboard: (context: Context, sourceId: String) -> Unit,
 ) {
 
@@ -60,7 +60,7 @@ fun HomeListSource(
     ) { page ->
         HomeSourceCard(
             sourceModel = sourceModels[page],
-            onSourceClick = navigateToSourceDetail,
+            onSourceClick = onToSourceDetail,
             copySourceIdToClipboard = copySourceIdToClipboard
         )
     }
@@ -147,7 +147,7 @@ private fun HomeListSourcePreview() {
                 SourceModel("00", 1200000),
                 SourceModel("KevinNitroSourceId", 0),
             ),
-            navigateToSourceDetail = {},
+            onToSourceDetail = {},
             copySourceIdToClipboard = { _, _ -> }
         )
     }
