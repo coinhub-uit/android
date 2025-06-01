@@ -1,4 +1,4 @@
-package com.coinhub.android.data.dtos
+package com.coinhub.android.data.dtos.request
 
 import java.util.Date
 

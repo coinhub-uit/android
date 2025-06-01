@@ -10,7 +10,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.coinhub.android.data.models.UserModel
 import com.coinhub.android.ui.theme.CoinhubTheme
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 import java.util.Date
 import kotlin.random.Random
 import kotlin.uuid.ExperimentalUuidApi
@@ -41,10 +41,10 @@ fun HomeGreeting(userModel: UserModel) {
 @Composable
 fun HomeGreetingPreview() {
     val userModel = UserModel(
-        id = Uuid.random().toString(),
-        birthDate = LocalDate.now().toString(),
+        id = Uuid.random(),
+        birthDate = LocalDate.parse("2000-01-01"),
         citizenId = "1234567890123",
-        createdAt = Date().toString(),
+        createdAt = LocalDate.parse("2023-01-01"),
         deletedAt = null,
         avatar = "https://avatars.githubusercontent.com/u/86353526?v=4",
         fullName = "NTGNguyen",

@@ -1,4 +1,4 @@
-package com.coinhub.android.data.dtos
+package com.coinhub.android.data.dtos.request
 
 import com.coinhub.android.data.models.TopUpProviderEnum
 

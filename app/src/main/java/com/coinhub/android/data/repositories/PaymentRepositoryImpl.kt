@@ -1,8 +1,8 @@
 package com.coinhub.android.data.repositories
 
 import com.coinhub.android.data.api_services.PaymentApiService
-import com.coinhub.android.data.dtos.CreateTopUpDto
-import com.coinhub.android.data.dtos.TransferMoneyDto
+import com.coinhub.android.data.dtos.request.CreateTopUpDto
+import com.coinhub.android.data.dtos.request.TransferMoneyDto
 import com.coinhub.android.domain.repositories.PaymentRepository
 import javax.inject.Inject
 

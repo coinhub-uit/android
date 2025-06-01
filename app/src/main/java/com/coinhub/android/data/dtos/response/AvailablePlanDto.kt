@@ -1,6 +1,6 @@
-package com.coinhub.android.data.models
+package com.coinhub.android.data.dtos.response
 
-data class AvailablePlanModel(
+data class AvailablePlanDto(
     val planHistoryId: Number,
     val rate: Number,
     val planId: Number,

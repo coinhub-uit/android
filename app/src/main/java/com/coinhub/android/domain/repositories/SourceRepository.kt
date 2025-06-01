@@ -1,6 +1,6 @@
 package com.coinhub.android.domain.repositories
 
-import com.coinhub.android.data.dtos.CreateSourceDto
+import com.coinhub.android.data.dtos.request.CreateSourceDto
 import com.coinhub.android.data.models.SourceModel
 import com.coinhub.android.data.models.TicketModel
 

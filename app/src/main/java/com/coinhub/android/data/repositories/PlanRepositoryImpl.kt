@@ -1,5 +1,6 @@
 package com.coinhub.android.data.repositories
 
+import com.coinhub.android.common.toAvailablePlanModel
 import com.coinhub.android.data.api_services.PlanApiService
 import com.coinhub.android.data.models.AvailablePlanModel
 import com.coinhub.android.domain.repositories.PlanRepository
@@ -11,7 +12,9 @@ class PlanRepositoryImpl @Inject constructor(
 
     override suspend fun getAvailablePlans(): List<AvailablePlanModel> {
         return try {
-            planApiService.getAvailablePlans()
+            planApiService.getAvailablePlans().map {
+                it.toAvailablePlanModel()
+            }
         } catch (e: Exception) {
             throw e
         }

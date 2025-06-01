@@ -1,7 +1,7 @@
 package com.coinhub.android.data.api_services
 
-import com.coinhub.android.data.dtos.CreateTopUpDto
-import com.coinhub.android.data.dtos.TransferMoneyDto
+import com.coinhub.android.data.dtos.request.CreateTopUpDto
+import com.coinhub.android.data.dtos.request.TransferMoneyDto
 import retrofit2.http.Body
 import retrofit2.http.POST
 

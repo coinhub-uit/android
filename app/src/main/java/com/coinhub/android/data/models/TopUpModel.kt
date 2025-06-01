@@ -1,9 +1,11 @@
 package com.coinhub.android.data.models
 
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
-data class TopUpModel(
-    val id: String,
+data class TopUpModel @OptIn(ExperimentalUuidApi::class) constructor(
+    val id: Uuid,
     val provider: TopUpProviderEnum,
     val amount: Long,
     val status: TopUpStatusEnum,

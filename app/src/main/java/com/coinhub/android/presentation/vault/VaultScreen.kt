@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -15,11 +14,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AttachMoney
-import androidx.compose.material.icons.filled.Description
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Money
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -42,14 +38,18 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coinhub.android.data.models.MethodEnum
+import com.coinhub.android.data.models.PlanModel
 import com.coinhub.android.data.models.TicketHistoryModel
 import com.coinhub.android.data.models.TicketModel
 import com.coinhub.android.data.models.TicketStatus
 import com.coinhub.android.presentation.vault.components.VaultTopBar
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
+import kotlinx.datetime.LocalDate
 import java.text.NumberFormat
 import java.util.Locale
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @Composable
 fun VaultScreen(
@@ -173,7 +173,7 @@ private fun VaultScreen(
             ) {
                 items(tickets) { ticket ->
                     TicketItem(
-                        ticket = ticket, onTicketClick = { onTicketDetail(ticket.id) })
+                        ticket = ticket, onTicketClick = { onTicketDetail(ticket.id.toString()) })
                 }
             }
         }
@@ -186,7 +186,7 @@ private fun TicketItem(
     onTicketClick: () -> Unit,
 ) {
     val formatter = NumberFormat.getNumberInstance(Locale.US)
-    val firstHistory = ticket.ticketHistory.firstOrNull()
+    val firstHistory = ticket.ticketHistories.firstOrNull()
 
     ElevatedCard(
         modifier = Modifier.fillMaxWidth(), onClick = onTicketClick
@@ -236,13 +236,13 @@ private fun TicketItem(
 
             firstHistory?.let {
                 Text(
-                    text = "Principal: ${formatter.format(it.principal.toLongOrNull() ?: 0)}",
+                    text = "Principal: ${formatter.format(it.principal)}",
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold
                 )
 
                 Text(
-                    text = "Interest: ${formatter.format(it.interest.toLongOrNull() ?: 0)}",
+                    text = "Interest: ${formatter.format(it.interest)}",
                     style = MaterialTheme.typography.bodySmall
                 )
             }
@@ -258,29 +258,33 @@ fun VaultScreenPreview() {
             VaultScreen(
                 tickets = listOf(
                     TicketModel(
-                        id = "1",
-                        openedAt = "2023-01-01",
+                        id = 2,
+                        openedAt = LocalDate.parse("2023-01-01"),
                         closedAt = null,
                         status = TicketStatus.ACTIVE,
                         method = MethodEnum.NR,
-                        ticketHistory = listOf(
+                        ticketHistories = listOf(
                             TicketHistoryModel(
-                                issuedAt = "2023-01-01", maturedAt = null, principal = "1000000", interest = "50000"
+                                issuedAt = LocalDate.parse("2022-01-01"), maturedAt = null, principal = 100000, interest = 100000
                             )
                         )
+                        , plan = PlanModel(
+                            id = 1,
+                            days = 10
+                        )
                     ), TicketModel(
-                        id = "2",
-                        openedAt = "2023-02-01",
-                        closedAt = "2023-02-28",
+                        id = 2,
+                        openedAt = LocalDate.parse("2023-02-01"),
+                        closedAt = LocalDate.parse("2023-02-28"),
                         status = TicketStatus.MATURED_WITH_DRAWN,
                         method = MethodEnum.PIR,
-                        ticketHistory = listOf(
+                        ticketHistories = listOf(
                             TicketHistoryModel(
-                                issuedAt = "2023-02-01",
-                                maturedAt = "2023-02-28",
-                                principal = "2000000",
-                                interest = "80000"
+                                issuedAt = LocalDate.parse("2022-01-01"), maturedAt = null, principal = 100000, interest = 100000
                             )
+                        ), plan = PlanModel(
+                            id =2,
+                            days = -1
                         )
                     )
                 ),

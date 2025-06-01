@@ -2,7 +2,7 @@ package com.coinhub.android.presentation.top_up
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.coinhub.android.data.dtos.CreateTopUpDto
+import com.coinhub.android.data.dtos.request.CreateTopUpDto
 import com.coinhub.android.data.models.SourceModel
 import com.coinhub.android.data.models.TopUpProviderEnum
 import dagger.hilt.android.lifecycle.HiltViewModel

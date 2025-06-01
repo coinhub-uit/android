@@ -1,7 +1,7 @@
 package com.coinhub.android.domain.repositories
 
-import com.coinhub.android.data.dtos.CreateUserDto
-import com.coinhub.android.data.dtos.RegisterDeviceDto
+import com.coinhub.android.data.dtos.request.CreateUserDto
+import com.coinhub.android.data.dtos.request.RegisterDeviceDto
 import com.coinhub.android.data.models.DeviceModel
 import com.coinhub.android.data.models.SourceModel
 import com.coinhub.android.data.models.TicketModel

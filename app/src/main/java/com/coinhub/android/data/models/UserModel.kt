@@ -1,14 +1,16 @@
 package com.coinhub.android.data.models
 
+import kotlinx.datetime.LocalDate
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 data class UserModel @OptIn(ExperimentalUuidApi::class) constructor(
-    val id: String,
+    val id: Uuid,
     val fullName: String,
     val citizenId: String,
-    val birthDate: String,
+    val birthDate: LocalDate,
     val avatar: String?,
     val address: String?,
-    val createdAt: String,
-    val deletedAt: String?,
+    val createdAt: LocalDate,
+    val deletedAt: LocalDate?,
 )

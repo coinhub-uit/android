@@ -1,7 +1,7 @@
 package com.coinhub.android.domain.repositories
 
-import com.coinhub.android.data.dtos.CreateTopUpDto
-import com.coinhub.android.data.dtos.TransferMoneyDto
+import com.coinhub.android.data.dtos.request.CreateTopUpDto
+import com.coinhub.android.data.dtos.request.TransferMoneyDto
 
 interface PaymentRepository {
     suspend fun transferMoney(dto: TransferMoneyDto)
@@ -9,5 +9,4 @@ interface PaymentRepository {
     suspend fun createTopUp(
         createTopUpDto: CreateTopUpDto,
     ): String
-
 }
