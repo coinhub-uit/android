@@ -39,11 +39,11 @@ class MainActivity : ComponentActivity() {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     when (isUserSignedIn) {
                         true -> {
-                            AppNavGraph(supabaseService = supabaseService)
+                            AppNavGraph()
                         }
 
                         false -> {
-                            AuthNavGraph(supabaseClient = supabaseClient, supabaseService = supabaseService)
+                            AuthNavGraph(supabaseClient = supabaseClient)
                         }
 
                         null -> {

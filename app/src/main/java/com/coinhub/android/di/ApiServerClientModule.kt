@@ -5,7 +5,6 @@ import com.coinhub.android.data.api_services.PaymentApiService
 import com.coinhub.android.data.api_services.PlanApiService
 import com.coinhub.android.data.api_services.SourceApiService
 import com.coinhub.android.data.api_services.TicketApiService
-import com.coinhub.android.data.api_services.TopUpApiService
 import com.coinhub.android.data.api_services.UserApiService
 import com.coinhub.android.data.repositories.SharedPreferenceRepositoryImpl
 import com.coinhub.android.utils.ACCESS_TOKEN_KEY
@@ -57,11 +56,6 @@ object ApiServerClientModule {
     @Provides
     fun provideSourceApiService(retrofit: Retrofit): SourceApiService =
         retrofit.create(SourceApiService::class.java)
-
-    @Singleton
-    @Provides
-    fun provideTopUpApiService(retrofit: Retrofit): TopUpApiService =
-        retrofit.create(TopUpApiService::class.java)
 
     @Singleton
     @Provides

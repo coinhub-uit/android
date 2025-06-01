@@ -6,13 +6,12 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.coinhub.android.data.remote.SupabaseService
 import com.coinhub.android.presentation.home.HomeScreen
 import com.coinhub.android.presentation.menu.MenuScreen
 import com.coinhub.android.presentation.navigation.AppNavDestinations
 import com.coinhub.android.presentation.vault.VaultScreen
 
-fun NavGraphBuilder.mainNavGraph(navController: NavHostController, supabaseService: SupabaseService) {
+fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
     navigation<AppNavDestinations.MainGraph>(startDestination = AppNavDestinations.Home) {
         composable<AppNavDestinations.Home>(
             enterTransition = { fadeIn() },
@@ -45,7 +44,7 @@ fun NavGraphBuilder.mainNavGraph(navController: NavHostController, supabaseServi
                 onEditProfile = { navController.navigate(AppNavDestinations.EditProfile) },
                 onSettings = { navController.navigate(AppNavDestinations.Settings) },
                 onCredentialChange = { navController.navigate(AppNavDestinations.CredentialChange) },
-                onSignOut = { supabaseService.signOut() })
+            )
         }
     }
 }

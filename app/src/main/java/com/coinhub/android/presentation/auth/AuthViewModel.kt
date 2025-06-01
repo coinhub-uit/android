@@ -2,6 +2,7 @@ package com.coinhub.android.presentation.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.coinhub.android.data.remote.SupabaseService
 import com.coinhub.android.domain.use_cases.SignInWithCredentialUseCase
 import com.coinhub.android.domain.use_cases.SignInWithGoogleUseCase
 import com.coinhub.android.domain.use_cases.SignUpWithCredentialUseCase
@@ -32,6 +33,7 @@ class AuthViewModel @Inject constructor(
     private val signInWithCredentialUseCase: SignInWithCredentialUseCase,
     private val signUpWithCredentialUseCase: SignUpWithCredentialUseCase,
     private val signInWithGoogleUseCase: SignInWithGoogleUseCase,
+    private val supabaseService: SupabaseService,
 ) : ViewModel() {
     private val _isSignUp = MutableStateFlow(false)
     val isSignUp: StateFlow<Boolean> = _isSignUp.asStateFlow()
@@ -103,9 +105,7 @@ class AuthViewModel @Inject constructor(
         _snackbarMessage.value = null
     }
 
-    fun signInWithCredential(
-        onSuccess: () -> Unit,
-    ) {
+    fun signInWithCredential() {
         viewModelScope.launch {
             when (val result = signInWithCredentialUseCase(email = _email.value, password = _password.value)) {
                 is SignInWithCredentialUseCase.Result.Error -> {
@@ -113,14 +113,14 @@ class AuthViewModel @Inject constructor(
                 }
 
                 is SignInWithCredentialUseCase.Result.Success -> {
-                    onSuccess()
+                    supabaseService.setIsUserSignedIn(true)
                 }
             }
         }
     }
 
     fun signUpWithCredential(
-        onSuccess: () -> Unit,
+        onSignedUp: () -> Unit,
     ) {
         viewModelScope.launch {
             when (val result = signUpWithCredentialUseCase(email = _email.value, password = _password.value)) {
@@ -129,7 +129,7 @@ class AuthViewModel @Inject constructor(
                 }
 
                 is SignUpWithCredentialUseCase.Result.Success -> {
-                    onSuccess()
+                    onSignedUp()
                 }
             }
         }
@@ -138,7 +138,6 @@ class AuthViewModel @Inject constructor(
     // FIXME: WTF args?
     fun onSignInWithGoogle(
         signInResult: NativeSignInResult,
-        onSignedIn: () -> Unit,
         onSignedUp: () -> Unit,
     ) {
         viewModelScope.launch {
@@ -149,7 +148,7 @@ class AuthViewModel @Inject constructor(
 
                 is SignInWithGoogleUseCase.Result.Success -> {
                     if (result.googleNavigateResultModel.isUserRegisterProfile) {
-                        onSignedIn()
+                        supabaseService.setIsUserSignedIn(true)
                     } else {
                         onSignedUp()
                     }

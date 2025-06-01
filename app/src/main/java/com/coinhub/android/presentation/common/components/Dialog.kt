@@ -16,7 +16,7 @@ fun Dialog(
     icon: ImageVector,
 ) {
     AlertDialog(icon = {
-        Icon(icon, contentDescription = "Example Icon")
+        Icon(icon, contentDescription = null)
     }, title = {
         Text(text = dialogTitle)
     }, text = {

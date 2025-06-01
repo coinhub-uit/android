@@ -5,8 +5,9 @@ import android.content.SharedPreferences
 import androidx.core.content.edit
 import com.coinhub.android.CoinHubApplication.Companion.appContext
 import com.coinhub.android.domain.repositories.SharedPreferenceRepository
+import javax.inject.Inject
 
-class SharedPreferenceRepositoryImpl() : SharedPreferenceRepository {
+class SharedPreferenceRepositoryImpl @Inject constructor() : SharedPreferenceRepository {
 
     private val context: Context = appContext()
 

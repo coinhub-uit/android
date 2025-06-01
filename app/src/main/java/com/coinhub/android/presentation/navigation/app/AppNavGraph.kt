@@ -35,7 +35,7 @@ import com.coinhub.android.presentation.navigation.app.navigations.transferMoney
 // The inner padding of scaffold isn't needed.. grammar
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun AppNavGraph(supabaseService: SupabaseService) {
+fun AppNavGraph() {
     RequestNotificationPermissionDialog()
 
     val navController = rememberNavController()
@@ -64,7 +64,7 @@ fun AppNavGraph(supabaseService: SupabaseService) {
             navController = navController,
             startDestination = AppNavDestinations.MainGraph,
         ) {
-            mainNavGraph(navController = navController, supabaseService = supabaseService)
+            mainNavGraph(navController = navController)
             createSourceGraph(navController = navController)
             topUpGraph(navController = navController)
             sourceDetailNav()

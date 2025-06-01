@@ -2,6 +2,7 @@ package com.coinhub.android.presentation.menu
 
 import androidx.lifecycle.ViewModel
 import com.coinhub.android.data.models.UserModel
+import com.coinhub.android.data.remote.SupabaseService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,7 +13,9 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @HiltViewModel
-class MenuViewModel @Inject constructor() : ViewModel() {
+class MenuViewModel @Inject constructor(
+    private val supabaseService: SupabaseService
+) : ViewModel() {
     @OptIn(ExperimentalUuidApi::class)
     private val _userModel = MutableStateFlow(
         UserModel(
@@ -27,4 +30,8 @@ class MenuViewModel @Inject constructor() : ViewModel() {
         )
     )
     val userModel = _userModel.asStateFlow()
+
+    fun onSignOut() {
+        supabaseService.signOut()
+    }
 }

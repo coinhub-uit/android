@@ -34,8 +34,8 @@ import io.github.jan.supabase.compose.auth.composeAuth
 
 @Composable
 fun AuthScreen(
-    onSignedIn: () -> Unit,
-    onSignedUp: () -> Unit,
+    onSignedUpWithCredential: () -> Unit,
+    onSignedUpWithOAuth: () -> Unit,
     supabaseClient: SupabaseClient,
     viewModel: AuthViewModel = hiltViewModel(),
 ) {
@@ -60,12 +60,9 @@ fun AuthScreen(
     val googleSignInState = supabaseClient.composeAuth.rememberSignInWithGoogle(
         onResult = { signInResult ->
             onSignInWithGoogle(
-                signInResult,
-                onSignedIn,
-                onSignedUp
+                signInResult, onSignedUpWithOAuth
             )
-        }
-    )
+        })
 
     AuthScreen(
         isSignUp = isSignUp,
@@ -82,8 +79,7 @@ fun AuthScreen(
         isFormValid = isFormValid,
         signUpWithCredential = signUpWithCredential,
         signInWithCredential = signInWithCredential,
-        onSignedIn = onSignedIn,
-        onSignedUp = onSignedUp,
+        onSignedUpWithCredential = onSignedUpWithCredential,
         snackbarMessage = snackbarMessage,
         clearSnackBarMessage = clearSnackBarMessage,
         googleSignInState = googleSignInState
@@ -104,10 +100,9 @@ private fun AuthScreen(
     onConfirmPasswordChange: (String) -> Unit,
     confirmPasswordCheckState: AuthStates.ConfirmPasswordCheckState,
     isFormValid: Boolean,
-    signUpWithCredential: (onSuccess: () -> Unit) -> Unit,
-    signInWithCredential: (onSuccess: () -> Unit) -> Unit,
-    onSignedIn: () -> Unit,
-    onSignedUp: () -> Unit,
+    signUpWithCredential: (() -> Unit) -> Unit,
+    signInWithCredential: () -> Unit,
+    onSignedUpWithCredential: () -> Unit,
     snackbarMessage: String?,
     clearSnackBarMessage: () -> Unit,
     googleSignInState: NativeSignInState?,
@@ -117,8 +112,7 @@ private fun AuthScreen(
     if (snackbarMessage != null) {
         LaunchedEffect(snackbarMessage) {
             snackbarHostState.showSnackbar(
-                snackbarMessage,
-                duration = SnackbarDuration.Short
+                snackbarMessage, duration = SnackbarDuration.Short
             )
             clearSnackBarMessage()
         }
@@ -130,8 +124,7 @@ private fun AuthScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 16.dp),
-            contentAlignment = Alignment.Center
+                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 16.dp), contentAlignment = Alignment.Center
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -155,14 +148,9 @@ private fun AuthScreen(
                     confirmPasswordCheckState = confirmPasswordCheckState
                 )
                 AuthSignInOrUpButton(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    isSignUp = isSignUp,
-                    onSignUp = {
-                        signUpWithCredential(onSignedUp)
-                    }, onSignIn = {
-                        signInWithCredential(onSignedIn)
-                    }, isFormValid = isFormValid
+                    modifier = Modifier.fillMaxWidth(), isSignUp = isSignUp, onSignUp = {
+                        signUpWithCredential(onSignedUpWithCredential)
+                    }, onSignIn = signInWithCredential, isFormValid = isFormValid
                 )
                 AuthSignInOrUpPrompt(
                     modifier = Modifier.fillMaxWidth(),
@@ -207,13 +195,11 @@ fun SignInScreenPreview() {
                 isValid = false, errorMessage = "bad"
             ),
             isFormValid = true,
-            onSignedIn = {},
-            onSignedUp = {},
+            onSignedUpWithCredential = {},
             signInWithCredential = { },
             signUpWithCredential = { },
             googleSignInState = null,
             snackbarMessage = null,
-            clearSnackBarMessage = {}
-        )
+            clearSnackBarMessage = {})
     }
 }

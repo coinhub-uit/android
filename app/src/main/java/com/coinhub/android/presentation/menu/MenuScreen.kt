@@ -35,7 +35,6 @@ fun MenuScreen(
     onEditProfile: () -> Unit,
     onSettings: () -> Unit,
     onCredentialChange: () -> Unit,
-    onSignOut: () -> Unit,
     viewModel: MenuViewModel = hiltViewModel(),
 ) {
     val userModel = viewModel.userModel.collectAsStateWithLifecycle().value
@@ -44,7 +43,7 @@ fun MenuScreen(
         onEditProfile = onEditProfile,
         onSettings = onSettings,
         onCredentialChange = onCredentialChange,
-        onSignOut = onSignOut,
+        onSignOut = viewModel::onSignOut,
         userModel = userModel
     )
 }
@@ -125,7 +124,6 @@ fun MenuScreenPreview() {
             onEditProfile = {},
             onSettings = {},
             onCredentialChange = {},
-            onSignOut = {},
         )
     }
 }

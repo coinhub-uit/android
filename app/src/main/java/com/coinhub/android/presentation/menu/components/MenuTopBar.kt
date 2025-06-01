@@ -18,6 +18,7 @@ fun MenuTopBar(onSignOut: () -> Unit) {
             Text("Menu", maxLines = 1)
         },
         actions = {
+            // TODO: Show dialog to confirm sign out
             IconButton(onClick = onSignOut) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.Logout,
