@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.coinhub.android.data.dtos.CreateTopUpDto
 import com.coinhub.android.data.models.SourceModel
 import com.coinhub.android.data.models.TopUpProviderEnum
-import com.coinhub.android.presentation.navigation.AppNavDestinations
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -36,9 +35,7 @@ class TopUpViewModel @Inject constructor() : ViewModel() {
     val amountText = _amountText.asStateFlow()
 
     val isFormValid = combine(
-        vnpResponseCode,
-        topUpProvider,
-        amountText
+        vnpResponseCode, topUpProvider, amountText
     ) { selectedSourceId, selectedProvider, amountText ->
         selectedSourceId != null && selectedProvider != null && amountText.isNotEmpty()
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
@@ -77,9 +74,10 @@ class TopUpViewModel @Inject constructor() : ViewModel() {
         )
     }
 
-    fun getTopUpResult(): AppNavDestinations.TopUpResult {
-        return AppNavDestinations.TopUpResult(
-            vnpResponseCode = vnpResponseCode.value!!
-        )
-    }
+    //fun getTopUpResult(): AppNavDestinations.TopUpResult {
+    //return AppNavDestinations.TopUpResult(
+    //   vnpResponseCode = vnpResponseCode.value!!
+
+    //)
+    //}
 }

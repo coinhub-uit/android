@@ -51,7 +51,7 @@ fun TopUpScreen(
         onSelectProvider = viewModel::selectProvider,
         onAmountChange = viewModel::updateAmount,
         onPresetAmountClick = viewModel::setPresetAmount,
-        onTopUpResult = { onTopUpResult(viewModel.getTopUpResult()) },
+        onTopUpResult = { /*onTopUpResult(viewModel.getTopUpResult())*/ },
         onBack = onBack
     )
 }
