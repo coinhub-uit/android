@@ -7,11 +7,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,12 +31,11 @@ import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.compose.auth.composable.NativeSignInState
 import io.github.jan.supabase.compose.auth.composable.rememberSignInWithGoogle
 import io.github.jan.supabase.compose.auth.composeAuth
-import kotlinx.coroutines.launch
 
 @Composable
 fun AuthScreen(
-    onSignedIn: () -> Unit,
-    onSignedUp: () -> Unit,
+    onSignedUpWithCredential: () -> Unit,
+    onSignedUpWithOAuth: () -> Unit,
     supabaseClient: SupabaseClient,
     viewModel: AuthViewModel = hiltViewModel(),
 ) {
@@ -51,7 +51,8 @@ fun AuthScreen(
     val onConfirmPasswordChange = viewModel::onConfirmPasswordChange
     val confirmPasswordCheckState = viewModel.confirmPasswordCheckState.collectAsStateWithLifecycle().value
     val isFormValid = viewModel.isFormValid.collectAsStateWithLifecycle().value
-    val message = viewModel.message // WARN: Check this, will it be updated?
+    val snackbarMessage = viewModel.snackbarMessage.collectAsStateWithLifecycle().value
+    val clearSnackBarMessage = viewModel::clearSnackbarMessage
     val signUpWithCredential = viewModel::signUpWithCredential
     val signInWithCredential = viewModel::signInWithCredential
     val onSignInWithGoogle = viewModel::onSignInWithGoogle
@@ -59,12 +60,9 @@ fun AuthScreen(
     val googleSignInState = supabaseClient.composeAuth.rememberSignInWithGoogle(
         onResult = { signInResult ->
             onSignInWithGoogle(
-                signInResult,
-                onSignedIn,
-                onSignedUp
+                signInResult, onSignedUpWithOAuth
             )
-        }
-    )
+        })
 
     AuthScreen(
         isSignUp = isSignUp,
@@ -81,9 +79,9 @@ fun AuthScreen(
         isFormValid = isFormValid,
         signUpWithCredential = signUpWithCredential,
         signInWithCredential = signInWithCredential,
-        onSignedIn = onSignedIn,
-        onSignedUp = onSignedUp,
-        message = message,
+        onSignedUpWithCredential = onSignedUpWithCredential,
+        snackbarMessage = snackbarMessage,
+        clearSnackBarMessage = clearSnackBarMessage,
         googleSignInState = googleSignInState
     )
 }
@@ -102,20 +100,21 @@ private fun AuthScreen(
     onConfirmPasswordChange: (String) -> Unit,
     confirmPasswordCheckState: AuthStates.ConfirmPasswordCheckState,
     isFormValid: Boolean,
-    signUpWithCredential: (onSuccess: () -> Unit, onError: () -> Unit) -> Unit,
-    signInWithCredential: (onSuccess: () -> Unit, onError: () -> Unit) -> Unit,
-    onSignedIn: () -> Unit,
-    onSignedUp: () -> Unit,
-    message: String,
+    signUpWithCredential: (() -> Unit) -> Unit,
+    signInWithCredential: () -> Unit,
+    onSignedUpWithCredential: () -> Unit,
+    snackbarMessage: String?,
+    clearSnackBarMessage: () -> Unit,
     googleSignInState: NativeSignInState?,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
-    val coroutineScope = rememberCoroutineScope()
-
-    fun showSnackbar() {
-        coroutineScope.launch {
-            snackbarHostState.showSnackbar(message)
+    if (snackbarMessage != null) {
+        LaunchedEffect(snackbarMessage) {
+            snackbarHostState.showSnackbar(
+                snackbarMessage, duration = SnackbarDuration.Short
+            )
+            clearSnackBarMessage()
         }
     }
 
@@ -125,8 +124,7 @@ private fun AuthScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 16.dp),
-            contentAlignment = Alignment.Center
+                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 16.dp), contentAlignment = Alignment.Center
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -150,14 +148,9 @@ private fun AuthScreen(
                     confirmPasswordCheckState = confirmPasswordCheckState
                 )
                 AuthSignInOrUpButton(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    isSignUp = isSignUp,
-                    onSignUp = {
-                        signUpWithCredential(onSignedUp) { showSnackbar() }
-                    }, onSignIn = {
-                        signInWithCredential(onSignedIn) { showSnackbar() }
-                    }, isFormValid = isFormValid
+                    modifier = Modifier.fillMaxWidth(), isSignUp = isSignUp, onSignUp = {
+                        signUpWithCredential(onSignedUpWithCredential)
+                    }, onSignIn = signInWithCredential, isFormValid = isFormValid
                 )
                 AuthSignInOrUpPrompt(
                     modifier = Modifier.fillMaxWidth(),
@@ -202,12 +195,11 @@ fun SignInScreenPreview() {
                 isValid = false, errorMessage = "bad"
             ),
             isFormValid = true,
-            message = "Heh",
-            onSignedIn = {},
-            onSignedUp = {},
-            signInWithCredential = { _, _ -> },
-            signUpWithCredential = { _, _ -> },
-            googleSignInState = null
-        )
+            onSignedUpWithCredential = {},
+            signInWithCredential = { },
+            signUpWithCredential = { },
+            googleSignInState = null,
+            snackbarMessage = null,
+            clearSnackBarMessage = {})
     }
 }

@@ -1,6 +1,7 @@
 [versions]
+activity = "1.10.1"
 hilt = "2.56.2"
-agp = "8.10.0"
+agp = "8.10.1"
 ksp = "2.1.21-2.0.1"
 hiltNavigationCompose = "1.2.0"
 kotlin = "2.1.21"
@@ -21,6 +22,7 @@ accompanistPermissions = "0.37.3"
 coreSplashscreen = "1.2.0-beta02"
 
 [libraries]
+androidx-activity = { module = "androidx.activity:activity", version.ref = "activity" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -50,6 +52,7 @@ compose-auth = { group = "io.github.jan-tennert.supabase", name = "compose-auth"
 compose-auth-ui = { group = "io.github.jan-tennert.supabase", name = "compose-auth-ui", version.ref = "supabase" }
 ktor-client = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
 
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version = "2.5.0" }
 androidx-credential-play-service-auth = { group = "androidx.credentials", name = "credentials-play-services-auth", version = "1.5.0" }
 androidx-credential = { group = "androidx.credentials", name = "credentials", version = "1.6.0-alpha01" }
 google-id = { module = "com.google.android.libraries.identity.googleid:googleid", version = "1.1.1" }

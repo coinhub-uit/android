@@ -9,7 +9,7 @@ class ValidatePasswordUseCase @Inject constructor() {
         return withContext(Dispatchers.Default) {
             when {
                 password.isEmpty() -> Result.Error("Password cannot be empty")
-                password.length < 4 -> Result.Error("Password must be at least 4 characters long")
+                password.length < 6 -> Result.Error("Password must be at least 6 characters long")
                 !password.any { it.isDigit() } -> Result.Error("Password must contain at least one digit")
                 !password.any { it.isUpperCase() } -> Result.Error("Password must contain at least one uppercase letter")
                 !password.any { it.isLowerCase() } -> Result.Error("Password must contain at least one lowercase letter")

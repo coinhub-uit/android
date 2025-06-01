@@ -47,6 +47,11 @@ android {
             "apiServerUrl",
             "\"${localProps.getProperty("API_SERVER_URL")}\""
         )
+        buildConfigField(
+            "String",
+            "vnpayReturnUrl",
+            "\"${localProps.getProperty("VNPAY_RETURN_URL")}\""
+        )
     }
 
     buildTypes {
@@ -103,7 +108,10 @@ dependencies {
     implementation(libs.compose.auth.ui)
     implementation(libs.androidx.material.icon)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.activity)
 
+
+    implementation(libs.coil.compose)
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.hilt.compiler)

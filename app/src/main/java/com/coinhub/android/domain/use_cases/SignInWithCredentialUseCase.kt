@@ -1,7 +1,7 @@
 package com.coinhub.android.domain.use_cases
 
-import com.coinhub.android.data.repository.AuthRepositoryImpl
-import com.coinhub.android.data.repository.SharedPreferenceRepositoryImpl
+import com.coinhub.android.data.repositories.AuthRepositoryImpl
+import com.coinhub.android.data.repositories.SharedPreferenceRepositoryImpl
 import com.coinhub.android.utils.ACCESS_TOKEN_KEY
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

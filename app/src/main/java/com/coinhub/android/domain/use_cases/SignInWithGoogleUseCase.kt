@@ -1,8 +1,8 @@
 package com.coinhub.android.domain.use_cases
 
-import com.coinhub.android.data.models.GoogleNavigateResult
-import com.coinhub.android.data.repository.AuthRepositoryImpl
-import com.coinhub.android.data.repository.SharedPreferenceRepositoryImpl
+import com.coinhub.android.data.models.GoogleNavigateResultModel
+import com.coinhub.android.data.repositories.AuthRepositoryImpl
+import com.coinhub.android.data.repositories.SharedPreferenceRepositoryImpl
 import io.github.jan.supabase.compose.auth.composable.NativeSignInResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -15,19 +15,16 @@ class SignInWithGoogleUseCase @Inject constructor(
     suspend operator fun invoke(result: NativeSignInResult): Result {
         return withContext(Dispatchers.IO) {
             when (result) {
-                NativeSignInResult.ClosedByUser -> {
-                    Result.Error("")
-                }
-
-                is NativeSignInResult.Error -> Result.Error("")
-                is NativeSignInResult.NetworkError -> Result.Error("")
+                NativeSignInResult.ClosedByUser -> Result.Error("Closed by user")
+                is NativeSignInResult.Error -> Result.Error(result.message)
+                is NativeSignInResult.NetworkError -> Result.Error(result.message)
                 NativeSignInResult.Success -> {
                     try {
                         val googleNavigateResult =
                             authRepositoryImpl.getUserOnSignInWithGoogle(sharedPreferenceRepositoryImpl::saveStringData)
                         Result.Success(googleNavigateResult)
                     } catch (e: Exception) {
-                        Result.Error(e.message ?: "")
+                        Result.Error(e.message ?: "Error during sign-in with Google")
                     }
                 }
             }
@@ -35,7 +32,7 @@ class SignInWithGoogleUseCase @Inject constructor(
     }
 
     sealed class Result {
-        data class Success(val googleNavigateResult: GoogleNavigateResult) : Result()
+        data class Success(val googleNavigateResultModel: GoogleNavigateResultModel) : Result()
         data class Error(val message: String) : Result()
     }
 }

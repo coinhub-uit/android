@@ -1,15 +1,15 @@
 package com.coinhub.android.di
 
-import com.coinhub.android.data.repository.AuthRepositoryImpl
-import com.coinhub.android.data.repository.SharedPreferenceRepositoryImpl
+import com.coinhub.android.data.repositories.AuthRepositoryImpl
+import com.coinhub.android.data.repositories.SharedPreferenceRepositoryImpl
 import com.coinhub.android.domain.use_cases.CheckUserSignedInUseCase
-import com.coinhub.android.domain.use_cases.SignInWithGoogleUseCase
-import com.coinhub.android.domain.use_cases.RegisterProfileUseCase
 import com.coinhub.android.domain.use_cases.SignInWithCredentialUseCase
+import com.coinhub.android.domain.use_cases.SignInWithGoogleUseCase
 import com.coinhub.android.domain.use_cases.SignUpWithCredentialUseCase
 import com.coinhub.android.domain.use_cases.ValidateConfirmPasswordUseCase
 import com.coinhub.android.domain.use_cases.ValidateEmailUseCase
 import com.coinhub.android.domain.use_cases.ValidatePasswordUseCase
+import com.coinhub.android.domain.use_cases.ValidateSourceIdUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,6 +30,10 @@ object UseCaseModule {
     @Provides
     @Singleton
     fun provideValidateConfirmPasswordUseCase() = ValidateConfirmPasswordUseCase()
+
+    @Provides
+    @Singleton
+    fun provideSourceIdUseCase() = ValidateSourceIdUseCase()
 
     @Provides
     @Singleton
@@ -70,12 +74,5 @@ object UseCaseModule {
     ) = CheckUserSignedInUseCase(
         authRepositoryImpl = authRepositoryImpl,
         sharedPreferenceRepositoryImpl = sharedPreferenceRepositoryImpl
-    )
-
-    @Provides
-    @Singleton
-    fun provideRegisterProfileUseCase(authRepositoryImpl: AuthRepositoryImpl) = RegisterProfileUseCase(
-        authRepositoryImpl =
-            authRepositoryImpl
     )
 }
