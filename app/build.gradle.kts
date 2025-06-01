@@ -15,10 +15,26 @@ var localPropertiesFile = rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {
     localProps.load(localPropertiesFile.inputStream())
 }
+val keystorePath = localProps.getProperty("KEYSTORE_FILE") ?: error("KEYSTORE_FILE not set")
+val keystoreFile = file(keystorePath)
+println("Resolved keystore path: ${keystoreFile.absolutePath}")
+if (!keystoreFile.exists()) {
+    throw GradleException("Keystore file not found at ${keystoreFile.absolutePath}")
+}
+
 
 android {
     namespace = "com.coinhub.android"
     compileSdk = 35
+
+    signingConfigs {
+        create("release") {
+            storeFile = file(localProps.getProperty("KEYSTORE_FILE"))
+            storePassword = localProps.getProperty("KEYSTORE_PASSWORD")
+            keyAlias = localProps.getProperty("KEY_ALIAS")
+            keyPassword = localProps.getProperty("KEY_PASSWORD")
+        }
+    }
 
     defaultConfig {
         applicationId = "com.coinhub.android"
@@ -61,6 +77,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            getByName("release") {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
     }
     compileOptions {
