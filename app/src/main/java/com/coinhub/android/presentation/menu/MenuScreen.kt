@@ -84,8 +84,6 @@ private fun MenuScreen(
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(32.dp))
-
             // Avatar
             MenuAvatar(userModel = userModel)
 

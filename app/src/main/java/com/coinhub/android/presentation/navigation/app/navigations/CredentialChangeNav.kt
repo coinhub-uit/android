@@ -4,12 +4,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.coinhub.android.presentation.navigation.AppNavDestinations
-import com.coinhub.android.presentation.settings.SettingsScreen
+import com.coinhub.android.presentation.profile.ProfileScreen
 
-fun NavGraphBuilder.settingNav(navController: NavHostController) {
-    composable<AppNavDestinations.Settings> {
-        SettingsScreen(
-            onBack = { navController.navigateUp() },
-        )
+fun NavGraphBuilder.credentialChangeNav(navController: NavHostController) {
+    composable<AppNavDestinations.CredentialChange> {
     }
 }

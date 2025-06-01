@@ -22,6 +22,7 @@ import com.coinhub.android.presentation.navigation.app.components.bottomNavItems
 import com.coinhub.android.presentation.navigation.app.navigations.aiChatNav
 import com.coinhub.android.presentation.navigation.app.navigations.createSourceGraph
 import com.coinhub.android.presentation.navigation.app.navigations.createTicketGraph
+import com.coinhub.android.presentation.navigation.app.navigations.credentialChangeNav
 import com.coinhub.android.presentation.navigation.app.navigations.editProfileNav
 import com.coinhub.android.presentation.navigation.app.navigations.mainNavGraph
 import com.coinhub.android.presentation.navigation.app.navigations.notificationNav
@@ -73,7 +74,8 @@ fun AppNavGraph(supabaseService: SupabaseService) {
             notificationNav()
             aiChatNav()
             editProfileNav(navController = navController)
-            settingNav()
+            credentialChangeNav(navController = navController)
+            settingNav(navController = navController)
         }
     }
 }
