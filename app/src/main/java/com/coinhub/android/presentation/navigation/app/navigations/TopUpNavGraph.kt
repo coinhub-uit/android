@@ -15,7 +15,22 @@ fun NavGraphBuilder.topUpGraph(navController: NavHostController) {
     navigation<AppNavDestinations.TopUpGraph>(startDestination = AppNavDestinations.TopUp) {
         composable<AppNavDestinations.TopUp> {
             TopUpScreen(onTopUpResult = { topUp: AppNavDestinations.TopUpResult ->
-                navController.navigate(AppNavDestinations.TopUpResult(vnpResponseCode = topUp.vnpResponseCode))
+                navController.navigate(
+                    AppNavDestinations.TopUpResult(
+                        vnpSecureHash = topUp.vnpSecureHash,
+                        vnpTxnRef = topUp.vnpTxnRef,
+                        vnpTransactionStatus = topUp.vnpTransactionStatus,
+                        vnpTransactionNo = topUp.vnpTransactionNo,
+                        vnpTmnCode = topUp.vnpTmnCode,
+                        vnpPayDate = topUp.vnpPayDate,
+                        vnpOrderInfo = topUp.vnpOrderInfo,
+                        vnpCardType =  topUp.vnpCardType,
+                        vnpAmount = topUp.vnpAmount,
+                        vnpBankTranNo = topUp.vnpBankTranNo,
+                        vnpBankCode = topUp.vnpBankCode,
+                        vnpResponseCode = topUp.vnpResponseCode,
+                    )
+                 )
             }, onBack = { navController.navigateUp() })
         }
         composable<AppNavDestinations.TopUpResult>(

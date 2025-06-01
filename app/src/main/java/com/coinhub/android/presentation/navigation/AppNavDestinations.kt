@@ -45,6 +45,28 @@ open class AppNavDestinations {
     //TODO: Parse all fields from the response
     @Serializable
     data class TopUpResult(
+        @SerialName("vnp_SecureHash")
+        val vnpSecureHash: String,
+        @SerialName("vnp_TxnRef")
+        val vnpTxnRef: String,
+        @SerialName("vnp_TransactionStatus")
+        val vnpTransactionStatus: String,
+        @SerialName("vnp_TransactionNo")
+        val vnpTransactionNo: String,
+        @SerialName("vnp_TmnCode")
+        val vnpTmnCode: String,
+        @SerialName("vnp_PayDate")
+        val vnpPayDate: String,
+        @SerialName("vnp_OrderInfo")
+        val vnpOrderInfo: String,
+        @SerialName("vnp_CardType")
+        val vnpCardType: String,
+        @SerialName("vnp_BankTranNo")
+        val vnpBankTranNo: String,
+        @SerialName("vnp_BankCode")
+        val vnpBankCode: String,
+        @SerialName("vnp_Amount")
+        val vnpAmount: String,
         @SerialName("vnp_ResponseCode")
         val vnpResponseCode: String,
     ) : AppNavDestinations()
