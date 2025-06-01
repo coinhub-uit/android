@@ -12,6 +12,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coinhub.android.data.remote.SupabaseService
 import com.coinhub.android.presentation.navigation.app.AppNavGraph
@@ -32,6 +33,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        installSplashScreen()
         setContent {
             CoinhubTheme {
                 val isUserSignedIn = supabaseService.isUserSignedIn.collectAsStateWithLifecycle().value
