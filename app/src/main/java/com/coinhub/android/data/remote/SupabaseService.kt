@@ -1,6 +1,6 @@
 package com.coinhub.android.data.remote
 
-import com.coinhub.android.data.repositories.SharedPreferenceRepositoryImpl
+import com.coinhub.android.data.repositories.PreferenceDataStoreImpl
 import com.coinhub.android.di.IoDispatcher
 import com.coinhub.android.utils.ACCESS_TOKEN_KEY
 import io.github.jan.supabase.SupabaseClient
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 class SupabaseService @Inject constructor(
     private val supabaseClient: SupabaseClient,
-    private val sharedPreferenceRepositoryImpl: SharedPreferenceRepositoryImpl,
+    private val sharedPreferenceRepositoryImpl: PreferenceDataStoreImpl,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) {
     private val supabaseServiceScope = CoroutineScope(SupervisorJob() + ioDispatcher)
@@ -102,14 +102,14 @@ class SupabaseService @Inject constructor(
 
     private suspend fun checkUserSignedIn() {
         try {
-            val token = sharedPreferenceRepositoryImpl.getStringData(ACCESS_TOKEN_KEY)
+            val token = sharedPreferenceRepositoryImpl.getAccessToken()
             if (token.isNullOrEmpty()) {
                 _isUserSignedIn.value = false
             } else {
                 getUserIdWithToken(token)
                 refreshSession()
                 val newToken = getToken()!!
-                sharedPreferenceRepositoryImpl.saveStringData(ACCESS_TOKEN_KEY, newToken)
+                sharedPreferenceRepositoryImpl.saveAccessToken(newToken)
                 _isUserSignedIn.value = true
             }
         } catch (e: Exception) {

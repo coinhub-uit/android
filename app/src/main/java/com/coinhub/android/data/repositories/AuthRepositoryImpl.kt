@@ -4,9 +4,8 @@ import android.util.Log
 import com.coinhub.android.data.models.GoogleNavigateResultModel
 import com.coinhub.android.data.remote.SupabaseService
 import com.coinhub.android.domain.repositories.AuthRepository
-import com.coinhub.android.utils.ACCESS_TOKEN_KEY
 import javax.inject.Inject
-import kotlin.reflect.KSuspendFunction2
+import kotlin.reflect.KSuspendFunction1
 
 class AuthRepositoryImpl @Inject constructor(
     private val userRepository: UserRepositoryImpl,
@@ -24,10 +23,10 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getUserOnSignInWithGoogle(
-        saveToken: KSuspendFunction2<String, String, Unit>,
+        saveToken: KSuspendFunction1<String, Unit>,
     ): GoogleNavigateResultModel {
         val token = supabaseService.getToken()!!
-        saveToken(ACCESS_TOKEN_KEY, token)
+        saveToken(token)
         val userId = supabaseService.getCurrentUserId()
         val user = try {
             userRepository.getUserById(userId)

@@ -7,6 +7,7 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 class GetTopUpUseCase @Inject constructor(
     private val paymentRepositoryImpl: PaymentRepositoryImpl,
@@ -20,7 +21,7 @@ class GetTopUpUseCase @Inject constructor(
         } catch (e: Exception) {
             emit(Result.Error(e.message ?: "Unknown error occurred"))
         }
-    }
+    }.flowOn(ioDispatcher)
 
     sealed class Result {
         data object Loading : Result()

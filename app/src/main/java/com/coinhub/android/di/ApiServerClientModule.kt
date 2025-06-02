@@ -6,8 +6,7 @@ import com.coinhub.android.data.api_services.PlanApiService
 import com.coinhub.android.data.api_services.SourceApiService
 import com.coinhub.android.data.api_services.TicketApiService
 import com.coinhub.android.data.api_services.UserApiService
-import com.coinhub.android.data.repositories.SharedPreferenceRepositoryImpl
-import com.coinhub.android.utils.ACCESS_TOKEN_KEY
+import com.coinhub.android.data.remote.SupabaseService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,9 +23,9 @@ object ApiServerClientModule {
 
     @Singleton
     @Provides
-    fun provideHttpClient(sharedPreferenceRepositoryImpl: SharedPreferenceRepositoryImpl) = OkHttpClient.Builder()
+    fun provideHttpClient(supabaseService: SupabaseService) = OkHttpClient.Builder()
         .addInterceptor { chain ->
-            var token = sharedPreferenceRepositoryImpl.getStringData(ACCESS_TOKEN_KEY)
+            var token = supabaseService.getToken()
             if (token.isNullOrEmpty()) {
                 token = ""
             }

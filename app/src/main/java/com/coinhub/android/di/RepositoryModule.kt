@@ -3,14 +3,14 @@ package com.coinhub.android.di
 import com.coinhub.android.data.repositories.AuthRepositoryImpl
 import com.coinhub.android.data.repositories.PaymentRepositoryImpl
 import com.coinhub.android.data.repositories.PlanRepositoryImpl
-import com.coinhub.android.data.repositories.SharedPreferenceRepositoryImpl
+import com.coinhub.android.data.repositories.PreferenceDataStoreImpl
 import com.coinhub.android.data.repositories.SourceRepositoryImpl
 import com.coinhub.android.data.repositories.TicketRepositoryImpl
 import com.coinhub.android.data.repositories.UserRepositoryImpl
 import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.repositories.PaymentRepository
 import com.coinhub.android.domain.repositories.PlanRepository
-import com.coinhub.android.domain.repositories.SharedPreferenceRepository
+import com.coinhub.android.domain.repositories.PreferenceDataStore
 import com.coinhub.android.domain.repositories.SourceRepository
 import com.coinhub.android.domain.repositories.TicketRepository
 import com.coinhub.android.domain.repositories.UserRepository
@@ -41,5 +41,5 @@ abstract class RepositoryModule {
     abstract fun providePaymentRepository(impl: PaymentRepositoryImpl): PaymentRepository
 
     @Binds
-    abstract fun provideSharedPreferencesRepository(impl: SharedPreferenceRepositoryImpl): SharedPreferenceRepository
+    abstract fun provideSharedPreferencesRepository(impl: PreferenceDataStoreImpl): PreferenceDataStore
 }
