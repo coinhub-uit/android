@@ -11,7 +11,7 @@ data class TopUpDto(
     val createdAt: String,
 )
 
-data class CreateTopUpDtoResponse(
+data class CreateTopUpResponseDto(
     val url: String,
     val topUpId: String,
 )

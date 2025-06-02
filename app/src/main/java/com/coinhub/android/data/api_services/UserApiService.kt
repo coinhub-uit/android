@@ -1,6 +1,6 @@
 package com.coinhub.android.data.api_services
 
-import com.coinhub.android.data.dtos.request.DeviceDto
+import com.coinhub.android.data.dtos.request.CreateDeviceDto
 import com.coinhub.android.data.dtos.response.DeviceDto
 import com.coinhub.android.data.dtos.response.SourceDto
 import com.coinhub.android.data.dtos.response.TicketDto
@@ -44,6 +44,6 @@ interface UserApiService {
     @POST("users/{id}/devices")
     suspend fun registerDevice(
         @Path("id") userId: String,
-        @Body registerDeviceDto: com.coinhub.android.data.dtos.request.DeviceDto,
+        @Body registerDeviceDto: CreateDeviceDto,
     ): DeviceDto
 }

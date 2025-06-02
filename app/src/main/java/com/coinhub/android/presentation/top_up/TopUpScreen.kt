@@ -1,5 +1,6 @@
 package com.coinhub.android.presentation.top_up
 
+import android.content.Intent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,8 +14,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coinhub.android.data.models.SourceModel
@@ -38,6 +41,7 @@ fun TopUpScreen(
     val topUpProvider = viewModel.topUpProvider.collectAsStateWithLifecycle().value
     val amountText = viewModel.amountText.collectAsStateWithLifecycle().value
     val isFormValid = viewModel.isFormValid.collectAsStateWithLifecycle().value
+    val context = LocalContext.current
 
     TopUpScreen(
         selectedSourceId = sourceId,
@@ -51,7 +55,11 @@ fun TopUpScreen(
         onSelectProvider = viewModel::selectProvider,
         onAmountChange = viewModel::updateAmount,
         onPresetAmountClick = viewModel::setPresetAmount,
-        onTopUpResult = { /*onTopUpResult(viewModel.getTopUpResult())*/ },
+        onTopUpResult = {
+            viewModel.createTopUp()
+            val intent = Intent(Intent.ACTION_VIEW, viewModel.createTopUpModel.value?.url!!.toUri())
+            context.startActivity(intent)
+        },
         onBack = onBack
     )
 }

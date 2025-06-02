@@ -1,4 +1,4 @@
-package com.coinhub.android.presentation.top_up_result.components
+package com.coinhub.android.presentation.top_up.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -78,7 +78,9 @@ fun TopUpResultStatus(topUpStatus: TopUpStatusEnum) {
             imageVector = status.icon,
             contentDescription = status.text,
             tint = status.color,
-            modifier = Modifier.size(128.dp).padding(bottom = 8.dp)
+            modifier = Modifier
+                .size(128.dp)
+                .padding(bottom = 8.dp)
         )
         Text(
             text = status.text,

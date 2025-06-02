@@ -1,8 +1,11 @@
 package com.coinhub.android.di
 
 import com.coinhub.android.data.repositories.AuthRepositoryImpl
+import com.coinhub.android.data.repositories.PaymentRepositoryImpl
 import com.coinhub.android.data.repositories.SharedPreferenceRepositoryImpl
 import com.coinhub.android.domain.use_cases.CheckUserSignedInUseCase
+import com.coinhub.android.domain.use_cases.CreateTopUpUseCase
+import com.coinhub.android.domain.use_cases.GetTopUpUseCase
 import com.coinhub.android.domain.use_cases.SignInWithCredentialUseCase
 import com.coinhub.android.domain.use_cases.SignInWithGoogleUseCase
 import com.coinhub.android.domain.use_cases.SignUpWithCredentialUseCase
@@ -14,6 +17,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Singleton
 
 @Module
@@ -74,5 +78,25 @@ object UseCaseModule {
     ) = CheckUserSignedInUseCase(
         authRepositoryImpl = authRepositoryImpl,
         sharedPreferenceRepositoryImpl = sharedPreferenceRepositoryImpl
+    )
+
+    @Provides
+    @Singleton
+    fun provideCreateTopUpUseCase(
+        paymentRepositoryImpl: PaymentRepositoryImpl,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher,
+    ) = CreateTopUpUseCase(
+        paymentRepositoryImpl = paymentRepositoryImpl,
+        ioDispatcher = ioDispatcher
+    )
+
+    @Provides
+    @Singleton
+    fun provideGetTopUpUseCase(
+        paymentRepositoryImpl: PaymentRepositoryImpl,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher,
+    ) = GetTopUpUseCase(
+        paymentRepositoryImpl = paymentRepositoryImpl,
+        ioDispatcher = ioDispatcher
     )
 }

@@ -8,29 +8,16 @@ import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
 import com.coinhub.android.BuildConfig
 import com.coinhub.android.presentation.navigation.AppNavDestinations
+import com.coinhub.android.presentation.top_up.TopUpResultScreen
 import com.coinhub.android.presentation.top_up.TopUpScreen
-import com.coinhub.android.presentation.top_up_result.TopUpResultScreen
 
 fun NavGraphBuilder.topUpGraph(navController: NavHostController) {
     navigation<AppNavDestinations.TopUpGraph>(startDestination = AppNavDestinations.TopUp) {
         composable<AppNavDestinations.TopUp> {
-            TopUpScreen(onTopUpResult = { topUp: AppNavDestinations.TopUpResult ->
+            TopUpScreen(onTopUpResult = {
                 navController.navigate(
-                    AppNavDestinations.TopUpResult(
-                        vnpSecureHash = topUp.vnpSecureHash,
-                        vnpTxnRef = topUp.vnpTxnRef,
-                        vnpTransactionStatus = topUp.vnpTransactionStatus,
-                        vnpTransactionNo = topUp.vnpTransactionNo,
-                        vnpTmnCode = topUp.vnpTmnCode,
-                        vnpPayDate = topUp.vnpPayDate,
-                        vnpOrderInfo = topUp.vnpOrderInfo,
-                        vnpCardType =  topUp.vnpCardType,
-                        vnpAmount = topUp.vnpAmount,
-                        vnpBankTranNo = topUp.vnpBankTranNo,
-                        vnpBankCode = topUp.vnpBankCode,
-                        vnpResponseCode = topUp.vnpResponseCode,
-                    )
-                 )
+                    AppNavDestinations.TopUpResult
+                )
             }, onBack = { navController.navigateUp() })
         }
         composable<AppNavDestinations.TopUpResult>(

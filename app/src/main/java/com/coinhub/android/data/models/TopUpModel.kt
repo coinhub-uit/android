@@ -13,7 +13,7 @@ data class TopUpModel @OptIn(ExperimentalUuidApi::class) constructor(
     val createdAt: LocalDate,
 )
 
-data class CreateTopUpModelResponse(
+data class CreateTopUpModel @OptIn(ExperimentalUuidApi::class) constructor(
     val url: String,
     val topUpId: Uuid,
 )
