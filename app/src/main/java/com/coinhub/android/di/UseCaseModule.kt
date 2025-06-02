@@ -3,9 +3,11 @@ package com.coinhub.android.di
 import com.coinhub.android.data.repositories.AuthRepositoryImpl
 import com.coinhub.android.data.repositories.PaymentRepositoryImpl
 import com.coinhub.android.data.repositories.PreferenceDataStoreImpl
+import com.coinhub.android.data.repositories.UserRepositoryImpl
 import com.coinhub.android.domain.use_cases.CheckUserSignedInUseCase
 import com.coinhub.android.domain.use_cases.CreateTopUpUseCase
 import com.coinhub.android.domain.use_cases.GetTopUpUseCase
+import com.coinhub.android.domain.use_cases.GetUserSourcesUseCase
 import com.coinhub.android.domain.use_cases.SignInWithCredentialUseCase
 import com.coinhub.android.domain.use_cases.SignInWithGoogleUseCase
 import com.coinhub.android.domain.use_cases.SignUpWithCredentialUseCase
@@ -97,6 +99,18 @@ object UseCaseModule {
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
     ) = GetTopUpUseCase(
         paymentRepositoryImpl = paymentRepositoryImpl,
+        ioDispatcher = ioDispatcher
+    )
+
+    @Provides
+    @Singleton
+    fun provideGetUserSourcesUseCase(
+        userRepositoryImpl: UserRepositoryImpl,
+        authRepositoryImpl: AuthRepositoryImpl,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher,
+    ) = GetUserSourcesUseCase(
+        userRepositoryImpl = userRepositoryImpl,
+        authRepositoryImpl = authRepositoryImpl,
         ioDispatcher = ioDispatcher
     )
 }

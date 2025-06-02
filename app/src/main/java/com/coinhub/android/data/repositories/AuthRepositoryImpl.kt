@@ -48,6 +48,10 @@ class AuthRepositoryImpl @Inject constructor(
         return supabaseService.getUserIdWithToken(token)
     }
 
+    override suspend fun getCurrentUserId(): String {
+        return supabaseService.getCurrentUserId()
+    }
+
     override suspend fun refreshSession() {
         supabaseService.refreshSession()
     }

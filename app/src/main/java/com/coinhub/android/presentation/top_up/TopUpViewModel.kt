@@ -9,6 +9,7 @@ import com.coinhub.android.data.models.SourceModel
 import com.coinhub.android.data.models.TopUpProviderEnum
 import com.coinhub.android.domain.use_cases.CreateTopUpUseCase
 import com.coinhub.android.domain.use_cases.GetTopUpUseCase
+import com.coinhub.android.domain.use_cases.GetUserSourcesUseCase
 import com.coinhub.android.presentation.top_up.state.TopUpState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,14 +28,15 @@ import javax.inject.Inject
 class TopUpViewModel @Inject constructor(
     private val createTopUpUseCase: CreateTopUpUseCase,
     private val getTopUpUseCase: GetTopUpUseCase,
+    private val getUserSourcesUseCase: GetUserSourcesUseCase,
 ) : ViewModel() {
-    private val _sourceModels = MutableStateFlow(
-        listOf(
-            SourceModel("1", BigInteger("1000000")),
-            SourceModel("2", BigInteger("500000")),
-            SourceModel("3", BigInteger("750000"))
-        )
-    )
+    init {
+        viewModelScope.launch {
+            getUserSources()
+        }
+    }
+
+    private val _sourceModels = MutableStateFlow<List<SourceModel>>(emptyList())
     val sourceModels = _sourceModels.asStateFlow()
 
     private val _sourceId = MutableStateFlow<String?>(null)
@@ -91,7 +93,7 @@ class TopUpViewModel @Inject constructor(
                     amount = BigInteger(_amountText.value),
                     provider = _topUpProvider.value!!,
                     sourceDestinationId = _sourceId.value!!,
-                    ipAddress = "",//How to get IP address in Android?
+                    ipAddress = "",//TODO:How to get IP address in Android?
                     returnUrl = BuildConfig.vnpayReturnUrl
                 )
             )
@@ -107,14 +109,21 @@ class TopUpViewModel @Inject constructor(
         }
     }
 
-    //fun getTopUpResult(): AppNavDestinations.TopUpResult {
-    //return AppNavDestinations.TopUpResult(
-    //   vnpResponseCode = vnpResponseCode.value!!
+    private fun getUserSources() {
+        viewModelScope.launch {
+            when (val result = getUserSourcesUseCase()) {
+                is GetUserSourcesUseCase.Result.Success -> {
+                    _sourceModels.value = result.sources
+                }
 
-    //)
-    //}
+                is GetUserSourcesUseCase.Result.Error -> {
+                    throw Exception(result.message)
+                }
+            }
+        }
+    }
 
-    //In TopUpResultScreen
+    //--------------------------------------------------------//
     private val _topUpState = MutableStateFlow<TopUpState>(TopUpState.Loading)
     val topUpState = _topUpState.asStateFlow()
 
