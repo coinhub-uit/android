@@ -18,8 +18,18 @@ enum class TicketStatus(val description: String) {
     MATURED_WITH_DRAWN("Matured Withdrawn"),
 }
 
-enum class MethodEnum(val description: String) {
-    NR("Non-rollover"),
-    PR("Principal Rollover"),
-    PIR("Principal & Interest Rollover"),
+// TODO: Just ...
+enum class MethodEnum(val description: String, longDescription: String) {
+    NR(
+        "Non Rollover",
+        "The interest is will be given to the user at the end of the plan, and the ticket will be closed."
+    ),
+    PR(
+        "Principal Rollover",
+        "Principal will be rolled over to the next plan, and the interest will be given to the user at the end of the plan."
+    ),
+    PIR(
+        "Principal & Interest Rollover",
+        "Principal and interest will be rolled over to the next plan. No interest will be given to the user at the end of the plan until user withdraw."
+    ),
 }

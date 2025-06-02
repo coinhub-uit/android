@@ -1,6 +1,5 @@
 package com.coinhub.android.presentation.navigation.app.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
