@@ -1,9 +1,9 @@
 package com.coinhub.android.data.models
 
-import java.math.BigDecimal
+import java.math.BigInteger
 
 data class SourceModel(
     val id: String,
-    val balance: BigDecimal,
+    val balance: BigInteger,
 )
 

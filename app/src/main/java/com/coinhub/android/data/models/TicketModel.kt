@@ -3,7 +3,7 @@ package com.coinhub.android.data.models
 import java.time.LocalDate
 
 data class TicketModel(
-    val id: Number,
+    val id: Int,
     val openedAt: LocalDate,
     val closedAt: LocalDate?,
     val status: TicketStatus,
@@ -12,14 +12,14 @@ data class TicketModel(
     val plan: PlanModel,
 )
 
-enum class TicketStatus {
-    ACTIVE,
-    EARLY_WITH_DRAWN,
-    MATURED_WITH_DRAWN,
+enum class TicketStatus(val description: String) {
+    ACTIVE("Active"),
+    EARLY_WITH_DRAWN("Early Withdrawn"),
+    MATURED_WITH_DRAWN("Matured Withdrawn"),
 }
 
-enum class MethodEnum {
-    NR,
-    PR,
-    PIR,
+enum class MethodEnum(val description: String) {
+    NR("Non-rollover"),
+    PR("Principal Rollover"),
+    PIR("Principal & Interest Rollover"),
 }

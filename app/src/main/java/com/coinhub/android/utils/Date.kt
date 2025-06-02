@@ -1,12 +1,9 @@
 package com.coinhub.android.utils
 
-import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.Date
-import java.util.Locale
 
 const val dateTimePattern = "dd/MM/yyyy h:mm a"
 const val datePattern = "dd/MM/yyyy"
@@ -17,14 +14,11 @@ val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern(timePattern)
 val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern(datePattern)
 
 fun Long.toDateString(): String {
-    val formatter = SimpleDateFormat(datePattern, Locale.getDefault())
-    return formatter.format(Date(this))
+    return toLocalDate().format(dateFormatter)
 }
 
 fun Long.toLocalDate(): LocalDate {
-    return Instant.ofEpochMilli(this)
-        .atZone(ZoneId.systemDefault())
-        .toLocalDate()
+    return Instant.ofEpochMilli(this).atZone(ZoneId.systemDefault()).toLocalDate()
 }
 
 fun LocalDate.toDateString(): String {
@@ -33,4 +27,8 @@ fun LocalDate.toDateString(): String {
 
 fun LocalDate.toMillis(): Long {
     return this.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+}
+
+fun String.toLocalDate(): LocalDate {
+    return LocalDate.parse(this, dateFormatter)
 }

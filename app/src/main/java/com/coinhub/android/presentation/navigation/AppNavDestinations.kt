@@ -79,7 +79,7 @@ open class AppNavDestinations {
     // App - Main Graph - Vault - Create Ticket Graph - Ticket Details
     @Serializable
     data class TicketDetail(
-        val ticketId: String,
+        val ticketId: Int,
     ) : AppNavDestinations()
 
     // App - Main Graph - Menu

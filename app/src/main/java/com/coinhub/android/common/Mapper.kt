@@ -18,7 +18,7 @@ import com.coinhub.android.data.models.TicketHistoryModel
 import com.coinhub.android.data.models.TicketModel
 import com.coinhub.android.data.models.TopUpModel
 import com.coinhub.android.data.models.UserModel
-import java.math.BigDecimal
+import java.math.BigInteger
 import java.time.LocalDate
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -37,14 +37,14 @@ fun PlanDto.toPlanModel() = PlanModel(
 
 fun SourceDto.toSourceModel() = SourceModel(
     id = this.id,
-    balance = BigDecimal(this.balance)
+    balance = BigInteger(this.balance)
 )
 
 fun TicketHistoryDto.toTicketHistoryModel() = TicketHistoryModel(
     issuedAt = LocalDate.parse(this.issuedAt),
-    maturedAt = this.maturedAt?.let { LocalDate.parse(it) },
-    principal = BigDecimal(this.principal),
-    interest = BigDecimal(this.interest)
+    maturedAt = LocalDate.parse(this.maturedAt),
+    principal = BigInteger(this.principal),
+    interest = BigInteger(this.interest)
 )
 
 fun TicketDto.toTicketModel() = TicketModel(
@@ -73,7 +73,7 @@ fun UserDto.toUserModel() = UserModel(
 fun TopUpDto.toTopUpModel() = TopUpModel(
     id = Uuid.parse(this.id),
     createdAt = LocalDate.parse(this.createdAt),
-    amount = BigDecimal(this.amount),
+    amount = BigInteger(this.amount),
     status = this.status,
     provider = this.provider
 )

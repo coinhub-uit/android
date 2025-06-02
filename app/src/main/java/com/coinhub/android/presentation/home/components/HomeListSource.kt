@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import com.coinhub.android.data.models.SourceModel
 import com.coinhub.android.ui.theme.CoinhubTheme
 import java.math.BigDecimal
+import java.math.BigInteger
 
 @Composable
 fun HomeListSource(
@@ -144,9 +145,9 @@ private fun HomeListSourcePreview() {
     CoinhubTheme {
         HomeListSource(
             sourceModels = listOf(
-                SourceModel("01123142213512521", BigDecimal(9999999999999999)),
-                SourceModel("00", BigDecimal(1200000)),
-                SourceModel("KevinNitroSourceId", BigDecimal(12000000)),
+                SourceModel("01123142213512521", BigInteger("9999999999999999")),
+                SourceModel("00", BigInteger("1200000")),
+                SourceModel("KevinNitroSourceId", BigInteger("12000000")),
             ),
             onToSourceDetail = {},
             copySourceIdToClipboard = { _, _ -> }

@@ -21,7 +21,7 @@ import com.coinhub.android.presentation.home.components.HomeListSource
 import com.coinhub.android.presentation.home.components.HomeTopBar
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
-import java.math.BigDecimal
+import java.math.BigInteger
 
 @Composable
 fun HomeScreen(
@@ -35,9 +35,9 @@ fun HomeScreen(
 ) {
     // TODO: Replace with real state from viewModel when available
     val sourceModels = listOf(
-        SourceModel("01123142213512521", BigDecimal(9999999999999999)),
-        SourceModel("00", BigDecimal(0)),
-        SourceModel("KevinNitroSourceId",BigDecimal(0)),
+        SourceModel("01123142213512521", BigInteger("9999999999999999")),
+        SourceModel("00", BigInteger("0")),
+        SourceModel("KevinNitroSourceId",BigInteger("0")),
     )
     val userModel = viewModel.userModel.collectAsStateWithLifecycle().value
     val copySourceIdToClipboard = viewModel::copySourceIdToClipboard

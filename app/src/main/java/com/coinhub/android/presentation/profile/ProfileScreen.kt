@@ -1,7 +1,6 @@
 package com.coinhub.android.presentation.profile
 
 import android.net.Uri
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -149,7 +148,6 @@ private fun ProfileScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
-            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AvatarPicker(avatarUri = avatarUri, onAvatarUriChange = onAvatarUriChange)

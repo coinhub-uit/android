@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.math.BigDecimal
+import java.math.BigInteger
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,9 +30,9 @@ class TopUpViewModel @Inject constructor(
 ) : ViewModel() {
     private val _sourceModels = MutableStateFlow(
         listOf(
-            SourceModel("1", BigDecimal(1000000)),
-            SourceModel("2", BigDecimal(500000)),
-            SourceModel("3", BigDecimal(750000))
+            SourceModel("1", BigInteger("1000000")),
+            SourceModel("2", BigInteger("500000")),
+            SourceModel("3", BigInteger("750000"))
         )
     )
     val sourceModels = _sourceModels.asStateFlow()
@@ -88,7 +88,7 @@ class TopUpViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = createTopUpUseCase(
                 CreateTopUpDto(
-                    amount = _amountText.value.toLong(),
+                    amount = BigInteger(_amountText.value),
                     provider = _topUpProvider.value!!,
                     sourceDestinationId = _sourceId.value!!,
                     ipAddress = "",//How to get IP address in Android?
