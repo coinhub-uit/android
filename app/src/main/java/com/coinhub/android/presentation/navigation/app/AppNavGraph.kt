@@ -69,7 +69,7 @@ fun AppNavGraph() {
             topUpGraph(navController = navController)
             sourceDetailNav()
             transferMoneyGraph()
-            createTicketGraph()
+            createTicketGraph(navController = navController)
             ticketDetailNav(navController = navController)
             notificationNav()
             aiChatNav()

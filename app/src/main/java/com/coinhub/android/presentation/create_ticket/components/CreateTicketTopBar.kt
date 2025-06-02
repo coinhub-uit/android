@@ -9,14 +9,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import com.coinhub.android.presentation.top_up.components.TopUpTopBar
 import com.coinhub.android.ui.theme.CoinhubTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopUpTopBar(onBack: () -> Unit) {
+fun CreateTicketTopBar(onBack: () -> Unit) {
     TopAppBar(
         title = {
-            Text("Top Up", maxLines = 1)
+            Text("Create Ticket", maxLines = 1)
         },
         navigationIcon = {
             IconButton(

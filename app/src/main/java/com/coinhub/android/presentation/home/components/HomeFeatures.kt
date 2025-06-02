@@ -17,8 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Payments
 import androidx.compose.material.icons.filled.SwapHoriz
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -79,9 +78,8 @@ private fun HomeFeatureCard(
     icon: ImageVector,
     onClick: () -> Unit,
 ) {
-    ElevatedCard(
+    Card(
         modifier = modifier.wrapContentHeight(),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
         onClick = onClick
     ) {
         Column(
