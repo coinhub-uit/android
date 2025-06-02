@@ -34,6 +34,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         installSplashScreen()
+        actionBar?.hide()
         setContent {
             CoinhubTheme {
                 val isUserSignedIn = supabaseService.isUserSignedIn.collectAsStateWithLifecycle().value
