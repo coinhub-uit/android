@@ -3,7 +3,11 @@ package com.coinhub.android.presentation.home.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Message
@@ -28,7 +32,8 @@ import com.coinhub.android.ui.theme.CoinhubTheme
 fun HomeTopBar(onNotification: () -> Unit, onAiChat: () -> Unit) {
     TopAppBar(title = {
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(WindowInsets.systemBars.asPaddingValues())
         ) {
             Image(
                 imageVector = ImageVector.vectorResource(R.drawable.coinhub),
@@ -57,9 +62,6 @@ fun HomeTopBar(onNotification: () -> Unit, onAiChat: () -> Unit) {
 @Composable
 fun HomeTopBarPreview() {
     CoinhubTheme {
-        HomeTopBar(
-            onNotification = {},
-            onAiChat = {}
-        )
+        HomeTopBar(onNotification = {}, onAiChat = {})
     }
 }
