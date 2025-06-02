@@ -15,6 +15,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
@@ -28,6 +29,7 @@ import com.coinhub.android.presentation.top_up.components.TopUpSelectProvider
 import com.coinhub.android.presentation.top_up.components.TopUpSelectSource
 import com.coinhub.android.presentation.top_up.components.TopUpTopBar
 import com.coinhub.android.ui.theme.CoinhubTheme
+import com.coinhub.android.utils.PreviewDeviceSpecs
 
 @Composable
 fun TopUpScreen(
@@ -131,7 +133,7 @@ private fun TopUpScreen(
     }
 }
 
-@PreviewLightDark
+@Preview(device = PreviewDeviceSpecs.DEVICE)
 @Composable
 fun TopUpScreenPreview() {
     CoinhubTheme {

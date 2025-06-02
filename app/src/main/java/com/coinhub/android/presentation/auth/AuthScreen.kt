@@ -42,24 +42,17 @@ fun AuthScreen(
     val isSignUp = viewModel.isSignUp.collectAsStateWithLifecycle().value
     val setIsSignUp = viewModel::setIsSignUp
     val email = viewModel.email.collectAsStateWithLifecycle().value
-    val onEmailChange = viewModel::onEmailChange
     val emailCheckState = viewModel.emailCheckState.collectAsStateWithLifecycle().value
     val password = viewModel.password.collectAsStateWithLifecycle().value
-    val onPasswordChange = viewModel::onPasswordChange
     val passwordCheckState = viewModel.passwordCheckState.collectAsStateWithLifecycle().value
     val confirmPassword = viewModel.confirmPassword.collectAsStateWithLifecycle().value
-    val onConfirmPasswordChange = viewModel::onConfirmPasswordChange
     val confirmPasswordCheckState = viewModel.confirmPasswordCheckState.collectAsStateWithLifecycle().value
     val isFormValid = viewModel.isFormValid.collectAsStateWithLifecycle().value
     val snackbarMessage = viewModel.snackbarMessage.collectAsStateWithLifecycle().value
-    val clearSnackBarMessage = viewModel::clearSnackbarMessage
-    val signUpWithCredential = viewModel::signUpWithCredential
-    val signInWithCredential = viewModel::signInWithCredential
-    val onSignInWithGoogle = viewModel::onSignInWithGoogle
 
     val googleSignInState = supabaseClient.composeAuth.rememberSignInWithGoogle(
         onResult = { signInResult ->
-            onSignInWithGoogle(
+            viewModel.onSignInWithGoogle(
                 signInResult, onSignedUpWithOAuth
             )
         })
@@ -68,20 +61,20 @@ fun AuthScreen(
         isSignUp = isSignUp,
         setIsSignUp = setIsSignUp,
         email = email,
-        onEmailChange = onEmailChange,
+        onEmailChange = viewModel::onEmailChange,
         emailCheckState = emailCheckState,
         password = password,
-        onPasswordChange = onPasswordChange,
+        onPasswordChange = viewModel::onPasswordChange,
         passwordCheckState = passwordCheckState,
         confirmPassword = confirmPassword,
-        onConfirmPasswordChange = onConfirmPasswordChange,
+        onConfirmPasswordChange = viewModel::onConfirmPasswordChange,
         confirmPasswordCheckState = confirmPasswordCheckState,
         isFormValid = isFormValid,
-        signUpWithCredential = signUpWithCredential,
-        signInWithCredential = signInWithCredential,
+        signUpWithCredential = viewModel::signUpWithCredential,
+        signInWithCredential = viewModel::signInWithCredential,
         onSignedUpWithCredential = onSignedUpWithCredential,
         snackbarMessage = snackbarMessage,
-        clearSnackBarMessage = clearSnackBarMessage,
+        clearSnackBarMessage = viewModel::clearSnackbarMessage,
         googleSignInState = googleSignInState
     )
 }
@@ -162,7 +155,6 @@ private fun AuthScreen(
                         .fillMaxWidth()
                         .padding(top = 16.dp, bottom = 16.dp)
                 )
-                // TODO: @NTGNguyen - Passing things?
                 AuthOAuth(
                     onClick = {
                         googleSignInState?.startFlow()
@@ -182,24 +174,24 @@ fun SignInScreenPreview() {
     CoinhubTheme {
         AuthScreen(
             isSignUp = true,
-            setIsSignUp = {},
-            email = "kevinnitro@duck.com",
-            onEmailChange = {},
-            emailCheckState = AuthStates.EmailCheckState(isValid = false, errorMessage = "Bad"),
-            password = "LookMe!",
-            onPasswordChange = {},
-            passwordCheckState = AuthStates.PasswordCheckState(isValid = false, errorMessage = "Bad"),
-            confirmPassword = "GlanceMe?",
-            onConfirmPasswordChange = {},
-            confirmPasswordCheckState = AuthStates.ConfirmPasswordCheckState(
-                isValid = false, errorMessage = "bad"
-            ),
-            isFormValid = true,
-            onSignedUpWithCredential = {},
-            signInWithCredential = { },
-            signUpWithCredential = { },
-            googleSignInState = null,
-            snackbarMessage = null,
-            clearSnackBarMessage = {})
+                   setIsSignUp = {},
+                   email = "kevinnitro@duck.com",
+                   onEmailChange = {},
+                   emailCheckState = AuthStates.EmailCheckState(isValid = false, errorMessage = "Bad"),
+                   password = "LookMe!",
+                   onPasswordChange = {},
+                   passwordCheckState = AuthStates.PasswordCheckState(isValid = false, errorMessage = "Bad"),
+                   confirmPassword = "GlanceMe?",
+                   onConfirmPasswordChange = {},
+                   confirmPasswordCheckState = AuthStates.ConfirmPasswordCheckState(
+                       isValid = false, errorMessage = "bad"
+                   ),
+                   isFormValid = true,
+                   onSignedUpWithCredential = {},
+                   signInWithCredential = { },
+                   signUpWithCredential = { },
+                   googleSignInState = null,
+                   snackbarMessage = null,
+                   clearSnackBarMessage = {})
     }
 }

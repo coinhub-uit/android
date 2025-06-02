@@ -93,7 +93,7 @@ class TopUpViewModel @Inject constructor(
                     amount = BigInteger(_amountText.value),
                     provider = _topUpProvider.value!!,
                     sourceDestinationId = _sourceId.value!!,
-                    ipAddress = "",//TODO:How to get IP address in Android?
+                    ipAddress = "", //TODO:How to get IP address in Android?
                     returnUrl = BuildConfig.vnpayReturnUrl
                 )
             )
