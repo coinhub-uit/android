@@ -2,6 +2,7 @@ package com.coinhub.android.data.api_services
 
 import com.coinhub.android.data.dtos.request.CreateTopUpDto
 import com.coinhub.android.data.dtos.request.TransferMoneyDto
+import com.coinhub.android.data.dtos.response.CreateTopUpDtoResponse
 import retrofit2.http.Body
 import retrofit2.http.POST
 
@@ -10,5 +11,5 @@ interface PaymentApiService {
     suspend fun transferMoney(@Body transferMoneyDto: TransferMoneyDto)
 
     @POST("payment/top-up")
-    suspend fun createTopUp(@Body createVnPayDto: CreateTopUpDto): String
+    suspend fun createTopUp(@Body createVnPayDto: CreateTopUpDto): CreateTopUpDtoResponse
 }

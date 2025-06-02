@@ -6,7 +6,7 @@ import com.coinhub.android.common.toTicketModel
 import com.coinhub.android.common.toUserModel
 import com.coinhub.android.data.api_services.UserApiService
 import com.coinhub.android.data.dtos.request.CreateUserDto
-import com.coinhub.android.data.dtos.request.RegisterDeviceDto
+import com.coinhub.android.data.dtos.request.DeviceDto
 import com.coinhub.android.data.models.DeviceModel
 import com.coinhub.android.data.models.SourceModel
 import com.coinhub.android.data.models.TicketModel
@@ -78,7 +78,7 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun registerDevice(id: String, dto: RegisterDeviceDto): DeviceModel {
+    override suspend fun registerDevice(id: String, dto: DeviceDto): DeviceModel {
         return try {
             userApiService.registerDevice(id, dto).toDeviceModel()
         } catch (e: Exception) {

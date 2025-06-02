@@ -1,6 +1,6 @@
 package com.coinhub.android.data.dtos.request
 
-data class RegisterDeviceDto(
+data class DeviceDto(
     val fcmToken: String,
     val deviceId: String,
 )

@@ -10,3 +10,8 @@ data class TopUpDto(
     val status: TopUpStatusEnum,
     val createdAt: String,
 )
+
+data class CreateTopUpDtoResponse(
+    val url: String,
+    val topUpId: String,
+)

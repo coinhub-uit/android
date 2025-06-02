@@ -1,6 +1,5 @@
 package com.coinhub.android.data.api_services
 
-import com.coinhub.android.data.dtos.request.CreateSourceDto
 import com.coinhub.android.data.dtos.response.SourceDto
 import com.coinhub.android.data.dtos.response.TicketDto
 import retrofit2.http.Body
@@ -11,7 +10,7 @@ import retrofit2.http.Path
 
 interface SourceApiService {
     @POST("sources")
-    suspend fun createSource(@Body createSourceDto: CreateSourceDto): SourceDto
+    suspend fun createSource(@Body createSourceDto: com.coinhub.android.data.dtos.request.CreateSourceDto): SourceDto
 
     @GET("sources/{id}")
     suspend fun getSourceById(@Path("id") sourceId: String): SourceDto?

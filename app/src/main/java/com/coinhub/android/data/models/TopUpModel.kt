@@ -13,6 +13,11 @@ data class TopUpModel @OptIn(ExperimentalUuidApi::class) constructor(
     val createdAt: LocalDate,
 )
 
+data class CreateTopUpModelResponse(
+    val url: String,
+    val topUpId: Uuid,
+)
+
 enum class TopUpProviderEnum {
     VNPAY,
     MOMO,

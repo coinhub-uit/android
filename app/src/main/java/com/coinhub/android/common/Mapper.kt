@@ -1,6 +1,7 @@
 package com.coinhub.android.common
 
 import com.coinhub.android.data.dtos.response.AvailablePlanDto
+import com.coinhub.android.data.dtos.response.CreateTopUpDtoResponse
 import com.coinhub.android.data.dtos.response.DeviceDto
 import com.coinhub.android.data.dtos.response.PlanDto
 import com.coinhub.android.data.dtos.response.SourceDto
@@ -9,6 +10,7 @@ import com.coinhub.android.data.dtos.response.TicketHistoryDto
 import com.coinhub.android.data.dtos.response.TopUpDto
 import com.coinhub.android.data.dtos.response.UserDto
 import com.coinhub.android.data.models.AvailablePlanModel
+import com.coinhub.android.data.models.CreateTopUpModelResponse
 import com.coinhub.android.data.models.DeviceModel
 import com.coinhub.android.data.models.PlanModel
 import com.coinhub.android.data.models.SourceModel
@@ -74,6 +76,12 @@ fun TopUpDto.toTopUpModel() = TopUpModel(
     amount = BigDecimal(this.amount),
     status = this.status,
     provider = this.provider
+)
+
+@OptIn(ExperimentalUuidApi::class)
+fun CreateTopUpDtoResponse.toCreateTopUpModelResponse() = CreateTopUpModelResponse(
+    url = this.url,
+    topUpId = Uuid.parse(this.topUpId)
 )
 
 fun DeviceDto.toDeviceModel() = DeviceModel(
