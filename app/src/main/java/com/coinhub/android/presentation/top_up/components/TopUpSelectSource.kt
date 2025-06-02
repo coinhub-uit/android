@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import com.coinhub.android.data.models.SourceModel
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
+import java.math.BigDecimal
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -133,9 +134,9 @@ private fun TopUpSelectSourcePreview() {
         var selectedSourceId by remember { mutableStateOf<String?>(null) }
         var isSheetVisible by remember { mutableStateOf(false) }
         val sources = listOf(
-            SourceModel("1", 1000000),
-            SourceModel("2", 500000),
-            SourceModel("3", 750000)
+            SourceModel("1", BigDecimal(1000000)),
+            SourceModel("2", BigDecimal(500000)),
+            SourceModel("3", BigDecimal(750000))
         )
         Surface {
             TopUpSelectSource(

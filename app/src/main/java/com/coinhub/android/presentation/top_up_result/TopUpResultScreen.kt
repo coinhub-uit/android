@@ -37,6 +37,7 @@ import com.coinhub.android.presentation.top_up_result.components.TopUpResultStat
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
 import kotlinx.datetime.LocalDate
+import java.math.BigDecimal
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -148,7 +149,7 @@ fun HomeScreenPreview() {
     val topUpModel = TopUpModel(
         id = Uuid.random(),
         status = TopUpStatusEnum.SUCCESS,
-        amount = 100L,
+        amount = BigDecimal(100L),
         createdAt = LocalDate.parse("2023-01-01"),
         provider = TopUpProviderEnum.VNPAY
     )

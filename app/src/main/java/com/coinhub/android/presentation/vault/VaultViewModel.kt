@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.datetime.LocalDate
+import java.math.BigDecimal
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,8 +32,8 @@ class VaultViewModel @Inject constructor() : ViewModel() {
                     TicketHistoryModel(
                         issuedAt = LocalDate.parse("2023-01-01"),
                         maturedAt = null,
-                        principal = 1000000,
-                        interest = 50000
+                        principal = BigDecimal(1000000),
+                        interest = BigDecimal(50000)
                     )
                 ), plan = PlanModel(
                     id = 3,
@@ -49,8 +50,8 @@ class VaultViewModel @Inject constructor() : ViewModel() {
                     TicketHistoryModel(
                         issuedAt = LocalDate.parse("2023-01-01"),
                         maturedAt = null,
-                        principal = 1000000,
-                        interest = 50000
+                        principal = BigDecimal(1000000),
+                        interest = BigDecimal(50000)
                     )
                 ), plan = PlanModel(
                     id = 3,
@@ -67,8 +68,8 @@ class VaultViewModel @Inject constructor() : ViewModel() {
                     TicketHistoryModel(
                         issuedAt = LocalDate.parse("2023-01-01"),
                         maturedAt = null,
-                        principal = 1000000,
-                        interest = 50000
+                        principal = BigDecimal(1000000),
+                        interest = BigDecimal(50000)
                     )
                 ), plan = PlanModel(
                     id = 3,

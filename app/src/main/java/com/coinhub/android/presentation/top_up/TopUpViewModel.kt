@@ -11,13 +11,14 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import java.math.BigDecimal
 import javax.inject.Inject
 
 @HiltViewModel
 class TopUpViewModel @Inject constructor() : ViewModel() {
     private val _sourceModels = MutableStateFlow(
         listOf(
-            SourceModel("1", 1000000), SourceModel("2", 500000), SourceModel("3", 750000)
+            SourceModel("1", BigDecimal(1000000)), SourceModel("2", BigDecimal(500000)), SourceModel("3", BigDecimal(750000))
         )
     )
     val sourceModels = _sourceModels.asStateFlow()
