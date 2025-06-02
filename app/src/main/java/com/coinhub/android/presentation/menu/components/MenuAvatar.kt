@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import com.coinhub.android.data.models.UserModel
 import com.coinhub.android.ui.theme.CoinhubTheme
-import kotlinx.datetime.LocalDate
+import java.time.LocalDate
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 

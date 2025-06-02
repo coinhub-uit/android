@@ -45,12 +45,10 @@ import com.coinhub.android.data.models.TicketStatus
 import com.coinhub.android.presentation.vault.components.VaultTopBar
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
-import kotlinx.datetime.LocalDate
 import java.math.BigDecimal
 import java.text.NumberFormat
+import java.time.LocalDate
 import java.util.Locale
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @Composable
 fun VaultScreen(
@@ -267,10 +265,10 @@ fun VaultScreenPreview() {
                         ticketHistories = listOf(
                             TicketHistoryModel(
                                 issuedAt = LocalDate.parse("2022-01-01"), maturedAt = null, principal = BigDecimal(
-                                100000), interest = BigDecimal(100000)
+                                    100000
+                                ), interest = BigDecimal(100000)
                             )
-                        )
-                        , plan = PlanModel(
+                        ), plan = PlanModel(
                             id = 1,
                             days = 10
                         )
@@ -282,10 +280,13 @@ fun VaultScreenPreview() {
                         method = MethodEnum.PIR,
                         ticketHistories = listOf(
                             TicketHistoryModel(
-                                issuedAt = LocalDate.parse("2022-01-01"), maturedAt = null, principal = BigDecimal( 100000), interest = BigDecimal(100000)
+                                issuedAt = LocalDate.parse("2022-01-01"),
+                                maturedAt = null,
+                                principal = BigDecimal(100000),
+                                interest = BigDecimal(100000)
                             )
                         ), plan = PlanModel(
-                            id =2,
+                            id = 2,
                             days = -1
                         )
                     )

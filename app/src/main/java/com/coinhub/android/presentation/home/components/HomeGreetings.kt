@@ -6,12 +6,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.coinhub.android.data.models.UserModel
 import com.coinhub.android.ui.theme.CoinhubTheme
-import kotlinx.datetime.LocalDate
-import java.util.Date
+import java.time.LocalDate
 import kotlin.random.Random
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid

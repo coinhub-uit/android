@@ -18,8 +18,8 @@ import com.coinhub.android.data.models.TicketHistoryModel
 import com.coinhub.android.data.models.TicketModel
 import com.coinhub.android.data.models.TopUpModel
 import com.coinhub.android.data.models.UserModel
-import kotlinx.datetime.LocalDate
 import java.math.BigDecimal
+import java.time.LocalDate
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 

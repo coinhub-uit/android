@@ -37,9 +37,8 @@ import com.coinhub.android.presentation.top_up.components.TopUpResultStatus
 import com.coinhub.android.presentation.top_up.state.TopUpState
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
-import io.ktor.util.reflect.instanceOf
-import kotlinx.datetime.LocalDate
 import java.math.BigDecimal
+import java.time.LocalDate
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 

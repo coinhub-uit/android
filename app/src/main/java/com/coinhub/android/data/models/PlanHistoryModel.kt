@@ -1,6 +1,6 @@
 package com.coinhub.android.data.models
 
-import kotlinx.datetime.LocalDate
+import java.time.LocalDate
 
 data class PlanHistoryModel(
     val id: Number,

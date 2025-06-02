@@ -1,7 +1,6 @@
 package com.coinhub.android.data.models
 
-import kotlinx.datetime.LocalDate
-import kotlin.uuid.Uuid
+import java.time.LocalDate
 
 data class TicketModel(
     val id: Number,
