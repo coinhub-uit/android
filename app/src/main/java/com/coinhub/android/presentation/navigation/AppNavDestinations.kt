@@ -46,7 +46,9 @@ open class AppNavDestinations {
 
     // App - Main Graph - Home - Source Detail
     @Serializable
-    data object SourceDetail : AppNavDestinations()
+    data class SourceDetail(
+        val sourceId: String,
+    ) : AppNavDestinations()
 
     // App - Main Graph - Home - Transfer Money Graph
     @Serializable

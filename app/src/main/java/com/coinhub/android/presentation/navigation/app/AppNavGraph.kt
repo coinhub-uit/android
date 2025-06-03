@@ -14,7 +14,6 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.coinhub.android.data.remote.SupabaseService
 import com.coinhub.android.presentation.common.permission_requests.RequestNotificationPermissionDialog
 import com.coinhub.android.presentation.navigation.AppNavDestinations
 import com.coinhub.android.presentation.navigation.app.components.AppBottomBar
@@ -67,7 +66,7 @@ fun AppNavGraph() {
             mainNavGraph(navController = navController)
             createSourceGraph(navController = navController)
             topUpGraph(navController = navController)
-            sourceDetailNav()
+            sourceDetailNav(navController = navController)
             transferMoneyGraph()
             createTicketGraph(navController = navController)
             ticketDetailNav(navController = navController)

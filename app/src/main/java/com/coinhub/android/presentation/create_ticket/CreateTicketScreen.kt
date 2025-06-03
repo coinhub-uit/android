@@ -1,5 +1,6 @@
 package com.coinhub.android.presentation.create_ticket
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -93,7 +94,9 @@ private fun CreateTicketScreen(
             CreateTicketTopBar(onBack = onBack)
         },
         floatingActionButton = {
-            if (isFormValid) {
+            AnimatedVisibility(
+                visible = isFormValid && !isLoading,
+            ) {
                 FloatingActionButton(onClick = onCreateTicket) {
                     Icon(
                         imageVector = Icons.Filled.Check,
