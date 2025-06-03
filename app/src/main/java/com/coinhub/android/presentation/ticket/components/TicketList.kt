@@ -1,4 +1,4 @@
-package com.coinhub.android.presentation.vault.components
+package com.coinhub.android.presentation.ticket.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,23 +38,30 @@ import java.text.NumberFormat
 import java.util.Locale
 
 @Composable
-fun VaultTickets(
+fun TicketList(
+    modifier: Modifier = Modifier,
     ticketModels: List<TicketModel>,
     currentDate: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
     onTicketDetail: (Int) -> Unit,
 ) {
-    Text(
-        text = "Your Tickets", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(bottom = 8.dp)
-    )
-
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+    Column(
+        modifier = modifier.fillMaxWidth()
     ) {
-        items(ticketModels) { ticketModel ->
-            TicketItem(
-                ticketModel = ticketModel,
-                currentDate = currentDate,
-                onTicketClick = { onTicketDetail(ticketModel.id) })
+        Text(
+            text = "Your Tickets",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(ticketModels) { ticketModel ->
+                TicketItem(
+                    ticketModel = ticketModel,
+                    currentDate = currentDate,
+                    onTicketClick = { onTicketDetail(ticketModel.id) })
+            }
         }
     }
 }
@@ -230,7 +237,7 @@ private fun Preview() {
                 )
             )
 
-            VaultTickets(
+            TicketList(
                 ticketModels = sampleTickets, currentDate = LocalDate.parse("2025-01-31"), onTicketDetail = {})
         }
     }

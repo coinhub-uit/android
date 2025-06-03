@@ -3,10 +3,10 @@ package com.coinhub.android.presentation.navigation.app.components
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Wallet
+import androidx.compose.material.icons.filled.Sell
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Menu
-import androidx.compose.material.icons.outlined.Wallet
+import androidx.compose.material.icons.outlined.Sell
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -68,6 +68,6 @@ data class BottomNavItem(
 
 val bottomNavItems = listOf(
     BottomNavItem("Home", AppNavDestinations.Home, Icons.Outlined.Home, Icons.Default.Home),
-    BottomNavItem("Vault", AppNavDestinations.Vault, Icons.Outlined.Wallet, Icons.Default.Wallet),
+    BottomNavItem("Tickets", AppNavDestinations.Tickets, Icons.Outlined.Sell, Icons.Default.Sell),
     BottomNavItem("Menu", AppNavDestinations.Menu, Icons.Outlined.Menu, Icons.Default.Menu)
 )

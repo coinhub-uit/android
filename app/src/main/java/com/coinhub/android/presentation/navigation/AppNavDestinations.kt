@@ -60,23 +60,23 @@ open class AppNavDestinations {
     @Serializable
     data object TransferMoneyResult : AppNavDestinations()
 
-    // App - Main Graph - Vault
+    // App - Main Graph - Tickets
     @Serializable
-    data object Vault : AppNavDestinations()
+    data object Tickets : AppNavDestinations()
 
-    // App - Main Graph - Vault - Create Ticket Graph
+    // App - Main Graph - Tickets - Create Ticket Graph
     @Serializable
     data object CreateTicketGraph : AppNavDestinations()
 
-    // App - Main Graph - Vault - Create Ticket Graph - Create Ticket
+    // App - Main Graph - Tickets - Create Ticket Graph - Create Ticket
     @Serializable
     data object CreateTicket : AppNavDestinations()
 
-    // App - Main Graph - Vault - Create Ticket Graph - Create Ticket - Confirm Create Ticket
+    // App - Main Graph - Tickets - Create Ticket Graph - Create Ticket - Confirm Create Ticket
     @Serializable
     data object ConfirmCreateTicket : AppNavDestinations()
 
-    // App - Main Graph - Vault - Create Ticket Graph - Ticket Details
+    // App - Main Graph - Tickets - Create Ticket Graph - Ticket Details
     @Serializable
     data class TicketDetail(
         val ticketId: Int,

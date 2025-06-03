@@ -9,7 +9,7 @@ import androidx.navigation.compose.navigation
 import com.coinhub.android.presentation.home.HomeScreen
 import com.coinhub.android.presentation.menu.MenuScreen
 import com.coinhub.android.presentation.navigation.AppNavDestinations
-import com.coinhub.android.presentation.vault.VaultScreen
+import com.coinhub.android.presentation.ticket.TicketScreen
 
 fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
     navigation<AppNavDestinations.MainGraph>(startDestination = AppNavDestinations.Home) {
@@ -25,11 +25,11 @@ fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
                 onAiChat = { navController.navigate(AppNavDestinations.AiChat) },
                 onTransferMoney = { navController.navigate(AppNavDestinations.TransferMoneyGraph) })
         }
-        composable<AppNavDestinations.Vault>(
+        composable<AppNavDestinations.Tickets>(
             enterTransition = { fadeIn() },
             exitTransition = { fadeOut() },
         ) {
-            VaultScreen(
+            TicketScreen(
                 onCreateTicket = { navController.navigate(AppNavDestinations.CreateTicketGraph) },
                 // TODO: May contains args here
                 onTicketDetail = { ticketId ->

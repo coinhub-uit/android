@@ -1,4 +1,4 @@
-package com.coinhub.android.presentation.vault
+package com.coinhub.android.presentation.ticket
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,7 +18,7 @@ import java.math.BigInteger
 import javax.inject.Inject
 
 @HiltViewModel
-class VaultViewModel @Inject constructor() : ViewModel() {
+class TicketViewModel @Inject constructor() : ViewModel() {
     // NOTE: This already filter which tickets are active
     private val _ticketModels = MutableStateFlow(
         listOf(
@@ -77,6 +77,78 @@ class VaultViewModel @Inject constructor() : ViewModel() {
                 ),
                 plan = PlanModel(
                     id = 3, days = 30
+                )
+            ),
+            TicketModel(
+                id = 1,
+                openedAt = "01/01/2025".toLocalDate(),
+                closedAt = null,
+                status = TicketStatus.ACTIVE,
+                method = MethodEnum.NR,
+                ticketHistories = listOf(
+                    TicketHistoryModel(
+                        issuedAt = "01/01/2025".toLocalDate(),
+                        maturedAt = "01/03/2025".toLocalDate(),
+                        principal = BigInteger("1000000"),
+                        interest = BigInteger("50000")
+                    )
+                ),
+                plan = PlanModel(
+                    id = 2, days = 90
+                )
+            ),
+            TicketModel(
+                id = 1,
+                openedAt = "01/01/2025".toLocalDate(),
+                closedAt = null,
+                status = TicketStatus.ACTIVE,
+                method = MethodEnum.NR,
+                ticketHistories = listOf(
+                    TicketHistoryModel(
+                        issuedAt = "01/01/2025".toLocalDate(),
+                        maturedAt = "01/03/2025".toLocalDate(),
+                        principal = BigInteger("1000000"),
+                        interest = BigInteger("50000")
+                    )
+                ),
+                plan = PlanModel(
+                    id = 2, days = 90
+                )
+            ),
+            TicketModel(
+                id = 1,
+                openedAt = "01/01/2025".toLocalDate(),
+                closedAt = null,
+                status = TicketStatus.ACTIVE,
+                method = MethodEnum.NR,
+                ticketHistories = listOf(
+                    TicketHistoryModel(
+                        issuedAt = "01/01/2025".toLocalDate(),
+                        maturedAt = "01/03/2025".toLocalDate(),
+                        principal = BigInteger("1000000"),
+                        interest = BigInteger("50000")
+                    )
+                ),
+                plan = PlanModel(
+                    id = 2, days = 90
+                )
+            ),
+            TicketModel(
+                id = 1,
+                openedAt = "01/01/2025".toLocalDate(),
+                closedAt = null,
+                status = TicketStatus.ACTIVE,
+                method = MethodEnum.NR,
+                ticketHistories = listOf(
+                    TicketHistoryModel(
+                        issuedAt = "01/01/2025".toLocalDate(),
+                        maturedAt = "01/03/2025".toLocalDate(),
+                        principal = BigInteger("1000000"),
+                        interest = BigInteger("50000")
+                    )
+                ),
+                plan = PlanModel(
+                    id = 2, days = 90
                 )
             )
         )

@@ -15,14 +15,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedCard
@@ -30,7 +28,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -47,6 +44,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coinhub.android.data.models.AvailablePlanModel
 import com.coinhub.android.data.models.MethodEnum
 import com.coinhub.android.data.models.SourceModel
+import com.coinhub.android.presentation.create_ticket.components.CreateTicketTopBar
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
 import java.math.BigInteger
@@ -55,7 +53,7 @@ import java.math.BigInteger
 fun CreateTicketScreen(
     onBack: () -> Unit,
     onMain: () -> Unit,
-    viewModel: CreateTicketViewModel = hiltViewModel()
+    viewModel: CreateTicketViewModel = hiltViewModel(),
 ) {
     val amountText = viewModel.amountText.collectAsStateWithLifecycle().value
     val selectedPlan = viewModel.selectedPlan.collectAsStateWithLifecycle().value
@@ -67,7 +65,7 @@ fun CreateTicketScreen(
     val availablePlans = viewModel.availablePlans.collectAsStateWithLifecycle().value
     val sourceModels = viewModel.sourceModels.collectAsStateWithLifecycle().value
     val isFormValid = viewModel.isFormValid.collectAsStateWithLifecycle().value
-    
+
     CreateTicketScreen(
         amountText = amountText,
         selectedPlan = selectedPlan,
@@ -94,7 +92,6 @@ fun CreateTicketScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CreateTicketScreen(
     amountText: String,
@@ -115,21 +112,11 @@ private fun CreateTicketScreen(
     setShowMethodBottomSheet: (Boolean) -> Unit,
     setShowSourceBottomSheet: (Boolean) -> Unit,
     onCreateTicket: () -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Create Ticket") },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
-                        )
-                    }
-                }
-            )
+            CreateTicketTopBar(onBack = onBack)
         },
         floatingActionButton = {
             if (isFormValid) {
@@ -149,44 +136,21 @@ private fun CreateTicketScreen(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            // Input Money Section
-            Text(
-                text = "Input Money",
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-            
-            Text(
-                text = "Minimum amount: 1,000,000 VND",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-            
-            OutlinedTextField(
-                value = amountText,
-                onValueChange = onAmountChange,
-                label = { Text("Amount (VND)") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth()
-            )
-            
-            Spacer(modifier = Modifier.height(24.dp))
-            
+
             // Selection Section
             Text(
                 text = "Plan Selection",
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-            
+
             // Select Plan
             Text(
                 text = "Select Plan",
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
-            
+
             OutlinedCard(
                 onClick = { setShowPlanBottomSheet(true) },
                 modifier = Modifier.fillMaxWidth()
@@ -209,16 +173,16 @@ private fun CreateTicketScreen(
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             // Select Method
             Text(
                 text = "Select Method",
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
-            
+
             OutlinedCard(
                 onClick = { setShowMethodBottomSheet(true) },
                 modifier = Modifier.fillMaxWidth()
@@ -239,16 +203,16 @@ private fun CreateTicketScreen(
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             // Select Source
             Text(
                 text = "Select Source",
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
-            
+
             OutlinedCard(
                 onClick = { setShowSourceBottomSheet(true) },
                 modifier = Modifier.fillMaxWidth()
@@ -273,7 +237,7 @@ private fun CreateTicketScreen(
                     )
                 }
             }
-            
+
             // Bottom Sheets
             if (isPlanBottomSheetVisible) {
                 PlanBottomSheet(
@@ -283,7 +247,7 @@ private fun CreateTicketScreen(
                     onDismissRequest = { setShowPlanBottomSheet(false) }
                 )
             }
-            
+
             if (isMethodBottomSheetVisible) {
                 MethodBottomSheet(
                     selectedMethod = selectedMethod,
@@ -291,7 +255,7 @@ private fun CreateTicketScreen(
                     onDismissRequest = { setShowMethodBottomSheet(false) }
                 )
             }
-            
+
             if (isSourceBottomSheetVisible) {
                 SourceBottomSheet(
                     sourceModels = sourceModels,
@@ -310,10 +274,10 @@ private fun PlanBottomSheet(
     availablePlans: List<AvailablePlanModel>,
     selectedPlan: AvailablePlanModel?,
     onPlanSelected: (AvailablePlanModel) -> Unit,
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
 ) {
     val bottomSheetState = rememberModalBottomSheetState()
-    
+
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = bottomSheetState
@@ -324,7 +288,7 @@ private fun PlanBottomSheet(
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-            
+
             LazyColumn {
                 items(availablePlans) { plan ->
                     Row(
@@ -348,7 +312,7 @@ private fun PlanBottomSheet(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
-                        
+
                         if (selectedPlan?.planHistoryId == plan.planHistoryId) {
                             Icon(
                                 imageVector = Icons.Default.Check,
@@ -357,13 +321,13 @@ private fun PlanBottomSheet(
                             )
                         }
                     }
-                    
+
                     if (plan != availablePlans.last()) {
                         HorizontalDivider()
                     }
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(32.dp))
         }
     }
@@ -374,10 +338,10 @@ private fun PlanBottomSheet(
 private fun MethodBottomSheet(
     selectedMethod: MethodEnum?,
     onMethodSelected: (MethodEnum) -> Unit,
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
 ) {
     val bottomSheetState = rememberModalBottomSheetState()
-    
+
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = bottomSheetState
@@ -388,7 +352,7 @@ private fun MethodBottomSheet(
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-            
+
             LazyColumn {
                 items(MethodEnum.entries.toTypedArray()) { method ->
                     Row(
@@ -416,7 +380,7 @@ private fun MethodBottomSheet(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
-                        
+
                         if (selectedMethod == method) {
                             Icon(
                                 imageVector = Icons.Default.Check,
@@ -425,13 +389,13 @@ private fun MethodBottomSheet(
                             )
                         }
                     }
-                    
+
                     if (method != MethodEnum.entries.last()) {
                         HorizontalDivider()
                     }
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(32.dp))
         }
     }
@@ -443,10 +407,10 @@ private fun SourceBottomSheet(
     sourceModels: List<SourceModel>,
     selectedSourceId: String?,
     onSourceSelected: (String) -> Unit,
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
 ) {
     val bottomSheetState = rememberModalBottomSheetState()
-    
+
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = bottomSheetState
@@ -457,7 +421,7 @@ private fun SourceBottomSheet(
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-            
+
             LazyColumn {
                 items(sourceModels) { source ->
                     Row(
@@ -474,7 +438,7 @@ private fun SourceBottomSheet(
                             text = "Source ID: ${source.id} (Balance: ${source.balance} VNĐ)",
                             modifier = Modifier.weight(1f)
                         )
-                        
+
                         if (selectedSourceId == source.id) {
                             Icon(
                                 imageVector = Icons.Default.Check,
@@ -483,13 +447,13 @@ private fun SourceBottomSheet(
                             )
                         }
                     }
-                    
+
                     if (source != sourceModels.last()) {
                         HorizontalDivider()
                     }
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(32.dp))
         }
     }
@@ -507,19 +471,19 @@ fun CreateTicketScreenPreview() {
             var isPlanBottomSheetVisible by remember { mutableStateOf(false) }
             var isMethodBottomSheetVisible by remember { mutableStateOf(false) }
             var isSourceBottomSheetVisible by remember { mutableStateOf(false) }
-            
+
             val availablePlans = listOf(
                 AvailablePlanModel(1, 5.5f, 101, 30),
                 AvailablePlanModel(2, 7.2f, 102, 60),
                 AvailablePlanModel(3, 8.5f, 103, 90)
             )
-            
+
             val sourceModels = listOf(
                 SourceModel("1", BigInteger("5000000")),
                 SourceModel("2", BigInteger("3000000")),
                 SourceModel("3", BigInteger("7500000"))
             )
-            
+
             CreateTicketScreen(
                 amountText = amountText,
                 selectedPlan = selectedPlan,

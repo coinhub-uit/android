@@ -1,4 +1,4 @@
-package com.coinhub.android.presentation.vault.components
+package com.coinhub.android.presentation.ticket.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -34,7 +34,7 @@ import com.coinhub.android.utils.PreviewDeviceSpecs
 import java.math.BigInteger
 
 @Composable
-fun VaultStatistics(
+fun TicketStatistics(
     totalPrincipal: BigInteger,
     totalInterest: BigInteger,
     onCreateTicket: () -> Unit,
@@ -134,7 +134,7 @@ fun VaultStatistics(
 private fun Preview() {
     Surface {
         CoinhubTheme {
-            VaultStatistics(
+            TicketStatistics(
                 totalPrincipal = BigInteger("1000000"),
                 totalInterest = BigInteger("50000"),
                 onCreateTicket = {}

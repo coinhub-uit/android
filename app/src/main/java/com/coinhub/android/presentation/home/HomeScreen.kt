@@ -37,7 +37,7 @@ fun HomeScreen(
     val sourceModels = listOf(
         SourceModel("01123142213512521", BigInteger("9999999999999999")),
         SourceModel("00", BigInteger("0")),
-        SourceModel("KevinNitroSourceId",BigInteger("0")),
+        SourceModel("KevinNitroSourceId", BigInteger("0")),
     )
     val userModel = viewModel.userModel.collectAsStateWithLifecycle().value
     val copySourceIdToClipboard = viewModel::copySourceIdToClipboard
@@ -51,7 +51,8 @@ fun HomeScreen(
         onTransferMoney = onTransferMoney,
         onNotification = onNotification,
         onAiChat = onAiChat,
-        copySourceIdToClipboard = copySourceIdToClipboard
+        copySourceIdToClipboard = copySourceIdToClipboard,
+        modifier = Modifier.padding(bottom = 64.dp)
     )
 }
 
@@ -66,15 +67,14 @@ private fun HomeScreen(
     onNotification: () -> Unit,
     onAiChat: () -> Unit,
     copySourceIdToClipboard: (Context, String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Scaffold(
-        topBar = {
+        modifier = modifier.padding(16.dp), topBar = {
             HomeTopBar(
-                onNotification = onNotification,
-                onAiChat = onAiChat
+                onNotification = onNotification, onAiChat = onAiChat
             )
-        }
-    ) { innerPadding ->
+        }) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
@@ -90,9 +90,7 @@ private fun HomeScreen(
             )
             Spacer(modifier = Modifier.height(16.dp))
             HomeFeatures(
-                onTopUp = onTopUp,
-                onCreateSource = onCreateSource,
-                onTransferMoney = onTransferMoney
+                onTopUp = onTopUp, onCreateSource = onCreateSource, onTransferMoney = onTransferMoney
             )
         }
     }
@@ -104,11 +102,10 @@ fun HomeScreenPreview() {
     CoinhubTheme {
         HomeScreen(
             onCreateSource = {},
-            onToSourceDetail = {},
-            onTopUp = {},
-            onNotification = {},
-            onAiChat = {},
-            onTransferMoney = {}
-        )
+                   onToSourceDetail = {},
+                   onTopUp = {},
+                   onNotification = {},
+                   onAiChat = {},
+                   onTransferMoney = {})
     }
 }

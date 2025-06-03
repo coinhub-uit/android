@@ -1,4 +1,4 @@
-package com.coinhub.android.presentation.vault
+package com.coinhub.android.presentation.ticket
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -18,64 +18,69 @@ import com.coinhub.android.data.models.PlanModel
 import com.coinhub.android.data.models.TicketHistoryModel
 import com.coinhub.android.data.models.TicketModel
 import com.coinhub.android.data.models.TicketStatus
-import com.coinhub.android.presentation.vault.components.VaultStatistics
-import com.coinhub.android.presentation.vault.components.VaultTickets
-import com.coinhub.android.presentation.vault.components.VaultTopBar
+import com.coinhub.android.presentation.ticket.components.TicketStatistics
+import com.coinhub.android.presentation.ticket.components.TicketList
+import com.coinhub.android.presentation.ticket.components.TicketTopBar
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
 import com.coinhub.android.utils.toLocalDate
 import java.math.BigInteger
 
 @Composable
-fun VaultScreen(
+fun TicketScreen(
     onCreateTicket: () -> Unit,
     onTicketDetail: (Int) -> Unit,
-    viewModel: VaultViewModel = hiltViewModel(),
+    viewModel: TicketViewModel = hiltViewModel(),
 ) {
     val ticketModels by viewModel.ticketModels.collectAsStateWithLifecycle()
     val totalPrincipal by viewModel.totalPrincipal.collectAsStateWithLifecycle()
     val totalInterest by viewModel.totalInterest.collectAsStateWithLifecycle()
 
-    VaultScreen(
+    TicketScreen(
         ticketModels = ticketModels,
         totalPrincipal = totalPrincipal,
         totalInterest = totalInterest,
         onCreateTicket = onCreateTicket,
-        onTicketDetail = onTicketDetail
+        onTicketDetail = onTicketDetail,
+        modifier = Modifier.padding(bottom = 64.dp)
     )
 }
 
 @Composable
-private fun VaultScreen(
+private fun TicketScreen(
     ticketModels: List<TicketModel>,
     totalPrincipal: BigInteger,
     totalInterest: BigInteger,
     onCreateTicket: () -> Unit,
     onTicketDetail: (Int) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    Scaffold(modifier = Modifier.padding(16.dp), topBar = {
-        VaultTopBar()
+    Scaffold(modifier = modifier.padding(16.dp), topBar = {
+        TicketTopBar()
     }) { innerPadding ->
         Column(
             modifier = Modifier.padding(innerPadding)
         ) {
-            VaultStatistics(
+            TicketStatistics(
                 totalPrincipal = totalPrincipal, totalInterest = totalInterest, onCreateTicket = onCreateTicket
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            VaultTickets(ticketModels = ticketModels, onTicketDetail = onTicketDetail)
+            TicketList(
+                ticketModels = ticketModels, onTicketDetail = onTicketDetail,
+                modifier = Modifier.padding(bottom = 32.dp) // Trick
+            )
         }
     }
 }
 
 @Preview(device = PreviewDeviceSpecs.DEVICE)
 @Composable
-fun VaultScreenPreview() {
+private fun Preview() {
     CoinhubTheme {
         Surface {
-            VaultScreen(
+            TicketScreen(
                 ticketModels = listOf(
                     TicketModel(
                         id = 1,

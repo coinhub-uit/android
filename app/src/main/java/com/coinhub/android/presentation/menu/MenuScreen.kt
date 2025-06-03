@@ -44,7 +44,8 @@ fun MenuScreen(
         onSettings = onSettings,
         onCredentialChange = onCredentialChange,
         onSignOut = viewModel::onSignOut,
-        userModel = userModel
+        userModel = userModel,
+        modifier = Modifier.padding(bottom = 64.dp)
     )
 }
 
@@ -55,6 +56,7 @@ private fun MenuScreen(
     onSignOut: () -> Unit,
     onCredentialChange: () -> Unit,
     userModel: UserModel,
+    modifier: Modifier = Modifier,
 ) {
     val menuItems = listOf(
         MenuEntry(
@@ -74,7 +76,8 @@ private fun MenuScreen(
         ),
     )
     Scaffold(
-        topBar = { MenuTopBar(onSignOut = onSignOut) }
+        topBar = { MenuTopBar(onSignOut = onSignOut) },
+        modifier = modifier.padding(16.dp)
     ) { innerPadding ->
         Column(
             modifier = Modifier
