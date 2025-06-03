@@ -8,12 +8,16 @@ import com.coinhub.android.data.models.AvailablePlanModel
 import com.coinhub.android.data.models.MethodEnum
 import com.coinhub.android.data.models.SourceModel
 import com.coinhub.android.domain.use_cases.ValidateAmountCreateTicketUseCase
+import com.coinhub.android.utils.DEBOUNCE_TYPING
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import java.math.BigInteger
 import javax.inject.Inject
@@ -23,21 +27,8 @@ class CreateTicketViewModel @Inject constructor(
     private val validateAmountCreateTicketUseCase: ValidateAmountCreateTicketUseCase,
 ) : ViewModel() {
     // TODO: If have time, implement repository to fetch real data
-    private val _minimumAmount = 1000000L
-    val minimumAmount get() = _minimumAmount
-
-    // State flows for UI state
-    private val _amountText = MutableStateFlow("")
-    val amountText: StateFlow<String> = _amountText.asStateFlow()
-
-    private val _selectedAvailablePlan = MutableStateFlow<AvailablePlanModel?>(null)
-    val selectedAvailablePlan: StateFlow<AvailablePlanModel?> = _selectedAvailablePlan.asStateFlow()
-
-    private val _selectedMethod = MutableStateFlow<MethodEnum?>(null)
-    val selectedMethod: StateFlow<MethodEnum?> = _selectedMethod.asStateFlow()
-
-    private val _selectedSourceId = MutableStateFlow<String?>(null)
-    val selectedSourceId: StateFlow<String?> = _selectedSourceId.asStateFlow()
+    private val _minimumAmount = MutableStateFlow(1_000_000L)
+    val minimumAmount = _minimumAmount.asStateFlow()
 
     // Mock data for demo/preview
     private val _availablePlans = MutableStateFlow(
@@ -58,13 +49,40 @@ class CreateTicketViewModel @Inject constructor(
     )
     val sources: StateFlow<List<SourceModel>> = _sources.asStateFlow()
 
+    // State flows for UI state
+    private val _amountText = MutableStateFlow("")
+    val amountText: StateFlow<String> = _amountText.asStateFlow()
+
+    @OptIn(FlowPreview::class)
+    val amountError = _amountText.debounce(DEBOUNCE_TYPING).map { amountText ->
+        val result =
+            validateAmountCreateTicketUseCase(
+                amountText,
+                _minimumAmount.value,
+                _sources.value.find { source -> source.id == _selectedSourceId.value })
+        return@map if (result is ValidateAmountCreateTicketUseCase.Result.Error) result.message else null
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = null
+    )
+
+    private val _selectedAvailablePlan = MutableStateFlow<AvailablePlanModel?>(null)
+    val selectedAvailablePlan: StateFlow<AvailablePlanModel?> = _selectedAvailablePlan.asStateFlow()
+
+    private val _selectedMethod = MutableStateFlow<MethodEnum?>(null)
+    val selectedMethod: StateFlow<MethodEnum?> = _selectedMethod.asStateFlow()
+
+    private val _selectedSourceId = MutableStateFlow<String?>(null)
+    val selectedSourceId: StateFlow<String?> = _selectedSourceId.asStateFlow()
+
     val isFormValid = combine(
-        _amountText,
+        amountError,
         _selectedAvailablePlan,
         _selectedMethod,
         _selectedSourceId
-    ) { amount, plan, method, sourceId ->
-        (amount.toLongOrNull() ?: 0L) >= _minimumAmount && plan != null && method != null && sourceId != null
+    ) { amountError, plan, method, sourceId ->
+        plan != null && method != null && sourceId != null && amountError == null
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),

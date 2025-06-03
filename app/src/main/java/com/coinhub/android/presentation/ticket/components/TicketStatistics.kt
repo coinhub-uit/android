@@ -29,8 +29,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.coinhub.android.ui.theme.CoinhubTheme
-import com.coinhub.android.utils.CURRENCY_FORMAT
 import com.coinhub.android.utils.PreviewDeviceSpecs
+import com.coinhub.android.utils.toVndFormat
 import java.math.BigInteger
 
 @Composable
@@ -74,7 +74,7 @@ fun TicketStatistics(
                         .weight(1f)
                 ) {
                     Text(
-                        text = "${CURRENCY_FORMAT.format(totalPrincipal)} VNĐ",
+                        text = totalPrincipal.toVndFormat(),
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
@@ -93,7 +93,7 @@ fun TicketStatistics(
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                         Text(
-                            text = "Interest: ${CURRENCY_FORMAT.format(totalInterest)} VNĐ",
+                            text = "Interest: ${totalInterest.toVndFormat()} VNĐ",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             maxLines = 1,

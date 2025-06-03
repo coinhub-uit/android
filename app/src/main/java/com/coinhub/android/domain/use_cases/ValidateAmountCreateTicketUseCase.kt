@@ -6,13 +6,13 @@ import kotlinx.coroutines.withContext
 import java.math.BigInteger
 
 class ValidateAmountCreateTicketUseCase {
-    suspend operator fun invoke(amount: String, minimumAmount: Long, source: SourceModel): Result {
+    suspend operator fun invoke(amount: String, minimumAmount: Long, source: SourceModel?): Result {
         return withContext(Dispatchers.Default) {
             if (amount.isEmpty()) {
                 Result.Error("Source cannot be empty")
             } else if ((amount.toLongOrNull() ?: 0L) < minimumAmount) {
                 Result.Error("Amount must be at least $minimumAmount")
-            } else if (source.balance < BigInteger(amount)) {
+            } else if (source != null && source.balance < BigInteger(amount)) {
                 Result.Error("Insufficient balance in selected source")
             } else {
                 Result.Success

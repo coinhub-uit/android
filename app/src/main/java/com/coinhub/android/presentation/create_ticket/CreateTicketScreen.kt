@@ -39,6 +39,7 @@ fun CreateTicketScreen(
     viewModel: CreateTicketViewModel = hiltViewModel(),
 ) {
     val amount = viewModel.amountText.collectAsStateWithLifecycle().value
+    val minimumAmount = viewModel.minimumAmount.collectAsStateWithLifecycle().value
     val selectedAvailablePlan = viewModel.selectedAvailablePlan.collectAsStateWithLifecycle().value
     val selectedMethod = viewModel.selectedMethod.collectAsStateWithLifecycle().value
     val selectedSourceId = viewModel.selectedSourceId.collectAsStateWithLifecycle().value
@@ -48,6 +49,7 @@ fun CreateTicketScreen(
     val isLoading = viewModel.isLoading.collectAsStateWithLifecycle().value
 
     CreateTicketScreen(
+        minimumAmount = minimumAmount,
         amount = amount,
         selectedAvailablePlan = selectedAvailablePlan,
         selectedMethod = selectedMethod,
@@ -70,6 +72,7 @@ fun CreateTicketScreen(
 
 @Composable
 private fun CreateTicketScreen(
+    minimumAmount: Long,
     amount: String,
     selectedAvailablePlan: AvailablePlanModel?,
     selectedMethod: MethodEnum?,
@@ -115,7 +118,7 @@ private fun CreateTicketScreen(
                     .verticalScroll(rememberScrollState())
             ) {
 
-                CreateTicketInputMoney(amount = amount, onAmountChange = onAmountChange)
+                CreateTicketInputMoney(minimumAmount = minimumAmount, amount = amount, onAmountChange = onAmountChange)
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -140,6 +143,7 @@ fun CreateTicketScreenPreview() {
     CoinhubTheme {
         Surface {
             CreateTicketScreen(
+                minimumAmount = 1_000_000L,
                 amount = "1000",
                 selectedAvailablePlan = AvailablePlanModel(1, 5.5f, 1, 30),
                 selectedMethod = MethodEnum.PIR,

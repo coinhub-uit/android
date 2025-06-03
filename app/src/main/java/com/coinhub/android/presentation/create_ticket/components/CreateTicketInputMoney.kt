@@ -13,9 +13,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.coinhub.android.utils.toVndFormat
 
 @Composable
-fun CreateTicketInputMoney(amount: String, onAmountChange: (String) -> Unit) {
+fun CreateTicketInputMoney(
+    minimumAmount: Long,
+    amount: String,
+    onAmountChange: (String) -> Unit,
+) {
     Column {
         // Input Money Section
         Text(
@@ -25,7 +30,7 @@ fun CreateTicketInputMoney(amount: String, onAmountChange: (String) -> Unit) {
         )
 
         Text(
-            text = "Minimum amount: 1,000,000 VND",
+            text = "Minimum amount: ${minimumAmount.toVndFormat()}",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(bottom = 16.dp)
@@ -34,7 +39,7 @@ fun CreateTicketInputMoney(amount: String, onAmountChange: (String) -> Unit) {
         OutlinedTextField(
             value = amount,
             onValueChange = onAmountChange,
-            label = { Text("Amount (VND)") },
+            label = { Text("Amount (VNĐ)") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth()
         )
