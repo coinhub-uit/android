@@ -12,13 +12,16 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/coinhub"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/coinhub"
         android:supportsRtl="true"
         android:theme="@style/Theme.SplashScreen.CoinHub"
         tools:ignore="CredentialDependency"
         tools:targetApi="31">
+        <activity
+            android:name=".LockActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -36,8 +39,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="coinhub"
-                    android:host="vnpaycallback" />
+                    android:host="vnpaycallback"
+                    android:scheme="coinhub" />
             </intent-filter>
         </activity>
     </application>
