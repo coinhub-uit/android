@@ -15,7 +15,8 @@ class CreateTopUpUseCase @Inject constructor(
     suspend operator fun invoke(createTopUpDto: CreateTopUpDto): Result {
         return withContext(ioDispatcher) {
             try {
-                Result.Success(paymentRepositoryImpl.createTopUp(createTopUpDto))
+                val topUp = paymentRepositoryImpl.createTopUp(createTopUpDto)
+                Result.Success(topUp)
             } catch (e: Exception) {
                 (Result.Error(e.message ?: "Unknown error occurred"))
             }

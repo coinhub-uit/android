@@ -99,59 +99,60 @@ fun TopUpResultScreen(
             }
         }
 
-        is TopUpState.Success -> {Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Card(
-                modifier = Modifier.padding(64.dp)
+        is TopUpState.Success -> {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                contentAlignment = Alignment.Center
             ) {
-                Column {
-                    Text(
-                        text = "Top Up Result",
-                        style = MaterialTheme.typography.headlineMedium,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        textAlign = TextAlign.Center,
-                        fontWeight = FontWeight.Bold
-                    )
+                Card(
+                    modifier = Modifier.padding(64.dp)
+                ) {
+                    Column {
+                        Text(
+                            text = "Top Up Result",
+                            style = MaterialTheme.typography.headlineMedium,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold
+                        )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(16.dp))
 
-                    TopUpResultStatus(
-                        topUpStatus = topUpState.topUpModel.status
-                    )
+                        TopUpResultStatus(
+                            topUpStatus = topUpState.topUpModel.status
+                        )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(16.dp))
 
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                    ) {
-                        AnimatedVisibility(
-                            visible = topUpState.topUpModel.status != TopUpStatusEnum.SUCCESS
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp)
                         ) {
-                            Button(onClick = onRetry, modifier = Modifier.weight(1f)) {
-                                Text("Retry")
+                            AnimatedVisibility(
+                                visible = topUpState.topUpModel.status != TopUpStatusEnum.SUCCESS
+                            ) {
+                                Button(onClick = onRetry, modifier = Modifier.weight(1f)) {
+                                    Text("Retry")
+                                }
                             }
-                        }
-                        Button(
-                            onClick = onMain,
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Text("Go to Home")
+                            Button(
+                                onClick = onMain,
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text("Go to Home")
+                            }
                         }
                     }
                 }
             }
-        }}
+        }
     }
-
 }
 
 @OptIn(ExperimentalUuidApi::class)
@@ -164,7 +165,7 @@ private fun PreviewScreen() {
                 topUpState = TopUpState.Success(
                     TopUpModel(
                         id = Uuid.random(),
-                        provider = TopUpProviderEnum.VNPAY,
+                        provider = TopUpProviderEnum.vnpay,
                         amount = BigInteger("1000000"),
                         status = TopUpStatusEnum.SUCCESS,
                         createdAt = LocalDate.parse("2023-01-01"),

@@ -23,7 +23,8 @@ class PaymentRepositoryImpl @Inject constructor(
 
     override suspend fun createTopUp(createTopUpDto: CreateTopUpDto): CreateTopUpModel {
         try {
-            return paymentApiService.createTopUp(createTopUpDto).toCreateTopUpModelResponse()
+            val re = paymentApiService.createTopUp(createTopUpDto)
+            return re.toCreateTopUpModelResponse()
         } catch (e: Exception) {
             throw e
         }

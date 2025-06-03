@@ -18,10 +18,10 @@ data class CreateTopUpModel @OptIn(ExperimentalUuidApi::class) constructor(
     val topUpId: Uuid,
 )
 
-enum class TopUpProviderEnum {
-    VNPAY,
-    MOMO,
-    ZALOPAY
+enum class TopUpProviderEnum() {
+    vnpay,
+    momo,
+    zalo
 }
 
 enum class TopUpStatusEnum {

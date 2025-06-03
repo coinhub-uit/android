@@ -13,10 +13,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -45,6 +45,13 @@ fun TopUpScreen(
     val isFormValid = viewModel.isFormValid.collectAsStateWithLifecycle().value
     val context = LocalContext.current
 
+    LaunchedEffect(Unit) {
+        viewModel.createTopUpModel.collect { it ->
+            val intent = Intent(Intent.ACTION_VIEW, it.url.toUri())
+            context.startActivity(intent)
+        }
+    }
+
     TopUpScreen(
         selectedSourceId = sourceId,
         isSourceBottomSheetVisible = isSourceBottomSheetVisible,
@@ -59,8 +66,6 @@ fun TopUpScreen(
         onPresetAmountClick = viewModel::setPresetAmount,
         onTopUpResult = {
             viewModel.createTopUp()
-            val intent = Intent(Intent.ACTION_VIEW, viewModel.createTopUpModel.value?.url!!.toUri())
-            context.startActivity(intent)
         },
         onBack = onBack
     )

@@ -12,16 +12,17 @@ import com.coinhub.android.domain.use_cases.GetTopUpUseCase
 import com.coinhub.android.domain.use_cases.GetUserSourcesUseCase
 import com.coinhub.android.presentation.top_up.state.TopUpState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.math.BigInteger
 import javax.inject.Inject
 
 @HiltViewModel
@@ -45,8 +46,8 @@ class TopUpViewModel @Inject constructor(
     private val _vnpResponseCode = MutableStateFlow<String?>(null)
     val vnpResponseCode = _vnpResponseCode.asStateFlow()
 
-    private val _createTopUpModel = MutableStateFlow<CreateTopUpModel?>(null)
-    val createTopUpModel = _createTopUpModel.asStateFlow()
+    private val _createTopUpModel = MutableSharedFlow<CreateTopUpModel>(replay = 0)
+    val createTopUpModel = _createTopUpModel.asSharedFlow()
 
     private val _isSourceBottomSheetVisible = MutableStateFlow(false)
     val isSourceBottomSheetVisible = _isSourceBottomSheetVisible.asStateFlow()
@@ -58,7 +59,7 @@ class TopUpViewModel @Inject constructor(
     val amountText = _amountText.asStateFlow()
 
     val isFormValid = combine(
-        vnpResponseCode, topUpProvider, amountText
+        _sourceId, topUpProvider, amountText
     ) { selectedSourceId, selectedProvider, amountText ->
         selectedSourceId != null && selectedProvider != null && amountText.isNotEmpty()
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
@@ -68,7 +69,7 @@ class TopUpViewModel @Inject constructor(
     }
 
     fun selectSource(sourceId: String) {
-        _vnpResponseCode.value = sourceId
+        _sourceId.value = sourceId
         _isSourceBottomSheetVisible.value = false
     }
 
@@ -90,16 +91,16 @@ class TopUpViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = createTopUpUseCase(
                 CreateTopUpDto(
-                    amount = BigInteger(_amountText.value),
-                    provider = _topUpProvider.value!!,
+                    amount = _amountText.value.toBigInteger(),
+                    provider = _topUpProvider.value.toString(),
                     sourceDestinationId = _sourceId.value!!,
-                    ipAddress = "", //TODO:How to get IP address in Android?
+                    ipAddress = "192.0.0.1", //TODO:How to get IP address in Android?
                     returnUrl = BuildConfig.vnpayReturnUrl
                 )
             )
             ) {
                 is CreateTopUpUseCase.Result.Success -> {
-                    _createTopUpModel.value = result.createTopUpModel
+                    result.createTopUpModel.let { _createTopUpModel.emit(it) }
                 }
 
                 is CreateTopUpUseCase.Result.Error -> {
