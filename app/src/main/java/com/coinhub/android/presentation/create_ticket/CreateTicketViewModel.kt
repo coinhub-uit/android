@@ -68,9 +68,12 @@ class CreateTicketViewModel @Inject constructor() : ViewModel() {
         initialValue = false
     )
 
+    // TODO: @NGTNguyen add state or sth
+    val isLoading = MutableStateFlow(false)
+
     // Functions to update state
     fun updateAmount(amount: String) {
-        if (!amount.isDigitsOnly()){
+        if (!amount.isDigitsOnly()) {
             return
         }
         _amountText.value = amount

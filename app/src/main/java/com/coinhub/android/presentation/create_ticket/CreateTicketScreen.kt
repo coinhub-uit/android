@@ -1,8 +1,10 @@
 package com.coinhub.android.presentation.create_ticket
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -11,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -42,6 +45,7 @@ fun CreateTicketScreen(
     val availablePlans = viewModel.availablePlans.collectAsStateWithLifecycle().value
     val sourceModels = viewModel.sources.collectAsStateWithLifecycle().value
     val isFormValid = viewModel.isFormValid.collectAsStateWithLifecycle().value
+    val isLoading = viewModel.isLoading.collectAsStateWithLifecycle().value
 
     CreateTicketScreen(
         amount = amount,
@@ -59,6 +63,7 @@ fun CreateTicketScreen(
             viewModel.createTicket()
             onMain()
         },
+        isLoading = isLoading,
         onBack = onBack
     )
 }
@@ -78,6 +83,7 @@ private fun CreateTicketScreen(
     onSelectSourceId: (String) -> Unit,
     onCreateTicket: () -> Unit,
     onBack: () -> Unit,
+    isLoading: Boolean = false,
 ) {
     Scaffold(
         topBar = {
@@ -94,32 +100,39 @@ private fun CreateTicketScreen(
             }
         }
     ) { innerPadding ->
-        Column(
+        Box(
             modifier = Modifier
                 .padding(innerPadding)
-                .padding(16.dp)
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
         ) {
+            if (isLoading) {
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            }
 
-            CreateTicketInputMoney(amount = amount, onAmountChange = onAmountChange)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
 
-            Spacer(modifier = Modifier.height(16.dp))
+                CreateTicketInputMoney(amount = amount, onAmountChange = onAmountChange)
 
-            CreateTicketSelections(
-                selectedAvailablePlan = selectedAvailablePlan,
-                onSelectAvailablePlan = onSelectAvailablePlan,
-                availablePlans = availablePlans,
-                selectedMethod = selectedMethod,
-                onSelectMethod = onSelectMethod,
-                sources = sources,
-                selectedSourceId = selectedSourceId,
-                onSelectSourceId = onSelectSourceId,
-            )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                CreateTicketSelections(
+                    selectedAvailablePlan = selectedAvailablePlan,
+                    onSelectAvailablePlan = onSelectAvailablePlan,
+                    availablePlans = availablePlans,
+                    selectedMethod = selectedMethod,
+                    onSelectMethod = onSelectMethod,
+                    sources = sources,
+                    selectedSourceId = selectedSourceId,
+                    onSelectSourceId = onSelectSourceId,
+                )
+            }
         }
     }
 }
-
 
 @Preview(device = PreviewDeviceSpecs.DEVICE)
 @Composable
