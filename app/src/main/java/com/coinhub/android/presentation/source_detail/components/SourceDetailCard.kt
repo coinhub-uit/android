@@ -1,0 +1,89 @@
+package com.coinhub.android.presentation.source_detail.components
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.coinhub.android.data.models.SourceModel
+import com.coinhub.android.utils.PreviewDeviceSpecs
+import com.coinhub.android.utils.toVndFormat
+
+@Composable
+fun SourceDetailCard(
+    sourceModel: SourceModel,
+    copySourceIdToClipboard: () -> Unit,
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight(), colors = CardDefaults.elevatedCardColors(
+            containerColor = MaterialTheme.colorScheme.secondary, contentColor = MaterialTheme.colorScheme.onSecondary
+        )
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+        ) {
+            Column(
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .padding(8.dp)
+            ) {
+                Text(
+                    text = sourceModel.id,
+                    style = MaterialTheme.typography.headlineMedium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Text(
+                    text = sourceModel.balance.toVndFormat(),
+                    style = MaterialTheme.typography.titleMedium,
+                    overflow = TextOverflow.Ellipsis,
+                )
+
+            }
+            IconButton(
+                onClick = copySourceIdToClipboard, modifier = Modifier.align(Alignment.TopEnd)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ContentCopy,
+                    contentDescription = "Copy Source ID",
+                )
+            }
+        }
+    }
+}
+
+@Preview(device = PreviewDeviceSpecs.DEVICE)
+@Composable
+fun SourceDetailCardPreview() {
+    SourceDetailCard(
+        sourceModel = SourceModel(
+            id = "source_1234567890",
+            balance = 1000000.toBigInteger()
+        ),
+        copySourceIdToClipboard = {}
+    )
+}
+

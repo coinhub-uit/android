@@ -6,6 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.coinhub.android.data.models.SourceModel
 import com.coinhub.android.presentation.home.HomeScreen
 import com.coinhub.android.presentation.menu.MenuScreen
 import com.coinhub.android.presentation.navigation.AppNavDestinations
@@ -19,7 +20,14 @@ fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
         ) {
             HomeScreen(
                 onCreateSource = { navController.navigate(AppNavDestinations.CreateSourceGraph) },
-                onToSourceDetail = { navController.navigate(AppNavDestinations.SourceDetail) },
+                onToSourceDetail = { source: SourceModel ->
+                    navController.navigate(
+                        AppNavDestinations.SourceDetail(
+                            sourceId = source.id,
+                            sourceBalanceString = source.balance.toString()
+                        )
+                    )
+                },
                 onTopUp = { navController.navigate(AppNavDestinations.TopUpGraph) },
                 onNotification = { navController.navigate(AppNavDestinations.Notification) },
                 onAiChat = { navController.navigate(AppNavDestinations.AiChat) },

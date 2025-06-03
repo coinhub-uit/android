@@ -15,8 +15,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -35,13 +35,12 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.coinhub.android.data.models.SourceModel
 import com.coinhub.android.ui.theme.CoinhubTheme
-import java.math.BigDecimal
 import java.math.BigInteger
 
 @Composable
 fun HomeListSource(
     sourceModels: List<SourceModel>,
-    onToSourceDetail: () -> Unit,
+    onToSourceDetail: (SourceModel) -> Unit,
     copySourceIdToClipboard: (context: Context, sourceId: String) -> Unit,
 ) {
 
@@ -71,22 +70,21 @@ fun HomeListSource(
 @Composable
 private fun HomeSourceCard(
     sourceModel: SourceModel,
-    onSourceClick: () -> Unit,
+    onSourceClick: (SourceModel) -> Unit,
     copySourceIdToClipboard: (context: Context, sourceId: String) -> Unit,
 ) {
     var isBalanceVisible by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
-    ElevatedCard(
+    Card(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight(),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.elevatedCardColors(
             containerColor = MaterialTheme.colorScheme.secondary,
             contentColor = MaterialTheme.colorScheme.onSecondary
         ),
-        onClick = onSourceClick
+        onClick = { onSourceClick(sourceModel) }
     ) {
         Box(
             modifier = Modifier

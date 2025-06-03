@@ -6,4 +6,3 @@ data class SourceModel(
     val id: String,
     val balance: BigInteger,
 )
-

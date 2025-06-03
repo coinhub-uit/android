@@ -1,46 +1,99 @@
 package com.coinhub.android.presentation.source_detail.components
 
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.coinhub.android.ui.theme.CoinhubTheme
+import com.coinhub.android.utils.PreviewDeviceSpecs
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopUpTopBar(onBack: () -> Unit) {
+fun SourceDetailTopBar(
+    onBack: () -> Unit,
+    onDelete: () -> Unit,
+    showDeleteDialog: Boolean,
+    showBalanceErrorDialog: Boolean,
+    onDeleteConfirm: () -> Unit,
+    dismissDeleteDialog: () -> Unit,
+    dismissBalanceErrorDialog: () -> Unit,
+) {
     TopAppBar(
         title = {
-            Text("Top Up", maxLines = 1)
+            Text("Source Details", maxLines = 1)
         },
         navigationIcon = {
             IconButton(
                 onClick = onBack,
-                modifier = Modifier.padding(WindowInsets.systemBars.asPaddingValues())
             ) {
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowBack,
                     "Back"
                 )
             }
+        },
+        actions = {
+            IconButton(onClick = onDelete) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Delete Source"
+                )
+            }
         }
     )
+
+    // Delete confirmation dialog
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = dismissDeleteDialog,
+            title = { Text("Delete Source") },
+            text = { Text("Are you sure you want to delete this source? This action cannot be undone.") },
+            confirmButton = {
+                TextButton(onClick = onDeleteConfirm) {
+                    Text("OK")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = dismissDeleteDialog) {
+                    Text("Cancel")
+                }
+            })
+    }
+
+    // Balance error dialog
+    if (showBalanceErrorDialog) {
+        AlertDialog(
+            onDismissRequest = dismissBalanceErrorDialog,
+            title = { Text("Cannot Delete Source") },
+            text = { Text("You cannot delete this source while its balance is not zero.") },
+            confirmButton = {
+                TextButton(onClick = dismissBalanceErrorDialog) {
+                    Text("OK")
+                }
+            })
+    }
 }
 
-@Preview
+@Preview(widthDp = PreviewDeviceSpecs.WIDTH)
 @Composable
-fun TopUpTopBarPreview() {
+fun SourceDetailTopBarPreview() {
     CoinhubTheme {
-        TopUpTopBar(onBack = {})
+        SourceDetailTopBar(
+            onBack = {},
+            onDelete = {},
+            showDeleteDialog = false,
+            showBalanceErrorDialog = false,
+            onDeleteConfirm = {},
+            dismissDeleteDialog = {},
+            dismissBalanceErrorDialog = {}
+        )
     }
 }

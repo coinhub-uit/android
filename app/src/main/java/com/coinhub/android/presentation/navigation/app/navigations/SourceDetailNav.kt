@@ -11,6 +11,8 @@ fun NavGraphBuilder.sourceDetailNav(navController: NavHostController) {
     composable<AppNavDestinations.SourceDetail> { navBackStackEntry ->
         val sourceDetail = navBackStackEntry.toRoute<AppNavDestinations.SourceDetail>()
         SourceDetailScreen(
-            sourceId = sourceDetail.sourceId, onBack = { navController.navigateUp() })
+            sourceId = sourceDetail.sourceId,
+            sourceBalanceString = sourceDetail.sourceBalanceString,
+            onBack = { navController.navigateUp() })
     }
 }

@@ -1,4 +1,4 @@
-package com.coinhub.android.presentation.home.components
+package com.coinhub.android.presentation.source_detail.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,9 +14,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Payments
-import androidx.compose.material.icons.filled.SwapHoriz
+import androidx.compose.material.icons.filled.QrCode
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -32,20 +30,16 @@ import androidx.compose.ui.unit.dp
 import com.coinhub.android.ui.theme.CoinhubTheme
 
 @Composable
-fun HomeFeatures(
-    onTopUp: () -> Unit,
-    onCreateSource: () -> Unit,
-    onTransferMoney: () -> Unit,
+fun SourceDetailActions(
+    onQr: () -> Unit,
 ) {
-    val homeFeatureCardItems = listOf(
-        HomeFeatureCardItem("Top Up", Icons.Default.Payments, onTopUp),
-        HomeFeatureCardItem("Create Source", Icons.Default.Add, onCreateSource),
-        HomeFeatureCardItem("Transfer", Icons.Default.SwapHoriz, onTransferMoney)
+    val cardItems = listOf(
+        CardItem("Top Up", Icons.Default.QrCode, onQr),
     )
 
     Column {
         Text(
-            text = "Features",
+            text = "Actions",
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.SemiBold
         )
@@ -59,8 +53,8 @@ fun HomeFeatures(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.wrapContentSize()
         ) {
-            items(homeFeatureCardItems) { item ->
-                HomeFeatureCard(
+            items(cardItems) { item ->
+                FeatureCard(
                     title = item.title,
                     icon = item.icon,
                     onClick = item.onClick,
@@ -72,7 +66,7 @@ fun HomeFeatures(
 }
 
 @Composable
-private fun HomeFeatureCard(
+private fun FeatureCard(
     modifier: Modifier = Modifier,
     title: String,
     icon: ImageVector,
@@ -112,16 +106,14 @@ private fun HomeFeatureCard(
 fun HomeFeaturesPreview() {
     Surface {
         CoinhubTheme {
-            HomeFeatures(
-                onTopUp = {},
-                onCreateSource = {},
-                onTransferMoney = {}
+            SourceDetailActions(
+                onQr = {},
             )
         }
     }
 }
 
-private data class HomeFeatureCardItem(
+private data class CardItem(
     val title: String,
     val icon: ImageVector,
     val onClick: () -> Unit,

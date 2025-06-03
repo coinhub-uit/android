@@ -1,6 +1,7 @@
 package com.coinhub.android.presentation.navigation
 
 import kotlinx.serialization.Serializable
+import java.math.BigInteger
 
 open class AppNavDestinations {
     // Auth
@@ -48,6 +49,7 @@ open class AppNavDestinations {
     @Serializable
     data class SourceDetail(
         val sourceId: String,
+        val sourceBalanceString: String, // Using String to represent BigInteger for simplicity in serialization
     ) : AppNavDestinations()
 
     // App - Main Graph - Home - Transfer Money Graph

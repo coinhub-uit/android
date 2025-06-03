@@ -25,7 +25,7 @@ import java.math.BigInteger
 
 @Composable
 fun HomeScreen(
-    onToSourceDetail: () -> Unit,
+    onToSourceDetail: (SourceModel) -> Unit,
     onTopUp: () -> Unit,
     onCreateSource: () -> Unit,
     onTransferMoney: () -> Unit,
@@ -60,7 +60,7 @@ fun HomeScreen(
 private fun HomeScreen(
     userModel: UserModel,
     sourceModels: List<SourceModel>,
-    onToSourceDetail: () -> Unit,
+    onToSourceDetail: (SourceModel) -> Unit,
     onTopUp: () -> Unit,
     onCreateSource: () -> Unit,
     onTransferMoney: () -> Unit,
