@@ -23,8 +23,7 @@ fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
                 onToSourceDetail = { source: SourceModel ->
                     navController.navigate(
                         AppNavDestinations.SourceDetail(
-                            sourceId = source.id,
-                            sourceBalanceString = source.balance.toString()
+                            source = source,
                         )
                     )
                 },

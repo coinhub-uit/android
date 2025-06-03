@@ -27,14 +27,10 @@ import java.math.BigInteger
 
 @Composable
 fun SourceDetailScreen(
-    sourceId: String,
-    sourceBalanceString: String,
+    source: SourceModel,
     onBack: () -> Unit,
     viewModel: SourceDetailViewModel = hiltViewModel(),
 ) {
-    val source = SourceModel(
-        id = sourceId, balance = BigInteger(sourceBalanceString)
-    )
     val context = LocalContext.current
 
     val isLoading = viewModel.isLoading.collectAsState().value
@@ -52,7 +48,7 @@ fun SourceDetailScreen(
         dismissDeleteDialog = viewModel::dismissDeleteDialog,
         dismissBalanceErrorDialog = viewModel::dismissBalanceErrorDialog,
         copySourceIdToClipboard = {
-            viewModel.copySourceIdToClipboard(context, sourceId)
+            viewModel.copySourceIdToClipboard(context, source.id)
         })
 }
 

@@ -1,7 +1,10 @@
 package com.coinhub.android.data.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
 
+@Parcelize
 data class TicketModel(
     val id: Int,
     val openedAt: LocalDate,
@@ -10,7 +13,7 @@ data class TicketModel(
     val method: MethodEnum,
     val ticketHistories: List<TicketHistoryModel>,
     val plan: PlanModel,
-)
+): Parcelable
 
 enum class TicketStatus(val description: String) {
     ACTIVE("Active"),
