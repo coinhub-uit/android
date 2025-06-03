@@ -40,7 +40,7 @@ import java.util.Locale
 @Composable
 fun TicketList(
     modifier: Modifier = Modifier,
-    ticketModels: List<TicketModel>,
+    tickets: List<TicketModel>,
     currentDate: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
     onTicketDetail: (Int) -> Unit,
 ) {
@@ -54,9 +54,11 @@ fun TicketList(
         )
 
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            items(ticketModels) { ticketModel ->
+            items(tickets, key = {
+                it.id
+            }) { ticketModel ->
                 TicketItem(
                     ticketModel = ticketModel,
                     currentDate = currentDate,
@@ -238,7 +240,7 @@ private fun Preview() {
             )
 
             TicketList(
-                ticketModels = sampleTickets, currentDate = LocalDate.parse("2025-01-31"), onTicketDetail = {})
+                tickets = sampleTickets, currentDate = LocalDate.parse("2025-01-31"), onTicketDetail = {})
         }
     }
 }

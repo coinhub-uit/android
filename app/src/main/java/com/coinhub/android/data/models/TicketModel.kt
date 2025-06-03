@@ -19,7 +19,7 @@ enum class TicketStatus(val description: String) {
 }
 
 // TODO: Just ...
-enum class MethodEnum(val description: String, longDescription: String) {
+enum class MethodEnum(val description: String, val longDescription: String) {
     NR(
         "Non Rollover",
         "The interest is will be given to the user at the end of the plan, and the ticket will be closed."

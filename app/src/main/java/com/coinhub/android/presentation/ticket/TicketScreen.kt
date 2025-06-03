@@ -32,12 +32,12 @@ fun TicketScreen(
     onTicketDetail: (Int) -> Unit,
     viewModel: TicketViewModel = hiltViewModel(),
 ) {
-    val ticketModels by viewModel.ticketModels.collectAsStateWithLifecycle()
+    val tickets by viewModel.tickets.collectAsStateWithLifecycle()
     val totalPrincipal by viewModel.totalPrincipal.collectAsStateWithLifecycle()
     val totalInterest by viewModel.totalInterest.collectAsStateWithLifecycle()
 
     TicketScreen(
-        ticketModels = ticketModels,
+        tickets = tickets,
         totalPrincipal = totalPrincipal,
         totalInterest = totalInterest,
         onCreateTicket = onCreateTicket,
@@ -48,7 +48,7 @@ fun TicketScreen(
 
 @Composable
 private fun TicketScreen(
-    ticketModels: List<TicketModel>,
+    tickets: List<TicketModel>,
     totalPrincipal: BigInteger,
     totalInterest: BigInteger,
     onCreateTicket: () -> Unit,
@@ -68,7 +68,7 @@ private fun TicketScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             TicketList(
-                ticketModels = ticketModels, onTicketDetail = onTicketDetail,
+                tickets = tickets, onTicketDetail = onTicketDetail,
                 modifier = Modifier.padding(bottom = 32.dp) // Trick
             )
         }
@@ -81,7 +81,7 @@ private fun Preview() {
     CoinhubTheme {
         Surface {
             TicketScreen(
-                ticketModels = listOf(
+                tickets = listOf(
                     TicketModel(
                         id = 1,
                         openedAt = "01/01/2025".toLocalDate(),

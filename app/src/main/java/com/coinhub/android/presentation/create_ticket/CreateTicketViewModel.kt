@@ -27,23 +27,14 @@ class CreateTicketViewModel @Inject constructor() : ViewModel() {
     private val _amountText = MutableStateFlow("")
     val amountText: StateFlow<String> = _amountText.asStateFlow()
 
-    private val _selectedPlan = MutableStateFlow<AvailablePlanModel?>(null)
-    val selectedPlan: StateFlow<AvailablePlanModel?> = _selectedPlan.asStateFlow()
+    private val _selectedAvailablePlan = MutableStateFlow<AvailablePlanModel?>(null)
+    val selectedAvailablePlan: StateFlow<AvailablePlanModel?> = _selectedAvailablePlan.asStateFlow()
 
     private val _selectedMethod = MutableStateFlow<MethodEnum?>(null)
     val selectedMethod: StateFlow<MethodEnum?> = _selectedMethod.asStateFlow()
 
     private val _selectedSourceId = MutableStateFlow<String?>(null)
     val selectedSourceId: StateFlow<String?> = _selectedSourceId.asStateFlow()
-
-    private val _isPlanBottomSheetVisible = MutableStateFlow(false)
-    val isPlanBottomSheetVisible: StateFlow<Boolean> = _isPlanBottomSheetVisible.asStateFlow()
-
-    private val _isMethodBottomSheetVisible = MutableStateFlow(false)
-    val isMethodBottomSheetVisible: StateFlow<Boolean> = _isMethodBottomSheetVisible.asStateFlow()
-
-    private val _isSourceBottomSheetVisible = MutableStateFlow(false)
-    val isSourceBottomSheetVisible: StateFlow<Boolean> = _isSourceBottomSheetVisible.asStateFlow()
 
     // Mock data for demo/preview
     private val _availablePlans = MutableStateFlow(
@@ -55,18 +46,18 @@ class CreateTicketViewModel @Inject constructor() : ViewModel() {
     )
     val availablePlans: StateFlow<List<AvailablePlanModel>> = _availablePlans.asStateFlow()
 
-    private val _sourceModels = MutableStateFlow(
+    private val _sources = MutableStateFlow(
         listOf(
             SourceModel("1", BigInteger("5000000")),
             SourceModel("2", BigInteger("3000000")),
             SourceModel("3", BigInteger("7500000"))
         )
     )
-    val sourceModels: StateFlow<List<SourceModel>> = _sourceModels.asStateFlow()
+    val sources: StateFlow<List<SourceModel>> = _sources.asStateFlow()
 
     val isFormValid = combine(
         _amountText,
-        _selectedPlan,
+        _selectedAvailablePlan,
         _selectedMethod,
         _selectedSourceId
     ) { amount, plan, method, sourceId ->
@@ -85,35 +76,23 @@ class CreateTicketViewModel @Inject constructor() : ViewModel() {
         _amountText.value = amount
     }
 
-    fun selectPlan(plan: AvailablePlanModel) {
-        _selectedPlan.value = plan
+    fun selectPlan(availablePlan: AvailablePlanModel) {
+        _selectedAvailablePlan.value = availablePlan
     }
 
     fun selectMethod(method: MethodEnum) {
         _selectedMethod.value = method
     }
 
-    fun selectSource(sourceId: String) {
+    fun selectSourceId(sourceId: String) {
         _selectedSourceId.value = sourceId
-    }
-
-    fun setShowPlanBottomSheet(show: Boolean) {
-        _isPlanBottomSheetVisible.value = show
-    }
-
-    fun setShowMethodBottomSheet(show: Boolean) {
-        _isMethodBottomSheetVisible.value = show
-    }
-
-    fun setShowSourceBottomSheet(show: Boolean) {
-        _isSourceBottomSheetVisible.value = show
     }
 
     fun createTicket() {
         val ticketDto = CreateTicketDto(
             sourceId = _selectedSourceId.value ?: return,
             methodEnum = _selectedMethod.value ?: return,
-            planHistoryId = _selectedPlan.value?.planHistoryId?.toString() ?: return,
+            planHistoryId = _selectedAvailablePlan.value?.planHistoryId?.toString() ?: return,
             amount = _amountText.value.toLongOrNull() ?: return
         )
 

@@ -20,7 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TicketViewModel @Inject constructor() : ViewModel() {
     // NOTE: This already filter which tickets are active
-    private val _ticketModels = MutableStateFlow(
+    private val _tickets = MutableStateFlow(
         listOf(
             TicketModel(
                 id = 1,
@@ -80,7 +80,7 @@ class TicketViewModel @Inject constructor() : ViewModel() {
                 )
             ),
             TicketModel(
-                id = 1,
+                id = 4,
                 openedAt = "01/01/2025".toLocalDate(),
                 closedAt = null,
                 status = TicketStatus.ACTIVE,
@@ -98,7 +98,7 @@ class TicketViewModel @Inject constructor() : ViewModel() {
                 )
             ),
             TicketModel(
-                id = 1,
+                id = 5,
                 openedAt = "01/01/2025".toLocalDate(),
                 closedAt = null,
                 status = TicketStatus.ACTIVE,
@@ -116,7 +116,7 @@ class TicketViewModel @Inject constructor() : ViewModel() {
                 )
             ),
             TicketModel(
-                id = 1,
+                id = 6,
                 openedAt = "01/01/2025".toLocalDate(),
                 closedAt = null,
                 status = TicketStatus.ACTIVE,
@@ -134,7 +134,7 @@ class TicketViewModel @Inject constructor() : ViewModel() {
                 )
             ),
             TicketModel(
-                id = 1,
+                id = 7,
                 openedAt = "01/01/2025".toLocalDate(),
                 closedAt = null,
                 status = TicketStatus.ACTIVE,
@@ -154,15 +154,15 @@ class TicketViewModel @Inject constructor() : ViewModel() {
         )
     )
 
-    val ticketModels: StateFlow<List<TicketModel>> = _ticketModels
+    val tickets: StateFlow<List<TicketModel>> = _tickets
 
-    val totalPrincipal = _ticketModels.map { tickets ->
+    val totalPrincipal = _tickets.map { tickets ->
         tickets.sumOf { ticket ->
             ticket.ticketHistories.firstOrNull()?.principal ?: BigInteger.ZERO
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), BigInteger.ZERO)
 
-    val totalInterest = _ticketModels.map { tickets ->
+    val totalInterest = _tickets.map { tickets ->
         tickets.sumOf { ticket ->
             ticket.ticketHistories.firstOrNull()?.interest ?: BigInteger.ZERO
         }
