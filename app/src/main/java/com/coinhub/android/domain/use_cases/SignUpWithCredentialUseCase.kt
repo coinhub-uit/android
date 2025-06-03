@@ -1,22 +1,27 @@
 package com.coinhub.android.domain.use_cases
 
-import com.coinhub.android.data.repositories.AuthRepositoryImpl
-import com.coinhub.android.data.repositories.PreferenceDataStoreImpl
+import com.coinhub.android.domain.repositories.AuthRepository
+import com.coinhub.android.domain.repositories.PreferenceDataStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class SignUpWithCredentialUseCase @Inject constructor(
-    private val authRepositoryImpl: AuthRepositoryImpl,
-    private val preferenceDataStoreImpl: PreferenceDataStoreImpl,
+    private val authRepository: AuthRepository,
+    private val preferenceDataStore: PreferenceDataStore,
 ) {
     suspend operator fun invoke(email: String, password: String): Result {
         return withContext(Dispatchers.IO) {
             try {
                 val userId: String =
-                    authRepositoryImpl.getUserOnSignUpWithCredential(email = email, password = password)
-                val token = authRepositoryImpl.getToken()
-                preferenceDataStoreImpl.saveAccessToken(token)
+                    authRepository.getUserOnSignUpWithCredential(email = email, password = password)
+                val token = authRepository.getToken()
+                // TODO: @NTGNguyen check this again. the token is String? and the saveAccessToken expects a String
+                // Just add to suppress the warning for now
+                if (token.isNullOrEmpty()) {
+                    return@withContext Result.Error("Failed to retrieve access token")
+                }
+                preferenceDataStore.saveAccessToken(token)
                 Result.Success(userId)
             } catch (e: Exception) {
                 //TODO: handle exception?

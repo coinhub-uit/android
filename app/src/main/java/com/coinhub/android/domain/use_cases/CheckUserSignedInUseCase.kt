@@ -1,24 +1,30 @@
 package com.coinhub.android.domain.use_cases
 
-import com.coinhub.android.data.repositories.AuthRepositoryImpl
-import com.coinhub.android.data.repositories.PreferenceDataStoreImpl
+import com.coinhub.android.domain.repositories.AuthRepository
+import com.coinhub.android.domain.repositories.PreferenceDataStore
+import com.coinhub.android.domain.use_cases.SignInWithCredentialUseCase.Result
 import javax.inject.Inject
 
-//WARN: Maybe dont use this use case, but rather check the token directly in the view model, get it directly from supabase service
+//WARN: Maybe don't use this use case, but rather check the token directly in the view model, get it directly from supabase service
 class CheckUserSignedInUseCase @Inject constructor(
-    private val authRepositoryImpl: AuthRepositoryImpl,
-    private val preferenceDataStoreImpl: PreferenceDataStoreImpl,
+    private val authRepository: AuthRepository,
+    private val preferenceDataStore: PreferenceDataStore,
 ) {
     suspend operator fun invoke(): Result {
         return try {
-            val token = preferenceDataStoreImpl.getAccessToken()
+            val token = preferenceDataStore.getAccessToken()
             if (token.isNullOrEmpty()) {
                 Result.Success(isSignedIn = false)
             } else {
-                authRepositoryImpl.getUserIdWithToken(token)
-                authRepositoryImpl.refreshSession()
-                val newToken = authRepositoryImpl.getToken()
-                preferenceDataStoreImpl.saveAccessToken(newToken)
+                authRepository.getUserIdWithToken(token)
+                authRepository.refreshSession()
+                val newToken = authRepository.getToken()
+                // TODO: @NTGNguyen check this again. the token is String? and the saveAccessToken expects a String
+                // Just add to suppress the warning for now
+                if (newToken.isNullOrEmpty()) {
+                    return Result.Error("Failed to retrieve access token")
+                }
+                preferenceDataStore.saveAccessToken(newToken)
                 Result.Success(isSignedIn = true)
             }
         } catch (e: Exception) {

@@ -1,23 +1,23 @@
 package com.coinhub.android.domain.use_cases
 
 import com.coinhub.android.data.models.SourceModel
-import com.coinhub.android.data.repositories.AuthRepositoryImpl
-import com.coinhub.android.data.repositories.UserRepositoryImpl
 import com.coinhub.android.di.IoDispatcher
+import com.coinhub.android.domain.repositories.AuthRepository
+import com.coinhub.android.domain.repositories.UserRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class GetUserSourcesUseCase @Inject constructor(
-    private val userRepositoryImpl: UserRepositoryImpl,
-    private val authRepositoryImpl: AuthRepositoryImpl,
+    private val userRepository: UserRepository,
+    private val authRepository: AuthRepository,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) {
     suspend operator fun invoke(): Result {
         return withContext(ioDispatcher) {
             try {
-                val userId = authRepositoryImpl.getCurrentUserId()
-                Result.Success(userRepositoryImpl.getUserSources(userId))
+                val userId = authRepository.getCurrentUserId()
+                Result.Success(userRepository.getUserSources(userId))
             } catch (e: Exception) {
                 Result.Error(e.message ?: "Unknown error occurred")
             }

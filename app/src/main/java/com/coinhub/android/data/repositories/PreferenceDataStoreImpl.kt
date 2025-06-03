@@ -23,9 +23,8 @@ class PreferenceDataStoreImpl @Inject constructor() : PreferenceDataStore {
 
     companion object {
         const val MY_PREF_KEY = "COINHUB_PREF_KEY"
+        private val ACCESS_TOKEN = stringPreferencesKey("access_token")
     }
-
-    private val ACCESS_TOKEN = stringPreferencesKey("access_token")
 
     override suspend fun saveAccessToken(value: String) {
         context.dataStore.edit { preferences ->

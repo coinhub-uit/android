@@ -1,16 +1,16 @@
 package com.coinhub.android.domain.use_cases
 
 import com.coinhub.android.data.models.GoogleNavigateResultModel
-import com.coinhub.android.data.repositories.AuthRepositoryImpl
-import com.coinhub.android.data.repositories.PreferenceDataStoreImpl
+import com.coinhub.android.domain.repositories.AuthRepository
+import com.coinhub.android.domain.repositories.PreferenceDataStore
 import io.github.jan.supabase.compose.auth.composable.NativeSignInResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class SignInWithGoogleUseCase @Inject constructor(
-    private val authRepositoryImpl: AuthRepositoryImpl,
-    private val preferenceDataStoreImpl: PreferenceDataStoreImpl,
+    private val authRepository: AuthRepository,
+    private val preferenceDataStore: PreferenceDataStore,
 ) {
     suspend operator fun invoke(result: NativeSignInResult): Result {
         return withContext(Dispatchers.IO) {
@@ -21,7 +21,7 @@ class SignInWithGoogleUseCase @Inject constructor(
                 NativeSignInResult.Success -> {
                     try {
                         val googleNavigateResult =
-                            authRepositoryImpl.getUserOnSignInWithGoogle(preferenceDataStoreImpl::saveAccessToken)
+                            authRepository.getUserOnSignInWithGoogle(preferenceDataStore::saveAccessToken)
                         Result.Success(googleNavigateResult)
                     } catch (e: Exception) {
                         Result.Error(e.message ?: "Error during sign-in with Google")

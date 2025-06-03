@@ -2,20 +2,20 @@ package com.coinhub.android.domain.use_cases
 
 import com.coinhub.android.data.dtos.request.CreateTopUpDto
 import com.coinhub.android.data.models.CreateTopUpModel
-import com.coinhub.android.data.repositories.PaymentRepositoryImpl
 import com.coinhub.android.di.IoDispatcher
+import com.coinhub.android.domain.repositories.PaymentRepository
 import jakarta.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 class CreateTopUpUseCase @Inject constructor(
-    private val paymentRepositoryImpl: PaymentRepositoryImpl,
+    private val paymentRepository: PaymentRepository,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) {
     suspend operator fun invoke(createTopUpDto: CreateTopUpDto): Result {
         return withContext(ioDispatcher) {
             try {
-                val topUp = paymentRepositoryImpl.createTopUp(createTopUpDto)
+                val topUp = paymentRepository.createTopUp(createTopUpDto)
                 Result.Success(topUp)
             } catch (e: Exception) {
                 (Result.Error(e.message ?: "Unknown error occurred"))

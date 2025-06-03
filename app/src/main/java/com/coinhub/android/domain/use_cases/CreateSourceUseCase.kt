@@ -2,20 +2,20 @@ package com.coinhub.android.domain.use_cases
 
 import com.coinhub.android.data.dtos.request.CreateSourceDto
 import com.coinhub.android.data.models.SourceModel
-import com.coinhub.android.data.repositories.SourceRepositoryImpl
 import com.coinhub.android.di.IoDispatcher
+import com.coinhub.android.domain.repositories.SourceRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class CreateSourceUseCase @Inject constructor(
-    private val sourceRepositoryImpl: SourceRepositoryImpl,
+    private val sourceRepository: SourceRepository,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) {
     suspend operator fun invoke(createSourceDto: CreateSourceDto): Result {
         return withContext(ioDispatcher) {
             try {
-                Result.Success(sourceRepositoryImpl.createSource(createSourceDto))
+                Result.Success(sourceRepository.createSource(createSourceDto))
             } catch (e: Exception) {
                 Result.Error(e.message ?: "Unknown error occurred")
             }

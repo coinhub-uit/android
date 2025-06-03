@@ -7,6 +7,7 @@ import com.coinhub.android.data.dtos.request.CreateTicketDto
 import com.coinhub.android.data.models.AvailablePlanModel
 import com.coinhub.android.data.models.MethodEnum
 import com.coinhub.android.data.models.SourceModel
+import com.coinhub.android.domain.use_cases.ValidateAmountCreateTicketUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,7 +19,9 @@ import java.math.BigInteger
 import javax.inject.Inject
 
 @HiltViewModel
-class CreateTicketViewModel @Inject constructor() : ViewModel() {
+class CreateTicketViewModel @Inject constructor(
+    private val validateAmountCreateTicketUseCase: ValidateAmountCreateTicketUseCase,
+) : ViewModel() {
     // TODO: If have time, implement repository to fetch real data
     private val _minimumAmount = 1000000L
     val minimumAmount get() = _minimumAmount

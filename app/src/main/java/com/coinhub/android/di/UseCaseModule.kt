@@ -1,10 +1,10 @@
 package com.coinhub.android.di
 
-import com.coinhub.android.data.repositories.AuthRepositoryImpl
-import com.coinhub.android.data.repositories.PaymentRepositoryImpl
-import com.coinhub.android.data.repositories.PreferenceDataStoreImpl
-import com.coinhub.android.data.repositories.SourceRepositoryImpl
-import com.coinhub.android.data.repositories.UserRepositoryImpl
+import com.coinhub.android.domain.repositories.AuthRepository
+import com.coinhub.android.domain.repositories.PaymentRepository
+import com.coinhub.android.domain.repositories.PreferenceDataStore
+import com.coinhub.android.domain.repositories.SourceRepository
+import com.coinhub.android.domain.repositories.UserRepository
 import com.coinhub.android.domain.use_cases.CheckUserSignedInUseCase
 import com.coinhub.android.domain.use_cases.CreateSourceUseCase
 import com.coinhub.android.domain.use_cases.CreateTopUpUseCase
@@ -13,6 +13,7 @@ import com.coinhub.android.domain.use_cases.GetUserSourcesUseCase
 import com.coinhub.android.domain.use_cases.SignInWithCredentialUseCase
 import com.coinhub.android.domain.use_cases.SignInWithGoogleUseCase
 import com.coinhub.android.domain.use_cases.SignUpWithCredentialUseCase
+import com.coinhub.android.domain.use_cases.ValidateAmountCreateTicketUseCase
 import com.coinhub.android.domain.use_cases.ValidateConfirmPasswordUseCase
 import com.coinhub.android.domain.use_cases.ValidateEmailUseCase
 import com.coinhub.android.domain.use_cases.ValidatePasswordUseCase
@@ -41,88 +42,92 @@ object UseCaseModule {
 
     @Provides
     @Singleton
-    fun provideSourceIdUseCase() = ValidateSourceIdUseCase()
+    fun provideValidateAmountCreateTicketUseCase() = ValidateAmountCreateTicketUseCase()
+
+    @Provides
+    @Singleton
+    fun provideValidateSourceIdUseCase() = ValidateSourceIdUseCase()
 
     @Provides
     @Singleton
     fun provideSignInWithCredentialUseCase(
-        authRepositoryImpl: AuthRepositoryImpl,
-        preferenceDataStoreImpl: PreferenceDataStoreImpl,
+        authRepository: AuthRepository,
+        preferenceDataStore: PreferenceDataStore,
     ) =
         SignInWithCredentialUseCase(
-            authRepositoryImpl = authRepositoryImpl,
-            preferenceDataStoreImpl = preferenceDataStoreImpl
+            authRepository = authRepository,
+            preferenceDataStore = preferenceDataStore
         )
 
     @Provides
     @Singleton
     fun provideSignUpWithCredentialUseCase(
-        authRepositoryImpl: AuthRepositoryImpl, preferenceDataStoreImpl: PreferenceDataStoreImpl,
+        authRepository: AuthRepository, preferenceDataStore: PreferenceDataStore,
     ) = SignUpWithCredentialUseCase(
-        authRepositoryImpl = authRepositoryImpl,
-        preferenceDataStoreImpl = preferenceDataStoreImpl
+        authRepository = authRepository,
+        preferenceDataStore = preferenceDataStore
     )
 
     @Provides
     @Singleton
     fun provideHandleResultOnSignInWithGoogleUseCase(
-        authRepositoryImpl: AuthRepositoryImpl,
-        preferenceDataStoreImpl: PreferenceDataStoreImpl,
+        authRepository: AuthRepository,
+        preferenceDataStore: PreferenceDataStore,
     ) =
         SignInWithGoogleUseCase(
-            authRepositoryImpl = authRepositoryImpl,
-            preferenceDataStoreImpl = preferenceDataStoreImpl
+            authRepository = authRepository,
+            preferenceDataStore = preferenceDataStore
         )
 
     @Provides
     @Singleton
     fun provideCheckUserSignedInUseCase(
-        authRepositoryImpl: AuthRepositoryImpl,
-        preferenceDataStoreImpl: PreferenceDataStoreImpl,
+        authRepository: AuthRepository,
+        preferenceDataStore: PreferenceDataStore,
     ) = CheckUserSignedInUseCase(
-        authRepositoryImpl = authRepositoryImpl,
-        preferenceDataStoreImpl = preferenceDataStoreImpl
+        authRepository = authRepository,
+        preferenceDataStore = preferenceDataStore
     )
 
     @Provides
     @Singleton
     fun provideCreateTopUpUseCase(
-        paymentRepositoryImpl: PaymentRepositoryImpl,
+        paymentRepository: PaymentRepository,
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
     ) = CreateTopUpUseCase(
-        paymentRepositoryImpl = paymentRepositoryImpl,
+        paymentRepository = paymentRepository,
         ioDispatcher = ioDispatcher
     )
 
     @Provides
     @Singleton
     fun provideGetTopUpUseCase(
-        paymentRepositoryImpl: PaymentRepositoryImpl,
+        paymentRepository: PaymentRepository,
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
     ) = GetTopUpUseCase(
-        paymentRepositoryImpl = paymentRepositoryImpl,
+        paymentRepository = paymentRepository,
         ioDispatcher = ioDispatcher
     )
 
     @Provides
     @Singleton
     fun provideGetUserSourcesUseCase(
-        userRepositoryImpl: UserRepositoryImpl,
-        authRepositoryImpl: AuthRepositoryImpl,
+        userRepository: UserRepository,
+        authRepository: AuthRepository,
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
     ) = GetUserSourcesUseCase(
-        userRepositoryImpl = userRepositoryImpl,
-        authRepositoryImpl = authRepositoryImpl,
+        userRepository = userRepository,
+        authRepository = authRepository,
         ioDispatcher = ioDispatcher
     )
 
     @Provides
     @Singleton
     fun provideCreateSourceUseCase(
-        sourceRepositoryImpl: SourceRepositoryImpl,
+        sourceRepository: SourceRepository,
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
     ) = CreateSourceUseCase(
-        sourceRepositoryImpl = sourceRepositoryImpl,
+        sourceRepository = sourceRepository,
         ioDispatcher = ioDispatcher
     )
 }
