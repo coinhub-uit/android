@@ -1,24 +1,26 @@
 package com.coinhub.android.data.models
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import com.coinhub.android.data.serializers.LocalDateSerializer
+import kotlinx.serialization.Serializable
 import java.time.LocalDate
 
-@Parcelize
+@Serializable
 data class TicketModel(
     val id: Int,
+    @Serializable(with = LocalDateSerializer::class)
     val openedAt: LocalDate,
+    @Serializable(with = LocalDateSerializer::class)
     val closedAt: LocalDate?,
     val status: TicketStatus,
     val method: MethodEnum,
     val ticketHistories: List<TicketHistoryModel>,
     val plan: PlanModel,
-): Parcelable
+)
 
-enum class TicketStatus(val description: String) {
-    ACTIVE("Active"),
-    EARLY_WITH_DRAWN("Early Withdrawn"),
-    MATURED_WITH_DRAWN("Matured Withdrawn"),
+enum class TicketStatus {
+    ACTIVE,
+    EARLY_WITH_DRAWN,
+    MATURED_WITH_DRAWN,
 }
 
 // TODO: Just ...

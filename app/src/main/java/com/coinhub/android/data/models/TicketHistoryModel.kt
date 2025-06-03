@@ -1,15 +1,19 @@
 package com.coinhub.android.data.models
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
-import java.math.BigDecimal
+import com.coinhub.android.data.serializers.BigIntegerSerializer
+import com.coinhub.android.data.serializers.LocalDateSerializer
+import kotlinx.serialization.Serializable
 import java.math.BigInteger
 import java.time.LocalDate
 
-@Parcelize
+@Serializable
 data class TicketHistoryModel(
+    @Serializable(with = LocalDateSerializer::class)
     val issuedAt: LocalDate,
+    @Serializable(with = LocalDateSerializer::class)
     val maturedAt: LocalDate,
+    @Serializable(with = BigIntegerSerializer::class)
     val principal: BigInteger,
+    @Serializable(with = BigIntegerSerializer::class)
     val interest: BigInteger,
-): Parcelable
+)

@@ -35,6 +35,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.coinhub.android.data.models.SourceModel
 import com.coinhub.android.ui.theme.CoinhubTheme
+import com.coinhub.android.utils.toVndFormat
 import java.math.BigInteger
 
 @Composable
@@ -103,7 +104,7 @@ private fun HomeSourceCard(
             )
 
             Text(
-                text = "${if (isBalanceVisible) sourceModel.balance else "******"} VNĐ",
+                text = if (isBalanceVisible) sourceModel.balance.toVndFormat() else "****** VNĐ",
                 style = MaterialTheme.typography.bodyMedium,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
