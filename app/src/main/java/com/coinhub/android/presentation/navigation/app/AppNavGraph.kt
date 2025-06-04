@@ -84,7 +84,7 @@ fun AppNavGraph() {
                     createTicketGraph(navController = navController)
                     ticketDetailNav(navController = navController)
                     notificationNav(navController = navController)
-                    aiChatNav()
+                    aiChatNav(navController = navController)
                     editProfileNav(navController = navController)
                     credentialChangeNav(navController = navController)
                     settingNav(navController = navController)

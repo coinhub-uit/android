@@ -1,4 +1,4 @@
-package com.coinhub.android.presentation.notification.components
+package com.coinhub.android.presentation.ai_chat.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -14,10 +14,10 @@ import com.coinhub.android.ui.theme.CoinhubTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NotificationTopBar(onBack: () -> Unit) {
+fun AiChatTopBar(onBack: () -> Unit) {
     TopAppBar(
         title = {
-            Text("Notification", maxLines = 1)
+            Text("AI Chat", maxLines = 1)
         },
         navigationIcon = {
             IconButton(

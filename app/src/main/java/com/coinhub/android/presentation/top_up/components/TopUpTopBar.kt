@@ -1,9 +1,5 @@
 package com.coinhub.android.presentation.top_up.components
 
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -12,7 +8,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.coinhub.android.ui.theme.CoinhubTheme
 
@@ -26,7 +21,6 @@ fun TopUpTopBar(onBack: () -> Unit) {
         navigationIcon = {
             IconButton(
                 onClick = onBack,
-                modifier = Modifier.padding(WindowInsets.systemBars.asPaddingValues())
             ) {
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowBack,

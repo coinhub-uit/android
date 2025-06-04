@@ -1,9 +1,122 @@
 package com.coinhub.android.presentation.ai_chat
 
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.coinhub.android.data.models.AiChatModel
+import com.coinhub.android.presentation.ai_chat.components.AiChatMessageItem
+import com.coinhub.android.presentation.ai_chat.components.AiChatTopBar
+import com.coinhub.android.presentation.ai_chat.components.ChatInputField
+import com.coinhub.android.ui.theme.CoinhubTheme
+import com.coinhub.android.utils.PreviewDeviceSpecs
 
 @Composable
-fun AiChatScreen() {
-    Text("Ai Chat Screen")
+fun AiChatScreen(
+    onBack: () -> Unit,
+    viewModel: AiChatViewModel = hiltViewModel(),
+) {
+    val message = viewModel.message.collectAsStateWithLifecycle().value
+
+    AiChatScreen(
+        message = message,
+        onMessageChange = viewModel::onMessageChange,
+        onSendMessage = viewModel::sendMessage,
+        messages = viewModel.messages,
+        onBack = onBack,
+    )
+}
+
+@Composable
+private fun AiChatScreen(
+    message: String,
+    onMessageChange: (String) -> Unit,
+    onSendMessage: () -> Unit,
+    messages: List<AiChatModel>,
+    onBack: () -> Unit,
+) {
+    val listState = rememberLazyListState()
+
+    // Scroll to the bottom when new messages arrive
+    LaunchedEffect(messages.size) {
+        if (messages.isNotEmpty()) {
+            listState.animateScrollToItem(messages.size - 1)
+        }
+    }
+
+    Scaffold(
+        topBar = {
+            AiChatTopBar(
+                onBack = onBack
+            )
+        }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(16.dp)
+        ) {
+            // Messages list
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                state = listState,
+            ) {
+                items(messages) { message ->
+                    AiChatMessageItem(message = message)
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
+
+            // Message input
+            ChatInputField(
+                value = message,
+                onValueChange = onMessageChange,
+                onSend = onSendMessage,
+            )
+        }
+    }
+}
+
+@Preview(device = PreviewDeviceSpecs.DEVICE)
+@Composable
+fun AiChatScreenPreview() {
+    CoinhubTheme {
+        val messages = listOf(
+            AiChatModel(
+                message = "Hello! How can I assist you today?",
+                role = AiChatModel.Role.ASSISTANT,
+            ), AiChatModel(
+                message = "I have a question about cryptocurrency",
+                role = AiChatModel.Role.USER,
+            ), AiChatModel(
+                message = "Sure, I'd be happy to help with your cryptocurrency questions. What would you like to know?",
+                role = AiChatModel.Role.ASSISTANT,
+            ), AiChatModel(
+                message = "How do I check the current Bitcoin price?",
+                role = AiChatModel.Role.USER,
+            ), AiChatModel(
+                message = "To check the current Bitcoin price, you can use the price chart function in the app or go to the markets tab.",
+                role = AiChatModel.Role.ASSISTANT,
+            )
+        )
+
+        AiChatScreen(messages = messages, onSendMessage = {}, onBack = {}, message = "Cool", onMessageChange = { _ -> })
+    }
 }
