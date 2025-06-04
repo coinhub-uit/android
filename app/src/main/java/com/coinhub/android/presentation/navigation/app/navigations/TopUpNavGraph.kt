@@ -1,5 +1,6 @@
 package com.coinhub.android.presentation.navigation.app.navigations
 
+import android.annotation.SuppressLint
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -11,14 +12,11 @@ import com.coinhub.android.presentation.navigation.AppNavDestinations
 import com.coinhub.android.presentation.top_up.TopUpResultScreen
 import com.coinhub.android.presentation.top_up.TopUpScreen
 
+@SuppressLint("UnrememberedGetBackStackEntry")
 fun NavGraphBuilder.topUpGraph(navController: NavHostController) {
     navigation<AppNavDestinations.TopUpGraph>(startDestination = AppNavDestinations.TopUp) {
         composable<AppNavDestinations.TopUp> {
-            TopUpScreen(onTopUpResult = {
-                navController.navigate(
-                    AppNavDestinations.TopUpResult
-                )
-            }, onBack = { navController.navigateUp() })
+            TopUpScreen(onBack = { navController.navigateUp() })
         }
         composable<AppNavDestinations.TopUpResult>(
             deepLinks = listOf(
@@ -29,13 +27,14 @@ fun NavGraphBuilder.topUpGraph(navController: NavHostController) {
         ) { backStackEntry ->
             val topUp = backStackEntry.toRoute<AppNavDestinations.TopUpResult>()
             TopUpResultScreen(
+                topUpId = topUp.vnpTxnRef,
                 onMain = {
                     navController.navigate(AppNavDestinations.MainGraph) {
                         popUpTo(AppNavDestinations.TopUpGraph) {
                             inclusive = true
                         }
                     }
-                }, topUp = topUp
+                }
             )
         }
     }

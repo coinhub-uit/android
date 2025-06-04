@@ -1,5 +1,6 @@
 package com.coinhub.android.data.repositories
 
+import android.util.Log
 import com.coinhub.android.common.toCreateTopUpModelResponse
 import com.coinhub.android.common.toTopUpModel
 import com.coinhub.android.data.api_services.PaymentApiService
@@ -34,6 +35,7 @@ class PaymentRepositoryImpl @Inject constructor(
         try {
             return paymentApiService.getTopUpById(id).toTopUpModel()
         } catch (e: Exception) {
+            Log.d("dwhlakwajda", "getTopUpById: ${e.message}")
             throw e
         }
     }

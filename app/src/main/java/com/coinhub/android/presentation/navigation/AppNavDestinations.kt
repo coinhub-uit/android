@@ -1,6 +1,7 @@
 package com.coinhub.android.presentation.navigation
 
 import com.coinhub.android.data.models.SourceModel
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 open class AppNavDestinations {
@@ -43,12 +44,15 @@ open class AppNavDestinations {
 
     // App - Main Graph - Home - Top Up Graph - Top Up - Top Up Result
     @Serializable
-    data object TopUpResult : AppNavDestinations()
+    data class TopUpResult(
+        @SerialName("vnp_TxnRef")
+        val vnpTxnRef: String? = null,
+    ) : AppNavDestinations()
 
     // App - Main Graph - Home - Source Detail
     @Serializable
     data class SourceDetail(
-        val source: SourceModel
+        val source: SourceModel,
     ) : AppNavDestinations()
 
     // App - Main Graph - Home - Transfer Money Graph

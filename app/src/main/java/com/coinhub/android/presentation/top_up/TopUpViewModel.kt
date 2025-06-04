@@ -1,5 +1,6 @@
 package com.coinhub.android.presentation.top_up
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.BuildConfig
@@ -12,11 +13,9 @@ import com.coinhub.android.domain.use_cases.GetTopUpUseCase
 import com.coinhub.android.domain.use_cases.GetUserSourcesUseCase
 import com.coinhub.android.presentation.top_up.state.TopUpState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
@@ -24,6 +23,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.uuid.ExperimentalUuidApi
 
 @HiltViewModel
 class TopUpViewModel @Inject constructor(
@@ -46,8 +46,8 @@ class TopUpViewModel @Inject constructor(
     private val _vnpResponseCode = MutableStateFlow<String?>(null)
     val vnpResponseCode = _vnpResponseCode.asStateFlow()
 
-    private val _createTopUpModel = MutableSharedFlow<CreateTopUpModel>(replay = 0)
-    val createTopUpModel = _createTopUpModel.asSharedFlow()
+    private val _createTopUpModel = MutableStateFlow<CreateTopUpModel?>(null)
+    val createTopUpModel = _createTopUpModel.asStateFlow()
 
     private val _isSourceBottomSheetVisible = MutableStateFlow(false)
     val isSourceBottomSheetVisible = _isSourceBottomSheetVisible.asStateFlow()
@@ -87,6 +87,7 @@ class TopUpViewModel @Inject constructor(
         _amountText.value = amount.replace(".", "")
     }
 
+    @OptIn(ExperimentalUuidApi::class)
     fun createTopUp() {
         viewModelScope.launch {
             when (val result = createTopUpUseCase(
@@ -100,7 +101,7 @@ class TopUpViewModel @Inject constructor(
             )
             ) {
                 is CreateTopUpUseCase.Result.Success -> {
-                    result.createTopUpModel.let { _createTopUpModel.emit(it) }
+                    _createTopUpModel.value = result.createTopUpModel
                 }
 
                 is CreateTopUpUseCase.Result.Error -> {
@@ -134,8 +135,14 @@ class TopUpViewModel @Inject constructor(
     private val _message = MutableStateFlow<String?>(null)
     val message = _message.asStateFlow()
 
-    fun checkTopUpStatus() {
-        getTopUpUseCase(_sourceId.value!!).onEach {
+    @OptIn(ExperimentalUuidApi::class)
+    suspend fun checkTopUpStatus(topUpId: String?) {
+        if (topUpId.isNullOrEmpty()) {
+            _topUpState.value = TopUpState.Error("Top-up ID is null or empty")
+            Log.d("dwodwjdal", "checkTopUpStatus: mullll")
+            return
+        }
+        getTopUpUseCase(topUpId).onEach {
             when (it) {
                 is GetTopUpUseCase.Result.Error -> {
                     _topUpState.value = TopUpState.Error(it.message)
@@ -152,3 +159,4 @@ class TopUpViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 }
+

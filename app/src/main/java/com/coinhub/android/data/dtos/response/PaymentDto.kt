@@ -1,14 +1,10 @@
 package com.coinhub.android.data.dtos.response
 
-import com.coinhub.android.data.models.TopUpProviderEnum
-import com.coinhub.android.data.models.TopUpStatusEnum
-import java.math.BigInteger
-
 data class TopUpDto(
     val id: String,
-    val provider: TopUpProviderEnum,
+    val provider: String,
     val amount: String,
-    val status: TopUpStatusEnum,
+    val status: String,
     val createdAt: String,
 )
 

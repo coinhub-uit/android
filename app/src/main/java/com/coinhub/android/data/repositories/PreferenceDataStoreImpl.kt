@@ -24,6 +24,7 @@ class PreferenceDataStoreImpl @Inject constructor() : PreferenceDataStore {
     companion object {
         const val MY_PREF_KEY = "COINHUB_PREF_KEY"
         private val ACCESS_TOKEN = stringPreferencesKey("access_token")
+        private val TEMP_SOURCE_ID = stringPreferencesKey("source_id")
     }
 
     override suspend fun saveAccessToken(value: String) {
@@ -35,6 +36,18 @@ class PreferenceDataStoreImpl @Inject constructor() : PreferenceDataStore {
     override suspend fun getAccessToken(): String? {
         return context.dataStore.data.map { preferences ->
             preferences[ACCESS_TOKEN]
+        }.first()
+    }
+
+    override suspend fun saveTempSourceId(value: String) {
+        context.dataStore.edit { preferences ->
+            preferences[TEMP_SOURCE_ID] = value
+        }
+    }
+
+    override suspend fun getTempSourceId(): String? {
+        return context.dataStore.data.map { preferences ->
+            preferences[TEMP_SOURCE_ID]
         }.first()
     }
 

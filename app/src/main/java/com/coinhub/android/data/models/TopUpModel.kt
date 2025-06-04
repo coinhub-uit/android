@@ -1,7 +1,7 @@
 package com.coinhub.android.data.models
 
 import java.math.BigInteger
-import java.time.LocalDate
+import java.time.ZonedDateTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -10,7 +10,7 @@ data class TopUpModel @OptIn(ExperimentalUuidApi::class) constructor(
     val provider: TopUpProviderEnum,
     val amount: BigInteger,
     val status: TopUpStatusEnum,
-    val createdAt: LocalDate,
+    val createdAt: ZonedDateTime,
 )
 
 data class CreateTopUpModel @OptIn(ExperimentalUuidApi::class) constructor(
@@ -25,8 +25,8 @@ enum class TopUpProviderEnum() {
 }
 
 enum class TopUpStatusEnum {
-    PROCESSING,
-    SUCCESS,
-    DECLINED,
-    OVERDUE,
+    proccesing,
+    success,
+    declined,
+    overdue,
 }

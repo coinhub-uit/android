@@ -17,9 +17,12 @@ import com.coinhub.android.data.models.SourceModel
 import com.coinhub.android.data.models.TicketHistoryModel
 import com.coinhub.android.data.models.TicketModel
 import com.coinhub.android.data.models.TopUpModel
+import com.coinhub.android.data.models.TopUpProviderEnum
+import com.coinhub.android.data.models.TopUpStatusEnum
 import com.coinhub.android.data.models.UserModel
 import java.math.BigInteger
 import java.time.LocalDate
+import java.time.ZonedDateTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -72,11 +75,26 @@ fun UserDto.toUserModel() = UserModel(
 @OptIn(ExperimentalUuidApi::class)
 fun TopUpDto.toTopUpModel() = TopUpModel(
     id = Uuid.parse(this.id),
-    createdAt = LocalDate.parse(this.createdAt),
+    createdAt = ZonedDateTime.parse(this.createdAt),
     amount = BigInteger(this.amount),
-    status = this.status,
-    provider = this.provider
+    status = this.status.toTopUpStatusEnum(),
+    provider = this.provider.toTopUpProviderEnum()
 )
+
+fun String.toTopUpProviderEnum(): TopUpProviderEnum = when (this.lowercase()) {
+    "vnpay" -> TopUpProviderEnum.vnpay
+    "momo" -> TopUpProviderEnum.momo
+    "zalo" -> TopUpProviderEnum.zalo
+    else -> throw IllegalArgumentException("Unknown provider: $this")
+}
+
+fun String.toTopUpStatusEnum(): TopUpStatusEnum = when (this.lowercase()) {
+    "processing" -> TopUpStatusEnum.proccesing
+    "success" -> TopUpStatusEnum.success
+    "declined" -> TopUpStatusEnum.declined
+    "overdue" -> TopUpStatusEnum.overdue
+    else -> throw IllegalArgumentException("Unknown status: $this")
+}
 
 @OptIn(ExperimentalUuidApi::class)
 fun CreateTopUpResponseDto.toCreateTopUpModelResponse() = CreateTopUpModel(

@@ -5,5 +5,9 @@ interface PreferenceDataStore {
 
     suspend fun getAccessToken(): String?
 
+    suspend fun saveTempSourceId(value: String)
+
+    suspend fun getTempSourceId(): String?
+
     suspend fun clearPreferences()
 }

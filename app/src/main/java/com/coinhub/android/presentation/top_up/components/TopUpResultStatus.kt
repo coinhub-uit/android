@@ -35,7 +35,7 @@ private data class TopUpResultStatusContent(
 @Composable
 fun TopUpResultStatus(topUpStatus: TopUpStatusEnum) {
     val status = when (topUpStatus) {
-        TopUpStatusEnum.PROCESSING -> TopUpResultStatusContent(
+        TopUpStatusEnum.proccesing -> TopUpResultStatusContent(
             topUpStatus = topUpStatus,
             icon = Icons.Filled.Pending,
             text = "Processing",
@@ -43,7 +43,7 @@ fun TopUpResultStatus(topUpStatus: TopUpStatusEnum) {
             color = MaterialTheme.colorScheme.inverseSurface,
         )
 
-        TopUpStatusEnum.SUCCESS -> TopUpResultStatusContent(
+        TopUpStatusEnum.success -> TopUpResultStatusContent(
             topUpStatus = topUpStatus,
             icon = Icons.Filled.CheckCircle,
             text = "Successful",
@@ -51,7 +51,7 @@ fun TopUpResultStatus(topUpStatus: TopUpStatusEnum) {
             color = MaterialTheme.colorScheme.inversePrimary,
         )
 
-        TopUpStatusEnum.DECLINED -> TopUpResultStatusContent(
+        TopUpStatusEnum.declined -> TopUpResultStatusContent(
             topUpStatus = topUpStatus,
             icon = Icons.Filled.Error,
             text = "Declined",
@@ -59,7 +59,7 @@ fun TopUpResultStatus(topUpStatus: TopUpStatusEnum) {
             color = MaterialTheme.colorScheme.error,
         )
 
-        TopUpStatusEnum.OVERDUE -> TopUpResultStatusContent(
+        TopUpStatusEnum.overdue -> TopUpResultStatusContent(
             topUpStatus = topUpStatus,
             icon = Icons.Filled.TimerOff,
             text = "Overdue",
@@ -98,7 +98,7 @@ fun TopUpResultStatus(topUpStatus: TopUpStatusEnum) {
 fun TopUpResultStatusSuccessPreview() {
     CoinhubTheme {
         Surface {
-            TopUpResultStatus(topUpStatus = TopUpStatusEnum.SUCCESS)
+            TopUpResultStatus(topUpStatus = TopUpStatusEnum.success)
         }
     }
 }
@@ -108,7 +108,7 @@ fun TopUpResultStatusSuccessPreview() {
 fun TopUpResultStatusProcessingPreview() {
     CoinhubTheme {
         Surface {
-            TopUpResultStatus(topUpStatus = TopUpStatusEnum.PROCESSING)
+            TopUpResultStatus(topUpStatus = TopUpStatusEnum.proccesing)
         }
     }
 }
@@ -118,7 +118,7 @@ fun TopUpResultStatusProcessingPreview() {
 fun TopUpResultStatusDeclinedPreview() {
     CoinhubTheme {
         Surface {
-            TopUpResultStatus(topUpStatus = TopUpStatusEnum.DECLINED)
+            TopUpResultStatus(topUpStatus = TopUpStatusEnum.declined)
         }
     }
 }
@@ -128,7 +128,7 @@ fun TopUpResultStatusDeclinedPreview() {
 fun TopUpResultStatusOverduePreview() {
     CoinhubTheme {
         Surface {
-            TopUpResultStatus(topUpStatus = TopUpStatusEnum.OVERDUE)
+            TopUpResultStatus(topUpStatus = TopUpStatusEnum.overdue)
         }
     }
 }

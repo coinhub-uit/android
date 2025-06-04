@@ -11,10 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -32,21 +30,20 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coinhub.android.data.models.TopUpModel
 import com.coinhub.android.data.models.TopUpProviderEnum
 import com.coinhub.android.data.models.TopUpStatusEnum
-import com.coinhub.android.presentation.navigation.AppNavDestinations
 import com.coinhub.android.presentation.top_up.components.TopUpResultStatus
 import com.coinhub.android.presentation.top_up.state.TopUpState
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
 import java.math.BigInteger
-import java.time.LocalDate
+import java.time.ZonedDateTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @Composable
 fun TopUpResultScreen(
+    topUpId: String?,
     onMain: () -> Unit,
-    topUp: AppNavDestinations.TopUpResult,
-    viewModel: TopUpViewModel = hiltViewModel(),
+    viewModel: TopUpResultViewModel = hiltViewModel(),
 ) {
     val topUpState = viewModel.topUpState.collectAsStateWithLifecycle().value
     val isLoading = viewModel.isLoading.collectAsStateWithLifecycle().value
@@ -54,7 +51,7 @@ fun TopUpResultScreen(
     val context = LocalContext.current
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.checkTopUpStatus()
+        viewModel.checkTopUpStatus(topUpId)
     }
 
     if (message != null) {
@@ -86,7 +83,7 @@ fun TopUpResultScreen(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier.fillMaxSize()
             ) {
-                CircularProgressIndicator(modifier = Modifier.size(32.dp))
+                Text("Error...")
             }
         }
 
@@ -95,7 +92,7 @@ fun TopUpResultScreen(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier.fillMaxSize()
             ) {
-                CircularProgressIndicator(modifier = Modifier.size(32.dp))
+                Text("Loading...")
             }
         }
 
@@ -135,7 +132,7 @@ fun TopUpResultScreen(
                                 .padding(horizontal = 16.dp)
                         ) {
                             AnimatedVisibility(
-                                visible = topUpState.topUpModel.status != TopUpStatusEnum.SUCCESS
+                                visible = topUpState.topUpModel.status != TopUpStatusEnum.success
                             ) {
                                 Button(onClick = onRetry, modifier = Modifier.weight(1f)) {
                                     Text("Retry")
@@ -167,8 +164,8 @@ private fun PreviewScreen() {
                         id = Uuid.random(),
                         provider = TopUpProviderEnum.vnpay,
                         amount = BigInteger("1000000"),
-                        status = TopUpStatusEnum.SUCCESS,
-                        createdAt = LocalDate.parse("2023-01-01"),
+                        status = TopUpStatusEnum.success,
+                        createdAt = ZonedDateTime.parse("2023-01-01"),
                     )
                 ),
                 isLoading = false,
