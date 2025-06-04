@@ -1,14 +1,14 @@
 package com.coinhub.android.common
 
-import com.coinhub.android.data.dtos.response.AvailablePlanDto
+import com.coinhub.android.data.dtos.response.AvailablePlanResponseDto
 import com.coinhub.android.data.dtos.response.CreateTopUpResponseDto
-import com.coinhub.android.data.dtos.response.DeviceDto
-import com.coinhub.android.data.dtos.response.PlanDto
-import com.coinhub.android.data.dtos.response.SourceDto
-import com.coinhub.android.data.dtos.response.TicketDto
-import com.coinhub.android.data.dtos.response.TicketHistoryDto
-import com.coinhub.android.data.dtos.response.TopUpDto
-import com.coinhub.android.data.dtos.response.UserDto
+import com.coinhub.android.data.dtos.response.DeviceResponseDto
+import com.coinhub.android.data.dtos.response.PlanResponseDto
+import com.coinhub.android.data.dtos.response.SourceResponseDto
+import com.coinhub.android.data.dtos.response.TicketHistoryResponseDto
+import com.coinhub.android.data.dtos.response.TicketResponseDto
+import com.coinhub.android.data.dtos.response.TopUpResponseDto
+import com.coinhub.android.data.dtos.response.UserResponseDto
 import com.coinhub.android.data.models.AvailablePlanModel
 import com.coinhub.android.data.models.CreateTopUpModel
 import com.coinhub.android.data.models.DeviceModel
@@ -26,31 +26,31 @@ import java.time.ZonedDateTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-fun AvailablePlanDto.toAvailablePlanModel() = AvailablePlanModel(
+fun AvailablePlanResponseDto.toAvailablePlanModel() = AvailablePlanModel(
     planId = this.planId,
     planHistoryId = this.planHistoryId,
     days = this.days,
     rate = this.rate
 )
 
-fun PlanDto.toPlanModel() = PlanModel(
+fun PlanResponseDto.toPlanModel() = PlanModel(
     id = this.id,
     days = this.days
 )
 
-fun SourceDto.toSourceModel() = SourceModel(
+fun SourceResponseDto.toSourceModel() = SourceModel(
     id = this.id,
     balance = BigInteger(this.balance)
 )
 
-fun TicketHistoryDto.toTicketHistoryModel() = TicketHistoryModel(
+fun TicketHistoryResponseDto.toTicketHistoryModel() = TicketHistoryModel(
     issuedAt = LocalDate.parse(this.issuedAt),
     maturedAt = LocalDate.parse(this.maturedAt),
     principal = BigInteger(this.principal),
     interest = BigInteger(this.interest)
 )
 
-fun TicketDto.toTicketModel() = TicketModel(
+fun TicketResponseDto.toTicketModel() = TicketModel(
     id = this.id,
     openedAt = LocalDate.parse(this.openedAt),
     closedAt = this.closedAt?.let { LocalDate.parse(it) },
@@ -61,7 +61,7 @@ fun TicketDto.toTicketModel() = TicketModel(
 )
 
 @OptIn(ExperimentalUuidApi::class)
-fun UserDto.toUserModel() = UserModel(
+fun UserResponseDto.toUserModel() = UserModel(
     id = Uuid.parse(this.id),
     fullName = this.fullName,
     citizenId = this.citizenId,
@@ -73,7 +73,7 @@ fun UserDto.toUserModel() = UserModel(
 )
 
 @OptIn(ExperimentalUuidApi::class)
-fun TopUpDto.toTopUpModel() = TopUpModel(
+fun TopUpResponseDto.toTopUpModel() = TopUpModel(
     id = Uuid.parse(this.id),
     createdAt = ZonedDateTime.parse(this.createdAt),
     amount = BigInteger(this.amount),
@@ -102,7 +102,7 @@ fun CreateTopUpResponseDto.toCreateTopUpModelResponse() = CreateTopUpModel(
     topUpId = Uuid.parse(this.topUpId)
 )
 
-fun DeviceDto.toDeviceModel() = DeviceModel(
+fun DeviceResponseDto.toDeviceModel() = DeviceModel(
     id = this.id,
     fcmToken = this.fcmToken
 )

@@ -5,8 +5,8 @@ import com.coinhub.android.common.toSourceModel
 import com.coinhub.android.common.toTicketModel
 import com.coinhub.android.common.toUserModel
 import com.coinhub.android.data.api_services.UserApiService
-import com.coinhub.android.data.dtos.request.CreateUserDto
-import com.coinhub.android.data.dtos.request.CreateDeviceDto
+import com.coinhub.android.data.dtos.request.CreateDeviceRequestDto
+import com.coinhub.android.data.dtos.request.CreateUserRequestDto
 import com.coinhub.android.data.models.DeviceModel
 import com.coinhub.android.data.models.SourceModel
 import com.coinhub.android.data.models.TicketModel
@@ -26,7 +26,7 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun registerProfile(user: CreateUserDto): UserModel {
+    override suspend fun registerProfile(user: CreateUserRequestDto): UserModel {
         return try {
             userApiService.registerProfile(user).toUserModel()
         } catch (e: Exception) {
@@ -34,7 +34,7 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateProfile(id: String, user: CreateUserDto) {
+    override suspend fun updateProfile(id: String, user: CreateUserRequestDto) {
         try {
             userApiService.updateProfile(id, user)
         } catch (e: Exception) {
@@ -42,7 +42,7 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updatePartialProfile(id: String, user: CreateUserDto): UserModel {
+    override suspend fun updatePartialProfile(id: String, user: CreateUserRequestDto): UserModel {
         return try {
             userApiService.updatePartialProfile(id, user).toUserModel()
         } catch (e: Exception) {
@@ -78,7 +78,7 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun registerDevice(id: String, dto: CreateDeviceDto): DeviceModel {
+    override suspend fun registerDevice(id: String, dto: CreateDeviceRequestDto): DeviceModel {
         return try {
             userApiService.registerDevice(id, dto).toDeviceModel()
         } catch (e: Exception) {

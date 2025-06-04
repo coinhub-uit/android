@@ -1,6 +1,6 @@
 package com.coinhub.android.data.dtos.response
 
-data class TopUpDto(
+data class TopUpResponseDto(
     val id: String,
     val provider: String,
     val amount: String,

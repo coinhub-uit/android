@@ -1,6 +1,6 @@
 package com.coinhub.android.data.dtos.response
 
-data class UserDto(
+data class UserResponseDto(
     val id: String,
     val fullName: String,
     val citizenId: String,

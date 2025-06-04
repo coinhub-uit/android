@@ -1,6 +1,6 @@
 package com.coinhub.android.data.dtos.request
 
-data class TransferMoneyDto(
+data class TransferMoneyRequestDto(
     val fromSourceId: String,
     val toSourceId: String,
     val money: Number,

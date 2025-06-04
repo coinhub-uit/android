@@ -1,6 +1,6 @@
 package com.coinhub.android.domain.use_cases
 
-import com.coinhub.android.data.dtos.request.CreateTopUpDto
+import com.coinhub.android.data.dtos.request.CreateTopUpRequestDto
 import com.coinhub.android.data.models.CreateTopUpModel
 import com.coinhub.android.di.IoDispatcher
 import com.coinhub.android.domain.repositories.PaymentRepository
@@ -12,7 +12,7 @@ class CreateTopUpUseCase @Inject constructor(
     private val paymentRepository: PaymentRepository,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) {
-    suspend operator fun invoke(createTopUpDto: CreateTopUpDto): Result {
+    suspend operator fun invoke(createTopUpDto: CreateTopUpRequestDto): Result {
         return withContext(ioDispatcher) {
             try {
                 val topUp = paymentRepository.createTopUp(createTopUpDto)

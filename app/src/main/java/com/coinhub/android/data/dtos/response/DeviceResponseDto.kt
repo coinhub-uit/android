@@ -1,6 +1,6 @@
 package com.coinhub.android.data.dtos.response
 
-data class SourceDto(
+data class DeviceResponseDto(
     val id: String,
-    val balance: String,
+    val fcmToken: String,
 )

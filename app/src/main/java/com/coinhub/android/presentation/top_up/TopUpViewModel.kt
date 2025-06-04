@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.BuildConfig
-import com.coinhub.android.data.dtos.request.CreateTopUpDto
+import com.coinhub.android.data.dtos.request.CreateTopUpRequestDto
 import com.coinhub.android.data.models.CreateTopUpModel
 import com.coinhub.android.data.models.SourceModel
 import com.coinhub.android.data.models.TopUpProviderEnum
@@ -91,7 +91,7 @@ class TopUpViewModel @Inject constructor(
     fun createTopUp() {
         viewModelScope.launch {
             when (val result = createTopUpUseCase(
-                CreateTopUpDto(
+                CreateTopUpRequestDto(
                     amount = _amountText.value.toBigInteger(),
                     provider = _topUpProvider.value.toString(),
                     sourceDestinationId = _sourceId.value!!,

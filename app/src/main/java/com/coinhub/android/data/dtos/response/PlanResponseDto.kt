@@ -1,6 +1,6 @@
 package com.coinhub.android.data.dtos.response
 
-data class PlanDto(
+data class PlanResponseDto(
     val id: Int,
     val days: Int,
 )

@@ -3,7 +3,7 @@ package com.coinhub.android.presentation.create_ticket
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.coinhub.android.data.dtos.request.CreateTicketDto
+import com.coinhub.android.data.dtos.request.CreateTicketRequestDto
 import com.coinhub.android.data.models.AvailablePlanModel
 import com.coinhub.android.data.models.MethodEnum
 import com.coinhub.android.data.models.SourceModel
@@ -112,7 +112,7 @@ class CreateTicketViewModel @Inject constructor(
     }
 
     fun createTicket() {
-        val ticketDto = CreateTicketDto(
+        val ticketDto = CreateTicketRequestDto(
             sourceId = _selectedSourceId.value ?: return,
             methodEnum = _selectedMethod.value ?: return,
             planHistoryId = _selectedAvailablePlan.value?.planHistoryId?.toString() ?: return,

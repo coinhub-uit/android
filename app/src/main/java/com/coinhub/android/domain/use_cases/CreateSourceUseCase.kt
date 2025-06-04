@@ -1,6 +1,6 @@
 package com.coinhub.android.domain.use_cases
 
-import com.coinhub.android.data.dtos.request.CreateSourceDto
+import com.coinhub.android.data.dtos.request.CreateSourceRequestDto
 import com.coinhub.android.data.models.SourceModel
 import com.coinhub.android.di.IoDispatcher
 import com.coinhub.android.domain.repositories.SourceRepository
@@ -12,7 +12,7 @@ class CreateSourceUseCase @Inject constructor(
     private val sourceRepository: SourceRepository,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) {
-    suspend operator fun invoke(createSourceDto: CreateSourceDto): Result {
+    suspend operator fun invoke(createSourceDto: CreateSourceRequestDto): Result {
         return withContext(ioDispatcher) {
             try {
                 Result.Success(sourceRepository.createSource(createSourceDto))
