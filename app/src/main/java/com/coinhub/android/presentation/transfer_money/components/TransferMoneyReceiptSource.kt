@@ -25,7 +25,7 @@ fun TransferMoneyReceiptSource(
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = "Receipient",
+            text = "Recipient",
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(bottom = 16.dp)
         )
