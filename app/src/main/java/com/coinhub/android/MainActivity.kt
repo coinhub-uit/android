@@ -17,7 +17,6 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coinhub.android.data.remote.SupabaseService
 import com.coinhub.android.domain.managers.UserManager
-import com.coinhub.android.presentation.lock.LockScreen
 import com.coinhub.android.presentation.navigation.app.AppNavGraph
 import com.coinhub.android.presentation.navigation.auth.AuthNavGraph
 import com.coinhub.android.ui.theme.CoinhubTheme
@@ -48,14 +47,10 @@ class MainActivity : AppCompatActivity() {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     when (isUserSignedIn) {
                         true -> {
-                            LockScreen()
-                            return@Surface
                             AppNavGraph()
                         }
 
                         false -> {
-                            LockScreen()
-                            return@Surface
                             AuthNavGraph(supabaseClient = supabaseClient)
                         }
 
