@@ -74,7 +74,7 @@ fun AppNavGraph() {
             createSourceGraph(navController = navController)
             topUpGraph(navController = navController)
             sourceDetailNav(navController = navController)
-            transferMoneyGraph()
+            transferMoneyGraph(navController = navController)
             createTicketGraph(navController = navController)
             ticketDetailNav(navController = navController)
             notificationNav()
