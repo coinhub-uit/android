@@ -125,6 +125,12 @@ private fun HomeSourceCard(
                     modifier = Modifier
                         .align(Alignment.BottomStart)
                         .padding(start = 8.dp, bottom = 12.dp)
+                        .sharedBounds(
+                            sharedContentState = rememberSharedContentState(
+                                key = "homeSourceBalance-${sourceModel.id}",
+                            ),
+                            animatedVisibilityScope = animatedVisibilityScope,
+                        )
                 )
 
                 IconButton(

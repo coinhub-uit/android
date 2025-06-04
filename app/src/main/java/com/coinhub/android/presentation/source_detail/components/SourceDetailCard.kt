@@ -70,11 +70,11 @@ fun SourceDetailCard(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.sharedBounds(
-                                sharedContentState = rememberSharedContentState(
-                                    key = "homeSourceId-${sourceModel.id}",
-                                ),
-                                animatedVisibilityScope = animatedVisibilityScope,
-                            )
+                            sharedContentState = rememberSharedContentState(
+                                key = "homeSourceId-${sourceModel.id}",
+                            ),
+                            animatedVisibilityScope = animatedVisibilityScope,
+                        )
                     )
 
                     Spacer(modifier = Modifier.height(32.dp))
@@ -83,8 +83,14 @@ fun SourceDetailCard(
                         text = sourceModel.balance.toVndFormat(),
                         style = MaterialTheme.typography.titleMedium,
                         overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier
+                            .sharedBounds(
+                                sharedContentState = rememberSharedContentState(
+                                    key = "homeSourceBalance-${sourceModel.id}",
+                                ),
+                                animatedVisibilityScope = animatedVisibilityScope,
+                            )
                     )
-
                 }
                 IconButton(
                     onClick = copySourceIdToClipboard, modifier = Modifier.align(Alignment.TopEnd)

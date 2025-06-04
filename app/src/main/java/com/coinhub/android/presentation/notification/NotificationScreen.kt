@@ -1,6 +1,7 @@
 package com.coinhub.android.presentation.notification
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -43,9 +44,10 @@ fun NotificationScreen(
             )
         }) { innerPadding ->
         LazyColumn(
-            modifier = Modifier.padding(innerPadding).padding(
-                horizontal = 16.dp,
-            ),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(notifications, key = {

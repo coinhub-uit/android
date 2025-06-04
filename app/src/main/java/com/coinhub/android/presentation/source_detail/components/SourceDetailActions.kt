@@ -34,7 +34,7 @@ fun SourceDetailActions(
     onQr: () -> Unit,
 ) {
     val cardItems = listOf(
-        CardItem("Top Up", Icons.Default.QrCode, onQr),
+        CardItem("QR", Icons.Default.QrCode, onQr),
     )
 
     Column {
