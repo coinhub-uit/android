@@ -25,6 +25,7 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Singleton
 
+// TODO: Maybe scoped to view model
 @Module
 @InstallIn(SingletonComponent::class)
 object UseCaseModule {

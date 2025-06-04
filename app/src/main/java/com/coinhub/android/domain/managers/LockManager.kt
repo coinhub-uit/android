@@ -1,4 +1,4 @@
-package com.coinhub.android.presentation.lock
+package com.coinhub.android.domain.managers
 
 import android.content.Context
 import android.util.Log
@@ -6,21 +6,10 @@ import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import javax.inject.Inject
 
-@HiltViewModel
-class LockViewModel @Inject constructor() : ViewModel() {
-    private val _pin = MutableStateFlow("")
-    val pin: StateFlow<String> = _pin.asStateFlow()
-
-    private val _isLoading = MutableStateFlow(false)
-
-    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+class LockManager {
+    // WARN: Just a simple PIN validation for demo purposes.
+    private val correctPin = "1234"
 
     private val promptInfo: BiometricPrompt.PromptInfo by lazy {
         BiometricPrompt.PromptInfo.Builder()
@@ -52,12 +41,15 @@ class LockViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun setPin(value: String) {
-        _pin.value = value
+    fun unlock(pin: String) {
+        if (validatePin(pin)) {
+            Log.d("LockManager", "Unlock successful")
+        } else {
+            Log.d("LockManager", "Unlock failed")
+        }
     }
 
-    fun unlock() {
-        Log.d("HEHE", "unlock: Hre")
-        // Unlock here
+    private fun validatePin(pin: String): Boolean {
+        return pin == correctPin
     }
 }

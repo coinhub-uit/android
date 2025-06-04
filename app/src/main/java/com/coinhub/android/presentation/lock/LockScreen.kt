@@ -1,6 +1,5 @@
 package com.coinhub.android.presentation.lock
 
-import androidx.biometric.BiometricManager
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,7 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -29,7 +27,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.coinhub.android.presentation.common.components.Banner
 import com.coinhub.android.ui.theme.CoinhubTheme
@@ -43,29 +40,13 @@ fun LockScreen(
     val isLoading by viewModel.isLoading.collectAsState()
 
     val context = LocalContext.current
-    val biometricManager = remember { BiometricManager.from(context) }
-
-    val isBiometricAvailable = remember {
-        biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL)
-    }
-
-    val onBiometricClick: (() -> Unit)? = when (isBiometricAvailable) {
-        BiometricManager.BIOMETRIC_SUCCESS -> {
-            val executor = remember { ContextCompat.getMainExecutor(context) }
-            viewModel.getBiometricPromptCallback(context, executor)
-        }
-
-        else -> {
-            null
-        }
-    }
 
     LockScreen(
         pin = pin,
         onPinChange = viewModel::setPin,
         isLoading = isLoading,
         onUnlock = viewModel::unlock,
-        onBiometricClick = onBiometricClick
+        onBiometricClick = viewModel.getBiometricPromptCallback(context)
     )
 }
 
@@ -136,7 +117,11 @@ fun LockScreenPreview() {
     CoinhubTheme {
         Surface {
             LockScreen(
-                pin = "123", onPinChange = {}, isLoading = false, onUnlock = {}, onBiometricClick = null
+                pin = "123",
+                onPinChange = {},
+                isLoading = false,
+                onUnlock = {},
+                onBiometricClick = {},
             )
         }
     }
