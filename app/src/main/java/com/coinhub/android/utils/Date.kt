@@ -2,6 +2,7 @@ package com.coinhub.android.utils
 
 import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
@@ -27,6 +28,10 @@ fun LocalDate.toDateString(): String {
 
 fun LocalDate.toMillis(): Long {
     return this.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+}
+
+fun LocalDateTime.toDateString(): String {
+    return this.format(dateTimeFormatter)
 }
 
 fun String.toLocalDate(): LocalDate {

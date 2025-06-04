@@ -41,6 +41,10 @@ interface UserApiService {
     @GET("users/{id}/tickets")
     suspend fun getUserTickets(@Path("id") userId: String): List<TicketDto>
 
+    // FIXME: @NTGNguyen change to dto
+    @GET("users/{id}/notifications")
+    suspend fun getUserNotification(@Path("id") userId: String): List<TicketDto>
+
     @POST("users/{id}/devices")
     suspend fun registerDevice(
         @Path("id") userId: String,
