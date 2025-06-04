@@ -3,12 +3,15 @@ package com.coinhub.android.presentation.navigation.app
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -34,6 +37,7 @@ import com.coinhub.android.presentation.navigation.app.navigations.topUpGraph
 import com.coinhub.android.presentation.navigation.app.navigations.transferMoneyGraph
 
 // The inner padding of scaffold isn't needed.. grammar
+@OptIn(ExperimentalSharedTransitionApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AppNavGraph() {
@@ -66,22 +70,26 @@ fun AppNavGraph() {
             AppBottomBar(navController = navController)
         }
     }) {
-        NavHost(
-            navController = navController,
-            startDestination = AppNavDestinations.MainGraph,
-        ) {
-            mainNavGraph(navController = navController)
-            createSourceGraph(navController = navController)
-            topUpGraph(navController = navController)
-            sourceDetailNav(navController = navController)
-            transferMoneyGraph(navController = navController)
-            createTicketGraph(navController = navController)
-            ticketDetailNav(navController = navController)
-            notificationNav()
-            aiChatNav()
-            editProfileNav(navController = navController)
-            credentialChangeNav(navController = navController)
-            settingNav(navController = navController)
+        SharedTransitionLayout {
+            CompositionLocalProvider(LocalSharedTransitionScope provides this@SharedTransitionLayout) {
+                NavHost(
+                    navController = navController,
+                    startDestination = AppNavDestinations.MainGraph,
+                ) {
+                    mainNavGraph(navController = navController)
+                    createSourceGraph(navController = navController)
+                    topUpGraph(navController = navController)
+                    sourceDetailNav(navController = navController)
+                    transferMoneyGraph(navController = navController)
+                    createTicketGraph(navController = navController)
+                    ticketDetailNav(navController = navController)
+                    notificationNav()
+                    aiChatNav()
+                    editProfileNav(navController = navController)
+                    credentialChangeNav(navController = navController)
+                    settingNav(navController = navController)
+                }
+            }
         }
     }
 }

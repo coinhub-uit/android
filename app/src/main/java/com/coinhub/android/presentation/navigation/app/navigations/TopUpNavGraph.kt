@@ -1,6 +1,7 @@
 package com.coinhub.android.presentation.navigation.app.navigations
 
 import android.annotation.SuppressLint
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -9,6 +10,7 @@ import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
 import com.coinhub.android.BuildConfig
 import com.coinhub.android.presentation.navigation.AppNavDestinations
+import com.coinhub.android.presentation.navigation.app.LocalAnimatedVisibilityScope
 import com.coinhub.android.presentation.top_up.TopUpResultScreen
 import com.coinhub.android.presentation.top_up.TopUpScreen
 
@@ -16,7 +18,9 @@ import com.coinhub.android.presentation.top_up.TopUpScreen
 fun NavGraphBuilder.topUpGraph(navController: NavHostController) {
     navigation<AppNavDestinations.TopUpGraph>(startDestination = AppNavDestinations.TopUp) {
         composable<AppNavDestinations.TopUp> {
-            TopUpScreen(onBack = { navController.navigateUp() })
+            CompositionLocalProvider(LocalAnimatedVisibilityScope provides this@composable) {
+                TopUpScreen(onBack = { navController.navigateUp() })
+            }
         }
         composable<AppNavDestinations.TopUpResult>(
             deepLinks = listOf(

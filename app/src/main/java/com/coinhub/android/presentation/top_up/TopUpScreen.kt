@@ -1,6 +1,7 @@
 package com.coinhub.android.presentation.top_up
 
 import android.content.Intent
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,15 +24,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coinhub.android.data.models.SourceModel
 import com.coinhub.android.data.models.TopUpProviderEnum
+import com.coinhub.android.presentation.navigation.app.LocalAnimatedVisibilityScope
+import com.coinhub.android.presentation.navigation.app.LocalSharedTransitionScope
 import com.coinhub.android.presentation.top_up.components.TopUpEnterAmount
 import com.coinhub.android.presentation.top_up.components.TopUpSelectProvider
 import com.coinhub.android.presentation.top_up.components.TopUpSelectSource
 import com.coinhub.android.presentation.top_up.components.TopUpTopBar
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
-import kotlin.uuid.ExperimentalUuidApi
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun TopUpScreen(
     onBack: () -> Unit,
@@ -45,6 +47,11 @@ fun TopUpScreen(
     val isFormValid = viewModel.isFormValid.collectAsStateWithLifecycle().value
     val context = LocalContext.current
 
+    val sharedTransitionScope =
+        LocalSharedTransitionScope.current ?: error("SharedTransitionScope not provided via CompositionLocal")
+    val animatedVisibilityScope =
+        LocalAnimatedVisibilityScope.current ?: error("AnimatedVisibilityScope not provided via CompositionLocal")
+
     LaunchedEffect(Unit) {
         viewModel.createTopUpModel.collect {
             if (it != null) {
@@ -54,27 +61,36 @@ fun TopUpScreen(
         }
     }
 
-    TopUpScreen(
-        selectedSourceId = sourceId,
-        isSourceBottomSheetVisible = isSourceBottomSheetVisible,
-        sourceModels = sourceModels,
-        selectedProvider = topUpProvider,
-        amountText = amountText,
-        isFormValid = isFormValid,
-        setShowBottomSheet = viewModel::setShowSourceBottomSheet,
-        onSelectSource = viewModel::selectSource,
-        onSelectProvider = viewModel::selectProvider,
-        onAmountChange = viewModel::updateAmount,
-        onPresetAmountClick = viewModel::setPresetAmount,
-        onTopUpResult = {
-            viewModel.createTopUp()
-        },
-        onBack = onBack
-    )
+    with(sharedTransitionScope) {
+        TopUpScreen(
+            selectedSourceId = sourceId,
+            isSourceBottomSheetVisible = isSourceBottomSheetVisible,
+            sourceModels = sourceModels,
+            selectedProvider = topUpProvider,
+            amountText = amountText,
+            isFormValid = isFormValid,
+            setShowBottomSheet = viewModel::setShowSourceBottomSheet,
+            onSelectSource = viewModel::selectSource,
+            onSelectProvider = viewModel::selectProvider,
+            onAmountChange = viewModel::updateAmount,
+            onPresetAmountClick = viewModel::setPresetAmount,
+            onTopUpResult = {
+                viewModel.createTopUp()
+            },
+            onBack = onBack,
+            modifier = Modifier.sharedBounds(
+                animatedVisibilityScope = animatedVisibilityScope,
+                sharedContentState = rememberSharedContentState(
+                    key = "topUp",
+                )
+            ),
+        )
+    }
 }
 
 @Composable
 private fun TopUpScreen(
+    modifier: Modifier = Modifier,
     selectedSourceId: String?,
     isSourceBottomSheetVisible: Boolean,
     sourceModels: List<SourceModel>,
@@ -106,7 +122,7 @@ private fun TopUpScreen(
                     )
                 }
             }
-        }
+        }, modifier = modifier
     ) { innerPadding ->
         Column(
             modifier = Modifier

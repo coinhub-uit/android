@@ -1,6 +1,7 @@
 package com.coinhub.android.presentation.transfer_money
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -25,9 +26,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coinhub.android.data.models.SourceModel
 import com.coinhub.android.data.models.UserModel
+import com.coinhub.android.presentation.navigation.app.LocalAnimatedVisibilityScope
+import com.coinhub.android.presentation.navigation.app.LocalSharedTransitionScope
 import com.coinhub.android.presentation.transfer_money.components.TransferMoneyEnterAmount
-import com.coinhub.android.presentation.transfer_money.components.TransferMoneySelectSource
 import com.coinhub.android.presentation.transfer_money.components.TransferMoneyReceiptSource
+import com.coinhub.android.presentation.transfer_money.components.TransferMoneySelectSource
 import com.coinhub.android.presentation.transfer_money.components.TransferMoneyTopBar
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
@@ -35,6 +38,7 @@ import java.math.BigInteger
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun TransferMoneyScreen(
     onBack: () -> Unit,
@@ -48,24 +52,37 @@ fun TransferMoneyScreen(
     val isFormValid = viewModel.isFormValid.collectAsStateWithLifecycle().value
     val isLoading = viewModel.isLoading.collectAsStateWithLifecycle().value
 
-    TransferMoneyScreen(
-        selectedSourceId = selectedSourceId,
-        sources = sources,
-        receiptSourceId = receiptSourceId,
-        receiptUser = receiptUser,
-        amount = amount,
-        isFormValid = isFormValid,
-        isLoading = isLoading,
-        onSelectSource = viewModel::selectSource,
-        onReceiptSourceIdChange = viewModel::updateReceiptSourceId,
-        onAmountChange = viewModel::updateAmount,
-        onTransfer = { viewModel.transferMoney(onBack) },
-        onBack = onBack
-    )
+    val sharedTransitionScope =
+        LocalSharedTransitionScope.current ?: error("SharedTransitionScope not provided via CompositionLocal")
+    val animatedVisibilityScope =
+        LocalAnimatedVisibilityScope.current ?: error("AnimatedVisibilityScope not provided via CompositionLocal")
+
+    with(sharedTransitionScope) {
+        TransferMoneyScreen(
+            selectedSourceId = selectedSourceId,
+            sources = sources,
+            receiptSourceId = receiptSourceId,
+            receiptUser = receiptUser,
+            amount = amount,
+            isFormValid = isFormValid,
+            isLoading = isLoading,
+            onSelectSource = viewModel::selectSource,
+            onReceiptSourceIdChange = viewModel::updateReceiptSourceId,
+            onAmountChange = viewModel::updateAmount,
+            onTransfer = { viewModel.transferMoney(onBack) },
+            onBack = onBack,
+            modifier = Modifier.sharedBounds(
+                animatedVisibilityScope = animatedVisibilityScope, sharedContentState = rememberSharedContentState(
+                    key = "transferMoney",
+                )
+            ),
+        )
+    }
 }
 
 @Composable
 private fun TransferMoneyScreen(
+    modifier: Modifier = Modifier,
     selectedSourceId: String?,
     sources: List<SourceModel>,
     receiptSourceId: String,
@@ -81,24 +98,21 @@ private fun TransferMoneyScreen(
 ) {
     Scaffold(
         topBar = {
-            TransferMoneyTopBar(onBack = onBack)
-        },
-        floatingActionButton = {
-            AnimatedVisibility(
-                visible = isFormValid && !isLoading,
-            ) {
-                FloatingActionButton(onClick = onTransfer) {
-                    Icon(
-                        imageVector = Icons.Filled.Check,
-                        contentDescription = "Transfer Money"
-                    )
-                }
+        TransferMoneyTopBar(onBack = onBack)
+    }, floatingActionButton = {
+        AnimatedVisibility(
+            visible = isFormValid && !isLoading,
+        ) {
+            FloatingActionButton(onClick = onTransfer) {
+                Icon(
+                    imageVector = Icons.Filled.Check, contentDescription = "Transfer Money"
+                )
             }
         }
+    }, modifier = modifier
     ) { innerPadding ->
         Box(
-            modifier = Modifier
-                .padding(innerPadding)
+            modifier = Modifier.padding(innerPadding)
         ) {
             if (isLoading) {
                 LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
@@ -127,8 +141,7 @@ private fun TransferMoneyScreen(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 TransferMoneyEnterAmount(
-                    amount = amount,
-                    onAmountChange = onAmountChange
+                    amount = amount, onAmountChange = onAmountChange
                 )
             }
         }
@@ -143,31 +156,30 @@ fun TransferMoneyScreenPreview() {
         Surface {
             TransferMoneyScreen(
                 selectedSourceId = "1",
-                sources = listOf(
-                    SourceModel("1", BigInteger("5000000")),
-                    SourceModel("2", BigInteger("3000000")),
-                    SourceModel("3", BigInteger("7500000"))
-                ),
-                receiptSourceId = "123",
-                receiptUser = UserModel(
-                    id = Uuid.random(),
-                    fullName = "Nguyen Van A",
-                    citizenId = "123456789",
-                    birthDate = java.time.LocalDate.now(),
-                    avatar = "https://example.com/avatar.png",
-                    address = "123 Street, City",
-                    createdAt = java.time.LocalDate.now(),
-                    deletedAt = null
-                ),
-                amount = "1000000",
-                isFormValid = true,
-                isLoading = false,
-                onSelectSource = {},
-                onReceiptSourceIdChange = {},
-                onAmountChange = {},
-                onTransfer = {},
-                onBack = {}
-            )
+                                sources = listOf(
+                                    SourceModel("1", BigInteger("5000000")),
+                                    SourceModel("2", BigInteger("3000000")),
+                                    SourceModel("3", BigInteger("7500000"))
+                                ),
+                                receiptSourceId = "123",
+                                receiptUser = UserModel(
+                                    id = Uuid.random(),
+                                    fullName = "Nguyen Van A",
+                                    citizenId = "123456789",
+                                    birthDate = java.time.LocalDate.now(),
+                                    avatar = "https://example.com/avatar.png",
+                                    address = "123 Street, City",
+                                    createdAt = java.time.LocalDate.now(),
+                                    deletedAt = null
+                                ),
+                                amount = "1000000",
+                                isFormValid = true,
+                                isLoading = false,
+                                onSelectSource = {},
+                                onReceiptSourceIdChange = {},
+                                onAmountChange = {},
+                                onTransfer = {},
+                                onBack = {})
         }
     }
 }

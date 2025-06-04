@@ -1,5 +1,6 @@
 package com.coinhub.android.presentation.source_detail.components
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -22,54 +23,77 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.coinhub.android.data.models.SourceModel
+import com.coinhub.android.presentation.navigation.app.LocalAnimatedVisibilityScope
+import com.coinhub.android.presentation.navigation.app.LocalSharedTransitionScope
 import com.coinhub.android.utils.PreviewDeviceSpecs
 import com.coinhub.android.utils.toVndFormat
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SourceDetailCard(
     sourceModel: SourceModel,
     copySourceIdToClipboard: () -> Unit,
 ) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight(), colors = CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.secondary, contentColor = MaterialTheme.colorScheme.onSecondary
-        )
-    ) {
-        Box(
+    val sharedTransitionScope =
+        LocalSharedTransitionScope.current ?: error("SharedTransitionScope not provided via CompositionLocal")
+    val animatedVisibilityScope =
+        LocalAnimatedVisibilityScope.current ?: error("AnimatedVisibilityScope not provided via CompositionLocal")
+
+    with(sharedTransitionScope) {
+        Card(
             modifier = Modifier
+                .sharedBounds(
+                    sharedContentState = rememberSharedContentState(
+                        key = "homeSourceCard-${sourceModel.id}",
+                    ),
+                    animatedVisibilityScope = animatedVisibilityScope,
+                )
                 .fillMaxWidth()
-                .padding(16.dp),
+                .wrapContentHeight(), colors = CardDefaults.elevatedCardColors(
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.onSecondary
+            )
         ) {
-            Column(
+            Box(
                 modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .padding(8.dp)
+                    .fillMaxWidth()
+                    .padding(16.dp),
             ) {
-                Text(
-                    text = sourceModel.id,
-                    style = MaterialTheme.typography.headlineMedium,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.CenterStart)
+                        .padding(8.dp)
+                ) {
+                    Text(
+                        text = sourceModel.id,
+                        style = MaterialTheme.typography.headlineMedium,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.sharedBounds(
+                                sharedContentState = rememberSharedContentState(
+                                    key = "homeSourceId-${sourceModel.id}",
+                                ),
+                                animatedVisibilityScope = animatedVisibilityScope,
+                            )
+                    )
 
-                Spacer(modifier = Modifier.height(32.dp))
+                    Spacer(modifier = Modifier.height(32.dp))
 
-                Text(
-                    text = sourceModel.balance.toVndFormat(),
-                    style = MaterialTheme.typography.titleMedium,
-                    overflow = TextOverflow.Ellipsis,
-                )
+                    Text(
+                        text = sourceModel.balance.toVndFormat(),
+                        style = MaterialTheme.typography.titleMedium,
+                        overflow = TextOverflow.Ellipsis,
+                    )
 
-            }
-            IconButton(
-                onClick = copySourceIdToClipboard, modifier = Modifier.align(Alignment.TopEnd)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ContentCopy,
-                    contentDescription = "Copy Source ID",
-                )
+                }
+                IconButton(
+                    onClick = copySourceIdToClipboard, modifier = Modifier.align(Alignment.TopEnd)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ContentCopy,
+                        contentDescription = "Copy Source ID",
+                    )
+                }
             }
         }
     }
@@ -80,10 +104,7 @@ fun SourceDetailCard(
 fun SourceDetailCardPreview() {
     SourceDetailCard(
         sourceModel = SourceModel(
-            id = "source_1234567890",
-            balance = 1000000.toBigInteger()
-        ),
-        copySourceIdToClipboard = {}
-    )
+            id = "source_1234567890", balance = 1000000.toBigInteger()
+        ), copySourceIdToClipboard = {})
 }
 

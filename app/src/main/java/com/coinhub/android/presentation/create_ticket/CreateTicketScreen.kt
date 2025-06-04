@@ -1,6 +1,7 @@
 package com.coinhub.android.presentation.create_ticket
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -29,10 +30,13 @@ import com.coinhub.android.data.models.SourceModel
 import com.coinhub.android.presentation.create_ticket.components.CreateTicketInputMoney
 import com.coinhub.android.presentation.create_ticket.components.CreateTicketSelections
 import com.coinhub.android.presentation.create_ticket.components.CreateTicketTopBar
+import com.coinhub.android.presentation.navigation.app.LocalAnimatedVisibilityScope
+import com.coinhub.android.presentation.navigation.app.LocalSharedTransitionScope
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
 import java.math.BigInteger
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun CreateTicketScreen(
     onBack: () -> Unit,
@@ -49,30 +53,43 @@ fun CreateTicketScreen(
     val isFormValid = viewModel.isFormValid.collectAsStateWithLifecycle().value
     val isLoading = viewModel.isLoading.collectAsStateWithLifecycle().value
 
-    CreateTicketScreen(
-        minimumAmount = minimumAmount,
-        amount = amount,
-        selectedAvailablePlan = selectedAvailablePlan,
-        selectedMethod = selectedMethod,
-        selectedSourceId = selectedSourceId,
-        availablePlans = availablePlans,
-        sources = sourceModels,
-        isFormValid = isFormValid,
-        onAmountChange = viewModel::updateAmount,
-        onSelectAvailablePlan = viewModel::selectPlan,
-        onSelectMethod = viewModel::selectMethod,
-        onSelectSourceId = viewModel::selectSourceId,
-        onCreateTicket = {
-            viewModel.createTicket()
-            onMain()
-        },
-        isLoading = isLoading,
-        onBack = onBack
-    )
+    val sharedTransitionScope =
+        LocalSharedTransitionScope.current ?: error("SharedTransitionScope not provided via CompositionLocal")
+    val animatedVisibilityScope =
+        LocalAnimatedVisibilityScope.current ?: error("AnimatedVisibilityScope not provided via CompositionLocal")
+
+    with(sharedTransitionScope) {
+        CreateTicketScreen(
+            minimumAmount = minimumAmount,
+            amount = amount,
+            selectedAvailablePlan = selectedAvailablePlan,
+            selectedMethod = selectedMethod,
+            selectedSourceId = selectedSourceId,
+            availablePlans = availablePlans,
+            sources = sourceModels,
+            isFormValid = isFormValid,
+            onAmountChange = viewModel::updateAmount,
+            onSelectAvailablePlan = viewModel::selectPlan,
+            onSelectMethod = viewModel::selectMethod,
+            onSelectSourceId = viewModel::selectSourceId,
+            onCreateTicket = {
+                viewModel.createTicket()
+                onMain()
+            },
+            isLoading = isLoading,
+            onBack = onBack,
+            modifier = Modifier.sharedBounds(
+                animatedVisibilityScope = animatedVisibilityScope, sharedContentState = rememberSharedContentState(
+                    key = "createTicket",
+                )
+            )
+        )
+    }
 }
 
 @Composable
 private fun CreateTicketScreen(
+    modifier: Modifier = Modifier,
     minimumAmount: Long,
     amount: String,
     selectedAvailablePlan: AvailablePlanModel?,
@@ -91,24 +108,21 @@ private fun CreateTicketScreen(
 ) {
     Scaffold(
         topBar = {
-            CreateTicketTopBar(onBack = onBack)
-        },
-        floatingActionButton = {
-            AnimatedVisibility(
-                visible = isFormValid && !isLoading,
-            ) {
-                FloatingActionButton(onClick = onCreateTicket) {
-                    Icon(
-                        imageVector = Icons.Filled.Check,
-                        contentDescription = "Create Ticket"
-                    )
-                }
+        CreateTicketTopBar(onBack = onBack)
+    }, floatingActionButton = {
+        AnimatedVisibility(
+            visible = isFormValid && !isLoading,
+        ) {
+            FloatingActionButton(onClick = onCreateTicket) {
+                Icon(
+                    imageVector = Icons.Filled.Check, contentDescription = "Create Ticket"
+                )
             }
         }
+    }, modifier = modifier
     ) { innerPadding ->
         Box(
-            modifier = Modifier
-                .padding(innerPadding)
+            modifier = Modifier.padding(innerPadding)
         ) {
             if (isLoading) {
                 LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
@@ -167,8 +181,7 @@ fun CreateTicketScreenPreview() {
                 onSelectMethod = {},
                 onSelectSourceId = {},
                 onCreateTicket = {},
-                onBack = {}
-            )
+                onBack = {})
         }
     }
 }

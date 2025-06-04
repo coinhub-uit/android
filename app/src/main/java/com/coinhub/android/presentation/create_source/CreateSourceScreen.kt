@@ -1,6 +1,7 @@
 package com.coinhub.android.presentation.create_source
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,9 +27,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.coinhub.android.presentation.create_source.components.CreateSourceTopBar
+import com.coinhub.android.presentation.navigation.app.LocalAnimatedVisibilityScope
+import com.coinhub.android.presentation.navigation.app.LocalSharedTransitionScope
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun CreateSourceScreen(
     onBack: () -> Unit,
@@ -40,19 +44,33 @@ fun CreateSourceScreen(
     val isFormValid = viewModel.isFormValid.collectAsState().value
     val isLoading = viewModel.isLoading.collectAsState().value
 
-    CreateSourceScreen(
-        sourceId = sourceId,
-        onSourceIdChange = setSourceId,
-        sourceCheckState = sourceCheckState,
-        isFormValid = isFormValid,
-        isLoading = isLoading,
-        onBack = onBack,
-        onCreate = viewModel::createSource
-    )
+    val sharedTransitionScope =
+        LocalSharedTransitionScope.current ?: error("SharedTransitionScope not provided via CompositionLocal")
+    val animatedVisibilityScope =
+        LocalAnimatedVisibilityScope.current ?: error("AnimatedVisibilityScope not provided via CompositionLocal")
+
+    with(sharedTransitionScope) {
+        CreateSourceScreen(
+            sourceId = sourceId,
+            onSourceIdChange = setSourceId,
+            sourceCheckState = sourceCheckState,
+            isFormValid = isFormValid,
+            isLoading = isLoading,
+            onBack = onBack,
+            onCreate = viewModel::createSource,
+            modifier = Modifier.sharedBounds(
+                animatedVisibilityScope = animatedVisibilityScope,
+                sharedContentState = rememberSharedContentState(
+                    key = "createSource",
+                )
+            ),
+        )
+    }
 }
 
 @Composable
 private fun CreateSourceScreen(
+    modifier: Modifier = Modifier,
     sourceId: String,
     onSourceIdChange: (String) -> Unit,
     sourceCheckState: CreateSourceStates.SourceCheckState,
@@ -74,7 +92,7 @@ private fun CreateSourceScreen(
                     )
                 }, text = { Text("Create") })
             }
-        }, modifier = Modifier.fillMaxSize()
+        }, modifier = modifier
     ) { innerPadding ->
         Box(
             modifier = Modifier.padding(innerPadding)

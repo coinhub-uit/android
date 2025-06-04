@@ -1,5 +1,6 @@
 package com.coinhub.android.presentation.ticket.components
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,17 +29,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.coinhub.android.presentation.navigation.app.LocalAnimatedVisibilityScope
+import com.coinhub.android.presentation.navigation.app.LocalSharedTransitionScope
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
 import com.coinhub.android.utils.toVndFormat
 import java.math.BigInteger
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun TicketStatistics(
     totalPrincipal: BigInteger,
     totalInterest: BigInteger,
     onCreateTicket: () -> Unit,
 ) {
+    val sharedTransitionScope =
+        LocalSharedTransitionScope.current ?: error("SharedTransitionScope not provided via CompositionLocal")
+    val animatedVisibilityScope =
+        LocalAnimatedVisibilityScope.current ?: error("AnimatedVisibilityScope not provided via CompositionLocal")
+
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -88,12 +97,11 @@ fun TicketStatistics(
                             imageVector = Icons.Default.AttachMoney,
                             contentDescription = "Interest",
                             modifier = Modifier
-                                .size(16.dp)
-                                .padding(end = 4.dp),
+                                .size(16.dp),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                         Text(
-                            text = "Interest: ${totalInterest.toVndFormat()} VNĐ",
+                            text = totalInterest.toVndFormat(),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             maxLines = 1,
@@ -117,12 +125,20 @@ fun TicketStatistics(
                         .background(MaterialTheme.colorScheme.primary),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Create Ticket",
-                        tint = MaterialTheme.colorScheme.onPrimary,
-                        modifier = Modifier.size(24.dp)
-                    )
+                    with (sharedTransitionScope) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Create Ticket",
+                            tint = MaterialTheme.colorScheme.onPrimary,
+                            modifier = Modifier.sharedBounds(
+                                animatedVisibilityScope = animatedVisibilityScope,
+                                sharedContentState = rememberSharedContentState(
+                                    key = "createTicket",
+                                )
+                            )
+                            .size(24.dp)
+                        )
+                    }
                 }
             }
         }

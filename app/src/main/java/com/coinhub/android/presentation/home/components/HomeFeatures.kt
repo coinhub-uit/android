@@ -1,5 +1,6 @@
 package com.coinhub.android.presentation.home.components
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -29,6 +30,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.coinhub.android.presentation.navigation.app.LocalAnimatedVisibilityScope
+import com.coinhub.android.presentation.navigation.app.LocalSharedTransitionScope
 import com.coinhub.android.ui.theme.CoinhubTheme
 
 @Composable
@@ -38,9 +41,24 @@ fun HomeFeatures(
     onTransferMoney: () -> Unit,
 ) {
     val homeFeatureCardItems = listOf(
-        HomeFeatureCardItem("Top Up", Icons.Default.Payments, onTopUp),
-        HomeFeatureCardItem("Create Source", Icons.Default.Add, onCreateSource),
-        HomeFeatureCardItem("Transfer", Icons.Default.SwapHoriz, onTransferMoney)
+        HomeFeatureCardItem(
+            title = "Top up",
+            icon = Icons.Default.Payments,
+            onClick = onTopUp,
+            shareTransitionKey = "topUp"
+        ),
+        HomeFeatureCardItem(
+            title = "Create source",
+            icon = Icons.Default.Add,
+            onClick = onCreateSource,
+            shareTransitionKey = "createSource"
+        ),
+        HomeFeatureCardItem(
+            title = "Transfer money",
+            icon = Icons.Default.SwapHoriz,
+            onClick = onTransferMoney,
+            shareTransitionKey = "transferMoney"
+        )
     )
 
     Column {
@@ -64,45 +82,59 @@ fun HomeFeatures(
                     title = item.title,
                     icon = item.icon,
                     onClick = item.onClick,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    shareTransitionKey = item.shareTransitionKey,
                 )
             }
         }
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun HomeFeatureCard(
     modifier: Modifier = Modifier,
     title: String,
     icon: ImageVector,
     onClick: () -> Unit,
+    shareTransitionKey: String,
 ) {
-    Card(
-        modifier = modifier.wrapContentHeight(),
-        onClick = onClick
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+    val sharedTransitionScope =
+        LocalSharedTransitionScope.current ?: error("SharedTransitionScope not provided via CompositionLocal")
+    val animatedVisibilityScope =
+        LocalAnimatedVisibilityScope.current ?: error("AnimatedVisibilityScope not provided via CompositionLocal")
+    with (sharedTransitionScope) {
+        Card(
+            modifier = modifier.sharedBounds(
+                animatedVisibilityScope = animatedVisibilityScope,
+                sharedContentState = rememberSharedContentState(
+                    key = shareTransitionKey,
+                )
+            ).wrapContentHeight(),
+            onClick = onClick
         ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = title,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(24.dp)
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = title,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(24.dp)
+                )
 
-            Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Medium
-            )
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Medium
+                )
+            }
         }
     }
 }
@@ -125,4 +157,5 @@ private data class HomeFeatureCardItem(
     val title: String,
     val icon: ImageVector,
     val onClick: () -> Unit,
+    val shareTransitionKey: String,
 )
