@@ -64,10 +64,13 @@ private fun LockScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(16.dp),
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Banner(modifier = Modifier.padding(bottom = 24.dp))
+            Banner(
+                modifier = Modifier.padding(bottom = 24.dp),
+                imageSize = 64.dp
+            )
 
             Text(
                 text = "Enter your PIN to unlock", modifier = Modifier.fillMaxWidth()
@@ -92,11 +95,13 @@ private fun LockScreen(
                     }
                 },
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
             )
 
             Button(
-                onClick = onUnlock, enabled = pin.length == 4 && !isLoading, modifier = Modifier.fillMaxWidth()
+                onClick = onUnlock, enabled = !isLoading, modifier = Modifier.fillMaxWidth()
             ) {
                 if (isLoading) {
                     CircularProgressIndicator(
