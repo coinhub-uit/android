@@ -62,7 +62,7 @@ fun HomeFeatures(
             shareTransitionKey = "transferMoney"
         ),
         HomeFeatureCardItem(
-            title = "Transfer money QR",
+            title = "Scan",
             icon = Icons.Default.QrCodeScanner,
             onClick = onTransferMoneyQr,
             shareTransitionKey = "transferMoneyQr"
