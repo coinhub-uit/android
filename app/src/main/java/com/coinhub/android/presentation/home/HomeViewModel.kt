@@ -1,6 +1,7 @@
 package com.coinhub.android.presentation.home
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -33,6 +34,19 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             userManager.reloadUser()
             getUserSources()
+        }
+    }
+
+    fun getUserOnUserLogin() {
+        if (userManager.user.value != null) {
+            return
+        }
+        viewModelScope.launch {
+            try {
+                userManager.reloadUser()
+            } catch (e: Exception) {
+                Log.d("Error", "Error reloading user: ${e.message}")
+            }
         }
     }
 
