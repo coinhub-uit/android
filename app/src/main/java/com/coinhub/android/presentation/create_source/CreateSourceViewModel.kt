@@ -2,6 +2,8 @@ package com.coinhub.android.presentation.create_source
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.coinhub.android.data.dtos.request.CreateSourceRequestDto
+import com.coinhub.android.domain.use_cases.CreateSourceUseCase
 import com.coinhub.android.domain.use_cases.ValidateSourceIdUseCase
 import com.coinhub.android.utils.DEBOUNCE_TYPING
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,11 +15,13 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateSourceViewModel @Inject constructor(
-    private val validateSourceIdUseCase: ValidateSourceIdUseCase
+    private val validateSourceIdUseCase: ValidateSourceIdUseCase,
+    private val createSourceUseCase: CreateSourceUseCase,
 ) : ViewModel() {
     private val _sourceId = MutableStateFlow("")
     val sourceId = _sourceId.asStateFlow()
@@ -42,7 +46,21 @@ class CreateSourceViewModel @Inject constructor(
     }
 
     // TODO: @NTGNguyen use case create source here
-    fun createSource() {
-        _isLoading.value = true
+    suspend fun createSource(onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            createSourceUseCase(CreateSourceRequestDto(id = _sourceId.value)).let {
+                when (it) {
+                    is CreateSourceUseCase.Result.Error -> {
+                        _isLoading.value = false
+                    }
+
+                    is CreateSourceUseCase.Result.Success -> {
+                        onSuccess()
+                        _isLoading.value = false
+                    }
+                }
+            }
+        }
     }
 }

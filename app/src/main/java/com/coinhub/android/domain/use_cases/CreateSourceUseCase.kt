@@ -23,7 +23,6 @@ class CreateSourceUseCase @Inject constructor(
     }
 
     sealed class Result {
-        data object Loading : Result()
         data class Success(val source: SourceModel) : Result()
         data class Error(val message: String) : Result()
     }
