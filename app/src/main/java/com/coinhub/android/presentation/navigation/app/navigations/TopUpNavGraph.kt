@@ -12,7 +12,7 @@ import com.coinhub.android.BuildConfig
 import com.coinhub.android.presentation.navigation.AppNavDestinations
 import com.coinhub.android.presentation.navigation.app.LocalAnimatedVisibilityScope
 import com.coinhub.android.presentation.top_up.TopUpResultScreen
-import com.coinhub.android.presentation.top_up.TopUpScreen
+import com.coinhub.android.presentation.top_up_result.TopUpScreen
 
 @SuppressLint("UnrememberedGetBackStackEntry")
 fun NavGraphBuilder.topUpGraph(navController: NavHostController) {

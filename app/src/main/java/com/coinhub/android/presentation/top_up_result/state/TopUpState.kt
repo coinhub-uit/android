@@ -1,4 +1,4 @@
-package com.coinhub.android.presentation.top_up.state
+package com.coinhub.android.presentation.top_up_result.state
 
 import com.coinhub.android.data.models.TopUpModel
 

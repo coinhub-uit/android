@@ -1,4 +1,4 @@
-package com.coinhub.android.presentation.top_up
+package com.coinhub.android.presentation.top_up_result
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -11,7 +11,7 @@ import com.coinhub.android.data.models.TopUpProviderEnum
 import com.coinhub.android.domain.use_cases.CreateTopUpUseCase
 import com.coinhub.android.domain.use_cases.GetTopUpUseCase
 import com.coinhub.android.domain.use_cases.GetUserSourcesUseCase
-import com.coinhub.android.presentation.top_up.state.TopUpState
+import com.coinhub.android.presentation.top_up_result.state.TopUpState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
