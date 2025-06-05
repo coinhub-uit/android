@@ -23,17 +23,24 @@ fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
             CompositionLocalProvider(LocalAnimatedVisibilityScope provides this@composable) {
                 HomeScreen(
                     onCreateSource = { navController.navigate(AppNavDestinations.CreateSourceGraph) },
-                           onToSourceDetail = { source: SourceModel ->
-                               navController.navigate(
-                                   AppNavDestinations.SourceDetail(
-                                       source = source,
-                                   )
-                               )
-                           },
-                           onTopUp = { navController.navigate(AppNavDestinations.TopUpGraph) },
-                           onNotification = { navController.navigate(AppNavDestinations.Notification) },
-                           onAiChat = { navController.navigate(AppNavDestinations.AiChat) },
-                           onTransferMoney = { navController.navigate(AppNavDestinations.TransferMoneyGraph) })
+                    onToSourceDetail = { source: SourceModel ->
+                        navController.navigate(
+                            AppNavDestinations.SourceDetail(
+                                source = source,
+                            )
+                        )
+                    },
+                    onTopUp = { navController.navigate(AppNavDestinations.TopUpGraph) },
+                    onNotification = { navController.navigate(AppNavDestinations.Notification) },
+                    onAiChat = { navController.navigate(AppNavDestinations.AiChat) },
+                    onTransferMoney = { navController.navigate(AppNavDestinations.TransferMoneyGraph) },
+                    onNavigateToCreateProfile = {
+                        navController.navigate(AppNavDestinations.CreateProfile) {
+                            popUpTo(AppNavDestinations.MainGraph) {
+                                inclusive = true
+                            }
+                        }
+                    })
             }
         }
         composable<AppNavDestinations.Tickets>(

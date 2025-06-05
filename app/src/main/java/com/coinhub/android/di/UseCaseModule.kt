@@ -5,6 +5,7 @@ import com.coinhub.android.domain.repositories.PaymentRepository
 import com.coinhub.android.domain.repositories.PreferenceDataStore
 import com.coinhub.android.domain.repositories.SourceRepository
 import com.coinhub.android.domain.repositories.UserRepository
+import com.coinhub.android.domain.use_cases.CheckUserRegisterProfileUseCase
 import com.coinhub.android.domain.use_cases.CheckUserSignedInUseCase
 import com.coinhub.android.domain.use_cases.CreateSourceUseCase
 import com.coinhub.android.domain.use_cases.CreateTopUpUseCase
@@ -129,6 +130,18 @@ object UseCaseModule {
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
     ) = CreateSourceUseCase(
         sourceRepository = sourceRepository,
+        ioDispatcher = ioDispatcher
+    )
+
+    @Provides
+    @Singleton
+    fun provideCheckUserRegisterProfileUseCase(
+        userRepository: UserRepository,
+        authRepository: AuthRepository,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher,
+    ) = CheckUserRegisterProfileUseCase(
+        userRepository = userRepository,
+        authRepository = authRepository,
         ioDispatcher = ioDispatcher
     )
 }
