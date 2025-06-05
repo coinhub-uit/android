@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -28,10 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coinhub.android.data.models.TopUpModel
-import com.coinhub.android.data.models.TopUpProviderEnum
-import com.coinhub.android.data.models.TopUpStatusEnum
-import com.coinhub.android.presentation.top_up.components.TopUpResultStatus
-import com.coinhub.android.presentation.top_up_result.state.TopUpState
+import com.coinhub.android.presentation.top_up_result.components.TopUpResultStatus
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
 import java.math.BigInteger
@@ -45,24 +43,27 @@ fun TopUpResultScreen(
     onMain: () -> Unit,
     viewModel: TopUpResultViewModel = hiltViewModel(),
 ) {
-    val topUpState = viewModel.topUpState.collectAsStateWithLifecycle().value
+    val topUp = viewModel.topUp.collectAsStateWithLifecycle().value
     val isLoading = viewModel.isLoading.collectAsStateWithLifecycle().value
-    val message = viewModel.message.collectAsStateWithLifecycle().value
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        viewModel.checkTopUpStatus(topUpId)
+        viewModel.toastMessage.collect { message ->
+            if (message != null) {
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
-    if (message != null) {
-        LaunchedEffect(Unit) {
-            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+    LaunchedEffect(topUpId) {
+        if (topUpId != null) {
+            viewModel.checkTopUpStatus(topUpId)
         }
     }
 
     TopUpResultScreen(
-        topUpState = topUpState,
         isLoading = isLoading,
+        topUp = topUp,
         onRetry = {
             viewModel.checkTopUpStatus(topUpId)
         },
@@ -72,79 +73,58 @@ fun TopUpResultScreen(
 
 @Composable
 fun TopUpResultScreen(
-    topUpState: TopUpState,
     isLoading: Boolean,
+    topUp: TopUpModel?,
     onRetry: () -> Unit,
     onMain: () -> Unit,
 ) {
-    when (topUpState) {
-        is TopUpState.Error -> {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Text("Error...")
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Card(
+            modifier = Modifier.padding(64.dp)
+        ) {
+            if (isLoading) {
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             }
-        }
+            Column {
+                Text(
+                    text = "Top Up Result",
+                    style = MaterialTheme.typography.headlineMedium,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold
+                )
 
-        TopUpState.Loading -> {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Text("Loading...")
-            }
-        }
+                Spacer(modifier = Modifier.height(16.dp))
 
-        is TopUpState.Success -> {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Card(
-                    modifier = Modifier.padding(64.dp)
+                TopUpResultStatus(topUp = topUp)
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
                 ) {
-                    Column {
-                        Text(
-                            text = "Top Up Result",
-                            style = MaterialTheme.typography.headlineMedium,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.Bold
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        TopUpResultStatus(
-                            topUpStatus = topUpState.topUpModel.status
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp)
-                        ) {
-                            AnimatedVisibility(
-                                visible = topUpState.topUpModel.status != TopUpStatusEnum.success
-                            ) {
-                                Button(onClick = onRetry, modifier = Modifier.weight(1f)) {
-                                    Text("Retry")
-                                }
-                            }
-                            Button(
-                                onClick = onMain,
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                Text("Go to Home")
-                            }
+                    AnimatedVisibility(
+                        visible = topUp != null && topUp.status != TopUpModel.StatusEnum.success
+                    ) {
+                        Button(onClick = onRetry, modifier = Modifier.weight(1f)) {
+                            Text("Retry")
                         }
+                    }
+                    Button(
+                        onClick = onMain,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Go to Home")
                     }
                 }
             }
@@ -159,18 +139,16 @@ private fun PreviewScreen() {
     Surface {
         CoinhubTheme {
             TopUpResultScreen(
-                topUpState = TopUpState.Success(
-                    TopUpModel(
-                        id = Uuid.random(),
-                        provider = TopUpProviderEnum.vnpay,
-                        amount = BigInteger("1000000"),
-                        status = TopUpStatusEnum.success,
-                        createdAt = ZonedDateTime.parse("2023-01-01"),
-                    )
-                ),
                 isLoading = false,
                 onRetry = {},
-                onMain = {}
+                onMain = {},
+                topUp = TopUpModel(
+                    id = Uuid.random(),
+                    provider = TopUpModel.ProviderEnum.vnpay,
+                    amount = BigInteger("1000000"),
+                    status = TopUpModel.StatusEnum.success,
+                    createdAt = ZonedDateTime.now()
+                )
             )
         }
     }

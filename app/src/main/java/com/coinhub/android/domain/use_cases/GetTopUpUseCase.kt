@@ -17,7 +17,12 @@ class GetTopUpUseCase @Inject constructor(
     operator fun invoke(topUpId: String): Flow<Result> = flow {
         emit(Result.Loading)
         try {
-            emit(Result.Success(paymentRepository.getTopUpById(topUpId)))
+            val topUp = paymentRepository.getTopUpById(topUpId)
+            if (topUp == null) {
+                emit(Result.Error("Top-up not found"))
+                return@flow
+            }
+            emit(Result.Success(topUp))
         } catch (e: Exception) {
             emit(Result.Error(e.message ?: "Unknown error occurred"))
         }
@@ -25,7 +30,7 @@ class GetTopUpUseCase @Inject constructor(
 
     sealed class Result {
         data object Loading : Result()
-        data class Success(val topUpModel: TopUpModel) : Result()
+        data class Success(val topUp: TopUpModel) : Result()
         data class Error(val message: String) : Result()
     }
 }

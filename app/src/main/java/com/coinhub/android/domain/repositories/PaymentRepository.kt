@@ -12,5 +12,5 @@ interface PaymentRepository {
         createTopUpDto: CreateTopUpRequestDto,
     ): CreateTopUpModel
 
-    suspend fun getTopUpById(id: String): TopUpModel
+    suspend fun getTopUpById(id: String): TopUpModel?
 }

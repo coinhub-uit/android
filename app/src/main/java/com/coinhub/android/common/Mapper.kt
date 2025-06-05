@@ -19,8 +19,6 @@ import com.coinhub.android.data.models.SourceModel
 import com.coinhub.android.data.models.TicketHistoryModel
 import com.coinhub.android.data.models.TicketModel
 import com.coinhub.android.data.models.TopUpModel
-import com.coinhub.android.data.models.TopUpProviderEnum
-import com.coinhub.android.data.models.TopUpStatusEnum
 import com.coinhub.android.data.models.UserModel
 import java.math.BigInteger
 import java.time.LocalDate
@@ -83,18 +81,18 @@ fun TopUpResponseDto.toTopUpModel() = TopUpModel(
     provider = this.provider.toTopUpProviderEnum()
 )
 
-fun String.toTopUpProviderEnum(): TopUpProviderEnum = when (this.lowercase()) {
-    "vnpay" -> TopUpProviderEnum.vnpay
-    "momo" -> TopUpProviderEnum.momo
-    "zalo" -> TopUpProviderEnum.zalo
+fun String.toTopUpProviderEnum(): TopUpModel.ProviderEnum = when (this.lowercase()) {
+    "vnpay" -> TopUpModel.ProviderEnum.vnpay
+    "momo" -> TopUpModel.ProviderEnum.momo
+    "zalo" -> TopUpModel.ProviderEnum.zalo
     else -> throw IllegalArgumentException("Unknown provider: $this")
 }
 
-fun String.toTopUpStatusEnum(): TopUpStatusEnum = when (this.lowercase()) {
-    "processing" -> TopUpStatusEnum.proccesing
-    "success" -> TopUpStatusEnum.success
-    "declined" -> TopUpStatusEnum.declined
-    "overdue" -> TopUpStatusEnum.overdue
+fun String.toTopUpStatusEnum(): TopUpModel.StatusEnum = when (this.lowercase()) {
+    "processing" -> TopUpModel.StatusEnum.proccesing
+    "success" -> TopUpModel.StatusEnum.success
+    "declined" -> TopUpModel.StatusEnum.declined
+    "overdue" -> TopUpModel.StatusEnum.overdue
     else -> throw IllegalArgumentException("Unknown status: $this")
 }
 

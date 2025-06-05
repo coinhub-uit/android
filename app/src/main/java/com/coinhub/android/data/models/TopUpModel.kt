@@ -7,26 +7,26 @@ import kotlin.uuid.Uuid
 
 data class TopUpModel @OptIn(ExperimentalUuidApi::class) constructor(
     val id: Uuid,
-    val provider: TopUpProviderEnum,
+    val provider: ProviderEnum,
     val amount: BigInteger,
-    val status: TopUpStatusEnum,
+    val status: StatusEnum,
     val createdAt: ZonedDateTime,
-)
+) {
+    enum class ProviderEnum() {
+        vnpay,
+        momo,
+        zalo
+    }
+
+    enum class StatusEnum {
+        proccesing,
+        success,
+        declined,
+        overdue,
+    }
+}
 
 data class CreateTopUpModel @OptIn(ExperimentalUuidApi::class) constructor(
     val url: String,
     val topUpId: Uuid,
 )
-
-enum class TopUpProviderEnum() {
-    vnpay,
-    momo,
-    zalo
-}
-
-enum class TopUpStatusEnum {
-    proccesing,
-    success,
-    declined,
-    overdue,
-}

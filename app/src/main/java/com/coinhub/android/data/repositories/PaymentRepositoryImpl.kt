@@ -31,10 +31,11 @@ class PaymentRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getTopUpById(id: String): TopUpModel {
+    override suspend fun getTopUpById(id: String): TopUpModel? {
         try {
-            return paymentApiService.getTopUpById(id).toTopUpModel()
+            return paymentApiService.getTopUpById(id)?.toTopUpModel()
         } catch (e: Exception) {
+            // TODO: Clean?
             Log.d("dwhlakwajda", "getTopUpById: ${e.message}")
             throw e
         }

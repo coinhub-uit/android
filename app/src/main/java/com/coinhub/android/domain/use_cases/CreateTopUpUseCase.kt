@@ -16,6 +16,7 @@ class CreateTopUpUseCase @Inject constructor(
         return withContext(ioDispatcher) {
             try {
                 val topUp = paymentRepository.createTopUp(createTopUpDto)
+                    ?: return@withContext Result.Error("Top-up creation failed")
                 Result.Success(topUp)
             } catch (e: Exception) {
                 (Result.Error(e.message ?: "Unknown error occurred"))
