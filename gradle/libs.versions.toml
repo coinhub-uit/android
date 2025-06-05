@@ -25,7 +25,7 @@ biometric = "1.4.0-alpha04"
 appcompat = "1.7.0"
 material = "1.12.0"
 constraintlayout = "2.2.1"
-core = "3.5.3"
+zxingCore = "3.5.3"
 zxingAndroidEmbedded = "4.3.0"
 
 [libraries]
@@ -74,7 +74,7 @@ androidx-biometric = { group = "androidx.biometric", name = "biometric", version
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
-core = { group = "com.google.zxing", name = "core", version.ref = "core" }
+zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxingCore" }
 zxing-android-embedded = { group = "com.journeyapps", name = "zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
 
 
