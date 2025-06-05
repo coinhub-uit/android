@@ -50,7 +50,7 @@ fun TopUpResultScreen(
     val message = viewModel.message.collectAsStateWithLifecycle().value
     val context = LocalContext.current
 
-    LaunchedEffect(key1 = Unit) {
+    LaunchedEffect(Unit) {
         viewModel.checkTopUpStatus(topUpId)
     }
 
@@ -64,7 +64,7 @@ fun TopUpResultScreen(
         topUpState = topUpState,
         isLoading = isLoading,
         onRetry = {
-            //viewModel.checkTopUpStatus(sourceId = topUp.)
+            viewModel.checkTopUpStatus(topUpId)
         },
         onMain = onMain
     )

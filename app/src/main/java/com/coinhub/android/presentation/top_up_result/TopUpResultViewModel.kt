@@ -1,6 +1,5 @@
 package com.coinhub.android.presentation.top_up_result
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.domain.use_cases.GetTopUpUseCase
@@ -12,7 +11,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
-import kotlin.uuid.ExperimentalUuidApi
 
 @HiltViewModel
 class TopUpResultViewModel @Inject constructor(
@@ -27,11 +25,9 @@ class TopUpResultViewModel @Inject constructor(
     private val _message = MutableStateFlow<String?>(null)
     val message = _message.asStateFlow()
 
-    @OptIn(ExperimentalUuidApi::class)
-    suspend fun checkTopUpStatus(topUpId: String?) {
+    fun checkTopUpStatus(topUpId: String?) {
         if (topUpId.isNullOrEmpty()) {
             _topUpState.value = TopUpState.Error("Top-up ID is null or empty")
-            Log.d("dwodwjdal", "checkTopUpStatus: mullll")
             return
         }
         getTopUpUseCase(topUpId).onEach {

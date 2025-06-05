@@ -1,6 +1,6 @@
 package com.coinhub.android.presentation.top_up
 
-import android.util.Log
+import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.BuildConfig
@@ -9,26 +9,19 @@ import com.coinhub.android.data.models.CreateTopUpModel
 import com.coinhub.android.data.models.SourceModel
 import com.coinhub.android.data.models.TopUpProviderEnum
 import com.coinhub.android.domain.use_cases.CreateTopUpUseCase
-import com.coinhub.android.domain.use_cases.GetTopUpUseCase
 import com.coinhub.android.domain.use_cases.GetUserSourcesUseCase
-import com.coinhub.android.presentation.top_up_result.state.TopUpState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.uuid.ExperimentalUuidApi
 
 @HiltViewModel
 class TopUpViewModel @Inject constructor(
     private val createTopUpUseCase: CreateTopUpUseCase,
-    private val getTopUpUseCase: GetTopUpUseCase,
     private val getUserSourcesUseCase: GetUserSourcesUseCase,
 ) : ViewModel() {
     init {
@@ -49,28 +42,20 @@ class TopUpViewModel @Inject constructor(
     private val _createTopUpModel = MutableStateFlow<CreateTopUpModel?>(null)
     val createTopUpModel = _createTopUpModel.asStateFlow()
 
-    private val _isSourceBottomSheetVisible = MutableStateFlow(false)
-    val isSourceBottomSheetVisible = _isSourceBottomSheetVisible.asStateFlow()
-
     private val _topUpProvider = MutableStateFlow<TopUpProviderEnum?>(null)
     val topUpProvider = _topUpProvider.asStateFlow()
 
-    private val _amountText = MutableStateFlow("")
-    val amountText = _amountText.asStateFlow()
+    private val _amount = MutableStateFlow("")
+    val amount = _amount.asStateFlow()
 
     val isFormValid = combine(
-        _sourceId, topUpProvider, amountText
+        _sourceId, topUpProvider, amount
     ) { selectedSourceId, selectedProvider, amountText ->
         selectedSourceId != null && selectedProvider != null && amountText.isNotEmpty()
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
-    fun setShowSourceBottomSheet(show: Boolean) {
-        _isSourceBottomSheetVisible.value = show
-    }
-
     fun selectSource(sourceId: String) {
         _sourceId.value = sourceId
-        _isSourceBottomSheetVisible.value = false
     }
 
     fun selectProvider(provider: TopUpProviderEnum) {
@@ -78,21 +63,21 @@ class TopUpViewModel @Inject constructor(
     }
 
     fun updateAmount(amount: String) {
-        if (amount.isEmpty() || amount.all { it.isDigit() }) {
-            _amountText.value = amount
+        if (!amount.isDigitsOnly()) {
+            return
         }
+        _amount.value = amount
     }
 
     fun setPresetAmount(amount: String) {
-        _amountText.value = amount.replace(".", "")
+        _amount.value = amount.replace(".", "")
     }
 
-    @OptIn(ExperimentalUuidApi::class)
     fun createTopUp() {
         viewModelScope.launch {
             when (val result = createTopUpUseCase(
                 CreateTopUpRequestDto(
-                    amount = _amountText.value.toBigInteger(),
+                    amount = _amount.value.toBigInteger(),
                     provider = _topUpProvider.value.toString(),
                     sourceDestinationId = _sourceId.value!!,
                     ipAddress = "192.0.0.1", //TODO:How to get IP address in Android?
@@ -124,39 +109,4 @@ class TopUpViewModel @Inject constructor(
             }
         }
     }
-
-    //--------------------------------------------------------//
-    private val _topUpState = MutableStateFlow<TopUpState>(TopUpState.Loading)
-    val topUpState = _topUpState.asStateFlow()
-
-    private val _isLoading = MutableStateFlow(true)
-    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
-
-    private val _message = MutableStateFlow<String?>(null)
-    val message = _message.asStateFlow()
-
-    @OptIn(ExperimentalUuidApi::class)
-    suspend fun checkTopUpStatus(topUpId: String?) {
-        if (topUpId.isNullOrEmpty()) {
-            _topUpState.value = TopUpState.Error("Top-up ID is null or empty")
-            Log.d("dwodwjdal", "checkTopUpStatus: mullll")
-            return
-        }
-        getTopUpUseCase(topUpId).onEach {
-            when (it) {
-                is GetTopUpUseCase.Result.Error -> {
-                    _topUpState.value = TopUpState.Error(it.message)
-                }
-
-                GetTopUpUseCase.Result.Loading -> {
-                    _topUpState.value = TopUpState.Loading
-                }
-
-                is GetTopUpUseCase.Result.Success -> {
-                    _topUpState.value = TopUpState.Success(it.topUpModel)
-                }
-            }
-        }.launchIn(viewModelScope)
-    }
 }
-

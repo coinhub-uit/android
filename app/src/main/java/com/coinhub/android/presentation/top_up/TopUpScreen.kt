@@ -40,10 +40,9 @@ fun TopUpScreen(
     viewModel: TopUpViewModel = hiltViewModel(),
 ) {
     val sourceId = viewModel.vnpResponseCode.collectAsStateWithLifecycle().value
-    val isSourceBottomSheetVisible = viewModel.isSourceBottomSheetVisible.collectAsStateWithLifecycle().value
     val sourceModels = viewModel.sourceModels.collectAsStateWithLifecycle().value
     val topUpProvider = viewModel.topUpProvider.collectAsStateWithLifecycle().value
-    val amountText = viewModel.amountText.collectAsStateWithLifecycle().value
+    val amount = viewModel.amount.collectAsStateWithLifecycle().value
     val isFormValid = viewModel.isFormValid.collectAsStateWithLifecycle().value
     val context = LocalContext.current
 
@@ -64,12 +63,10 @@ fun TopUpScreen(
     with(sharedTransitionScope) {
         TopUpScreen(
             selectedSourceId = sourceId,
-            isSourceBottomSheetVisible = isSourceBottomSheetVisible,
             sourceModels = sourceModels,
             selectedProvider = topUpProvider,
-            amountText = amountText,
+            amountText = amount,
             isFormValid = isFormValid,
-            setShowBottomSheet = viewModel::setShowSourceBottomSheet,
             onSelectSource = viewModel::selectSource,
             onSelectProvider = viewModel::selectProvider,
             onAmountChange = viewModel::updateAmount,
@@ -92,12 +89,10 @@ fun TopUpScreen(
 private fun TopUpScreen(
     modifier: Modifier = Modifier,
     selectedSourceId: String?,
-    isSourceBottomSheetVisible: Boolean,
     sourceModels: List<SourceModel>,
     selectedProvider: TopUpProviderEnum?,
     amountText: String,
     isFormValid: Boolean,
-    setShowBottomSheet: (Boolean) -> Unit,
     onSelectSource: (String) -> Unit,
     onSelectProvider: (TopUpProviderEnum) -> Unit,
     onAmountChange: (String) -> Unit,
@@ -133,8 +128,6 @@ private fun TopUpScreen(
             TopUpSelectSource(
                 selectedSourceId = selectedSourceId,
                 sourceModels = sourceModels,
-                isBottomSheetVisible = isSourceBottomSheetVisible,
-                setShowBottomSheet = setShowBottomSheet,
                 onSelectSource = onSelectSource
             )
 
@@ -163,12 +156,10 @@ fun TopUpScreenPreview() {
         Surface {
             TopUpScreen(
                 selectedSourceId = "sourceId",
-                isSourceBottomSheetVisible = false,
                 sourceModels = listOf(),
                 selectedProvider = null,
                 amountText = "",
                 isFormValid = false,
-                setShowBottomSheet = {},
                 onSelectSource = {},
                 onSelectProvider = {},
                 onAmountChange = {},

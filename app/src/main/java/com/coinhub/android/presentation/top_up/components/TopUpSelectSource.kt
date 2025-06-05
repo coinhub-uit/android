@@ -41,10 +41,9 @@ import java.math.BigInteger
 fun TopUpSelectSource(
     selectedSourceId: String?,
     sourceModels: List<SourceModel>,
-    isBottomSheetVisible: Boolean,
-    setShowBottomSheet: (Boolean) -> Unit,
     onSelectSource: (String) -> Unit,
 ) {
+    var isBottomSheetVisible by remember { mutableStateOf(false) }
     Text(
         text = "Select Source",
         style = MaterialTheme.typography.titleMedium,
@@ -52,7 +51,7 @@ fun TopUpSelectSource(
     )
 
     OutlinedCard(
-        onClick = { setShowBottomSheet(true) },
+        onClick = { isBottomSheetVisible = true },
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
@@ -79,7 +78,7 @@ fun TopUpSelectSource(
     if (isBottomSheetVisible) {
         val bottomSheetState = rememberModalBottomSheetState()
         ModalBottomSheet(
-            onDismissRequest = { setShowBottomSheet(false) },
+            onDismissRequest = { isBottomSheetVisible = false },
             sheetState = bottomSheetState
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
@@ -96,7 +95,7 @@ fun TopUpSelectSource(
                                 .fillMaxWidth()
                                 .clickable {
                                     onSelectSource(source.id)
-                                    setShowBottomSheet(false)
+                                    isBottomSheetVisible = false
                                 }
                                 .padding(vertical = 12.dp),
                             verticalAlignment = Alignment.CenterVertically
@@ -132,7 +131,6 @@ fun TopUpSelectSource(
 private fun TopUpSelectSourcePreview() {
     CoinhubTheme {
         var selectedSourceId by remember { mutableStateOf<String?>(null) }
-        var isSheetVisible by remember { mutableStateOf(false) }
         val sources = listOf(
             SourceModel("1", BigInteger("1000000")),
             SourceModel("2", BigInteger("500000")),
@@ -142,8 +140,6 @@ private fun TopUpSelectSourcePreview() {
             TopUpSelectSource(
                 selectedSourceId = selectedSourceId,
                 sourceModels = sources,
-                isBottomSheetVisible = isSheetVisible,
-                setShowBottomSheet = { isSheetVisible = it },
                 onSelectSource = {
                     selectedSourceId = it
                 }
