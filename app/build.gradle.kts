@@ -10,29 +10,30 @@ plugins {
     alias(libs.plugins.google.ksp)
 }
 
-var localProps = Properties()
-var localPropertiesFile = rootProject.file("local.properties")
+val localProps = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {
     localProps.load(localPropertiesFile.inputStream())
 }
-val keystorePath = localProps.getProperty("KEYSTORE_FILE") ?: error("KEYSTORE_FILE not set")
-val keystoreFile = file(keystorePath)
-println("Resolved keystore path: ${keystoreFile.absolutePath}")
-if (!keystoreFile.exists()) {
-    throw GradleException("Keystore file not found at ${keystoreFile.absolutePath}")
+val keystorePath: String? = localProps.getProperty("KEYSTORE_FILE")
+val keystoreFile = keystorePath?.let { file(it) }
+val hasKeystore = keystoreFile?.exists() == true
+if (keystorePath != null && !hasKeystore) {
+    println("Warning: Keystore file not found at ${keystoreFile?.absolutePath}")
 }
-
 
 android {
     namespace = "com.coinhub.android"
     compileSdk = 35
 
-    signingConfigs {
-        create("release") {
-            storeFile = file(localProps.getProperty("KEYSTORE_FILE"))
-            storePassword = localProps.getProperty("KEYSTORE_PASSWORD")
-            keyAlias = localProps.getProperty("KEY_ALIAS")
-            keyPassword = localProps.getProperty("KEY_PASSWORD")
+    if (hasKeystore) {
+        signingConfigs {
+            create("release") {
+                storeFile = keystoreFile
+                storePassword = localProps.getProperty("KEYSTORE_PASSWORD")
+                keyAlias = localProps.getProperty("KEY_ALIAS")
+                keyPassword = localProps.getProperty("KEY_PASSWORD")
+            }
         }
     }
 
@@ -71,13 +72,20 @@ android {
     }
 
     buildTypes {
+        debug {
+            getByName("release") {
+                if (hasKeystore) { // Just use same signing config for debug
+                    signingConfig = signingConfigs.getByName("release")
+                }
+            }
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            getByName("release") {
+            if (hasKeystore) {
                 signingConfig = signingConfigs.getByName("release")
             }
         }
