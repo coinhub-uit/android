@@ -7,4 +7,6 @@ data class CreateUserRequestDto(
     val fullName: String,
     val citizenId: String,
     val birthDate: Date,
+    val address: String?,
+    val avatar: String?,
 )
