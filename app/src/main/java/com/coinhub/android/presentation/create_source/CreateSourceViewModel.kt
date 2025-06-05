@@ -34,7 +34,6 @@ class CreateSourceViewModel @Inject constructor(
     val isFormValid = isSourceIdValid.map { it.isValid }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
-    // TODO: @NTGNguyen use case create source here
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 

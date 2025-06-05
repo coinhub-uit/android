@@ -3,6 +3,7 @@ package com.coinhub.android.common
 import com.coinhub.android.data.dtos.response.AvailablePlanResponseDto
 import com.coinhub.android.data.dtos.response.CreateTopUpResponseDto
 import com.coinhub.android.data.dtos.response.DeviceResponseDto
+import com.coinhub.android.data.dtos.response.NotificationResponseDto
 import com.coinhub.android.data.dtos.response.PlanResponseDto
 import com.coinhub.android.data.dtos.response.SourceResponseDto
 import com.coinhub.android.data.dtos.response.TicketHistoryResponseDto
@@ -12,6 +13,7 @@ import com.coinhub.android.data.dtos.response.UserResponseDto
 import com.coinhub.android.data.models.AvailablePlanModel
 import com.coinhub.android.data.models.CreateTopUpModel
 import com.coinhub.android.data.models.DeviceModel
+import com.coinhub.android.data.models.NotificationModel
 import com.coinhub.android.data.models.PlanModel
 import com.coinhub.android.data.models.SourceModel
 import com.coinhub.android.data.models.TicketHistoryModel
@@ -105,4 +107,13 @@ fun CreateTopUpResponseDto.toCreateTopUpModelResponse() = CreateTopUpModel(
 fun DeviceResponseDto.toDeviceModel() = DeviceModel(
     id = this.id,
     fcmToken = this.fcmToken
+)
+
+@OptIn(ExperimentalUuidApi::class)
+fun NotificationResponseDto.toNotificationModel() = NotificationModel(
+    id = Uuid.parse(this.id),
+    createdAt = ZonedDateTime.parse(this.createdAt),
+    title = this.title,
+    body = this.body,
+    isRead = this.isRead
 )
