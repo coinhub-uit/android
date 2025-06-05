@@ -8,8 +8,8 @@ on:
     branches:
       - main
     paths:
-      - app
-      - gradle
+      - app/**
+      - gradle/**
       - build.gradle.kts
       - settings.gradle.kts
 
