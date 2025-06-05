@@ -63,4 +63,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: apk-${{ matrix.buildType }}
-          path: ${{ env.main_project_module }}/build/outputs/*/release/
+          path: ${{ env.main_project_module }}/build/outputs/*/release/*.apk
