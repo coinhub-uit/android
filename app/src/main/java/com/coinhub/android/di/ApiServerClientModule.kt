@@ -1,6 +1,8 @@
 package com.coinhub.android.di
 
 import com.coinhub.android.BuildConfig
+import com.coinhub.android.data.api_services.AiChatApiService
+import com.coinhub.android.data.api_services.NotificationApiService
 import com.coinhub.android.data.api_services.PaymentApiService
 import com.coinhub.android.data.api_services.PlanApiService
 import com.coinhub.android.data.api_services.SourceApiService
@@ -23,51 +25,49 @@ object ApiServerClientModule {
 
     @Singleton
     @Provides
-    fun provideHttpClient(supabaseService: SupabaseService) = OkHttpClient.Builder()
-        .addInterceptor { chain ->
+    fun provideHttpClient(supabaseService: SupabaseService) = OkHttpClient.Builder().addInterceptor { chain ->
             var token = supabaseService.getToken()
             if (token.isNullOrEmpty()) {
                 token = ""
             }
-            val request = chain.request().newBuilder()
-                .addHeader("Authorization", "Bearer $token") // FIXME: token here
+            val request = chain.request().newBuilder().addHeader("Authorization", "Bearer $token") // FIXME: token here
                 .build()
             chain.proceed(request)
-        }
-        .build()
+        }.build()
 
     // TODO: https://freedium.cfd/https://medium.com/@ramadan123sayed/retrofit-with-hilt-in-kotlin-f1046ae9b2be
     @Singleton
     @Provides
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit =
-        Retrofit.Builder()
-            .baseUrl(API_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(okHttpClient)
+        Retrofit.Builder().baseUrl(API_URL).addConverterFactory(GsonConverterFactory.create()).client(okHttpClient)
             .build()
 
     @Singleton
     @Provides
-    fun provideUserApiService(retrofit: Retrofit): UserApiService =
-        retrofit.create(UserApiService::class.java)
+    fun provideUserApiService(retrofit: Retrofit): UserApiService = retrofit.create(UserApiService::class.java)
 
     @Singleton
     @Provides
-    fun provideSourceApiService(retrofit: Retrofit): SourceApiService =
-        retrofit.create(SourceApiService::class.java)
+    fun provideSourceApiService(retrofit: Retrofit): SourceApiService = retrofit.create(SourceApiService::class.java)
 
     @Singleton
     @Provides
-    fun provideTicketApiService(retrofit: Retrofit): TicketApiService =
-        retrofit.create(TicketApiService::class.java)
+    fun provideTicketApiService(retrofit: Retrofit): TicketApiService = retrofit.create(TicketApiService::class.java)
 
     @Singleton
     @Provides
-    fun providePlanApiService(retrofit: Retrofit): PlanApiService =
-        retrofit.create(PlanApiService::class.java)
+    fun providePlanApiService(retrofit: Retrofit): PlanApiService = retrofit.create(PlanApiService::class.java)
 
     @Singleton
     @Provides
-    fun providePaymentApiService(retrofit: Retrofit): PaymentApiService =
-        retrofit.create(PaymentApiService::class.java)
+    fun providePaymentApiService(retrofit: Retrofit): PaymentApiService = retrofit.create(PaymentApiService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideAiChatApiService(retrofit: Retrofit): AiChatApiService = retrofit.create(AiChatApiService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideNotificationApiService(retrofit: Retrofit): NotificationApiService =
+        retrofit.create(NotificationApiService::class.java)
 }
