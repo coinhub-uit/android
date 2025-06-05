@@ -30,7 +30,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coinhub.android.data.models.TopUpModel
 import com.coinhub.android.data.models.TopUpProviderEnum
 import com.coinhub.android.data.models.TopUpStatusEnum
-import com.coinhub.android.presentation.top_up.TopUpResultViewModel
 import com.coinhub.android.presentation.top_up.components.TopUpResultStatus
 import com.coinhub.android.presentation.top_up_result.state.TopUpState
 import com.coinhub.android.ui.theme.CoinhubTheme

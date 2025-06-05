@@ -1,4 +1,4 @@
-package com.coinhub.android.presentation.top_up
+package com.coinhub.android.presentation.top_up_result
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

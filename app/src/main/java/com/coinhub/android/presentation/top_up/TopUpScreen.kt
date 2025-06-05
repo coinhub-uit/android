@@ -30,7 +30,6 @@ import com.coinhub.android.presentation.top_up.components.TopUpEnterAmount
 import com.coinhub.android.presentation.top_up.components.TopUpSelectProvider
 import com.coinhub.android.presentation.top_up.components.TopUpSelectSource
 import com.coinhub.android.presentation.top_up.components.TopUpTopBar
-import com.coinhub.android.presentation.top_up_result.TopUpViewModel
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
 
