@@ -47,6 +47,9 @@ fun HomeListSource(
     onToSourceDetail: (SourceModel) -> Unit,
     copySourceIdToClipboard: (context: Context, sourceId: String) -> Unit,
 ) {
+    if (sourceModels.isEmpty()) {
+        return // Too lazy to show empty state
+    }
 
     val pagerState = rememberPagerState { sourceModels.size }
 

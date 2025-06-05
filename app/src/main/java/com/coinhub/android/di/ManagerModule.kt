@@ -1,6 +1,8 @@
 package com.coinhub.android.di
 
+import com.coinhub.android.domain.managers.ThemeManger
 import com.coinhub.android.domain.managers.UserManager
+import com.coinhub.android.domain.repositories.PreferenceDataStore
 import com.coinhub.android.domain.repositories.UserRepository
 import dagger.Module
 import dagger.Provides
@@ -16,4 +18,8 @@ class SingletonManagerModule {
     @Singleton
     fun provideUserManager(supabaseClient: SupabaseClient, userRepository: UserRepository) =
         UserManager(supabaseClient = supabaseClient, userRepository = userRepository)
+
+    @Provides
+    @Singleton
+    fun provideThemeManager(preferenceDataStore: PreferenceDataStore) = ThemeManger(preferenceDataStore)
 }

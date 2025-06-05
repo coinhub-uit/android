@@ -16,6 +16,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coinhub.android.data.remote.SupabaseService
+import com.coinhub.android.domain.managers.ThemeManger
 import com.coinhub.android.domain.managers.UserManager
 import com.coinhub.android.presentation.navigation.app.AppNavGraph
 import com.coinhub.android.presentation.navigation.auth.AuthNavGraph
@@ -35,6 +36,9 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var userManager: UserManager
 
+    @Inject
+    lateinit var themeManager: ThemeManger
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -42,7 +46,9 @@ class MainActivity : AppCompatActivity() {
         actionBar?.hide()
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
-            CoinhubTheme {
+            val themeMode = themeManager.themeMode.collectAsStateWithLifecycle().value
+
+            CoinhubTheme(themeMode = themeMode) {
                 val isUserSignedIn = supabaseService.isUserSignedIn.collectAsStateWithLifecycle().value
                 Surface(modifier = Modifier.fillMaxSize()) {
                     when (isUserSignedIn) {
