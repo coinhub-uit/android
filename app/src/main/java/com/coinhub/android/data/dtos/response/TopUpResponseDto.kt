@@ -8,7 +8,3 @@ data class TopUpResponseDto(
     val createdAt: String,
 )
 
-data class CreateTopUpResponseDto(
-    val url: String,
-    val topUpId: String,
-)
