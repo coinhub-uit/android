@@ -15,7 +15,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coinhub.android.data.models.NotificationModel
 import com.coinhub.android.presentation.notification.components.NotificationItem
 import com.coinhub.android.presentation.notification.components.NotificationTopBar
-import java.time.LocalDateTime
+import java.time.ZonedDateTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -70,14 +70,14 @@ private fun Preview() {
                 id = Uuid.parse("123e4567-e89b-12d3-a456-426614174000"),
                 title = "Test Notification",
                 body = "This is a test notification message.",
-                createdAt = LocalDateTime.now(),
+                createdAt = ZonedDateTime.now(),
                 isRead = false
             ),
             NotificationModel(
                 id = Uuid.parse("123e4567-e89b-12d3-a456-426614174001"),
                 title = "Another Notification",
                 body = "This is another test notification message.",
-                createdAt = LocalDateTime.now(),
+                createdAt = ZonedDateTime.now(),
                 isRead = true
             )
         )

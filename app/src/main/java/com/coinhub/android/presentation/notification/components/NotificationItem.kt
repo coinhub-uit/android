@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.coinhub.android.data.models.NotificationModel
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.toDateString
-import java.time.LocalDateTime
+import java.time.ZonedDateTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -83,7 +83,7 @@ private fun Preview() {
                     id = Uuid.NIL,
                     title = "Sample Notification",
                     body = "This is a sample notification body to demonstrate the layout.",
-                    createdAt = LocalDateTime.now(),
+                    createdAt = ZonedDateTime.now(),
                     isRead = false
                 )
             )

@@ -7,7 +7,7 @@ import com.coinhub.android.BuildConfig
 import com.coinhub.android.data.dtos.request.CreateTopUpRequestDto
 import com.coinhub.android.data.models.CreateTopUpModel
 import com.coinhub.android.data.models.SourceModel
-import com.coinhub.android.data.models.TopUpProviderEnum
+import com.coinhub.android.data.models.TopUpModel
 import com.coinhub.android.domain.use_cases.CreateTopUpUseCase
 import com.coinhub.android.domain.use_cases.GetUserSourcesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -42,7 +42,7 @@ class TopUpViewModel @Inject constructor(
     private val _createTopUpModel = MutableStateFlow<CreateTopUpModel?>(null)
     val createTopUpModel = _createTopUpModel.asStateFlow()
 
-    private val _topUpProvider = MutableStateFlow<TopUpProviderEnum?>(null)
+    private val _topUpProvider = MutableStateFlow<TopUpModel.ProviderEnum?>(null)
     val topUpProvider = _topUpProvider.asStateFlow()
 
     private val _amount = MutableStateFlow("")
@@ -58,7 +58,7 @@ class TopUpViewModel @Inject constructor(
         _sourceId.value = sourceId
     }
 
-    fun selectProvider(provider: TopUpProviderEnum) {
+    fun selectProvider(provider: TopUpModel.ProviderEnum) {
         _topUpProvider.value = provider
     }
 

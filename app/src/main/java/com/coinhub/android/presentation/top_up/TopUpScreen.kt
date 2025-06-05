@@ -23,7 +23,7 @@ import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coinhub.android.data.models.SourceModel
-import com.coinhub.android.data.models.TopUpProviderEnum
+import com.coinhub.android.data.models.TopUpModel
 import com.coinhub.android.presentation.navigation.app.LocalAnimatedVisibilityScope
 import com.coinhub.android.presentation.navigation.app.LocalSharedTransitionScope
 import com.coinhub.android.presentation.top_up.components.TopUpEnterAmount
@@ -90,11 +90,11 @@ private fun TopUpScreen(
     modifier: Modifier = Modifier,
     selectedSourceId: String?,
     sourceModels: List<SourceModel>,
-    selectedProvider: TopUpProviderEnum?,
+    selectedProvider: TopUpModel.ProviderEnum?,
     amountText: String,
     isFormValid: Boolean,
     onSelectSource: (String) -> Unit,
-    onSelectProvider: (TopUpProviderEnum) -> Unit,
+    onSelectProvider: (TopUpModel.ProviderEnum) -> Unit,
     onAmountChange: (String) -> Unit,
     onPresetAmountClick: (String) -> Unit,
     onTopUpResult: () -> Unit,

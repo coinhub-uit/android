@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
 import androidx.core.net.toUri
+import kotlin.uuid.ExperimentalUuidApi
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
@@ -36,7 +37,8 @@ class ProfileViewModel @Inject constructor(
         private set
 
     private val _avatarUri = MutableStateFlow(
-        "https://via.placeholder.com/150".toUri())
+        "https://via.placeholder.com/150".toUri()
+    )
     val avatarUri = _avatarUri.asStateFlow()
 
     private val _fullName = MutableStateFlow("")
@@ -117,6 +119,7 @@ class ProfileViewModel @Inject constructor(
         _address.value = address
     }
 
+    @OptIn(ExperimentalUuidApi::class)
     fun onCreateProfile(onSuccess: () -> Unit, onError: () -> Unit) {
         if (!isFormValid.value) { // Actually in the UI will block this, so it's quite odd to check here
             return

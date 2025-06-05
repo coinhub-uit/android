@@ -46,7 +46,7 @@ class CreateSourceViewModel @Inject constructor(
     }
 
     // TODO: @NTGNguyen use case create source here
-    suspend fun createSource(onSuccess: () -> Unit) {
+    fun createSource(onSuccess: () -> Unit) {
         viewModelScope.launch {
             _isLoading.value = true
             createSourceUseCase(CreateSourceRequestDto(id = _sourceId.value)).let {

@@ -4,6 +4,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 const val dateTimePattern = "dd/MM/yyyy h:mm a"
@@ -31,6 +32,10 @@ fun LocalDate.toMillis(): Long {
 }
 
 fun LocalDateTime.toDateString(): String {
+    return this.format(dateTimeFormatter)
+}
+
+fun ZonedDateTime.toDateString(): String {
     return this.format(dateTimeFormatter)
 }
 

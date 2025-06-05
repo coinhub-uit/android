@@ -17,13 +17,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import com.coinhub.android.data.models.TopUpProviderEnum
+import com.coinhub.android.data.models.TopUpModel
 import com.coinhub.android.ui.theme.CoinhubTheme
 
 @Composable
 fun TopUpSelectProvider(
-    selectedProvider: TopUpProviderEnum?,
-    onSelectProvider: (TopUpProviderEnum) -> Unit,
+    selectedProvider: TopUpModel.ProviderEnum?,
+    onSelectProvider: (TopUpModel.ProviderEnum) -> Unit,
 ) {
     Column {
         Text(
@@ -35,7 +35,7 @@ fun TopUpSelectProvider(
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(TopUpProviderEnum.entries.toTypedArray()) { provider ->
+            items(TopUpModel.ProviderEnum.entries.toTypedArray()) { provider ->
                 FilterChip(
                     selected = selectedProvider == provider,
                     onClick = { onSelectProvider(provider) },
@@ -50,7 +50,7 @@ fun TopUpSelectProvider(
 @Composable
 private fun TopUpSelectProviderPreview() {
     CoinhubTheme {
-        var selectedProvider by remember { mutableStateOf<TopUpProviderEnum?>(null) }
+        var selectedProvider by remember { mutableStateOf<TopUpModel.ProviderEnum?>(null) }
         Surface {
             TopUpSelectProvider(
                 selectedProvider = selectedProvider,

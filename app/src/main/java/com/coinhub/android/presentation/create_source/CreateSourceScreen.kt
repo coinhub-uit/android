@@ -57,7 +57,7 @@ fun CreateSourceScreen(
             isFormValid = isFormValid,
             isLoading = isLoading,
             onBack = onBack,
-            onCreate = viewModel::createSource,
+            onCreate = { viewModel.createSource(onBack) },
             modifier = Modifier.sharedBounds(
                 animatedVisibilityScope = animatedVisibilityScope,
                 sharedContentState = rememberSharedContentState(
