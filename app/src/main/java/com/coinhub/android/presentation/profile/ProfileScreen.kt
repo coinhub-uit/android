@@ -40,7 +40,7 @@ import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coinhub.android.presentation.common.components.DatePickerModal
-import com.coinhub.android.presentation.navigation.app.components.AvatarPicker
+import com.coinhub.android.presentation.menu.components.AvatarPicker
 import com.coinhub.android.presentation.profile.components.ProfileTopBar
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
@@ -265,7 +265,7 @@ fun CreateProfileScreenPreview() {
             onAddressChange = {},
             isFormValid = true,
             message = "Wow",
-            onCreateProfile = { _,  -> },
+            onCreateProfile = { _ -> },
             onProfileCreated = {},
             avatarUri = "https://placehold.co/150".toUri(),
             onAvatarUriChange = {}

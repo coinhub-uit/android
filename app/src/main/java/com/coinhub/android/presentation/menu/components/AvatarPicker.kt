@@ -1,4 +1,4 @@
-package com.coinhub.android.presentation.navigation.app.components
+package com.coinhub.android.presentation.menu.components
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
