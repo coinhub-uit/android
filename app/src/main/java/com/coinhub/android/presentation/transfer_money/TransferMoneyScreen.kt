@@ -35,6 +35,7 @@ import com.coinhub.android.presentation.transfer_money.components.TransferMoneyT
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
 import java.math.BigInteger
+import java.time.ZonedDateTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -98,18 +99,18 @@ private fun TransferMoneyScreen(
 ) {
     Scaffold(
         topBar = {
-        TransferMoneyTopBar(onBack = onBack)
-    }, floatingActionButton = {
-        AnimatedVisibility(
-            visible = isFormValid && !isLoading,
-        ) {
-            FloatingActionButton(onClick = onTransfer) {
-                Icon(
-                    imageVector = Icons.Filled.Check, contentDescription = "Transfer Money"
-                )
+            TransferMoneyTopBar(onBack = onBack)
+        }, floatingActionButton = {
+            AnimatedVisibility(
+                visible = isFormValid && !isLoading,
+            ) {
+                FloatingActionButton(onClick = onTransfer) {
+                    Icon(
+                        imageVector = Icons.Filled.Check, contentDescription = "Transfer Money"
+                    )
+                }
             }
-        }
-    }, modifier = modifier
+        }, modifier = modifier
     ) { innerPadding ->
         Box(
             modifier = Modifier.padding(innerPadding)
@@ -156,30 +157,30 @@ fun TransferMoneyScreenPreview() {
         Surface {
             TransferMoneyScreen(
                 selectedSourceId = "1",
-                                sources = listOf(
-                                    SourceModel("1", BigInteger("5000000")),
-                                    SourceModel("2", BigInteger("3000000")),
-                                    SourceModel("3", BigInteger("7500000"))
-                                ),
-                                receiptSourceId = "123",
-                                receiptUser = UserModel(
-                                    id = Uuid.random(),
-                                    fullName = "Nguyen Van A",
-                                    citizenId = "123456789",
-                                    birthDate = java.time.LocalDate.now(),
-                                    avatar = "https://example.com/avatar.png",
-                                    address = "123 Street, City",
-                                    createdAt = java.time.LocalDate.now(),
-                                    deletedAt = null
-                                ),
-                                amount = "1000000",
-                                isFormValid = true,
-                                isLoading = false,
-                                onSelectSource = {},
-                                onReceiptSourceIdChange = {},
-                                onAmountChange = {},
-                                onTransfer = {},
-                                onBack = {})
+                sources = listOf(
+                    SourceModel("1", BigInteger("5000000")),
+                    SourceModel("2", BigInteger("3000000")),
+                    SourceModel("3", BigInteger("7500000"))
+                ),
+                receiptSourceId = "123",
+                receiptUser = UserModel(
+                    id = Uuid.random(),
+                    fullName = "Nguyen Van A",
+                    citizenId = "123456789",
+                    birthDate = java.time.LocalDate.now(),
+                    avatar = "https://example.com/avatar.png",
+                    address = "123 Street, City",
+                    createdAt = ZonedDateTime.now(),
+                    deletedAt = null
+                ),
+                amount = "1000000",
+                isFormValid = true,
+                isLoading = false,
+                onSelectSource = {},
+                onReceiptSourceIdChange = {},
+                onAmountChange = {},
+                onTransfer = {},
+                onBack = {})
         }
     }
 }

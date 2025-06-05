@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.math.BigInteger
 import java.time.LocalDate
+import java.time.ZonedDateTime
 import javax.inject.Inject
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -55,7 +56,7 @@ class TransferMoneyViewModel @Inject constructor() : ViewModel() {
             birthDate = LocalDate.now(),
             avatar = "https://example.com/avatar.png",
             address = "123 Street, City",
-            createdAt = LocalDate.now(),
+            createdAt = ZonedDateTime.now(),
             deletedAt = null
         )
     }.stateIn(

@@ -1,6 +1,7 @@
 package com.coinhub.android.data.models
 
 import java.time.LocalDate
+import java.time.ZonedDateTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -11,6 +12,6 @@ data class UserModel @OptIn(ExperimentalUuidApi::class) constructor(
     val birthDate: LocalDate,
     val avatar: String?,
     val address: String?,
-    val createdAt: LocalDate,
-    val deletedAt: LocalDate?,
+    val createdAt: ZonedDateTime,
+    val deletedAt: ZonedDateTime?,
 )

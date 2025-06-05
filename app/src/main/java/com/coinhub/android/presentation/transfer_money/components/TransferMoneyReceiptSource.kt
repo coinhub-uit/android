@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.coinhub.android.data.models.UserModel
 import com.coinhub.android.ui.theme.CoinhubTheme
 import java.time.LocalDate
+import java.time.ZonedDateTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -63,7 +64,7 @@ private fun Preview() {
                     birthDate = LocalDate.now(),
                     avatar = "https://example.com/avatar.png",
                     address = "123 Street, City",
-                    createdAt = LocalDate.now(),
+                    createdAt = ZonedDateTime.now(),
                     deletedAt = null
                 )
             )

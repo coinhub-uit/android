@@ -65,10 +65,10 @@ fun UserResponseDto.toUserModel() = UserModel(
     id = Uuid.parse(this.id),
     fullName = this.fullName,
     citizenId = this.citizenId,
-    birthDate = LocalDate.parse(birthDate),
+    birthDate = ZonedDateTime.parse(birthDate).toLocalDate(),
     address = address,
-    createdAt = LocalDate.parse(createdAt),
-    deletedAt = this.deletedAt?.let { LocalDate.parse(it) },
+    createdAt = ZonedDateTime.parse(createdAt),
+    deletedAt = this.deletedAt?.let { ZonedDateTime.parse(it) },
     avatar = this.avatar
 )
 

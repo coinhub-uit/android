@@ -22,7 +22,12 @@ import com.coinhub.android.presentation.home.components.HomeListSource
 import com.coinhub.android.presentation.home.components.HomeTopBar
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
+import java.time.LocalDate
+import java.time.ZonedDateTime
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 @Composable
 fun HomeScreen(
     onToSourceDetail: (SourceModel) -> Unit,
@@ -34,9 +39,9 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     onNavigateToCreateProfile: () -> Unit,
 ) {
-    // TODO: Replace with real state from viewModel when available
+
     LaunchedEffect(Unit) {
-        viewModel.checkUserRegisterProfile(onNavigateToRegisterProfile = onNavigateToCreateProfile, onError = {})
+        viewModel.checkUserRegisterProfile(onNavigateToRegisterProfile = onNavigateToCreateProfile, onError = {}, onLoginSuccess = {})
     }
 
     val sourceModels = viewModel.sourceModels.collectAsStateWithLifecycle().value
@@ -44,7 +49,16 @@ fun HomeScreen(
     val copySourceIdToClipboard = viewModel::copySourceIdToClipboard
 
     HomeScreen(
-        userModel = userModel,
+        userModel = userModel ?: UserModel(
+            id = Uuid.parse("00000000-0000-0000-0000-000000000000"),
+            fullName = "No One",
+            citizenId = "0000000000000",
+            birthDate = LocalDate.now(),
+            createdAt = ZonedDateTime.now(),
+            deletedAt = null,
+            avatar = null,
+            address = null,
+        ),
         sourceModels = sourceModels,
         onToSourceDetail = onToSourceDetail,
         onTopUp = onTopUp,

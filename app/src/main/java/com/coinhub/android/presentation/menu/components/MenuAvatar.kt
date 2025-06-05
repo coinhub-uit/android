@@ -24,6 +24,7 @@ import coil.compose.SubcomposeAsyncImage
 import com.coinhub.android.data.models.UserModel
 import com.coinhub.android.ui.theme.CoinhubTheme
 import java.time.LocalDate
+import java.time.ZonedDateTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -32,10 +33,10 @@ fun MenuAvatar(
     userModel: UserModel,
 ) {
     val avatarSize = 128.dp
-    Column (
+    Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
-    ){
+    ) {
         if (userModel.avatar != null) {
             AvatarImage(
                 avatarUrl = userModel.avatar,
@@ -64,7 +65,7 @@ fun MenuAvatar(
 private fun AvatarImage(
     avatarUrl: String,
     fullName: String,
-    avatarSize: Dp
+    avatarSize: Dp,
 ) {
     SubcomposeAsyncImage(
         model = avatarUrl,
@@ -76,7 +77,8 @@ private fun AvatarImage(
                 color = MaterialTheme.colorScheme.primary
             )
         },
-        modifier = Modifier.size(avatarSize)
+        modifier = Modifier
+            .size(avatarSize)
             .clip(CircleShape)
     )
 }
@@ -84,12 +86,13 @@ private fun AvatarImage(
 @Composable
 private fun InitialAvatar(
     fullName: String,
-    avatarSize: Dp
+    avatarSize: Dp,
 ) {
     val initial = fullName.first().toString()
 
     Box(
-        modifier = Modifier.size(avatarSize)
+        modifier = Modifier
+            .size(avatarSize)
             .clip(CircleShape)
             .background(MaterialTheme.colorScheme.secondary),
         contentAlignment = Alignment.Center
@@ -113,7 +116,7 @@ fun MenuAvatarPreview() {
                 id = Uuid.random(),
                 birthDate = LocalDate.parse("2000-01-01"),
                 citizenId = "1234567890123",
-                createdAt = LocalDate.parse("2023-01-01"),
+                createdAt = ZonedDateTime.parse("2023-01-01"),
                 deletedAt = null,
                 avatar = "https://avatars.githubusercontent.com/u/86353526?v=4",
                 fullName = "NTGNguyen",
@@ -133,7 +136,7 @@ fun MenuAvatarNoImagePreview() {
                 id = Uuid.random(),
                 birthDate = LocalDate.parse("2000-01-01"),
                 citizenId = "1234567890123",
-                createdAt = LocalDate.parse("2023-01-01"),
+                createdAt = ZonedDateTime.parse("2023-01-01"),
                 deletedAt = null,
                 avatar = null,
                 fullName = "NTGNguyen",
