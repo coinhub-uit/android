@@ -2,6 +2,7 @@ package com.coinhub.android.presentation.top_up_result.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -23,6 +24,9 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.coinhub.android.data.models.TopUpModel
 import com.coinhub.android.ui.theme.CoinhubTheme
+import com.coinhub.android.utils.toDateString
+import com.coinhub.android.utils.toVndFormat
+import java.time.ZonedDateTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -47,6 +51,7 @@ fun TopUpResultStatus(topUp: TopUpModel?) {
             description = "Your top-up is being processed. Please wait for confirmation.",
             color = MaterialTheme.colorScheme.inverseSurface,
         )
+
         TopUpModel.StatusEnum.success -> TopUpResultStatusContent(
             topUpStatus = topUp.status,
             icon = Icons.Filled.CheckCircle,
@@ -54,6 +59,7 @@ fun TopUpResultStatus(topUp: TopUpModel?) {
             description = "Your top-up was successful.",
             color = MaterialTheme.colorScheme.inversePrimary,
         )
+
         TopUpModel.StatusEnum.declined -> TopUpResultStatusContent(
             topUpStatus = topUp.status,
             icon = Icons.Filled.Error,
@@ -61,6 +67,7 @@ fun TopUpResultStatus(topUp: TopUpModel?) {
             description = "Your top-up was declined. Please check your payment details or contact support.",
             color = MaterialTheme.colorScheme.error,
         )
+
         TopUpModel.StatusEnum.overdue -> TopUpResultStatusContent(
             topUpStatus = topUp.status,
             icon = Icons.Filled.TimerOff,
@@ -92,22 +99,47 @@ fun TopUpResultStatus(topUp: TopUpModel?) {
         Text(
             text = statusContent.description,
         )
-        // Show additional information from TopUpModel
-        Text(
-            text = "Provider: ${topUp.provider.name}",
-            modifier = Modifier.padding(top = 8.dp)
-        )
-        Text(
-            text = "Amount: ${topUp.amount}",
+        Row(
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .fillMaxWidth(),
+        ) {
+            Text(
+                text = "Provider:",
+                modifier = Modifier.weight(1f),
+            )
+            Text(
+                text = topUp.provider.displayName,
+            )
+        }
+        Row(
             modifier = Modifier.padding(top = 4.dp)
-        )
-        Text(
-            text = "Created at: ${topUp.createdAt}",
+        ) {
+            Text(
+                text = "Amount:",
+                modifier = Modifier.weight(1f),
+            )
+            Text(
+                text = topUp.amount.toVndFormat(),
+            )
+        }
+        Row(
             modifier = Modifier.padding(top = 4.dp)
-        )
+        ) {
+            Text(
+                text = "Created at:",
+                modifier = Modifier.weight(1f),
+            )
+            Text(
+                text = topUp.createdAt.toDateString(),
+            )
+        }
         Text(
             text = "ID: ${topUp.id}",
-            modifier = Modifier.padding(top = 4.dp)
+            modifier = Modifier.padding(top = 8.dp),
+            style = MaterialTheme.typography.bodySmall.copy(
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         )
     }
 }
@@ -124,7 +156,7 @@ fun TopUpResultStatusSuccessPreview() {
                     provider = TopUpModel.ProviderEnum.vnpay,
                     amount = java.math.BigInteger("1000000"),
                     status = TopUpModel.StatusEnum.success,
-                    createdAt = java.time.ZonedDateTime.now()
+                    createdAt = ZonedDateTime.now()
                 )
             )
         }

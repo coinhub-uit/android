@@ -40,7 +40,7 @@ import java.math.BigInteger
 @Composable
 fun TopUpSelectSource(
     selectedSourceId: String?,
-    sourceModels: List<SourceModel>,
+    sources: List<SourceModel>,
     onSelectSource: (String) -> Unit,
 ) {
     var isBottomSheetVisible by remember { mutableStateOf(false) }
@@ -63,7 +63,7 @@ fun TopUpSelectSource(
         ) {
             Text(
                 text = selectedSourceId?.let { id ->
-                    sourceModels.find { it.id == id }?.let {
+                    sources.find { it.id == id }?.let {
                         "${it.id} (Balance: ${it.balance} VNĐ)"
                     }
                 } ?: "Select Source"
@@ -89,7 +89,7 @@ fun TopUpSelectSource(
                 )
 
                 LazyColumn {
-                    items(sourceModels) { source ->
+                    items(sources) { source ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -114,7 +114,7 @@ fun TopUpSelectSource(
                             }
                         }
 
-                        if (source != sourceModels.last()) {
+                        if (source != sources.last()) {
                             HorizontalDivider()
                         }
                     }
@@ -130,7 +130,7 @@ fun TopUpSelectSource(
 @Composable
 private fun TopUpSelectSourcePreview() {
     CoinhubTheme {
-        var selectedSourceId by remember { mutableStateOf<String?>(null) }
+        var selectedSourceId by remember { mutableStateOf<String?>("1") }
         val sources = listOf(
             SourceModel("1", BigInteger("1000000")),
             SourceModel("2", BigInteger("500000")),
@@ -139,7 +139,7 @@ private fun TopUpSelectSourcePreview() {
         Surface {
             TopUpSelectSource(
                 selectedSourceId = selectedSourceId,
-                sourceModels = sources,
+                sources = sources,
                 onSelectSource = {
                     selectedSourceId = it
                 }

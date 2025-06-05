@@ -12,10 +12,10 @@ data class TopUpModel @OptIn(ExperimentalUuidApi::class) constructor(
     val status: StatusEnum,
     val createdAt: ZonedDateTime,
 ) {
-    enum class ProviderEnum() {
-        vnpay,
-        momo,
-        zalo
+    enum class ProviderEnum(val displayName: String) {
+        vnpay("VNPay"),
+        momo("Momo"),
+        zalo("ZaloPay"),
     }
 
     enum class StatusEnum {

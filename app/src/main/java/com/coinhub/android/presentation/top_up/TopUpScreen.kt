@@ -32,6 +32,7 @@ import com.coinhub.android.presentation.top_up.components.TopUpSelectSource
 import com.coinhub.android.presentation.top_up.components.TopUpTopBar
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
+import java.math.BigInteger
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -63,7 +64,7 @@ fun TopUpScreen(
     with(sharedTransitionScope) {
         TopUpScreen(
             selectedSourceId = sourceId,
-            sourceModels = sourceModels,
+            sources = sourceModels,
             selectedProvider = topUpProvider,
             amountText = amount,
             isFormValid = isFormValid,
@@ -89,7 +90,7 @@ fun TopUpScreen(
 private fun TopUpScreen(
     modifier: Modifier = Modifier,
     selectedSourceId: String?,
-    sourceModels: List<SourceModel>,
+    sources: List<SourceModel>,
     selectedProvider: TopUpModel.ProviderEnum?,
     amountText: String,
     isFormValid: Boolean,
@@ -127,7 +128,7 @@ private fun TopUpScreen(
         ) {
             TopUpSelectSource(
                 selectedSourceId = selectedSourceId,
-                sourceModels = sourceModels,
+                sources = sources,
                 onSelectSource = onSelectSource
             )
 
@@ -154,9 +155,14 @@ private fun TopUpScreen(
 fun TopUpScreenPreview() {
     CoinhubTheme {
         Surface {
+            val sources = listOf(
+            SourceModel("1", BigInteger("1000000")),
+            SourceModel("2", BigInteger("500000")),
+            SourceModel("3", BigInteger("750000"))
+        )
             TopUpScreen(
-                selectedSourceId = "sourceId",
-                sourceModels = listOf(),
+                selectedSourceId = "1",
+                sources = sources,
                 selectedProvider = null,
                 amountText = "",
                 isFormValid = false,
