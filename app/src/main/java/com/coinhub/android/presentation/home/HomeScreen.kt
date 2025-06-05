@@ -38,11 +38,10 @@ fun HomeScreen(
     onNotification: () -> Unit,
     onAiChat: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
-    onNavigateToCreateProfile: () -> Unit,
 ) {
 
     LaunchedEffect(Unit) {
-        viewModel.checkUserRegisterProfile(onNavigateToRegisterProfile = onNavigateToCreateProfile, onError = {}, onLoginSuccess = {})
+        viewModel.getUserSources()
     }
 
     val sourceModels = viewModel.sourceModels.collectAsStateWithLifecycle().value
@@ -127,6 +126,6 @@ fun HomeScreenPreview() {
             onAiChat = {},
             onTransferMoney = {},
             onTransferMoneyQr = {},
-            onNavigateToCreateProfile = {})
+        )
     }
 }

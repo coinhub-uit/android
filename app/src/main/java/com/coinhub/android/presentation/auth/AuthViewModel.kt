@@ -3,6 +3,7 @@ package com.coinhub.android.presentation.auth
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.data.remote.SupabaseService
+import com.coinhub.android.domain.managers.UserManager
 import com.coinhub.android.domain.use_cases.SignInWithCredentialUseCase
 import com.coinhub.android.domain.use_cases.SignInWithGoogleUseCase
 import com.coinhub.android.domain.use_cases.SignUpWithCredentialUseCase
@@ -34,6 +35,7 @@ class AuthViewModel @Inject constructor(
     private val signUpWithCredentialUseCase: SignUpWithCredentialUseCase,
     private val signInWithGoogleUseCase: SignInWithGoogleUseCase,
     private val supabaseService: SupabaseService,
+    private val userManager: UserManager,
 ) : ViewModel() {
     private val _isSignUp = MutableStateFlow(false)
     val isSignUp: StateFlow<Boolean> = _isSignUp.asStateFlow()
@@ -105,7 +107,7 @@ class AuthViewModel @Inject constructor(
         _snackbarMessage.value = null
     }
 
-    fun signInWithCredential() {
+    fun signInWithCredential(onProfileAvailable: () -> Unit) {
         viewModelScope.launch {
             when (val result = signInWithCredentialUseCase(email = _email.value, password = _password.value)) {
                 is SignInWithCredentialUseCase.Result.Error -> {
@@ -113,7 +115,11 @@ class AuthViewModel @Inject constructor(
                 }
 
                 is SignInWithCredentialUseCase.Result.Success -> {
-                    supabaseService.setIsUserSignedIn(true)
+                    when (userManager.checkUserRegistered()) {
+
+                        true -> supabaseService.setIsUserSignedIn(true)
+                        false -> onProfileAvailable()
+                    }
                 }
             }
         }

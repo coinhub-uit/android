@@ -29,30 +29,14 @@ class HomeViewModel @Inject constructor(
         Toast.makeText(context, "Source ID copied", Toast.LENGTH_SHORT).show()
     }
 
-    fun checkUserRegisterProfile(
-        onNavigateToRegisterProfile: () -> Unit,
-        onError: () -> Unit,
-        onLoginSuccess: () -> Unit,
-    ) {
+    fun refresh() {
         viewModelScope.launch {
-            try {
-                when (userManager.checkUserRegistered()) {
-                    true -> {
-                        onLoginSuccess()
-                        getUserSources()
-                    }
-
-                    false -> {
-                        onNavigateToRegisterProfile()
-                    }
-                }
-            } catch (e: Exception) {
-                onError()
-            }
+            userManager.reloadUser()
+            getUserSources()
         }
     }
 
-    private fun getUserSources() {
+    fun getUserSources() {
         viewModelScope.launch {
             when (val result = getUserSourcesUseCase()) {
                 is GetUserSourcesUseCase.Result.Success -> {

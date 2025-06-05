@@ -75,6 +75,7 @@ fun AuthScreen(
         onSignedUpWithCredential = onSignedUpWithCredential,
         snackbarMessage = snackbarMessage,
         clearSnackBarMessage = viewModel::clearSnackbarMessage,
+        onProfileAvailable = onSignedUpWithOAuth,
         googleSignInState = googleSignInState
     )
 }
@@ -94,8 +95,9 @@ private fun AuthScreen(
     confirmPasswordCheckState: AuthStates.ConfirmPasswordCheckState,
     isFormValid: Boolean,
     signUpWithCredential: (() -> Unit) -> Unit,
-    signInWithCredential: () -> Unit,
+    signInWithCredential: (() -> Unit) -> Unit,
     onSignedUpWithCredential: () -> Unit,
+    onProfileAvailable: () -> Unit,
     snackbarMessage: String?,
     clearSnackBarMessage: () -> Unit,
     googleSignInState: NativeSignInState?,
@@ -143,7 +145,7 @@ private fun AuthScreen(
                 AuthSignInOrUpButton(
                     modifier = Modifier.fillMaxWidth(), isSignUp = isSignUp, onSignUp = {
                         signUpWithCredential(onSignedUpWithCredential)
-                    }, onSignIn = signInWithCredential, isFormValid = isFormValid
+                    }, onSignIn = { signInWithCredential(onProfileAvailable) }, isFormValid = isFormValid
                 )
                 AuthSignInOrUpPrompt(
                     modifier = Modifier.fillMaxWidth(),
@@ -174,24 +176,25 @@ fun SignInScreenPreview() {
     CoinhubTheme {
         AuthScreen(
             isSignUp = true,
-                   setIsSignUp = {},
-                   email = "kevinnitro@duck.com",
-                   onEmailChange = {},
-                   emailCheckState = AuthStates.EmailCheckState(isValid = false, errorMessage = "Bad"),
-                   password = "LookMe!",
-                   onPasswordChange = {},
-                   passwordCheckState = AuthStates.PasswordCheckState(isValid = false, errorMessage = "Bad"),
-                   confirmPassword = "GlanceMe?",
-                   onConfirmPasswordChange = {},
-                   confirmPasswordCheckState = AuthStates.ConfirmPasswordCheckState(
-                       isValid = false, errorMessage = "bad"
-                   ),
-                   isFormValid = true,
-                   onSignedUpWithCredential = {},
-                   signInWithCredential = { },
-                   signUpWithCredential = { },
-                   googleSignInState = null,
-                   snackbarMessage = null,
-                   clearSnackBarMessage = {})
+            setIsSignUp = {},
+            email = "kevinnitro@duck.com",
+            onEmailChange = {},
+            emailCheckState = AuthStates.EmailCheckState(isValid = false, errorMessage = "Bad"),
+            password = "LookMe!",
+            onPasswordChange = {},
+            passwordCheckState = AuthStates.PasswordCheckState(isValid = false, errorMessage = "Bad"),
+            confirmPassword = "GlanceMe?",
+            onConfirmPasswordChange = {},
+            confirmPasswordCheckState = AuthStates.ConfirmPasswordCheckState(
+                isValid = false, errorMessage = "bad"
+            ),
+            isFormValid = true,
+            onSignedUpWithCredential = {},
+            signInWithCredential = { },
+            signUpWithCredential = { },
+            googleSignInState = null,
+            snackbarMessage = null,
+            clearSnackBarMessage = {},
+            onProfileAvailable = {})
     }
 }

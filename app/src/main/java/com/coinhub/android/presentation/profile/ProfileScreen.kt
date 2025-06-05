@@ -112,7 +112,7 @@ private fun ProfileScreen(
     onAddressChange: (String) -> Unit,
     isFormValid: Boolean,
     message: String,
-    onCreateProfile: (onSuccess: () -> Unit, onError: () -> Unit) -> Unit,
+    onCreateProfile: (onError: () -> Unit) -> Unit,
     onProfileCreated: () -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -136,7 +136,6 @@ private fun ProfileScreen(
                 ExtendedFloatingActionButton(
                     onClick = {
                         onCreateProfile(
-                            onProfileCreated
                         ) { showSnackbar() }
                     },
                 ) {
@@ -266,7 +265,7 @@ fun CreateProfileScreenPreview() {
             onAddressChange = {},
             isFormValid = true,
             message = "Wow",
-            onCreateProfile = { _, _ -> },
+            onCreateProfile = { _,  -> },
             onProfileCreated = {},
             avatarUri = "https://placehold.co/150".toUri(),
             onAvatarUriChange = {}

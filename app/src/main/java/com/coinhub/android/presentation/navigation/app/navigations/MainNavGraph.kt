@@ -37,13 +37,7 @@ fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
                     onTransferMoneyQr = {
                         navController.navigate(AppNavDestinations.TransferMoneyQrGraph)
                     },
-                    onNavigateToCreateProfile = {
-                        navController.navigate(AppNavDestinations.CreateProfile) {
-                            popUpTo(AppNavDestinations.MainGraph) {
-                                inclusive = true
-                            }
-                        }
-                    })
+                )
             }
         }
         composable<AppNavDestinations.Tickets>(

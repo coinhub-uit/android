@@ -1,6 +1,5 @@
 package com.coinhub.android.domain.managers
 
-import android.content.res.Resources.NotFoundException
 import com.coinhub.android.data.models.UserModel
 import com.coinhub.android.domain.repositories.UserRepository
 import io.github.jan.supabase.SupabaseClient
@@ -27,9 +26,9 @@ class UserManager @Inject constructor(
             _user.value = userRepository.getUserById(userId)
             return true
         } catch (e: Exception) {
-            if (e is NotFoundException)
+            if (e.message?.startsWith("HTTP 404") == true) {
                 return false
-            else
+            } else
                 throw e
         }
     }
@@ -41,6 +40,10 @@ class UserManager @Inject constructor(
         } catch (e: Exception) {
             throw e
         }
+    }
+
+    fun clear() {
+        _user.value = null
     }
 }
 

@@ -1,8 +1,10 @@
 package com.coinhub.android.presentation.profile
 
 import android.net.Uri
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.coinhub.android.data.remote.SupabaseService
 import com.coinhub.android.domain.use_cases.CreateProfileUseCase
 import com.coinhub.android.domain.use_cases.ValidateBirthDateUseCase
 import com.coinhub.android.domain.use_cases.ValidateCitizenIdUseCase
@@ -23,8 +25,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
-import androidx.core.net.toUri
-import kotlin.uuid.ExperimentalUuidApi
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
@@ -32,6 +32,7 @@ class ProfileViewModel @Inject constructor(
     private val validateBirthDateUseCase: ValidateBirthDateUseCase,
     private val validateCitizenIdUseCase: ValidateCitizenIdUseCase,
     private val createProfileUseCase: CreateProfileUseCase,
+    private val supabaseService: SupabaseService,
 ) : ViewModel() {
     var message = "" // WARN: Again check
         private set
@@ -119,8 +120,7 @@ class ProfileViewModel @Inject constructor(
         _address.value = address
     }
 
-    @OptIn(ExperimentalUuidApi::class)
-    fun onCreateProfile(onSuccess: () -> Unit, onError: () -> Unit) {
+    fun onCreateProfile(onError: () -> Unit) {
         if (!isFormValid.value) { // Actually in the UI will block this, so it's quite odd to check here
             return
         }
@@ -133,17 +133,14 @@ class ProfileViewModel @Inject constructor(
                 address = _address.value.takeIf { it.isNotBlank() }).collect { result ->
                 when (result) {
                     is CreateProfileUseCase.Result.Loading -> {
-                        TODO()
                     }
 
                     is CreateProfileUseCase.Result.Success -> {
-                        onSuccess()
-                        TODO()
+                        supabaseService.setIsUserSignedIn(true)
                     }
 
                     is CreateProfileUseCase.Result.Error -> {
                         onError()
-                        TODO()
                     }
                 }
             }
