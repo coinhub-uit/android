@@ -7,6 +7,11 @@ on:
   push:
     branches:
       - main
+    paths:
+      - app
+      - gradle
+      - build.gradle.kts
+      - settings.gradle.kts
 
   workflow_dispatch:
 
@@ -48,11 +53,10 @@ jobs:
           KEY_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}
           EOF
 
-      - name: Build gradle project
+      - name: Build project
         run: ./gradlew build
 
-      # Create APK
-      - name: Build apk debug project (APK) - ${{ env.main_project_module }} module
+      - name: Assemble APK
         run: ./gradlew assemble${{ matrix.buildType }}
 
       - name: Upload artifact
