@@ -33,10 +33,16 @@ class AiChatViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun clearMessageText() {
+    fun deleteSession() {
+        _messages.clear()
         _message.update {
             ""
         }
+        _messages.add(
+            AiChatModel(
+                message = "Hello! How can I assist you today?", role = AiChatModel.Role.ASSISTANT
+            )
+        )
     }
 
     fun sendMessage() {
@@ -44,15 +50,5 @@ class AiChatViewModel @Inject constructor() : ViewModel() {
             message = _message.value, role = AiChatModel.Role.USER
         )
         _messages.add(userMessage)
-    }
-
-    fun sendMessage(message: String) {
-        val userMessage = AiChatModel(
-            message = message, role = AiChatModel.Role.USER
-        )
-        _messages.add(userMessage)
-        _message.update {
-            ""
-        }
     }
 }

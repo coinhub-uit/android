@@ -2,6 +2,7 @@ package com.coinhub.android.presentation.ai_chat.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -14,7 +15,10 @@ import com.coinhub.android.ui.theme.CoinhubTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AiChatTopBar(onBack: () -> Unit) {
+fun AiChatTopBar(
+    onBack: () -> Unit,
+    onDeleteSession: () -> Unit,
+) {
     TopAppBar(
         title = {
             Text("AI Chat", maxLines = 1)
@@ -28,6 +32,16 @@ fun AiChatTopBar(onBack: () -> Unit) {
                     "Back"
                 )
             }
+        },
+        actions =  {
+            IconButton(
+                onClick = onDeleteSession,
+            ) {
+                Icon(
+                    Icons.Default.Delete,
+                    "Delete Session"
+                )
+            }
         }
     )
 }
@@ -36,6 +50,9 @@ fun AiChatTopBar(onBack: () -> Unit) {
 @Composable
 fun TopUpTopBarPreview() {
     CoinhubTheme {
-        TopUpTopBar(onBack = {})
+        AiChatTopBar(
+            onBack = {},
+            onDeleteSession = {}
+        )
     }
 }

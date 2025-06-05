@@ -37,6 +37,7 @@ fun AiChatScreen(
         onSendMessage = viewModel::sendMessage,
         messages = viewModel.messages,
         onBack = onBack,
+        onDeleteSession = viewModel::deleteSession,
     )
 }
 
@@ -47,6 +48,7 @@ private fun AiChatScreen(
     onSendMessage: () -> Unit,
     messages: List<AiChatModel>,
     onBack: () -> Unit,
+    onDeleteSession: () -> Unit,
 ) {
     val listState = rememberLazyListState()
 
@@ -60,10 +62,10 @@ private fun AiChatScreen(
     Scaffold(
         topBar = {
             AiChatTopBar(
-                onBack = onBack
+                onBack = onBack,
+                onDeleteSession = onDeleteSession,
             )
-        }
-    ) { paddingValues ->
+        }) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -117,6 +119,12 @@ fun AiChatScreenPreview() {
             )
         )
 
-        AiChatScreen(messages = messages, onSendMessage = {}, onBack = {}, message = "Cool", onMessageChange = { _ -> })
+        AiChatScreen(
+            messages = messages,
+                     onSendMessage = {},
+                     onBack = {},
+                     message = "Cool",
+                     onMessageChange = { _ -> },
+                     onDeleteSession = {})
     }
 }
