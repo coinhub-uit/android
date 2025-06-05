@@ -1,0 +1,62 @@
+name: Build
+
+env:
+  main_project_module: app
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        buildType: [Debug, Release]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set Up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: "zulu" # See 'Supported distributions' for available options
+          java-version: "17"
+          cache: "gradle"
+
+      - name: Change wrapper permissions
+        run: chmod +x ./gradlew
+
+      - name: Setup keystore
+        run: echo '${{ secrets.KEY_STORE }}' | base64 --decode > app/keystore.jks
+
+      - name: Populate local properties
+        run: |
+          cat <<EOF >> local.properties
+          API_SERVER_URL=${{ secrets.API_SERVER_URL }}
+          OAUTH_GOOGLE_ANDROID_CLIENT=${{ secrets.OAUTH_GOOGLE_ANDROID_CLIENT }}
+          SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
+          SUPABASE_URL=${{ secrets.SUPABASE_URL }}
+          VNPAY_RETURN_URL=coinhub://vnpaycallback/ReturnUrl
+          KEYSTORE_FILE=keystore.ks
+          KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS=${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}
+          EOF
+
+      - name: Build gradle project
+        run: ./gradlew build
+
+      # Create APK
+      - name: Build apk debug project (APK) - ${{ env.main_project_module }} module
+        run: ./gradlew assemble${{ matrix.buildType }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: apk-${{ matrix.buildType }}
+          path: ${{ env.main_project_module }}/build/outputs/*/release/
