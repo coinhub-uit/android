@@ -19,6 +19,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,6 +43,7 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun TransferMoneyScreen(
+    sourceId: String? = null,
     onBack: () -> Unit,
     viewModel: TransferMoneyViewModel = hiltViewModel(),
 ) {
@@ -57,6 +59,12 @@ fun TransferMoneyScreen(
         LocalSharedTransitionScope.current ?: error("SharedTransitionScope not provided via CompositionLocal")
     val animatedVisibilityScope =
         LocalAnimatedVisibilityScope.current ?: error("AnimatedVisibilityScope not provided via CompositionLocal")
+
+    LaunchedEffect(Unit) {
+        if (sourceId != null) {
+            viewModel.updateReceiptSourceId(sourceId)
+        }
+    }
 
     with(sharedTransitionScope) {
         TransferMoneyScreen(

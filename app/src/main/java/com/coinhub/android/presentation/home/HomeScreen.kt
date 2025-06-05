@@ -34,6 +34,7 @@ fun HomeScreen(
     onTopUp: () -> Unit,
     onCreateSource: () -> Unit,
     onTransferMoney: () -> Unit,
+    onTransferMoneyQr: () -> Unit,
     onNotification: () -> Unit,
     onAiChat: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
@@ -64,6 +65,7 @@ fun HomeScreen(
         onTopUp = onTopUp,
         onCreateSource = onCreateSource,
         onTransferMoney = onTransferMoney,
+        onTransferMoneyQr = onTransferMoneyQr,
         onNotification = onNotification,
         onAiChat = onAiChat,
         copySourceIdToClipboard = copySourceIdToClipboard,
@@ -79,6 +81,7 @@ private fun HomeScreen(
     onTopUp: () -> Unit,
     onCreateSource: () -> Unit,
     onTransferMoney: () -> Unit,
+    onTransferMoneyQr: () -> Unit,
     onNotification: () -> Unit,
     onAiChat: () -> Unit,
     copySourceIdToClipboard: (Context, String) -> Unit,
@@ -105,7 +108,8 @@ private fun HomeScreen(
             )
             Spacer(modifier = Modifier.height(16.dp))
             HomeFeatures(
-                onTopUp = onTopUp, onCreateSource = onCreateSource, onTransferMoney = onTransferMoney
+                onTopUp = onTopUp, onCreateSource = onCreateSource, onTransferMoney = onTransferMoney,
+                onTransferMoneyQr = onTransferMoneyQr
             )
         }
     }
@@ -122,6 +126,7 @@ fun HomeScreenPreview() {
             onNotification = {},
             onAiChat = {},
             onTransferMoney = {},
+            onTransferMoneyQr = {},
             onNavigateToCreateProfile = {})
     }
 }

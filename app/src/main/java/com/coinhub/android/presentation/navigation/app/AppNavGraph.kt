@@ -35,6 +35,7 @@ import com.coinhub.android.presentation.navigation.app.navigations.sourceDetailN
 import com.coinhub.android.presentation.navigation.app.navigations.ticketDetailNav
 import com.coinhub.android.presentation.navigation.app.navigations.topUpGraph
 import com.coinhub.android.presentation.navigation.app.navigations.transferMoneyGraph
+import com.coinhub.android.presentation.navigation.app.navigations.transferMoneyQrNav
 
 // The inner padding of scaffold isn't needed.. grammar
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -77,6 +78,7 @@ fun AppNavGraph() {
                     startDestination = AppNavDestinations.MainGraph,
                 ) {
                     mainNavGraph(navController = navController)
+                    transferMoneyQrNav(navController = navController)
                     createSourceGraph(navController = navController)
                     topUpGraph(navController = navController)
                     sourceDetailNav(navController = navController)

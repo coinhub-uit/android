@@ -1,4 +1,4 @@
-package com.coinhub.android.presentation.source_qr.components
+package com.coinhub.android.presentation.transfer_money_scan.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -13,10 +13,10 @@ import com.coinhub.android.ui.theme.CoinhubTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SourceQrTopBar(onBack: () -> Unit) {
+fun TransferMoneyScanTopBar(onBack: () -> Unit) {
     TopAppBar(
         title = {
-            Text("Source QR", maxLines = 1)
+            Text("Transfer Money QR", maxLines = 1)
         },
         navigationIcon = {
             IconButton(
@@ -35,6 +35,6 @@ fun SourceQrTopBar(onBack: () -> Unit) {
 @Composable
 private fun Preview() {
     CoinhubTheme {
-        SourceQrTopBar(onBack = {})
+        TransferMoneyScanTopBar(onBack = {})
     }
 }

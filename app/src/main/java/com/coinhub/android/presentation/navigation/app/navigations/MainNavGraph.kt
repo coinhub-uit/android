@@ -34,6 +34,9 @@ fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
                     onNotification = { navController.navigate(AppNavDestinations.Notification) },
                     onAiChat = { navController.navigate(AppNavDestinations.AiChat) },
                     onTransferMoney = { navController.navigate(AppNavDestinations.TransferMoneyGraph) },
+                    onTransferMoneyQr = {
+                        navController.navigate(AppNavDestinations.TransferMoneyQrGraph)
+                    },
                     onNavigateToCreateProfile = {
                         navController.navigate(AppNavDestinations.CreateProfile) {
                             popUpTo(AppNavDestinations.MainGraph) {

@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Payments
+import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -39,6 +40,7 @@ fun HomeFeatures(
     onTopUp: () -> Unit,
     onCreateSource: () -> Unit,
     onTransferMoney: () -> Unit,
+    onTransferMoneyQr: () -> Unit,
 ) {
     val homeFeatureCardItems = listOf(
         HomeFeatureCardItem(
@@ -58,6 +60,12 @@ fun HomeFeatures(
             icon = Icons.Default.SwapHoriz,
             onClick = onTransferMoney,
             shareTransitionKey = "transferMoney"
+        ),
+        HomeFeatureCardItem(
+            title = "Transfer money QR",
+            icon = Icons.Default.QrCodeScanner,
+            onClick = onTransferMoneyQr,
+            shareTransitionKey = "transferMoneyQr"
         )
     )
 
@@ -103,14 +111,16 @@ private fun HomeFeatureCard(
         LocalSharedTransitionScope.current ?: error("SharedTransitionScope not provided via CompositionLocal")
     val animatedVisibilityScope =
         LocalAnimatedVisibilityScope.current ?: error("AnimatedVisibilityScope not provided via CompositionLocal")
-    with (sharedTransitionScope) {
+    with(sharedTransitionScope) {
         Card(
-            modifier = modifier.sharedBounds(
-                animatedVisibilityScope = animatedVisibilityScope,
-                sharedContentState = rememberSharedContentState(
-                    key = shareTransitionKey,
+            modifier = modifier
+                .sharedBounds(
+                    animatedVisibilityScope = animatedVisibilityScope,
+                    sharedContentState = rememberSharedContentState(
+                        key = shareTransitionKey,
+                    )
                 )
-            ).wrapContentHeight(),
+                .wrapContentHeight(),
             onClick = onClick
         ) {
             Column(
@@ -147,7 +157,8 @@ fun HomeFeaturesPreview() {
             HomeFeatures(
                 onTopUp = {},
                 onCreateSource = {},
-                onTransferMoney = {}
+                onTransferMoney = {},
+                onTransferMoneyQr = {}
             )
         }
     }

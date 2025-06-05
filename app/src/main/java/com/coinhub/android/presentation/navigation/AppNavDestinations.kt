@@ -45,8 +45,7 @@ open class AppNavDestinations {
     // App - Main Graph - Home - Top Up Graph - Top Up - Top Up Result
     @Serializable
     data class TopUpResult(
-        @SerialName("vnp_TxnRef")
-        val vnpTxnRef: String? = null,
+        @SerialName("vnp_TxnRef") val vnpTxnRef: String? = null,
     ) : AppNavDestinations()
 
     // App - Main Graph - Home - Source Detail
@@ -58,6 +57,20 @@ open class AppNavDestinations {
     // App - Main Graph - Home - Source Detail - Source QR
     @Serializable
     data class SourceQr(
+        val sourceId: String,
+    ) : AppNavDestinations()
+
+    // App - Main Graph - Home - Transfer Money QR Graph
+    @Serializable
+    data object TransferMoneyQrGraph : AppNavDestinations()
+
+    // App - Main Graph - Home - Transfer Money QR Graph - Transfer Money QR Scan
+    @Serializable
+    data object TransferMoneyQrScan : AppNavDestinations()
+
+    // App - Main Graph - Home - Transfer Money QR Graph - Transfer Money QR Scan - Transfer Money QR
+    @Serializable
+    data class TransferMoneyQr(
         val sourceId: String,
     ) : AppNavDestinations()
 
@@ -94,7 +107,7 @@ open class AppNavDestinations {
     data class TicketDetail(
         val ticketId: Int,
     ) : AppNavDestinations()
-    
+
     // App - Main Graph - Menu
     @Serializable
     data object Menu : AppNavDestinations()

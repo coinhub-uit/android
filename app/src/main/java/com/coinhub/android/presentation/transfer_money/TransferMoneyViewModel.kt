@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -47,7 +48,7 @@ class TransferMoneyViewModel @Inject constructor() : ViewModel() {
     val amountText: StateFlow<String> = _amountText
 
     @OptIn(FlowPreview::class, ExperimentalUuidApi::class)
-    val receiptUser = _receiptSourceId.debounce(DEBOUNCE_TYPING).map {
+    val receiptUser = _receiptSourceId.drop(1).debounce(DEBOUNCE_TYPING).map {
         // @NTGNguyen - Fetch user by source id
         UserModel(
             id = Uuid.random(),
