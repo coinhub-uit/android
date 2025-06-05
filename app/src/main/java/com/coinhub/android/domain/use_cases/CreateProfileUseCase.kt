@@ -2,6 +2,7 @@ package com.coinhub.android.domain.use_cases
 
 import com.coinhub.android.data.dtos.request.CreateUserRequestDto
 import com.coinhub.android.di.IoDispatcher
+import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.repositories.UserRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -13,6 +14,7 @@ import javax.inject.Inject
 
 class CreateProfileUseCase @Inject constructor(
     private val userRepository: UserRepository,
+    private val authRepository: AuthRepository,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) {
     operator fun invoke(
@@ -24,7 +26,7 @@ class CreateProfileUseCase @Inject constructor(
         emit(Result.Loading)
         userRepository.registerProfile(
             user = CreateUserRequestDto(
-                id = "", // FIXME: @NTGNguyen get id
+                id = authRepository.getCurrentUserId(),
                 fullName = fullName,
                 birthDate = Date(birthDateInMillis),
                 citizenId = citizenId,
