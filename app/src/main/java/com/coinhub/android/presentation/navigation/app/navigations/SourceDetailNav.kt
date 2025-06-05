@@ -10,6 +10,7 @@ import com.coinhub.android.presentation.navigation.AppNavDestinations
 import com.coinhub.android.presentation.navigation.app.LocalAnimatedVisibilityScope
 import com.coinhub.android.presentation.navigation.navTypeOf
 import com.coinhub.android.presentation.source_detail.SourceDetailScreen
+import com.coinhub.android.presentation.source_qr.SourceQrScreen
 import kotlin.reflect.typeOf
 
 fun NavGraphBuilder.sourceDetailNav(navController: NavHostController) {
@@ -20,6 +21,13 @@ fun NavGraphBuilder.sourceDetailNav(navController: NavHostController) {
         CompositionLocalProvider(LocalAnimatedVisibilityScope provides this@composable) {
             SourceDetailScreen(
                 source = sourceDetail.source, onBack = { navController.navigateUp() })
+        }
+    }
+    composable<AppNavDestinations.SourceQr> { navBackStackEntry ->
+        val sourceQr = navBackStackEntry.toRoute<AppNavDestinations.SourceQr>()
+        CompositionLocalProvider(LocalAnimatedVisibilityScope provides this@composable) {
+            SourceQrScreen(
+                sourceId = sourceQr.sourceId, onBack = { navController.navigateUp() })
         }
     }
 }

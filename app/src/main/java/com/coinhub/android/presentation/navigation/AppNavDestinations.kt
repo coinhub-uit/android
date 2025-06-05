@@ -55,6 +55,12 @@ open class AppNavDestinations {
         val source: SourceModel,
     ) : AppNavDestinations()
 
+    // App - Main Graph - Home - Source Detail - Source QR
+    @Serializable
+    data class SourceQr(
+        val sourceId: String,
+    ) : AppNavDestinations()
+
     // App - Main Graph - Home - Transfer Money Graph
     @Serializable
     data object TransferMoneyGraph : AppNavDestinations()
@@ -88,7 +94,7 @@ open class AppNavDestinations {
     data class TicketDetail(
         val ticketId: Int,
     ) : AppNavDestinations()
-
+    
     // App - Main Graph - Menu
     @Serializable
     data object Menu : AppNavDestinations()
