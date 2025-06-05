@@ -42,6 +42,7 @@ fun HomeScreen(
 
     LaunchedEffect(Unit) {
         viewModel.getUserSources()
+        viewModel.getUserOnUserLogin()
     }
 
     val sourceModels = viewModel.sourceModels.collectAsStateWithLifecycle().value
