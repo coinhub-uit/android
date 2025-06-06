@@ -27,7 +27,7 @@ class CreateSourceViewModel @Inject constructor(
     val sourceId = _sourceId.asStateFlow()
 
     @OptIn(FlowPreview::class)
-    val isSourceIdValid = sourceId.drop(1).debounce(DEBOUNCE_TYPING).map { sourceId ->
+    val sourceCheckState = sourceId.drop(1).debounce(DEBOUNCE_TYPING).map { sourceId ->
         val result = validateSourceIdUseCase(sourceId = sourceId)
         CreateSourceStates.SourceCheckState(
             isValid = result is ValidateSourceIdUseCase.Result.Success,
@@ -36,7 +36,7 @@ class CreateSourceViewModel @Inject constructor(
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), CreateSourceStates.SourceCheckState())
 
     val isFormValid =
-        isSourceIdValid.drop(1).map { it.isValid }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+        sourceCheckState.drop(1).map { it.isValid }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()

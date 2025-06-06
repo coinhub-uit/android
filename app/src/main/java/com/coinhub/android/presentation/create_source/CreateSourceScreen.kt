@@ -39,7 +39,7 @@ fun CreateSourceScreen(
     viewModel: CreateSourceViewModel = hiltViewModel(),
 ) {
     val sourceId = viewModel.sourceId.collectAsState().value
-    val sourceCheckState = viewModel.isSourceIdValid.collectAsState().value
+    val sourceCheckState = viewModel.sourceCheckState.collectAsState().value
     val setSourceId = viewModel::setSourceId
     val isFormValid = viewModel.isFormValid.collectAsState().value
     val isLoading = viewModel.isLoading.collectAsState().value
