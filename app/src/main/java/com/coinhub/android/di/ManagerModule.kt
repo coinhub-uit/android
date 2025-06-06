@@ -32,5 +32,6 @@ class SingletonManagerModule {
 
     @Provides
     @Singleton
-    fun provideThemeManager(preferenceDataStore: PreferenceDataStore) = ThemeManger(preferenceDataStore)
+    fun provideThemeManager(preferenceDataStore: PreferenceDataStore, @IoDispatcher ioDispatcher: CoroutineDispatcher) =
+        ThemeManger(preferenceDataStore, ioDispatcher = ioDispatcher)
 }
