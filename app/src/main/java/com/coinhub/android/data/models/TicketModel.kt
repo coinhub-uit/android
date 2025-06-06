@@ -17,6 +17,7 @@ data class TicketModel(
     val plan: PlanModel,
 )
 
+// TODO: Move it into above
 enum class TicketStatus {
     ACTIVE,
     EARLY_WITH_DRAWN,

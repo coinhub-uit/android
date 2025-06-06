@@ -9,3 +9,8 @@ fun Number.toVndFormat(space: Boolean = true, fullFormat: Boolean = true): Strin
     return CURRENCY_FORMAT.format(this) + (if (space) " " else "") + (if (fullFormat) "VNĐ" else "Đ")
 }
 
+fun Number.toPercentFormat(): String {
+    val percentFormat = NumberFormat.getPercentInstance(Locale.US)
+    percentFormat.maximumFractionDigits = 2
+    return percentFormat.format(this.toDouble())
+}

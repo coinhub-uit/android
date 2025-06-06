@@ -1,21 +1,152 @@
 package com.coinhub.android.presentation.ticket_detail
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.coinhub.android.domain.managers.TicketManager
+import com.coinhub.android.data.models.AvailablePlanModel
+import com.coinhub.android.data.models.MethodEnum
+import com.coinhub.android.data.models.PlanModel
+import com.coinhub.android.data.models.TicketHistoryModel
+import com.coinhub.android.data.models.TicketModel
+import com.coinhub.android.data.models.TicketStatus
+import com.coinhub.android.presentation.ticket_detail.components.TicketDetailDetail
+import com.coinhub.android.presentation.ticket_detail.components.TicketDetailHeader
+import com.coinhub.android.presentation.ticket_detail.components.TicketDetailProgressCard
+import com.coinhub.android.presentation.ticket_detail.components.TicketDetailTopBar
+import com.coinhub.android.ui.theme.CoinhubTheme
+import com.coinhub.android.utils.PreviewDeviceSpecs
+import com.coinhub.android.utils.toLocalDate
+import java.math.BigInteger
 
 @Composable
 fun TicketDetailScreen(
     ticketId: Int, onBack: () -> Unit,
-    viewmodel: TicketDetailViewModel = hiltViewModel(),
+    viewModel: TicketDetailViewModel = hiltViewModel(),
 ) {
-    val ticketDetailState = viewmodel.ticketModelsState.collectAsStateWithLifecycle().value
+    val ticket = viewModel.ticket.collectAsStateWithLifecycle().value
+    val withdrawPlan = viewModel.withdrawPlan.collectAsStateWithLifecycle().value
+    LaunchedEffect(ticketId) {
+        viewModel.getTicket(ticketId)
+    }
 
-    when (ticketDetailState) {
-        is TicketManager.TicketModelsState.Error -> {} //TODO: Do this babe
-        TicketManager.TicketModelsState.Loading -> {}
-        is TicketManager.TicketModelsState.Success -> Text("This is the Ticket Detail Screen for ticket ID: $ticketId")
+    TicketDetailScreen(
+        ticket = ticket, withdrawPlan = withdrawPlan, onBack = onBack, onWithdraw = {
+            viewModel.withdraw(ticketId)
+            onBack()
+        })
+}
+
+@Composable
+fun TicketDetailScreen(
+    ticket: TicketModel?,
+    withdrawPlan: AvailablePlanModel?,
+    onBack: () -> Unit,
+    onWithdraw: () -> Unit,
+) {
+    Scaffold(
+        topBar = {
+            TicketDetailTopBar(onBack = onBack)
+        }) { innerPadding ->
+        if (ticket == null || withdrawPlan == null) {
+            LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            return@Scaffold
+        }
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .padding(16.dp)
+        ) {
+            // Ticket header
+            TicketDetailHeader(ticket = ticket)
+
+            Spacer(modifier = Modifier.height(16.dp))
+            HorizontalDivider()
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Ticket progress info
+            TicketDetailProgressCard(ticketModel = ticket)
+
+            Spacer(modifier = Modifier.height(16.dp))
+            HorizontalDivider()
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Interest calculation
+            TicketDetailDetail(ticket = ticket, withdrawPlan = withdrawPlan)
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Withdraw button
+            OutlinedButton(
+                onClick = onWithdraw, modifier = Modifier.fillMaxWidth(), colors = ButtonDefaults.outlinedButtonColors()
+            ) {
+                Text(text = "Withdraw Now")
+            }
+        }
+    }
+}
+
+@Preview(device = PreviewDeviceSpecs.DEVICE)
+@Composable
+private fun TicketDetailScreenPreview() {
+    CoinhubTheme {
+        Surface {
+            TicketDetailScreen(
+                ticket = TicketModel(
+                id = 1,
+                openedAt = "01/01/2025".toLocalDate(),
+                closedAt = null,
+                status = TicketStatus.ACTIVE,
+                method = MethodEnum.PR,
+                ticketHistories = listOf(
+                    TicketHistoryModel(
+                        issuedAt = "01/09/2025".toLocalDate(),
+                        maturedAt = "01/11/2025".toLocalDate(),
+                        principal = BigInteger("1000000"),
+                        interest = BigInteger("40000")
+                    ), TicketHistoryModel(
+                        issuedAt = "01/07/2025".toLocalDate(),
+                        maturedAt = "01/09/2025".toLocalDate(),
+                        principal = BigInteger("1000000"),
+                        interest = BigInteger("90000")
+                    ), TicketHistoryModel(
+                        issuedAt = "01/05/2025".toLocalDate(),
+                        maturedAt = "01/07/2025".toLocalDate(),
+                        principal = BigInteger("1000000"),
+                        interest = BigInteger("23000")
+                    ), TicketHistoryModel(
+                        issuedAt = "01/03/2025".toLocalDate(),
+                        maturedAt = "01/05/2025".toLocalDate(),
+                        principal = BigInteger("1000000"),
+                        interest = BigInteger("54000")
+                    ), TicketHistoryModel(
+                        issuedAt = "01/01/2025".toLocalDate(),
+                        maturedAt = "01/03/2025".toLocalDate(),
+                        principal = BigInteger("1000000"),
+                        interest = BigInteger("50000")
+                    )
+                ),
+                plan = PlanModel(
+                    id = 2, days = 90
+                )
+            ), withdrawPlan = AvailablePlanModel(
+                planHistoryId = 1, rate = 0.04f, planId = 2, days = 90
+            ), onBack = {}, onWithdraw = {})
+        }
     }
 }

@@ -26,22 +26,19 @@ import com.coinhub.android.data.models.PlanModel
 import com.coinhub.android.data.models.TicketHistoryModel
 import com.coinhub.android.data.models.TicketModel
 import com.coinhub.android.data.models.TicketStatus
+import com.coinhub.android.presentation.common.utils.calculateTicketProgress
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
 import com.coinhub.android.utils.toLocalDate
-import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
+import com.coinhub.android.utils.toVndFormat
 import java.math.BigInteger
-import java.text.NumberFormat
-import java.util.Locale
+import java.time.LocalDate
 
 @Composable
 fun TicketList(
     modifier: Modifier = Modifier,
     tickets: List<TicketModel>,
-    currentDate: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
+    currentDate: LocalDate = LocalDate.now(),
     onTicketDetail: (Int) -> Unit,
 ) {
     Column(
@@ -74,19 +71,8 @@ private fun TicketItem(
     currentDate: LocalDate,
     onTicketClick: () -> Unit,
 ) {
-    val formatter = NumberFormat.getNumberInstance(Locale.US)
     val firstHistory = ticketModel.ticketHistories.first()
-
-    // Calculate progress using the provided currentDate
-    val issuedAt = firstHistory.issuedAt
-    val maturedAt = firstHistory.maturedAt
-
-    // Calculate days passed and total days
-    val totalDays = (maturedAt.toEpochDay() - issuedAt.toEpochDay()).toFloat().coerceAtLeast(1f)
-    val daysPassed = (currentDate.toEpochDays() - issuedAt.toEpochDay()).toFloat().coerceAtLeast(0f)
-
-    // Calculate progress as percentage
-    val progress = (daysPassed / totalDays).coerceIn(0f, 1f)
+    val progress = calculateTicketProgress(firstHistory, currentDate)
 
     Card(
         modifier = Modifier.fillMaxWidth(), onClick = onTicketClick,
@@ -152,7 +138,7 @@ private fun TicketItem(
                         text = "Principal", style = MaterialTheme.typography.bodySmall
                     )
                     Text(
-                        text = formatter.format(firstHistory.principal),
+                        text = firstHistory.principal.toVndFormat(),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -164,7 +150,7 @@ private fun TicketItem(
                         text = "Interest", style = MaterialTheme.typography.bodySmall
                     )
                     Text(
-                        text = formatter.format(firstHistory.interest),
+                        text = firstHistory.interest.toVndFormat(),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold
                     )

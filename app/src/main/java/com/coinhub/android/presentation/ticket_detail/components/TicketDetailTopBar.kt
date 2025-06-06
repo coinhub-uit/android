@@ -1,4 +1,4 @@
-package com.coinhub.android.presentation.top_up.components
+package com.coinhub.android.presentation.ticket_detail.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -13,10 +13,10 @@ import com.coinhub.android.ui.theme.CoinhubTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopUpTopBar(onBack: () -> Unit) {
+fun TicketDetailTopBar(onBack: () -> Unit) {
     TopAppBar(
         title = {
-            Text("Top Up", maxLines = 1)
+            Text("Ticket Detail", maxLines = 1)
         },
         navigationIcon = {
             IconButton(
@@ -35,6 +35,6 @@ fun TopUpTopBar(onBack: () -> Unit) {
 @Composable
 private fun Preview() {
     CoinhubTheme {
-        TopUpTopBar(onBack = {})
+        TicketDetailTopBar(onBack = {})
     }
 }
