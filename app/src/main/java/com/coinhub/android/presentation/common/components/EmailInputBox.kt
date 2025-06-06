@@ -44,5 +44,6 @@ fun EmailInputBox(
             autoCorrectEnabled = false,
             imeAction = imeAction,
         ),
+        singleLine = true,
     )
 }

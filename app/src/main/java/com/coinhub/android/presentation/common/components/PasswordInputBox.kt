@@ -68,5 +68,6 @@ fun PasswordInputBox(
             autoCorrectEnabled = false,
             imeAction = imeAction,
         ),
+        singleLine = true,
     )
 }
