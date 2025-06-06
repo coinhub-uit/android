@@ -41,6 +41,9 @@ fun TicketList(
     currentDate: LocalDate = LocalDate.now(),
     onTicketDetail: (Int) -> Unit,
 ) {
+    if (tickets.isEmpty()) {
+        return
+    }
     Column(
         modifier = modifier.fillMaxWidth()
     ) {

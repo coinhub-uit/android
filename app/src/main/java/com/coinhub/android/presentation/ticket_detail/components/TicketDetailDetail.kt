@@ -52,7 +52,7 @@ fun TicketDetailDetail(ticket: TicketModel, withdrawPlan: AvailablePlanModel) {
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = "Interest Calculation", style = MaterialTheme.typography.titleMedium
+            text = "Interest detail", style = MaterialTheme.typography.titleMedium
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -61,7 +61,7 @@ fun TicketDetailDetail(ticket: TicketModel, withdrawPlan: AvailablePlanModel) {
             modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "Original Interest:", style = MaterialTheme.typography.bodyMedium
+                text = "Original interest:", style = MaterialTheme.typography.bodyMedium
             )
             Text(
                 text = firstHistory.interest.toVndFormat(),
@@ -76,7 +76,7 @@ fun TicketDetailDetail(ticket: TicketModel, withdrawPlan: AvailablePlanModel) {
             modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "Current Interest:", style = MaterialTheme.typography.bodyMedium
+                text = "Current interest:", style = MaterialTheme.typography.bodyMedium
             )
             Text(
                 text = currentInterest.toVndFormat(),
@@ -91,7 +91,7 @@ fun TicketDetailDetail(ticket: TicketModel, withdrawPlan: AvailablePlanModel) {
             modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "Days Passed:", style = MaterialTheme.typography.bodyMedium
+                text = "Days passed:", style = MaterialTheme.typography.bodyMedium
             )
             Text(
                 text = "$daysPassed days", style = MaterialTheme.typography.bodyMedium
@@ -104,7 +104,7 @@ fun TicketDetailDetail(ticket: TicketModel, withdrawPlan: AvailablePlanModel) {
             modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "Annual Rate:", style = MaterialTheme.typography.bodyMedium
+                text = "Rate:", style = MaterialTheme.typography.bodyMedium
             )
             Text(
                 text = annualRate.toPercentFormat(),

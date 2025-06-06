@@ -1,5 +1,6 @@
 package com.coinhub.android.presentation.ticket_detail
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -25,6 +27,7 @@ import com.coinhub.android.data.models.PlanModel
 import com.coinhub.android.data.models.TicketHistoryModel
 import com.coinhub.android.data.models.TicketModel
 import com.coinhub.android.data.models.TicketStatus
+import com.coinhub.android.presentation.ticket_detail.components.TicketDetailChart
 import com.coinhub.android.presentation.ticket_detail.components.TicketDetailDetail
 import com.coinhub.android.presentation.ticket_detail.components.TicketDetailHeader
 import com.coinhub.android.presentation.ticket_detail.components.TicketDetailProgressCard
@@ -39,22 +42,28 @@ fun TicketDetailScreen(
     ticketId: Int, onBack: () -> Unit,
     viewModel: TicketDetailViewModel = hiltViewModel(),
 ) {
-    val ticket = viewModel.ticketModelState.collectAsStateWithLifecycle().value
-    val withdrawPlan = viewModel.plan.collectAsStateWithLifecycle().value
+    val ticket = viewModel.ticket.collectAsStateWithLifecycle().value
+    val withdrawPlan = viewModel.withdrawPlan.collectAsStateWithLifecycle().value
+    val context = LocalContext.current
+
     LaunchedEffect(ticketId) {
-        viewModel.getTicket(ticketId)
+        viewModel.getTicketAndWithdrawPlan(ticketId)
     }
 
-    when (ticket) {
-        is TicketDetailViewModel.TicketModelState.Error -> {} //TODO: @KevinNitro again
-        TicketDetailViewModel.TicketModelState.Loading -> {}
-        is TicketDetailViewModel.TicketModelState.Success -> TicketDetailScreen(
-            ticket = ticket.ticketModel,
-            withdrawPlan = withdrawPlan,
-            onBack = onBack,
-            onWithdraw = viewModel::withdrawTicket
-        )
+    LaunchedEffect(Unit) {
+        viewModel.toastMessage.collect { message ->
+            if (message != null) {
+                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
+
+    TicketDetailScreen(
+        ticket = ticket,
+        withdrawPlan = withdrawPlan,
+        onBack = onBack,
+        onWithdraw = { viewModel.withdrawTicket(onBack) }
+    )
 }
 
 @Composable
@@ -62,7 +71,7 @@ fun TicketDetailScreen(
     ticket: TicketModel?,
     withdrawPlan: AvailablePlanModel?,
     onBack: () -> Unit,
-    onWithdraw: ((String) -> Unit, (String) -> Unit) -> Unit,
+    onWithdraw: () -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -77,29 +86,31 @@ fun TicketDetailScreen(
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
-            // Ticket header
             TicketDetailHeader(ticket = ticket)
 
             Spacer(modifier = Modifier.height(16.dp))
             HorizontalDivider()
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Ticket progress info
             TicketDetailProgressCard(ticketModel = ticket)
 
             Spacer(modifier = Modifier.height(16.dp))
             HorizontalDivider()
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Interest calculation
+            TicketDetailChart(ticket = ticket)
+
+            Spacer(modifier = Modifier.height(16.dp))
+            HorizontalDivider()
+            Spacer(modifier = Modifier.height(16.dp))
+
             TicketDetailDetail(ticket = ticket, withdrawPlan = withdrawPlan)
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Withdraw button
             OutlinedButton(
                 onClick = {
-                    onWithdraw({}, {}) //TODO: Do it babe
+                    onWithdraw()
                     onBack()
                 },
                 modifier = Modifier.fillMaxWidth(),
@@ -156,7 +167,7 @@ private fun TicketDetailScreenPreview() {
                     )
                 ), withdrawPlan = AvailablePlanModel(
                     planHistoryId = 1, rate = 0.04f, planId = 2, days = 90
-                ), onBack = {}, onWithdraw = { _, _ -> })
+                ), onBack = {}, onWithdraw = {})
         }
     }
 }

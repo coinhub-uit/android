@@ -7,8 +7,14 @@ import com.coinhub.android.data.models.TicketModel
 import com.coinhub.android.domain.repositories.PlanRepository
 import com.coinhub.android.domain.repositories.TicketRepository
 import com.coinhub.android.domain.use_cases.WithdrawTicketUseCase
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,47 +23,47 @@ class TicketDetailViewModel @Inject constructor(
     private val withdrawTicketUseCase: WithdrawTicketUseCase,
     private val planRepository: PlanRepository,
 ) : ViewModel() {
+    private val _ticket = MutableStateFlow<TicketModel?>(null)
+    val ticket = _ticket.asStateFlow()
 
-    private val _ticketModelState = MutableStateFlow<TicketModelState>(TicketModelState.Loading)
-    val ticketModelState = _ticketModelState.asStateFlow()
+    private val _withdrawPlan = MutableStateFlow<AvailablePlanModel?>(null)
+    val withdrawPlan = _withdrawPlan.asStateFlow()
 
-    private val _plan = MutableStateFlow<AvailablePlanModel?>(null)
-    val plan = _plan.asStateFlow()
+    val isLoading = combine(
+        _ticket, _withdrawPlan
+    ) { ticket, plan -> ticket == null || plan == null }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000),
+        false
+    )
 
-    fun getTicket(ticketId: Int, refresh: Boolean = false) {
+    private val _toastMessage = MutableSharedFlow<String?>(0)
+    val toastMessage = _toastMessage.asSharedFlow()
+
+    fun getTicketAndWithdrawPlan(ticketId: Int, refresh: Boolean = false) {
         viewModelScope.launch {
-            _ticketModelState.value = TicketModelState.Loading
-            try {
-                val ticket = ticketRepository.getTicketById(ticketId, refresh)
-                _ticketModelState.value = TicketModelState.Success(ticket)
-                _plan.value = planRepository.getAvailablePlans().find { it.planId == ticket.plan.id }
-            } catch (e: Exception) {
-                _ticketModelState.value =
-                    TicketModelState.Error(e.message ?: "An error occurred while fetching the ticket")
+            _ticket.update {
+                ticketRepository.getTicketById(ticketId, refresh)
             }
+            _withdrawPlan.value = planRepository.getAvailablePlans().find { it.days == -1 }
         }
     }
 
-    fun withdrawTicket(onSuccess: (String) -> Unit, onError: (String) -> Unit) {
+    fun withdrawTicket(onSuccess: () -> Unit) {
         viewModelScope.launch {
-            if (_ticketModelState.value is TicketModelState.Success) {
-                when (val result =
-                    withdrawTicketUseCase((_ticketModelState.value as TicketModelState.Success).ticketModel.id)) {
-                    is WithdrawTicketUseCase.Result.Error -> {
-                        onError(result.message)
-                    }
-
-                    is WithdrawTicketUseCase.Result.Success -> {
-                        onSuccess(result.message)
-                    }
+            when (val result = _ticket.value?.let {
+                withdrawTicketUseCase(it.id)
+            }) {
+                is WithdrawTicketUseCase.Result.Error -> {
+                    _toastMessage.emit(result.message)
                 }
+
+                is WithdrawTicketUseCase.Result.Success -> {
+                    onSuccess()
+                }
+
+                null -> _toastMessage.emit("Ticket not found")
             }
         }
-    }
-
-    sealed class TicketModelState {
-        data object Loading : TicketModelState()
-        data class Success(val ticketModel: TicketModel) : TicketModelState()
-        data class Error(val message: String) : TicketModelState()
     }
 }
