@@ -16,7 +16,7 @@ import retrofit2.http.Path
 
 interface UserApiService {
     @GET("users/{id}")
-    suspend fun getUserById(@Path("id") userId: String): UserResponseDto?
+    suspend fun getUserById(@Path("id") userId: String): UserResponseDto
 
     @POST("users")
     suspend fun registerProfile(@Body() user: com.coinhub.android.data.dtos.request.CreateUserRequestDto): UserResponseDto

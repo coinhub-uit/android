@@ -107,7 +107,7 @@ class AuthViewModel @Inject constructor(
         _snackbarMessage.value = null
     }
 
-    fun signInWithCredential(onProfileAvailable: () -> Unit) {
+    fun signInWithCredential(onProfileNotAvailable: () -> Unit) {
         viewModelScope.launch {
             when (val result = signInWithCredentialUseCase(email = _email.value, password = _password.value)) {
                 is SignInWithCredentialUseCase.Result.Error -> {
@@ -115,10 +115,19 @@ class AuthViewModel @Inject constructor(
                 }
 
                 is SignInWithCredentialUseCase.Result.Success -> {
-                    when (userManager.checkUserRegistered()) {
+                    when (val profileAvailableState = userManager.checkUserRegistered()) {
+                        is UserManager.ProfileAvailableState.Error -> {}
+                        is UserManager.ProfileAvailableState.Success -> {
+                            when (profileAvailableState.profileAvailable) {
+                                true -> {
+                                    supabaseService.setIsUserSignedIn(true)
+                                }
 
-                        true -> supabaseService.setIsUserSignedIn(true)
-                        false -> onProfileAvailable()
+                                false -> {
+                                    onProfileNotAvailable()
+                                }
+                            }
+                        }
                     }
                 }
             }

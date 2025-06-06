@@ -8,7 +8,7 @@ import com.coinhub.android.data.models.TicketModel
 import com.coinhub.android.data.models.UserModel
 
 interface UserRepository {
-    suspend fun getUserById(id: String): UserModel?
+    suspend fun getUserById(id: String): UserModel
     suspend fun registerProfile(user: CreateUserRequestDto): UserModel
     suspend fun updateProfile(id: String, user: CreateUserRequestDto)
     suspend fun updatePartialProfile(id: String, user: CreateUserRequestDto): UserModel

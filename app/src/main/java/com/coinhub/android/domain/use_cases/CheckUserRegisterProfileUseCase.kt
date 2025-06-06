@@ -1,6 +1,7 @@
 package com.coinhub.android.domain.use_cases
 
 import android.content.res.Resources.NotFoundException
+import android.util.Log
 import com.coinhub.android.data.models.UserModel
 import com.coinhub.android.di.IoDispatcher
 import com.coinhub.android.domain.repositories.AuthRepository
@@ -19,6 +20,7 @@ class CheckUserRegisterProfileUseCase @Inject constructor(
             try {
                 val userId = authRepository.getCurrentUserId()
                 val user = userRepository.getUserById(userId)
+                Log.d("CheckUSer", "invoke: djawkdlwa")
                 Result.Success(user = user)
             } catch (e: Exception) {
                 if (e is NotFoundException) {
