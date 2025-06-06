@@ -44,6 +44,7 @@ fun TicketDetailScreen(
 ) {
     val ticket = viewModel.ticket.collectAsStateWithLifecycle().value
     val withdrawPlan = viewModel.withdrawPlan.collectAsStateWithLifecycle().value
+    val isLoading = viewModel.isLoading.collectAsStateWithLifecycle().value
     val context = LocalContext.current
 
     LaunchedEffect(ticketId) {
@@ -52,24 +53,23 @@ fun TicketDetailScreen(
 
     LaunchedEffect(Unit) {
         viewModel.toastMessage.collect { message ->
-            if (message != null) {
-                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-            }
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         }
     }
 
     TicketDetailScreen(
         ticket = ticket,
         withdrawPlan = withdrawPlan,
+        isLoading = isLoading,
         onBack = onBack,
-        onWithdraw = { viewModel.withdrawTicket(onBack) }
-    )
+        onWithdraw = { viewModel.withdrawTicket(onBack) })
 }
 
 @Composable
 fun TicketDetailScreen(
     ticket: TicketModel?,
     withdrawPlan: AvailablePlanModel?,
+    isLoading: Boolean,
     onBack: () -> Unit,
     onWithdraw: () -> Unit,
 ) {
@@ -77,10 +77,20 @@ fun TicketDetailScreen(
         topBar = {
             TicketDetailTopBar(onBack = onBack)
         }) { innerPadding ->
-        if (ticket == null || withdrawPlan == null) {
+        if (isLoading) {
             LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             return@Scaffold
         }
+
+        if (ticket == null || withdrawPlan == null) {
+            Text(
+                text = "Ticket not found", modifier = Modifier
+                    .padding(innerPadding)
+                    .padding(16.dp)
+            )
+            return@Scaffold
+        }
+
         Column(
             modifier = Modifier
                 .padding(innerPadding)
@@ -112,9 +122,7 @@ fun TicketDetailScreen(
                 onClick = {
                     onWithdraw()
                     onBack()
-                },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.outlinedButtonColors()
+                }, modifier = Modifier.fillMaxWidth(), colors = ButtonDefaults.outlinedButtonColors()
             ) {
                 Text(text = "Withdraw Now")
             }
@@ -167,7 +175,8 @@ private fun TicketDetailScreenPreview() {
                     )
                 ), withdrawPlan = AvailablePlanModel(
                     planHistoryId = 1, rate = 0.04f, planId = 2, days = 90
-                ), onBack = {}, onWithdraw = {})
+                ), onBack = {}, onWithdraw = {}, isLoading = false
+            )
         }
     }
 }

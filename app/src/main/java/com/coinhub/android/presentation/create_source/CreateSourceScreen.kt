@@ -42,7 +42,7 @@ fun CreateSourceScreen(
     val sourceCheckState = viewModel.sourceCheckState.collectAsState().value
     val setSourceId = viewModel::setSourceId
     val isFormValid = viewModel.isFormValid.collectAsState().value
-    val isLoading = viewModel.isLoading.collectAsState().value
+    val isProcessing = viewModel.isProcessing.collectAsState().value
 
     val sharedTransitionScope =
         LocalSharedTransitionScope.current ?: error("SharedTransitionScope not provided via CompositionLocal")
@@ -55,7 +55,7 @@ fun CreateSourceScreen(
             onSourceIdChange = setSourceId,
             sourceCheckState = sourceCheckState,
             isFormValid = isFormValid,
-            isLoading = isLoading,
+            isProcessing = isProcessing,
             onBack = onBack,
             onCreate = { viewModel.createSource(onBack) },
             modifier = Modifier.sharedBounds(
@@ -75,7 +75,7 @@ private fun CreateSourceScreen(
     onSourceIdChange: (String) -> Unit,
     sourceCheckState: CreateSourceStates.SourceCheckState,
     isFormValid: Boolean,
-    isLoading: Boolean,
+    isProcessing: Boolean,
     onBack: () -> Unit,
     onCreate: () -> Unit,
 ) {
@@ -84,7 +84,7 @@ private fun CreateSourceScreen(
             CreateSourceTopBar(onBack = onBack)
         }, floatingActionButton = {
             AnimatedVisibility(
-                visible = isFormValid && !isLoading,
+                visible = isFormValid && !isProcessing,
             ) {
                 ExtendedFloatingActionButton(onClick = onCreate, icon = {
                     Icon(
@@ -97,7 +97,7 @@ private fun CreateSourceScreen(
         Box(
             modifier = Modifier.padding(innerPadding)
         ) {
-            if (isLoading) {
+            if (isProcessing) {
                 LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             }
 
@@ -143,7 +143,7 @@ fun CreateSourceScreenPreview() {
             sourceCheckState = CreateSourceStates.SourceCheckState(
                 isValid = false, errorMessage = "NO"
             ),
-            isLoading = false,
+            isProcessing = false,
             isFormValid = true,
             onBack = {},
             onCreate = {})

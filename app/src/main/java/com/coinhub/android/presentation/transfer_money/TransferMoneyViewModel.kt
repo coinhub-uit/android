@@ -6,15 +6,17 @@ import com.coinhub.android.data.models.SourceModel
 import com.coinhub.android.data.models.UserModel
 import com.coinhub.android.utils.DEBOUNCE_TYPING
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.math.BigInteger
@@ -34,22 +36,20 @@ class TransferMoneyViewModel @Inject constructor() : ViewModel() {
             SourceModel("3", BigInteger("7500000"))
         )
     )
-    val sources: StateFlow<List<SourceModel>> = _sources
+    val sources = _sources.asStateFlow()
 
     private val _selectedSourceId = MutableStateFlow<String?>(null)
-    val selectedSourceId: StateFlow<String?> = _selectedSourceId
+    val selectedSourceId = _selectedSourceId.asStateFlow()
 
-    // Receipt source ID input
     private val _receiptSourceId = MutableStateFlow("")
-    val receiptSourceId: StateFlow<String> = _receiptSourceId
+    val receiptSourceId = _receiptSourceId.asStateFlow()
 
-    // Amount input
     private val _amountText = MutableStateFlow("")
-    val amountText: StateFlow<String> = _amountText
+    val amountText = _amountText.asStateFlow()
 
-    @OptIn(FlowPreview::class, ExperimentalUuidApi::class)
-    val receiptUser = _receiptSourceId.drop(1).debounce(DEBOUNCE_TYPING).map {
-        // @NTGNguyen - Fetch user by source id
+    // TODO: @NTGNguyen - Fetch user by source id
+    @OptIn(FlowPreview::class, ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
+    val receiptUser = _receiptSourceId.drop(1).debounce(DEBOUNCE_TYPING).mapLatest {
         UserModel(
             id = Uuid.random(),
             fullName = "Nguyen Van A",
@@ -66,11 +66,9 @@ class TransferMoneyViewModel @Inject constructor() : ViewModel() {
         initialValue = null
     )
 
-    // Loading state
     private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> = _isLoading
+    val isLoading = _isLoading.asStateFlow()
 
-    // Form validation
     val isFormValid = combine(
         _selectedSourceId,
         receiptUser,
@@ -83,13 +81,18 @@ class TransferMoneyViewModel @Inject constructor() : ViewModel() {
         } catch (e: NumberFormatException) {
             false
         }
-
         isSourceIdValid && receiptUser != null && isAmountValid
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = false
     )
+
+    private val _isProcessing = MutableStateFlow(false)
+    val isProcessing = _isProcessing.asStateFlow()
+
+    private val _toastMessage = MutableSharedFlow<String>(0)
+    val toastMessage = _toastMessage.asSharedFlow()
 
     fun selectSource(sourceId: String) {
         _selectedSourceId.value = sourceId
@@ -108,18 +111,9 @@ class TransferMoneyViewModel @Inject constructor() : ViewModel() {
 
     fun transferMoney(onSuccess: () -> Unit) {
         viewModelScope.launch {
-            _isLoading.value = true
-
-            // Simulate API call
-            delay(1500)
-
-            // Reset form
-            _selectedSourceId.value = null
-            _receiptSourceId.value = ""
-            _amountText.value = ""
-
-            _isLoading.value = false
+            _isProcessing.value = true
             onSuccess()
+            _isProcessing.value = false
         }
     }
 }

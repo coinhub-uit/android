@@ -1,5 +1,6 @@
 package com.coinhub.android.presentation.transfer_money
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.Box
@@ -21,6 +22,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -54,6 +56,9 @@ fun TransferMoneyScreen(
     val amount = viewModel.amountText.collectAsStateWithLifecycle().value
     val isFormValid = viewModel.isFormValid.collectAsStateWithLifecycle().value
     val isLoading = viewModel.isLoading.collectAsStateWithLifecycle().value
+    val isProcessing = viewModel.isProcessing.collectAsStateWithLifecycle().value
+
+    val context = LocalContext.current
 
     val sharedTransitionScope =
         LocalSharedTransitionScope.current ?: error("SharedTransitionScope not provided via CompositionLocal")
@@ -66,6 +71,12 @@ fun TransferMoneyScreen(
         }
     }
 
+    LaunchedEffect (Unit){
+        viewModel.toastMessage.collect { message ->
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
     with(sharedTransitionScope) {
         TransferMoneyScreen(
             selectedSourceId = selectedSourceId,
@@ -75,6 +86,7 @@ fun TransferMoneyScreen(
             amount = amount,
             isFormValid = isFormValid,
             isLoading = isLoading,
+            isProcessing = isProcessing,
             onSelectSource = viewModel::selectSource,
             onReceiptSourceIdChange = viewModel::updateReceiptSourceId,
             onAmountChange = viewModel::updateAmount,
@@ -99,6 +111,7 @@ private fun TransferMoneyScreen(
     amount: String,
     isFormValid: Boolean,
     isLoading: Boolean,
+    isProcessing: Boolean,
     onSelectSource: (String) -> Unit,
     onReceiptSourceIdChange: (String) -> Unit,
     onAmountChange: (String) -> Unit,
@@ -110,7 +123,7 @@ private fun TransferMoneyScreen(
             TransferMoneyTopBar(onBack = onBack)
         }, floatingActionButton = {
             AnimatedVisibility(
-                visible = isFormValid && !isLoading,
+                visible = isFormValid && !isLoading && !isProcessing,
             ) {
                 FloatingActionButton(onClick = onTransfer) {
                     Icon(
@@ -125,6 +138,7 @@ private fun TransferMoneyScreen(
         ) {
             if (isLoading) {
                 LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                return@Box
             }
 
             Column(
@@ -184,6 +198,7 @@ fun TransferMoneyScreenPreview() {
                 amount = "1000000",
                 isFormValid = true,
                 isLoading = false,
+                isProcessing = false,
                 onSelectSource = {},
                 onReceiptSourceIdChange = {},
                 onAmountChange = {},

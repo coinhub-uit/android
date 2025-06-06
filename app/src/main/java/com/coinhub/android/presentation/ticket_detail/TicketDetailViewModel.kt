@@ -37,7 +37,7 @@ class TicketDetailViewModel @Inject constructor(
         false
     )
 
-    private val _toastMessage = MutableSharedFlow<String?>(0)
+    private val _toastMessage = MutableSharedFlow<String>(0)
     val toastMessage = _toastMessage.asSharedFlow()
 
     fun getTicketAndWithdrawPlan(ticketId: Int, refresh: Boolean = false) {

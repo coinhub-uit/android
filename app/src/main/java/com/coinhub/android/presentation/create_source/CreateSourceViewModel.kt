@@ -7,6 +7,7 @@ import com.coinhub.android.domain.use_cases.CreateSourceUseCase
 import com.coinhub.android.domain.use_cases.ValidateSourceIdUseCase
 import com.coinhub.android.utils.DEBOUNCE_TYPING
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,8 +28,8 @@ class CreateSourceViewModel @Inject constructor(
     private val _sourceId = MutableStateFlow("")
     val sourceId = _sourceId.asStateFlow()
 
-    @OptIn(FlowPreview::class)
-    val sourceCheckState = sourceId.drop(1).debounce(DEBOUNCE_TYPING).map { sourceId ->
+    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
+    val sourceCheckState = sourceId.drop(1).debounce(DEBOUNCE_TYPING).mapLatest { sourceId ->
         val result = validateSourceIdUseCase(sourceId = sourceId)
         CreateSourceStates.SourceCheckState(
             isValid = result is ValidateSourceIdUseCase.Result.Success,
@@ -38,8 +40,8 @@ class CreateSourceViewModel @Inject constructor(
     val isFormValid =
         sourceCheckState.drop(1).map { it.isValid }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
-    private val _isLoading = MutableStateFlow(false)
-    val isLoading = _isLoading.asStateFlow()
+    private val _isProcessing = MutableStateFlow(false)
+    val isProcessing = _isProcessing.asStateFlow()
 
     fun setSourceId(id: String) {
         _sourceId.value = id
@@ -48,16 +50,16 @@ class CreateSourceViewModel @Inject constructor(
     // TODO: @NTGNguyen use case create source here
     fun createSource(onSuccess: () -> Unit) {
         viewModelScope.launch {
-            _isLoading.value = true
+            _isProcessing.value = true
             createSourceUseCase(CreateSourceRequestDto(id = _sourceId.value)).let {
                 when (it) {
                     is CreateSourceUseCase.Result.Error -> {
-                        _isLoading.value = false
+                        _isProcessing.value = false
                     }
 
                     is CreateSourceUseCase.Result.Success -> {
                         onSuccess()
-                        _isLoading.value = false
+                        _isProcessing.value = false
                     }
                 }
             }
