@@ -27,7 +27,6 @@ import com.coinhub.android.presentation.auth.components.AuthSignInOrUpButton
 import com.coinhub.android.presentation.auth.components.AuthSignInOrUpPrompt
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
-import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.compose.auth.composable.NativeSignInState
 import io.github.jan.supabase.compose.auth.composable.rememberSignInWithGoogle
 import io.github.jan.supabase.compose.auth.composeAuth
@@ -36,7 +35,6 @@ import io.github.jan.supabase.compose.auth.composeAuth
 fun AuthScreen(
     onSignedUpWithCredential: () -> Unit,
     onSignedUpWithOAuth: () -> Unit,
-    supabaseClient: SupabaseClient,
     viewModel: AuthViewModel = hiltViewModel(),
 ) {
     val isSignUp = viewModel.isSignUp.collectAsStateWithLifecycle().value
@@ -50,7 +48,7 @@ fun AuthScreen(
     val isFormValid = viewModel.isFormValid.collectAsStateWithLifecycle().value
     val snackbarMessage = viewModel.snackbarMessage.collectAsStateWithLifecycle().value
 
-    val googleSignInState = supabaseClient.composeAuth.rememberSignInWithGoogle(
+    val googleSignInState = viewModel.supabaseClient.composeAuth.rememberSignInWithGoogle(
         onResult = { signInResult ->
             viewModel.onSignInWithGoogle(
                 signInResult, onSignedUpWithOAuth

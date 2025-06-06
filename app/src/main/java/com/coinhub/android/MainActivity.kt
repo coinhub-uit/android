@@ -24,14 +24,10 @@ import com.coinhub.android.shortcuts.TicketScreenShortcut
 import com.coinhub.android.shortcuts.TransferMoneyQrScreenShortcut
 import com.coinhub.android.ui.theme.CoinhubTheme
 import dagger.hilt.android.AndroidEntryPoint
-import io.github.jan.supabase.SupabaseClient
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    @Inject
-    lateinit var supabaseClient: SupabaseClient
-
     @Inject
     lateinit var supabaseService: SupabaseService
 
@@ -61,7 +57,7 @@ class MainActivity : AppCompatActivity() {
                         }
 
                         false -> {
-                            AuthNavGraph(supabaseClient = supabaseClient)
+                            AuthNavGraph()
                             removeSignInShortcuts()
                         }
 

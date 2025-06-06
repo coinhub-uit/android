@@ -8,19 +8,15 @@ import com.coinhub.android.presentation.auth.AuthScreen
 import com.coinhub.android.presentation.confirm_auth.ConfirmAccountScreen
 import com.coinhub.android.presentation.navigation.AppNavDestinations
 import com.coinhub.android.presentation.profile.ProfileScreen
-import io.github.jan.supabase.SupabaseClient
 
 @Composable
-fun AuthNavGraph(
-    supabaseClient: SupabaseClient,
-) {
+fun AuthNavGraph() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = AppNavDestinations.Auth) {
         composable<AppNavDestinations.Auth> {
             AuthScreen(
                 onSignedUpWithCredential = { navController.navigate(AppNavDestinations.ConfirmAccount) },
                 onSignedUpWithOAuth = { navController.navigate(AppNavDestinations.CreateProfile) },
-                supabaseClient = supabaseClient
             )
         }
 

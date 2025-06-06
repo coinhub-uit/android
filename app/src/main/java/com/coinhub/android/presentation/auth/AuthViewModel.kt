@@ -12,6 +12,7 @@ import com.coinhub.android.domain.use_cases.ValidateEmailUseCase
 import com.coinhub.android.domain.use_cases.ValidatePasswordUseCase
 import com.coinhub.android.utils.DEBOUNCE_TYPING
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.compose.auth.composable.NativeSignInResult
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,6 +37,7 @@ class AuthViewModel @Inject constructor(
     private val signInWithGoogleUseCase: SignInWithGoogleUseCase,
     private val supabaseService: SupabaseService,
     private val userManager: UserManager,
+    val supabaseClient: SupabaseClient,
 ) : ViewModel() {
     private val _isSignUp = MutableStateFlow(false)
     val isSignUp: StateFlow<Boolean> = _isSignUp.asStateFlow()
