@@ -13,7 +13,6 @@ import com.coinhub.android.domain.use_cases.CreateTicketUseCase
 import com.coinhub.android.domain.use_cases.CreateTopUpUseCase
 import com.coinhub.android.domain.use_cases.GetTopUpUseCase
 import com.coinhub.android.domain.use_cases.GetUserSourcesUseCase
-import com.coinhub.android.domain.use_cases.GetUserTicketsUseCase
 import com.coinhub.android.domain.use_cases.SignInWithCredentialUseCase
 import com.coinhub.android.domain.use_cases.SignInWithGoogleUseCase
 import com.coinhub.android.domain.use_cases.SignUpWithCredentialUseCase
@@ -144,18 +143,6 @@ object UseCaseModule {
         authRepository: AuthRepository,
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
     ) = CheckUserRegisterProfileUseCase(
-        userRepository = userRepository,
-        authRepository = authRepository,
-        ioDispatcher = ioDispatcher
-    )
-
-    @Provides
-    @Singleton
-    fun provideGetUserTicketsUseCase(
-        userRepository: UserRepository,
-        authRepository: AuthRepository,
-        @IoDispatcher ioDispatcher: CoroutineDispatcher,
-    ) = GetUserTicketsUseCase(
         userRepository = userRepository,
         authRepository = authRepository,
         ioDispatcher = ioDispatcher
