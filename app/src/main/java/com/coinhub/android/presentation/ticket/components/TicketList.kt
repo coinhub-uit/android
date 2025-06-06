@@ -1,5 +1,6 @@
 package com.coinhub.android.presentation.ticket.components
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,6 +28,8 @@ import com.coinhub.android.data.models.TicketHistoryModel
 import com.coinhub.android.data.models.TicketModel
 import com.coinhub.android.data.models.TicketStatus
 import com.coinhub.android.presentation.common.utils.calculateTicketProgress
+import com.coinhub.android.presentation.navigation.app.LocalAnimatedVisibilityScope
+import com.coinhub.android.presentation.navigation.app.LocalSharedTransitionScope
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
 import com.coinhub.android.utils.toLocalDate
@@ -58,105 +61,121 @@ fun TicketList(
         ) {
             items(tickets, key = {
                 it.id
-            }) { ticketModel ->
+            }) { ticket ->
                 TicketItem(
-                    ticketModel = ticketModel,
+                    ticket = ticket,
                     currentDate = currentDate,
-                    onTicketClick = { onTicketDetail(ticketModel.id) })
+                    onTicketClick = { onTicketDetail(ticket.id) })
             }
         }
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun TicketItem(
-    ticketModel: TicketModel,
+    ticket: TicketModel,
     currentDate: LocalDate,
     onTicketClick: () -> Unit,
 ) {
-    val firstHistory = ticketModel.ticketHistories.first()
+    val firstHistory = ticket.ticketHistories.first()
     val progress = calculateTicketProgress(firstHistory, currentDate)
 
-    Card(
-        modifier = Modifier.fillMaxWidth(), onClick = onTicketClick,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer,
-        ),
-    ) {
-        Column(
+    val sharedTransitionScope =
+        LocalSharedTransitionScope.current ?: error("SharedTransitionScope not provided via CompositionLocal")
+    val animatedVisibilityScope =
+        LocalAnimatedVisibilityScope.current ?: error("AnimatedVisibilityScope not provided via CompositionLocal")
+
+
+    with(sharedTransitionScope) {
+        Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .sharedBounds(
+                    animatedVisibilityScope = animatedVisibilityScope, sharedContentState = rememberSharedContentState(
+                        key = "ticketDetail-${ticket.id}",
+                    )
+                ),
+            onClick = onTicketClick,
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainer,
+            ),
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
             ) {
-                Text(
-                    text = "Ticket #${ticketModel.id}", style = MaterialTheme.typography.titleMedium
-                )
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "Method: ${ticketModel.method.description}", style = MaterialTheme.typography.bodyMedium
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // Progress timeline section
-            Column(modifier = Modifier.fillMaxWidth()) {
-                // Date labels above progress bar
                 Row(
                     modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "Issued: ${firstHistory.issuedAt}", style = MaterialTheme.typography.bodySmall
-                    )
-                    Text(
-                        text = "Matures: ${firstHistory.maturedAt}", style = MaterialTheme.typography.bodySmall
+                        text = "Ticket #${ticket.id}", style = MaterialTheme.typography.titleMedium
                     )
                 }
 
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-                // Progress bar
-                LinearProgressIndicator(
-                    progress = { progress },
-                    modifier = Modifier.fillMaxWidth(),
+                Text(
+                    text = "Method: ${ticket.method.description}", style = MaterialTheme.typography.bodyMedium
                 )
-            }
 
-            Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
-            // Principal and Interest row
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Principal on left
-                Column(horizontalAlignment = Alignment.Start) {
-                    Text(
-                        text = "Principal", style = MaterialTheme.typography.bodySmall
-                    )
-                    Text(
-                        text = firstHistory.principal.toVndFormat(),
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.Bold
+                // Progress timeline section
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    // Date labels above progress bar
+                    Row(
+                        modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Issued: ${firstHistory.issuedAt}", style = MaterialTheme.typography.bodySmall
+                        )
+                        Text(
+                            text = "Matures: ${firstHistory.maturedAt}", style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    // Progress bar
+                    LinearProgressIndicator(
+                        progress = { progress },
+                        modifier = Modifier.fillMaxWidth(),
                     )
                 }
 
-                // Interest on right
-                Column(horizontalAlignment = Alignment.End) {
-                    Text(
-                        text = "Interest", style = MaterialTheme.typography.bodySmall
-                    )
-                    Text(
-                        text = firstHistory.interest.toVndFormat(),
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.Bold
-                    )
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Principal and Interest row
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // Principal on left
+                    Column(horizontalAlignment = Alignment.Start) {
+                        Text(
+                            text = "Principal", style = MaterialTheme.typography.bodySmall
+                        )
+                        Text(
+                            text = firstHistory.principal.toVndFormat(),
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+
+                    // Interest on right
+                    Column(horizontalAlignment = Alignment.End) {
+                        Text(
+                            text = "Interest", style = MaterialTheme.typography.bodySmall
+                        )
+                        Text(
+                            text = firstHistory.interest.toVndFormat(),
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
             }
         }
