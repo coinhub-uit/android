@@ -3,7 +3,6 @@ package com.coinhub.android.presentation.home
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.data.models.SourceModel
@@ -34,7 +33,7 @@ class HomeViewModel @Inject constructor(
     fun refresh() {
         viewModelScope.launch {
             userManager.reloadUser()
-            getUserSources()
+            getUserSources(true)
         }
     }
 
@@ -51,9 +50,9 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getUserSources() {
+    fun getUserSources(refresh: Boolean = false) {
         viewModelScope.launch {
-            when (val result = getUserSourcesUseCase()) {
+            when (val result = getUserSourcesUseCase(refresh)) {
                 is GetUserSourcesUseCase.Result.Success -> {
                     _sourceModels.value = result.sources
                 }

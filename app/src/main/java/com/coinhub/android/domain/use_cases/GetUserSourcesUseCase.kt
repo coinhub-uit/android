@@ -13,11 +13,11 @@ class GetUserSourcesUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) {
-    suspend operator fun invoke(): Result {
+    suspend operator fun invoke(refresh: Boolean): Result {
         return withContext(ioDispatcher) {
             try {
                 val userId = authRepository.getCurrentUserId()
-                Result.Success(userRepository.getUserSources(userId))
+                Result.Success(userRepository.getUserSources(userId, refresh))
             } catch (e: Exception) {
                 Result.Error(e.message ?: "Unknown error occurred")
             }

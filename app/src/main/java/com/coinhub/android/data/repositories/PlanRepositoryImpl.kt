@@ -11,6 +11,7 @@ class PlanRepositoryImpl @Inject constructor(
 ) : PlanRepository {
 
     override suspend fun getAvailablePlans(): List<AvailablePlanModel> {
+
         return try {
             planApiService.getAvailablePlans().map {
                 it.toAvailablePlanModel()

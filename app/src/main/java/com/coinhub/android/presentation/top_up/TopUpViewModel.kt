@@ -73,6 +73,10 @@ class TopUpViewModel @Inject constructor(
         _amount.value = amount.replace(".", "")
     }
 
+    fun refreshSources() {
+        getUserSources(true)
+    }
+
     fun createTopUp() {
         viewModelScope.launch {
             when (val result = createTopUpUseCase(
@@ -96,9 +100,9 @@ class TopUpViewModel @Inject constructor(
         }
     }
 
-    private fun getUserSources() {
+    private fun getUserSources(refresh: Boolean = false) {
         viewModelScope.launch {
-            when (val result = getUserSourcesUseCase()) {
+            when (val result = getUserSourcesUseCase(refresh)) {
                 is GetUserSourcesUseCase.Result.Success -> {
                     _sourceModels.value = result.sources
                 }

@@ -15,6 +15,9 @@ interface TicketApiService {
     @GET("tickets/{id}/source")
     fun getSourceByTicketId(@Path("id") ticketId: String): SourceResponseDto?
 
+    @GET("tickets/{id}/withdraw")
+    fun withdrawTicket(@Path("id") ticketId: Int)
+
     @GET("tickets/{id}")
-    fun withdrawTicket(@Path("id") ticketId: String)
+    fun getTicketById(@Path("id") ticketId: Int): TicketResponseDto
 }

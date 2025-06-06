@@ -39,17 +39,22 @@ fun TicketDetailScreen(
     ticketId: Int, onBack: () -> Unit,
     viewModel: TicketDetailViewModel = hiltViewModel(),
 ) {
-    val ticket = viewModel.ticket.collectAsStateWithLifecycle().value
-    val withdrawPlan = viewModel.withdrawPlan.collectAsStateWithLifecycle().value
+    val ticket = viewModel.ticketModelState.collectAsStateWithLifecycle().value
+    val withdrawPlan = viewModel.plan.collectAsStateWithLifecycle().value
     LaunchedEffect(ticketId) {
         viewModel.getTicket(ticketId)
     }
 
-    TicketDetailScreen(
-        ticket = ticket, withdrawPlan = withdrawPlan, onBack = onBack, onWithdraw = {
-            viewModel.withdraw(ticketId)
-            onBack()
-        })
+    when (ticket) {
+        is TicketDetailViewModel.TicketModelState.Error -> {} //TODO: @KevinNitro again
+        TicketDetailViewModel.TicketModelState.Loading -> {}
+        is TicketDetailViewModel.TicketModelState.Success -> TicketDetailScreen(
+            ticket = ticket.ticketModel,
+            withdrawPlan = withdrawPlan,
+            onBack = onBack,
+            onWithdraw = viewModel::withdrawTicket
+        )
+    }
 }
 
 @Composable
@@ -57,7 +62,7 @@ fun TicketDetailScreen(
     ticket: TicketModel?,
     withdrawPlan: AvailablePlanModel?,
     onBack: () -> Unit,
-    onWithdraw: () -> Unit,
+    onWithdraw: ((String) -> Unit, (String) -> Unit) -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -93,7 +98,12 @@ fun TicketDetailScreen(
 
             // Withdraw button
             OutlinedButton(
-                onClick = onWithdraw, modifier = Modifier.fillMaxWidth(), colors = ButtonDefaults.outlinedButtonColors()
+                onClick = {
+                    onWithdraw({}, {}) //TODO: Do it babe
+                    onBack()
+                },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.outlinedButtonColors()
             ) {
                 Text(text = "Withdraw Now")
             }
@@ -108,45 +118,45 @@ private fun TicketDetailScreenPreview() {
         Surface {
             TicketDetailScreen(
                 ticket = TicketModel(
-                id = 1,
-                openedAt = "01/01/2025".toLocalDate(),
-                closedAt = null,
-                status = TicketStatus.ACTIVE,
-                method = MethodEnum.PR,
-                ticketHistories = listOf(
-                    TicketHistoryModel(
-                        issuedAt = "01/09/2025".toLocalDate(),
-                        maturedAt = "01/11/2025".toLocalDate(),
-                        principal = BigInteger("1000000"),
-                        interest = BigInteger("40000")
-                    ), TicketHistoryModel(
-                        issuedAt = "01/07/2025".toLocalDate(),
-                        maturedAt = "01/09/2025".toLocalDate(),
-                        principal = BigInteger("1000000"),
-                        interest = BigInteger("90000")
-                    ), TicketHistoryModel(
-                        issuedAt = "01/05/2025".toLocalDate(),
-                        maturedAt = "01/07/2025".toLocalDate(),
-                        principal = BigInteger("1000000"),
-                        interest = BigInteger("23000")
-                    ), TicketHistoryModel(
-                        issuedAt = "01/03/2025".toLocalDate(),
-                        maturedAt = "01/05/2025".toLocalDate(),
-                        principal = BigInteger("1000000"),
-                        interest = BigInteger("54000")
-                    ), TicketHistoryModel(
-                        issuedAt = "01/01/2025".toLocalDate(),
-                        maturedAt = "01/03/2025".toLocalDate(),
-                        principal = BigInteger("1000000"),
-                        interest = BigInteger("50000")
+                    id = 1,
+                    openedAt = "01/01/2025".toLocalDate(),
+                    closedAt = null,
+                    status = TicketStatus.ACTIVE,
+                    method = MethodEnum.PR,
+                    ticketHistories = listOf(
+                        TicketHistoryModel(
+                            issuedAt = "01/09/2025".toLocalDate(),
+                            maturedAt = "01/11/2025".toLocalDate(),
+                            principal = BigInteger("1000000"),
+                            interest = BigInteger("40000")
+                        ), TicketHistoryModel(
+                            issuedAt = "01/07/2025".toLocalDate(),
+                            maturedAt = "01/09/2025".toLocalDate(),
+                            principal = BigInteger("1000000"),
+                            interest = BigInteger("90000")
+                        ), TicketHistoryModel(
+                            issuedAt = "01/05/2025".toLocalDate(),
+                            maturedAt = "01/07/2025".toLocalDate(),
+                            principal = BigInteger("1000000"),
+                            interest = BigInteger("23000")
+                        ), TicketHistoryModel(
+                            issuedAt = "01/03/2025".toLocalDate(),
+                            maturedAt = "01/05/2025".toLocalDate(),
+                            principal = BigInteger("1000000"),
+                            interest = BigInteger("54000")
+                        ), TicketHistoryModel(
+                            issuedAt = "01/01/2025".toLocalDate(),
+                            maturedAt = "01/03/2025".toLocalDate(),
+                            principal = BigInteger("1000000"),
+                            interest = BigInteger("50000")
+                        )
+                    ),
+                    plan = PlanModel(
+                        id = 2, days = 90
                     )
-                ),
-                plan = PlanModel(
-                    id = 2, days = 90
-                )
-            ), withdrawPlan = AvailablePlanModel(
-                planHistoryId = 1, rate = 0.04f, planId = 2, days = 90
-            ), onBack = {}, onWithdraw = {})
+                ), withdrawPlan = AvailablePlanModel(
+                    planHistoryId = 1, rate = 0.04f, planId = 2, days = 90
+                ), onBack = {}, onWithdraw = { _, _ -> })
         }
     }
 }

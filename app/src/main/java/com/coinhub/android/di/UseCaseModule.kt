@@ -1,14 +1,15 @@
 package com.coinhub.android.di
 
+import com.coinhub.android.data.api_services.TicketApiService
 import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.repositories.PaymentRepository
 import com.coinhub.android.domain.repositories.PreferenceDataStore
 import com.coinhub.android.domain.repositories.SourceRepository
-import com.coinhub.android.domain.repositories.TicketRepository
 import com.coinhub.android.domain.repositories.UserRepository
 import com.coinhub.android.domain.use_cases.CheckUserRegisterProfileUseCase
 import com.coinhub.android.domain.use_cases.CheckUserSignedInUseCase
 import com.coinhub.android.domain.use_cases.CreateSourceUseCase
+import com.coinhub.android.domain.use_cases.CreateTicketUseCase
 import com.coinhub.android.domain.use_cases.CreateTopUpUseCase
 import com.coinhub.android.domain.use_cases.GetTopUpUseCase
 import com.coinhub.android.domain.use_cases.GetUserSourcesUseCase
@@ -21,6 +22,7 @@ import com.coinhub.android.domain.use_cases.ValidateConfirmPasswordUseCase
 import com.coinhub.android.domain.use_cases.ValidateEmailUseCase
 import com.coinhub.android.domain.use_cases.ValidatePasswordUseCase
 import com.coinhub.android.domain.use_cases.ValidateSourceIdUseCase
+import com.coinhub.android.domain.use_cases.WithdrawTicketUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -162,10 +164,20 @@ object UseCaseModule {
     @Provides
     @Singleton
     fun provideCreateTicketUseCase(
-        ticketRepository: TicketRepository,
+        ticketApiService: TicketApiService,
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
-    ) = com.coinhub.android.domain.use_cases.CreateTicketUseCase(
-        ticketRepository = ticketRepository,
-        ioDispatcher = ioDispatcher
+    ) = CreateTicketUseCase(
+        ticketApiService = ticketApiService,
+        ioDispatcher = ioDispatcher,
+    )
+
+    @Provides
+    @Singleton
+    fun provideWithdrawTicketUseCase(
+        ticketApiService: TicketApiService,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher,
+    ) = WithdrawTicketUseCase(
+        ticketApiService = ticketApiService,
+        ioDispatcher = ioDispatcher,
     )
 }
