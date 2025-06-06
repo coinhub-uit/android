@@ -7,6 +7,7 @@ import com.coinhub.android.data.dtos.request.CreateTicketRequestDto
 import com.coinhub.android.data.models.AvailablePlanModel
 import com.coinhub.android.data.models.MethodEnum
 import com.coinhub.android.data.models.SourceModel
+import com.coinhub.android.domain.managers.TicketManager
 import com.coinhub.android.domain.use_cases.ValidateAmountCreateTicketUseCase
 import com.coinhub.android.utils.DEBOUNCE_TYPING
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,10 +26,13 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateTicketViewModel @Inject constructor(
     private val validateAmountCreateTicketUseCase: ValidateAmountCreateTicketUseCase,
+    private val ticketManager: TicketManager,
 ) : ViewModel() {
     // TODO: If have time, implement repository to fetch real data
     private val _minimumAmount = MutableStateFlow(1_000_000L)
     val minimumAmount = _minimumAmount.asStateFlow()
+
+    val ticketModelsState = ticketManager.ticketModelsState
 
     // Mock data for demo/preview
     private val _availablePlans = MutableStateFlow(

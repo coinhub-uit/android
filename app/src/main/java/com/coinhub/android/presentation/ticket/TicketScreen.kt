@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,8 +19,9 @@ import com.coinhub.android.data.models.PlanModel
 import com.coinhub.android.data.models.TicketHistoryModel
 import com.coinhub.android.data.models.TicketModel
 import com.coinhub.android.data.models.TicketStatus
-import com.coinhub.android.presentation.ticket.components.TicketStatistics
+import com.coinhub.android.domain.managers.TicketManager
 import com.coinhub.android.presentation.ticket.components.TicketList
+import com.coinhub.android.presentation.ticket.components.TicketStatistics
 import com.coinhub.android.presentation.ticket.components.TicketTopBar
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
@@ -32,18 +34,27 @@ fun TicketScreen(
     onTicketDetail: (Int) -> Unit,
     viewModel: TicketViewModel = hiltViewModel(),
 ) {
-    val tickets by viewModel.tickets.collectAsStateWithLifecycle()
+    LaunchedEffect(Unit) {
+        viewModel.getTickets()
+    }
+
+    val ticketStates by viewModel.ticketsState.collectAsStateWithLifecycle()
     val totalPrincipal by viewModel.totalPrincipal.collectAsStateWithLifecycle()
     val totalInterest by viewModel.totalInterest.collectAsStateWithLifecycle()
 
-    TicketScreen(
-        tickets = tickets,
-        totalPrincipal = totalPrincipal,
-        totalInterest = totalInterest,
-        onCreateTicket = onCreateTicket,
-        onTicketDetail = onTicketDetail,
-        modifier = Modifier.padding(bottom = 64.dp)
-    )
+    when (ticketStates) {
+        is TicketManager.TicketModelsState.Error -> {}
+        TicketManager.TicketModelsState.Loading -> {}//TODO: Do this babe
+        is TicketManager.TicketModelsState.Success ->
+            TicketScreen(
+                tickets = (ticketStates as TicketManager.TicketModelsState.Success).ticketModels,
+                totalPrincipal = totalPrincipal,
+                totalInterest = totalInterest,
+                onCreateTicket = onCreateTicket,
+                onTicketDetail = onTicketDetail,
+                modifier = Modifier.padding(bottom = 64.dp)
+            )
+    }
 }
 
 @Composable
