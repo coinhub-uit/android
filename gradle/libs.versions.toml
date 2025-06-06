@@ -82,7 +82,6 @@ zxing-android-embedded = { group = "com.journeyapps", name = "zxing-android-embe
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 jetbrains-composehotreload = { id = "org.jetbrains.compose.hot-reload", version.ref = "composeHotReload" }
 android-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
