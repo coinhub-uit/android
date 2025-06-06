@@ -9,11 +9,11 @@ import com.coinhub.android.MainActivity
 import com.coinhub.android.R
 import com.coinhub.android.presentation.navigation.AppNavDestinations
 
-object TicketScreenShortcut {
-    private const val SHORTCUT_ID = "ticketScreenDynamicShortcut"
-    private const val SHORTCUT_LABEL = "Ticket Screen"
-    private const val SHORTCUT_LONG_LABEL = "Open Your Ticket Screen"
-    private val shortcutIcon = R.drawable.baseline_qr_code_scanner_24
+object TransferMoneyQrScreenShortcut {
+    private const val SHORTCUT_ID = "transferMoneyScreenDynamicShortcut"
+    private const val SHORTCUT_LABEL = "Transfer Money"
+    private const val SHORTCUT_LONG_LABEL = "Transfer Money QR Screen"
+    private val shortcutIcon = R.drawable.baseline_sell_24
 
     fun add(
         context: Context,

@@ -14,8 +14,11 @@ import com.coinhub.android.presentation.navigation.AppNavDestinations
 import com.coinhub.android.presentation.navigation.app.LocalAnimatedVisibilityScope
 import com.coinhub.android.presentation.ticket.TicketScreen
 
-fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
-    navigation<AppNavDestinations.MainGraph>(startDestination = AppNavDestinations.Home) {
+fun NavGraphBuilder.mainNavGraph(
+    navController: NavHostController,
+    startDestination: AppNavDestinations?,
+) {
+    navigation<AppNavDestinations.MainGraph>(startDestination = startDestination ?: AppNavDestinations.Home) {
         composable<AppNavDestinations.Home>(
             enterTransition = { fadeIn() },
             exitTransition = { fadeOut() },

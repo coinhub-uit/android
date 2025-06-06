@@ -1,7 +1,6 @@
 package com.coinhub.android.presentation.navigation.app
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
@@ -12,7 +11,6 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -41,18 +39,21 @@ import com.coinhub.android.presentation.navigation.app.navigations.transferMoney
 @OptIn(ExperimentalSharedTransitionApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun AppNavGraph() {
+fun AppNavGraph(
+    destination: String?,
+) {
     RequestNotificationPermissionDialog()
+
+    val startDestination = when (destination) {
+        AppNavDestinations.Tickets.toString() -> AppNavDestinations.Tickets
+        AppNavDestinations.TransferMoneyQrGraph.toString() -> AppNavDestinations.TransferMoneyQrGraph
+        else -> AppNavDestinations.MainGraph
+    }
 
     val navController = rememberNavController()
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-
-    val currentRoute = navBackStackEntry?.destination?.route
-    LaunchedEffect(currentRoute) {
-        Log.d("CurrentScreen", "You're at route: $currentRoute")
-    }
 
     val mainGraphDestinations = bottomNavItems.map { it.route }
 
@@ -73,11 +74,17 @@ fun AppNavGraph() {
     }) {
         SharedTransitionLayout {
             CompositionLocalProvider(LocalSharedTransitionScope provides this@SharedTransitionLayout) {
+                // NOTE: I know this is complicated and it can be fixed by making AppNavDestinations inherit strictly
                 NavHost(
                     navController = navController,
-                    startDestination = AppNavDestinations.MainGraph,
+                    startDestination = if (startDestination != AppNavDestinations.MainGraph) startDestination else AppNavDestinations.MainGraph,
                 ) {
-                    mainNavGraph(navController = navController)
+                    mainNavGraph(
+                        navController = navController, startDestination = when (startDestination) {
+                            AppNavDestinations.Tickets -> AppNavDestinations.Tickets
+                            else -> null
+                        }
+                    )
                     transferMoneyQrNav(navController = navController)
                     createSourceGraph(navController = navController)
                     topUpGraph(navController = navController)

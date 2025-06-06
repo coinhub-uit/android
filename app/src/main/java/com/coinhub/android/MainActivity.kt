@@ -20,6 +20,8 @@ import com.coinhub.android.domain.managers.ThemeManger
 import com.coinhub.android.domain.managers.UserManager
 import com.coinhub.android.presentation.navigation.app.AppNavGraph
 import com.coinhub.android.presentation.navigation.auth.AuthNavGraph
+import com.coinhub.android.shortcuts.TicketScreenShortcut
+import com.coinhub.android.shortcuts.TransferMoneyQrScreenShortcut
 import com.coinhub.android.ui.theme.CoinhubTheme
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.jan.supabase.SupabaseClient
@@ -53,11 +55,14 @@ class MainActivity : AppCompatActivity() {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     when (isUserSignedIn) {
                         true -> {
-                            AppNavGraph()
+                            val destination = intent.getStringExtra("destination")
+                            AppNavGraph(destination = destination)
+                            addSignInShortcuts()
                         }
 
                         false -> {
                             AuthNavGraph(supabaseClient = supabaseClient)
+                            removeSignInShortcuts()
                         }
 
                         null -> {
@@ -69,5 +74,17 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun addSignInShortcuts() {
+        TicketScreenShortcut.add(context = this, MainActivity::class.java)
+        TransferMoneyQrScreenShortcut.add(
+            context = this, mainActivity = MainActivity::class.java
+        )
+    }
+
+    private fun removeSignInShortcuts() {
+        TicketScreenShortcut.remove(context = this)
+        TransferMoneyQrScreenShortcut.remove(context = this)
     }
 }
