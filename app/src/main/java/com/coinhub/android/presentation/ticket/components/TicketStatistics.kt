@@ -118,25 +118,25 @@ fun TicketStatistics(
                     contentColor = MaterialTheme.colorScheme.primaryContainer
                 )
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.primary),
-                    contentAlignment = Alignment.Center
-                ) {
-                    with (sharedTransitionScope) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = "Create Ticket",
-                            tint = MaterialTheme.colorScheme.onPrimary,
-                            modifier = Modifier.sharedBounds(
+                with(sharedTransitionScope) {
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.primary)
+                            .sharedBounds(
                                 animatedVisibilityScope = animatedVisibilityScope,
                                 sharedContentState = rememberSharedContentState(
                                     key = "createTicket",
                                 )
-                            )
-                            .size(24.dp)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Create Ticket",
+                            tint = MaterialTheme.colorScheme.onPrimary,
+                            modifier = Modifier.size(24.dp)
                         )
                     }
                 }
