@@ -10,6 +10,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.github.jan.supabase.SupabaseClient
+import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Singleton
 
 @Module
@@ -21,11 +22,12 @@ class SingletonManagerModule {
         supabaseClient: SupabaseClient,
         userRepository: UserRepository,
         checkUserRegisterProfileUseCase: CheckUserRegisterProfileUseCase,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher,
     ) =
         UserManager(
             supabaseClient = supabaseClient,
             userRepository = userRepository,
-            checkUserRegisterProfileUseCase = checkUserRegisterProfileUseCase
+            checkUserRegisterProfileUseCase = checkUserRegisterProfileUseCase, ioDispatcher = ioDispatcher
         )
 
     @Provides
