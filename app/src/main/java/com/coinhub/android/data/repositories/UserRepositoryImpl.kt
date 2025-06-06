@@ -18,12 +18,20 @@ class UserRepositoryImpl @Inject constructor(
     private val userApiService: UserApiService,
 ) : UserRepository {
 
-    override suspend fun getUserById(id: String): UserModel {
-        return try {
-            userApiService.getUserById(id).toUserModel()
-        } catch (e: Exception) {
-            throw e
+    private var userModel: UserModel? = null
+    private var ticketModels: List<TicketModel>? = null
+    private var sourceModels: List<SourceModel>? = null
+
+    override suspend fun getUserById(id: String, refresh: Boolean): UserModel {
+        if (refresh || userModel == null) {
+            try {
+                userApiService.getUserById(id).toUserModel()
+                this.userModel = userApiService.getUserById(id).toUserModel()
+            } catch (e: Exception) {
+                throw e
+            }
         }
+        return this.userModel!!
     }
 
     override suspend fun registerProfile(user: CreateUserRequestDto): UserModel {
@@ -58,24 +66,30 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getUserSources(id: String): List<SourceModel> {
-        return try {
-            userApiService.getUserSources(id).map {
-                it.toSourceModel()
+    override suspend fun getUserSources(id: String, refresh: Boolean): List<SourceModel> {
+        if (refresh || sourceModels == null) {
+            try {
+                sourceModels = userApiService.getUserSources(id).map {
+                    it.toSourceModel()
+                }
+            } catch (e: Exception) {
+                throw e
             }
-        } catch (e: Exception) {
-            throw e
         }
+        return sourceModels!!
     }
 
-    override suspend fun getUserTickets(id: String): List<TicketModel> {
-        return try {
-            userApiService.getUserTickets(id).map {
-                it.toTicketModel()
+    override suspend fun getUserTickets(id: String, refresh: Boolean): List<TicketModel> {
+        if (refresh || ticketModels == null) {
+            try {
+                ticketModels = userApiService.getUserTickets(id).map {
+                    it.toTicketModel()
+                }
+            } catch (e: Exception) {
+                throw e
             }
-        } catch (e: Exception) {
-            throw e
         }
+        return ticketModels!!
     }
 
     override suspend fun registerDevice(id: String, dto: CreateDeviceRequestDto): DeviceModel {

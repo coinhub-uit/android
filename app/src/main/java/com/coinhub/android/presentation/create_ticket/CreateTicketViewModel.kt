@@ -7,7 +7,7 @@ import com.coinhub.android.data.dtos.request.CreateTicketRequestDto
 import com.coinhub.android.data.models.AvailablePlanModel
 import com.coinhub.android.data.models.MethodEnum
 import com.coinhub.android.data.models.SourceModel
-import com.coinhub.android.domain.managers.TicketManager
+import com.coinhub.android.domain.use_cases.CreateTicketUseCase
 import com.coinhub.android.domain.use_cases.ValidateAmountCreateTicketUseCase
 import com.coinhub.android.utils.DEBOUNCE_TYPING
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import java.math.BigInteger
 import javax.inject.Inject
@@ -26,13 +27,11 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateTicketViewModel @Inject constructor(
     private val validateAmountCreateTicketUseCase: ValidateAmountCreateTicketUseCase,
-    private val ticketManager: TicketManager,
+    private val createTicketUseCase: CreateTicketUseCase,
 ) : ViewModel() {
     // TODO: If have time, implement repository to fetch real data
     private val _minimumAmount = MutableStateFlow(1_000_000L)
     val minimumAmount = _minimumAmount.asStateFlow()
-
-    val ticketModelsState = ticketManager.ticketModelsState
 
     // Mock data for demo/preview
     private val _availablePlans = MutableStateFlow(
@@ -115,15 +114,41 @@ class CreateTicketViewModel @Inject constructor(
         _selectedSourceId.value = sourceId
     }
 
-    fun createTicket() {
-        val ticketDto = CreateTicketRequestDto(
-            sourceId = _selectedSourceId.value ?: return,
-            methodEnum = _selectedMethod.value ?: return,
-            planHistoryId = _selectedAvailablePlan.value?.planHistoryId?.toString() ?: return,
-            amount = _amountText.value.toLongOrNull() ?: return
-        )
+    private val _createTicketState = MutableStateFlow<CreateTicketState>(CreateTicketState.Loading)
+    val createTicketState: StateFlow<CreateTicketState> = _createTicketState.asStateFlow()
 
-        // Here you would call a repository to create the ticket
-        // For now, we just validate the form
+    fun createTicket() {
+        createTicketUseCase(
+            CreateTicketRequestDto(
+                amount = _amountText.value.toLong(),
+                planHistoryId = _selectedAvailablePlan.value!!.planHistoryId,
+                methodEnum = _selectedMethod.value!!,
+                sourceId = _selectedSourceId.value!!
+            )
+        ).onEach {
+            when (it) {
+                is CreateTicketUseCase.Result.Error -> {
+                    _createTicketState.value = CreateTicketState.Error(it.message)
+                }
+
+                CreateTicketUseCase.Result.Loading -> {
+                    _createTicketState.value = CreateTicketState.Loading
+                }
+
+                is CreateTicketUseCase.Result.Success -> {
+                    _createTicketState.value = CreateTicketState.Success
+                    _amountText.value = ""
+                    _selectedAvailablePlan.value = null
+                    _selectedMethod.value = null
+                    _selectedSourceId.value = null
+                }
+            }
+        }
+    }
+
+    sealed class CreateTicketState {
+        data object Loading : CreateTicketState()
+        data object Success : CreateTicketState()
+        data class Error(val message: String) : CreateTicketState()
     }
 }

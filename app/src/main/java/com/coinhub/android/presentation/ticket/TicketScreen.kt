@@ -19,7 +19,6 @@ import com.coinhub.android.data.models.PlanModel
 import com.coinhub.android.data.models.TicketHistoryModel
 import com.coinhub.android.data.models.TicketModel
 import com.coinhub.android.data.models.TicketStatus
-import com.coinhub.android.domain.managers.TicketManager
 import com.coinhub.android.presentation.ticket.components.TicketList
 import com.coinhub.android.presentation.ticket.components.TicketStatistics
 import com.coinhub.android.presentation.ticket.components.TicketTopBar
@@ -35,19 +34,19 @@ fun TicketScreen(
     viewModel: TicketViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(Unit) {
-        viewModel.getTickets()
+        viewModel.getTickets(false)
     }
 
-    val ticketStates by viewModel.ticketsState.collectAsStateWithLifecycle()
+    val ticketStates by viewModel.ticketsModelState.collectAsStateWithLifecycle()
     val totalPrincipal by viewModel.totalPrincipal.collectAsStateWithLifecycle()
     val totalInterest by viewModel.totalInterest.collectAsStateWithLifecycle()
 
     when (ticketStates) {
-        is TicketManager.TicketModelsState.Error -> {}
-        TicketManager.TicketModelsState.Loading -> {}//TODO: Do this babe
-        is TicketManager.TicketModelsState.Success ->
+        is TicketViewModel.TicketModelsState.Error -> {}
+        TicketViewModel.TicketModelsState.Loading -> {}//TODO: Do this babe
+        is TicketViewModel.TicketModelsState.Success ->
             TicketScreen(
-                tickets = (ticketStates as TicketManager.TicketModelsState.Success).ticketModels,
+                tickets = (ticketStates as TicketViewModel.TicketModelsState.Success).ticketModels,
                 totalPrincipal = totalPrincipal,
                 totalInterest = totalInterest,
                 onCreateTicket = onCreateTicket,
