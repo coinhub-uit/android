@@ -4,15 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.domain.models.TicketModel
 import com.coinhub.android.domain.repositories.AuthRepository
+import com.coinhub.android.domain.repositories.PreferenceDataStore
 import com.coinhub.android.domain.repositories.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.math.BigInteger
 import javax.inject.Inject
@@ -21,21 +19,31 @@ import javax.inject.Inject
 class TicketViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val authRepository: AuthRepository,
+    private val preferenceDataStore: PreferenceDataStore
 ) : ViewModel() {
     private val _tickets = MutableStateFlow<List<TicketModel>>(emptyList())
     val tickets = _tickets.asStateFlow()
 
-    val totalPrincipal = tickets.map {
-        it.sumOf { ticket ->
-            ticket.ticketHistories.firstOrNull()?.principal ?: BigInteger.ZERO
-        }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), BigInteger.ZERO)
+    private val _totalPrincipal = MutableStateFlow<BigInteger>(BigInteger("0"))
+    val totalPrincipal = _totalPrincipal.asStateFlow()
 
-    val totalInterest = tickets.map {
-        it.sumOf { ticket ->
-            ticket.ticketHistories.firstOrNull()?.interest ?: BigInteger.ZERO
+    private val _totalInterest = MutableStateFlow<BigInteger>(BigInteger("0"))
+    val totalInterest = _totalInterest.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            preferenceDataStore.getTotalPrincipal().collect { value ->
+                if (value != null) {
+                    _totalPrincipal.value = value
+                }
+            }
+            preferenceDataStore.getTotalInterest().collect { value ->
+                if (value != null) {
+                    _totalInterest.value = value
+                }
+            }
         }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), BigInteger.ZERO)
+    }
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()

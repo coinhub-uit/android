@@ -23,8 +23,7 @@
         android:roundIcon="@drawable/coinhub"
         android:supportsRtl="true"
         android:theme="@style/Theme.SplashScreen.CoinHub"
-        tools:ignore="CredentialDependency"
-        >
+        tools:ignore="CredentialDependency">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -46,6 +45,16 @@
                     android:scheme="coinhub" />
             </intent-filter>
         </activity>
-    </application>
 
+        <receiver
+            android:name=".widgets.receivers.TicketWidgetReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/ticket_widget_info" />
+        </receiver>
+    </application>
 </manifest>

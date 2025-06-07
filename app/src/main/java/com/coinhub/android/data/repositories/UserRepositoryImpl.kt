@@ -7,16 +7,27 @@ import com.coinhub.android.common.toUserModel
 import com.coinhub.android.data.api_services.UserApiService
 import com.coinhub.android.data.dtos.request.CreateDeviceRequestDto
 import com.coinhub.android.data.dtos.request.CreateUserRequestDto
+import com.coinhub.android.di.IoDispatcher
 import com.coinhub.android.domain.models.DeviceModel
 import com.coinhub.android.domain.models.SourceModel
 import com.coinhub.android.domain.models.TicketModel
 import com.coinhub.android.domain.models.UserModel
+import com.coinhub.android.domain.repositories.PreferenceDataStore
 import com.coinhub.android.domain.repositories.UserRepository
 import jakarta.inject.Inject
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import java.math.BigInteger
 
 class UserRepositoryImpl @Inject constructor(
     private val userApiService: UserApiService,
+    private val preferenceDataStore: PreferenceDataStore,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : UserRepository {
+
+    private val userRepositoryScope = CoroutineScope(SupervisorJob() + ioDispatcher)
 
     private var userModel: UserModel? = null
     private var ticketModels: List<TicketModel>? = null
@@ -89,6 +100,7 @@ class UserRepositoryImpl @Inject constructor(
                 throw e
             }
         }
+        saveTotalPrincipalAndInterest(ticketModels!!)
         return ticketModels!!
     }
 
@@ -97,6 +109,19 @@ class UserRepositoryImpl @Inject constructor(
             userApiService.registerDevice(id, dto).toDeviceModel()
         } catch (e: Exception) {
             throw e
+        }
+    }
+
+    private fun saveTotalPrincipalAndInterest(tickets: List<TicketModel>) {
+        val totalPrincipal = tickets.sumOf { ticket ->
+            ticket.ticketHistories.firstOrNull()?.principal ?: BigInteger.ZERO
+        }
+        val totalInterest = tickets.sumOf { ticket ->
+            ticket.ticketHistories.firstOrNull()?.interest ?: BigInteger.ZERO
+        }
+        userRepositoryScope.launch {
+            preferenceDataStore.saveTotalPrincipal(totalPrincipal)
+            preferenceDataStore.saveTotalInterest(totalInterest)
         }
     }
 }

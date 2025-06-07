@@ -1,5 +1,6 @@
 package com.coinhub.android.presentation.ticket
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +14,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -43,8 +45,16 @@ fun TicketScreen(
     val isLoading = viewModel.isLoading.collectAsStateWithLifecycle().value
     val isRefreshing = viewModel.isRefreshing.collectAsStateWithLifecycle().value
 
+    val context = LocalContext.current
+
     LaunchedEffect(Unit) {
         viewModel.fetch()
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.toastMessage.collect { message ->
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
     }
 
     PullToRefreshBox(

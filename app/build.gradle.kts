@@ -153,4 +153,6 @@ dependencies {
     implementation(libs.androidx.datastore.preferences.core)
 
     implementation(libs.compose.charts)
+
+    implementation(libs.bundles.glance)
 }

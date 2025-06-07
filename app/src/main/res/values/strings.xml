@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CoinHub</string>
+    <string name="ticket_widget_description">Your ticket statistics</string>
 </resources>

@@ -10,8 +10,10 @@ import com.coinhub.android.common.enums.ThemeModeEnum
 import com.coinhub.android.data.repositories.PreferenceDataStoreImpl.Companion.MY_PREF_KEY
 import com.coinhub.android.domain.repositories.PreferenceDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import java.math.BigInteger
 import javax.inject.Inject
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
@@ -25,8 +27,9 @@ class PreferenceDataStoreImpl @Inject constructor(
     companion object {
         const val MY_PREF_KEY = "COINHUB_PREF_KEY"
         private val ACCESS_TOKEN = stringPreferencesKey("access_token")
-        private val TEMP_SOURCE_ID = stringPreferencesKey("source_id")
         private val THEME_MODE = stringPreferencesKey("theme_mode")
+        private val TOTAL_PRINCIPAL = stringPreferencesKey("total_principal")
+        private val TOTAL_INTEREST = stringPreferencesKey("total_interest")
     }
 
     override suspend fun saveAccessToken(value: String) {
@@ -38,18 +41,6 @@ class PreferenceDataStoreImpl @Inject constructor(
     override suspend fun getAccessToken(): String? {
         return context.dataStore.data.map { preferences ->
             preferences[ACCESS_TOKEN]
-        }.first()
-    }
-
-    override suspend fun saveTempSourceId(value: String) {
-        context.dataStore.edit { preferences ->
-            preferences[TEMP_SOURCE_ID] = value
-        }
-    }
-
-    override suspend fun getTempSourceId(): String? {
-        return context.dataStore.data.map { preferences ->
-            preferences[TEMP_SOURCE_ID]
         }.first()
     }
 
@@ -68,6 +59,30 @@ class PreferenceDataStoreImpl @Inject constructor(
                 else -> ThemeModeEnum.SYSTEM
             }
         }.first()
+    }
+
+    override suspend fun getTotalPrincipal(): Flow<BigInteger?> {
+        return context.dataStore.data.map { preferences ->
+            preferences[TOTAL_PRINCIPAL]?.toBigIntegerOrNull()
+        }
+    }
+
+    override suspend fun saveTotalPrincipal(value: BigInteger) {
+        context.dataStore.edit { preferences ->
+            preferences[TOTAL_PRINCIPAL] = value.toString()
+        }
+    }
+
+    override suspend fun getTotalInterest(): Flow<BigInteger?> {
+        return context.dataStore.data.map { preferences ->
+            preferences[TOTAL_INTEREST]?.toBigIntegerOrNull()
+        }
+    }
+
+    override suspend fun saveTotalInterest(value: BigInteger) {
+        context.dataStore.edit { preferences ->
+            preferences[TOTAL_INTEREST] = value.toString()
+        }
     }
 
     override suspend fun clearPreferences() {
