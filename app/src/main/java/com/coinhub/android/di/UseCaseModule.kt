@@ -1,10 +1,10 @@
 package com.coinhub.android.di
 
+import com.coinhub.android.data.api_services.SourceApiService
 import com.coinhub.android.data.api_services.TicketApiService
 import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.repositories.PaymentRepository
 import com.coinhub.android.domain.repositories.PreferenceDataStore
-import com.coinhub.android.domain.repositories.SourceRepository
 import com.coinhub.android.domain.repositories.UserRepository
 import com.coinhub.android.domain.use_cases.CheckUserRegisterProfileUseCase
 import com.coinhub.android.domain.use_cases.CheckUserSignedInUseCase
@@ -129,10 +129,10 @@ object UseCaseModule {
     @Provides
     @Singleton
     fun provideCreateSourceUseCase(
-        sourceRepository: SourceRepository,
+        sourceApiService: SourceApiService,
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
     ) = CreateSourceUseCase(
-        sourceRepository = sourceRepository,
+        sourceApiService = sourceApiService,
         ioDispatcher = ioDispatcher
     )
 

@@ -47,7 +47,6 @@ class CreateSourceViewModel @Inject constructor(
         _sourceId.value = id
     }
 
-    // TODO: @NTGNguyen use case create source here
     fun createSource(onSuccess: () -> Unit) {
         viewModelScope.launch {
             _isProcessing.value = true
