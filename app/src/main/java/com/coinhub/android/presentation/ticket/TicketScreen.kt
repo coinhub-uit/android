@@ -2,13 +2,16 @@ package com.coinhub.android.presentation.ticket
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,32 +30,36 @@ import com.coinhub.android.utils.PreviewDeviceSpecs
 import com.coinhub.android.utils.toLocalDate
 import java.math.BigInteger
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TicketScreen(
     onCreateTicket: () -> Unit,
     onTicketDetail: (Int) -> Unit,
     viewModel: TicketViewModel = hiltViewModel(),
 ) {
+    val tickets = viewModel.tickets.collectAsStateWithLifecycle().value
+    val totalPrincipal = viewModel.totalPrincipal.collectAsStateWithLifecycle().value
+    val totalInterest = viewModel.totalInterest.collectAsStateWithLifecycle().value
+    val isLoading = viewModel.isLoading.collectAsStateWithLifecycle().value
+    val isRefreshing = viewModel.isRefreshing.collectAsStateWithLifecycle().value
+
     LaunchedEffect(Unit) {
-        viewModel.getTickets(false)
+        viewModel.fetch()
     }
 
-    val ticketStates by viewModel.ticketsModelState.collectAsStateWithLifecycle()
-    val totalPrincipal by viewModel.totalPrincipal.collectAsStateWithLifecycle()
-    val totalInterest by viewModel.totalInterest.collectAsStateWithLifecycle()
-
-    when (ticketStates) {
-        is TicketViewModel.TicketModelsState.Error -> {}
-        TicketViewModel.TicketModelsState.Loading -> {}//TODO: Do this babe
-        is TicketViewModel.TicketModelsState.Success ->
-            TicketScreen(
-                tickets = (ticketStates as TicketViewModel.TicketModelsState.Success).ticketModels,
-                totalPrincipal = totalPrincipal,
-                totalInterest = totalInterest,
-                onCreateTicket = onCreateTicket,
-                onTicketDetail = onTicketDetail,
-                modifier = Modifier.padding(bottom = 64.dp)
-            )
+    PullToRefreshBox(
+        isRefreshing = isRefreshing,
+        onRefresh = viewModel::refresh,
+    ) {
+        TicketScreen(
+            tickets = tickets,
+            totalPrincipal = totalPrincipal,
+            totalInterest = totalInterest,
+            onCreateTicket = onCreateTicket,
+            onTicketDetail = onTicketDetail,
+            isLoading = isLoading,
+            modifier = Modifier.padding(bottom = 64.dp)
+        )
     }
 }
 
@@ -63,14 +70,21 @@ private fun TicketScreen(
     totalInterest: BigInteger,
     onCreateTicket: () -> Unit,
     onTicketDetail: (Int) -> Unit,
+    isLoading: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    Scaffold(modifier = modifier.padding(16.dp), topBar = {
+    Scaffold(modifier = modifier, topBar = {
         TicketTopBar()
     }) { innerPadding ->
         Column(
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                .padding(innerPadding)
+                .padding(16.dp)
         ) {
+            if (isLoading) {
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            }
+
             TicketStatistics(
                 totalPrincipal = totalPrincipal, totalInterest = totalInterest, onCreateTicket = onCreateTicket
             )
@@ -78,8 +92,7 @@ private fun TicketScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             TicketList(
-                tickets = tickets, onTicketDetail = onTicketDetail,
-                modifier = Modifier.padding(bottom = 32.dp) // Trick
+                tickets = tickets, onTicketDetail = onTicketDetail, modifier = Modifier.padding(bottom = 32.dp) // Trick
             )
         }
     }
@@ -153,6 +166,7 @@ private fun Preview() {
                 totalPrincipal = BigInteger("3000000"),
                 totalInterest = BigInteger("130000"),
                 onCreateTicket = {},
+                isLoading = false,
                 onTicketDetail = {})
         }
     }

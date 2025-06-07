@@ -1,15 +1,21 @@
 package com.coinhub.android.presentation.home
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -22,12 +28,8 @@ import com.coinhub.android.presentation.home.components.HomeListSource
 import com.coinhub.android.presentation.home.components.HomeTopBar
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
-import java.time.LocalDate
-import java.time.ZonedDateTime
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     onToSourceDetail: (SourceModel) -> Unit,
@@ -39,44 +41,49 @@ fun HomeScreen(
     onAiChat: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
+    val sources = viewModel.sources.collectAsStateWithLifecycle().value
+    val user = viewModel.user.collectAsStateWithLifecycle().value
+    val copySourceIdToClipboard = viewModel::copySourceIdToClipboard
+    val isLoading = viewModel.isLoading.collectAsStateWithLifecycle().value
+    val isRefreshing = viewModel.isRefreshing.collectAsStateWithLifecycle().value
+
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        viewModel.getUserSources()
-        viewModel.getUserOnUserLogin()
+        viewModel.toastMessage.collect { message ->
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
     }
 
-    val sourceModels = viewModel.sourceModels.collectAsStateWithLifecycle().value
-    val userModel = viewModel.userModel.collectAsStateWithLifecycle().value
-    val copySourceIdToClipboard = viewModel::copySourceIdToClipboard
+    LaunchedEffect(Unit) {
+        viewModel.fetch()
+    }
 
-    HomeScreen(
-        userModel = userModel ?: UserModel(
-            id = Uuid.parse("00000000-0000-0000-0000-000000000000"),
-            fullName = "No One",
-            citizenId = "0000000000000",
-            birthDate = LocalDate.now(),
-            createdAt = ZonedDateTime.now(),
-            deletedAt = null,
-            avatar = null,
-            address = null,
-        ),
-        sourceModels = sourceModels,
-        onToSourceDetail = onToSourceDetail,
-        onTopUp = onTopUp,
-        onCreateSource = onCreateSource,
-        onTransferMoney = onTransferMoney,
-        onTransferMoneyQr = onTransferMoneyQr,
-        onNotification = onNotification,
-        onAiChat = onAiChat,
-        copySourceIdToClipboard = copySourceIdToClipboard,
-        modifier = Modifier.padding(bottom = 64.dp)
-    )
+    PullToRefreshBox(
+        isRefreshing = isRefreshing,
+        onRefresh = viewModel::refresh,
+    ) {
+        HomeScreen(
+            user = user,
+            sources = sources,
+            onToSourceDetail = onToSourceDetail,
+            onTopUp = onTopUp,
+            onCreateSource = onCreateSource,
+            onTransferMoney = onTransferMoney,
+            onTransferMoneyQr = onTransferMoneyQr,
+            onNotification = onNotification,
+            onAiChat = onAiChat,
+            copySourceIdToClipboard = copySourceIdToClipboard,
+            isLoading = isLoading,
+            modifier = Modifier.padding(bottom = 64.dp) // Trick
+        )
+    }
 }
 
 @Composable
 private fun HomeScreen(
-    userModel: UserModel,
-    sourceModels: List<SourceModel>,
+    user: UserModel?,
+    sources: List<SourceModel>,
     onToSourceDetail: (SourceModel) -> Unit,
     onTopUp: () -> Unit,
     onCreateSource: () -> Unit,
@@ -85,6 +92,7 @@ private fun HomeScreen(
     onNotification: () -> Unit,
     onAiChat: () -> Unit,
     copySourceIdToClipboard: (Context, String) -> Unit,
+    isLoading: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -93,22 +101,26 @@ private fun HomeScreen(
                 onNotification = onNotification, onAiChat = onAiChat
             )
         }) { innerPadding ->
+        if (isLoading) {
+            LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+        }
         Column(
             modifier = Modifier
                 .padding(innerPadding)
                 .padding(16.dp)
                 .fillMaxSize()
         ) {
-            HomeGreeting(userModel = userModel)
+            HomeGreeting(user = user)
             Spacer(modifier = Modifier.height(32.dp))
             HomeListSource(
-                sourceModels = sourceModels,
+                sources = sources,
                 onToSourceDetail = onToSourceDetail,
                 copySourceIdToClipboard = copySourceIdToClipboard
             )
-            Spacer(modifier = Modifier.height(16.dp))
             HomeFeatures(
-                onTopUp = onTopUp, onCreateSource = onCreateSource, onTransferMoney = onTransferMoney,
+                onTopUp = onTopUp,
+                onCreateSource = onCreateSource,
+                onTransferMoney = onTransferMoney,
                 onTransferMoneyQr = onTransferMoneyQr
             )
         }

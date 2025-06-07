@@ -24,12 +24,12 @@ private fun getRandomGreeting(): String {
 }
 
 @Composable
-fun HomeGreeting(userModel: UserModel) {
+fun HomeGreeting(user: UserModel?) {
     val greeting = remember { getRandomGreeting() }
 
     Text(
-        text = "$greeting, ${userModel.fullName}",
-        style = MaterialTheme.typography.displaySmall,
+        text = "$greeting, ${user?.fullName ?: "..."}!",
+        style = MaterialTheme.typography.headlineMedium,
         fontWeight = FontWeight.Bold,
         softWrap = true
     )
@@ -52,7 +52,7 @@ fun HomeGreetingPreview() {
 
     Surface {
         CoinhubTheme {
-            HomeGreeting(userModel = userModel)
+            HomeGreeting(user = userModel)
         }
     }
 }

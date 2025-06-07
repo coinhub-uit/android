@@ -43,15 +43,15 @@ import java.math.BigInteger
 
 @Composable
 fun HomeListSource(
-    sourceModels: List<SourceModel>,
+    sources: List<SourceModel>,
     onToSourceDetail: (SourceModel) -> Unit,
     copySourceIdToClipboard: (context: Context, sourceId: String) -> Unit,
 ) {
-    if (sourceModels.isEmpty()) {
+    if (sources.isEmpty()) {
         return // Too lazy to show empty state
     }
 
-    val pagerState = rememberPagerState { sourceModels.size }
+    val pagerState = rememberPagerState { sources.size }
 
     Text(
         text = "Your Sources", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.SemiBold
@@ -60,14 +60,16 @@ fun HomeListSource(
     Spacer(modifier = Modifier.height(8.dp))
 
     HorizontalPager(
-        state = pagerState, contentPadding = PaddingValues(end = 32.dp), pageSpacing = 16.dp
+        state = pagerState, contentPadding = PaddingValues(horizontal = 8.dp), pageSpacing = 16.dp
     ) { page ->
         HomeSourceCard(
-            sourceModel = sourceModels[page],
+            sourceModel = sources[page],
             onSourceClick = onToSourceDetail,
             copySourceIdToClipboard = copySourceIdToClipboard
         )
     }
+
+    Spacer(modifier = Modifier.height(16.dp))
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -166,7 +168,7 @@ private fun HomeSourceCard(
 private fun HomeListSourcePreview() {
     CoinhubTheme {
         HomeListSource(
-            sourceModels = listOf(
+            sources = listOf(
                 SourceModel("01123142213512521", BigInteger("9999999999999999")),
                 SourceModel("00", BigInteger("1200000")),
                 SourceModel("KevinNitroSourceId", BigInteger("12000000")),

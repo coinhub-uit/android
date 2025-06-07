@@ -18,7 +18,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
@@ -26,6 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coinhub.android.presentation.create_source.components.CreateSourceTopBar
 import com.coinhub.android.presentation.navigation.app.LocalAnimatedVisibilityScope
 import com.coinhub.android.presentation.navigation.app.LocalSharedTransitionScope
@@ -38,11 +38,10 @@ fun CreateSourceScreen(
     onBack: () -> Unit,
     viewModel: CreateSourceViewModel = hiltViewModel(),
 ) {
-    val sourceId = viewModel.sourceId.collectAsState().value
-    val sourceCheckState = viewModel.sourceCheckState.collectAsState().value
-    val setSourceId = viewModel::setSourceId
-    val isFormValid = viewModel.isFormValid.collectAsState().value
-    val isProcessing = viewModel.isProcessing.collectAsState().value
+    val sourceId = viewModel.sourceId.collectAsStateWithLifecycle().value
+    val sourceCheckState = viewModel.sourceCheckState.collectAsStateWithLifecycle().value
+    val isFormValid = viewModel.isFormValid.collectAsStateWithLifecycle().value
+    val isProcessing = viewModel.isProcessing.collectAsStateWithLifecycle().value
 
     val sharedTransitionScope =
         LocalSharedTransitionScope.current ?: error("SharedTransitionScope not provided via CompositionLocal")
@@ -52,7 +51,7 @@ fun CreateSourceScreen(
     with(sharedTransitionScope) {
         CreateSourceScreen(
             sourceId = sourceId,
-            onSourceIdChange = setSourceId,
+            onSourceIdChange = viewModel::setSourceId,
             sourceCheckState = sourceCheckState,
             isFormValid = isFormValid,
             isProcessing = isProcessing,
