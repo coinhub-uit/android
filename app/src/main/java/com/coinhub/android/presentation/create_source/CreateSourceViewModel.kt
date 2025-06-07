@@ -38,7 +38,7 @@ class CreateSourceViewModel @Inject constructor(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), CreateSourceStates.SourceCheckState())
 
-    val isFormValid = sourceCheckState.drop(1).map { it.isValid }.distinctUntilChanged()
+    val isFormValid = sourceCheckState.map { it.isValid }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     private val _isProcessing = MutableStateFlow(false)
