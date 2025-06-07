@@ -17,7 +17,6 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coinhub.android.data.remote.SupabaseService
 import com.coinhub.android.domain.managers.ThemeManger
-import com.coinhub.android.domain.managers.UserManager
 import com.coinhub.android.presentation.navigation.app.AppNavGraph
 import com.coinhub.android.presentation.navigation.auth.AuthNavGraph
 import com.coinhub.android.shortcuts.TicketScreenShortcut
@@ -30,9 +29,6 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var supabaseService: SupabaseService
-
-    @Inject
-    lateinit var userManager: UserManager
 
     @Inject
     lateinit var themeManager: ThemeManger

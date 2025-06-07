@@ -4,7 +4,7 @@ import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.coinhub.android.data.models.SourceModel
+import com.coinhub.android.domain.models.SourceModel
 import com.coinhub.android.utils.copyToClipboard
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay

@@ -1,4 +1,4 @@
-package com.coinhub.android.data.models
+package com.coinhub.android.domain.models
 
 import java.time.LocalDate
 

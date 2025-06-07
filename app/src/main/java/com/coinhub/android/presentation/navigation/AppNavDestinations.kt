@@ -1,6 +1,6 @@
 package com.coinhub.android.presentation.navigation
 
-import com.coinhub.android.data.models.SourceModel
+import com.coinhub.android.domain.models.SourceModel
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

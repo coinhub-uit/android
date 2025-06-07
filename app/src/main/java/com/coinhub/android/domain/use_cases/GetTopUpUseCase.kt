@@ -1,7 +1,7 @@
 package com.coinhub.android.domain.use_cases
 
-import com.coinhub.android.data.models.TopUpModel
 import com.coinhub.android.di.IoDispatcher
+import com.coinhub.android.domain.models.TopUpModel
 import com.coinhub.android.domain.repositories.PaymentRepository
 import jakarta.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher

@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.coinhub.android.data.models.UserModel
+import com.coinhub.android.domain.models.UserModel
 import com.coinhub.android.presentation.menu.components.MenuAvatar
 import com.coinhub.android.presentation.menu.components.MenuItem
 import com.coinhub.android.presentation.menu.components.MenuTopBar

@@ -4,7 +4,7 @@ import com.coinhub.android.domain.managers.ThemeManger
 import com.coinhub.android.domain.managers.UserManager
 import com.coinhub.android.domain.repositories.PreferenceDataStore
 import com.coinhub.android.domain.repositories.UserRepository
-import com.coinhub.android.domain.use_cases.CheckUserRegisterProfileUseCase
+import com.coinhub.android.domain.use_cases.CheckProfileAvailableUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,19 +16,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class SingletonManagerModule {
-    @Provides
-    @Singleton
-    fun provideUserManager(
-        supabaseClient: SupabaseClient,
-        userRepository: UserRepository,
-        checkUserRegisterProfileUseCase: CheckUserRegisterProfileUseCase,
-        @IoDispatcher ioDispatcher: CoroutineDispatcher,
-    ) =
-        UserManager(
-            supabaseClient = supabaseClient,
-            userRepository = userRepository,
-            checkUserRegisterProfileUseCase = checkUserRegisterProfileUseCase, ioDispatcher = ioDispatcher
-        )
+
 
     @Provides
     @Singleton

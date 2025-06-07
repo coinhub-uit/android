@@ -3,8 +3,8 @@ package com.coinhub.android.data.repositories
 import com.coinhub.android.common.toSourceModel
 import com.coinhub.android.common.toTicketModel
 import com.coinhub.android.data.api_services.SourceApiService
-import com.coinhub.android.data.models.SourceModel
-import com.coinhub.android.data.models.TicketModel
+import com.coinhub.android.domain.models.SourceModel
+import com.coinhub.android.domain.models.TicketModel
 import com.coinhub.android.domain.repositories.SourceRepository
 import javax.inject.Inject
 

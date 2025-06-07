@@ -12,8 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.coinhub.android.data.models.AvailablePlanModel
-import com.coinhub.android.data.models.TicketModel
+import com.coinhub.android.domain.models.AvailablePlanModel
+import com.coinhub.android.domain.models.TicketModel
 import com.coinhub.android.utils.toPercentFormat
 import com.coinhub.android.utils.toVndFormat
 import kotlinx.datetime.Clock

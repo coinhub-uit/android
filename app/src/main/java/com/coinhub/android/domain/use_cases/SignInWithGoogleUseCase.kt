@@ -1,6 +1,6 @@
 package com.coinhub.android.domain.use_cases
 
-import com.coinhub.android.data.models.GoogleNavigateResultModel
+import com.coinhub.android.domain.models.GoogleNavigateResultModel
 import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.repositories.PreferenceDataStore
 import io.github.jan.supabase.compose.auth.composable.NativeSignInResult

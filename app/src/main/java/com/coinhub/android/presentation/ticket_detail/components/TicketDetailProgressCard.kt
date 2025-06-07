@@ -17,7 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.coinhub.android.data.models.TicketModel
+import com.coinhub.android.domain.models.TicketModel
 import com.coinhub.android.presentation.common.utils.calculateTicketProgress
 import com.coinhub.android.utils.toDateString
 import com.coinhub.android.utils.toVndFormat

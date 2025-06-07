@@ -19,9 +19,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.coinhub.android.data.models.AvailablePlanModel
-import com.coinhub.android.data.models.MethodEnum
-import com.coinhub.android.data.models.SourceModel
+import com.coinhub.android.domain.models.AvailablePlanModel
+import com.coinhub.android.domain.models.MethodEnum
+import com.coinhub.android.domain.models.SourceModel
 import com.coinhub.android.presentation.common.components.RowSelectBottomSheet
 import com.coinhub.android.ui.theme.CoinhubTheme
 import java.math.BigInteger

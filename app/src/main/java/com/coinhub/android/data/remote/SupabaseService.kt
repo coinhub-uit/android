@@ -59,6 +59,7 @@ class SupabaseService @Inject constructor(
             } catch (e: Exception) {
                 throw Exception("Failed to sign out: ${e.message}")
             }
+            //Please clear all caches
         }
     }
 

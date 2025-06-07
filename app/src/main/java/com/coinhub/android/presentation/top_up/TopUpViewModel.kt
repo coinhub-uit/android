@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.BuildConfig
 import com.coinhub.android.data.dtos.request.CreateTopUpRequestDto
-import com.coinhub.android.data.models.CreateTopUpModel
-import com.coinhub.android.data.models.SourceModel
-import com.coinhub.android.data.models.TopUpModel
+import com.coinhub.android.domain.models.CreateTopUpModel
+import com.coinhub.android.domain.models.SourceModel
+import com.coinhub.android.domain.models.TopUpModel
 import com.coinhub.android.domain.use_cases.CreateTopUpUseCase
 import com.coinhub.android.domain.use_cases.GetUserSourcesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel

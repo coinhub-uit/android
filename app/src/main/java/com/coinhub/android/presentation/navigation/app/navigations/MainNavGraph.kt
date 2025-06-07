@@ -7,7 +7,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.coinhub.android.data.models.SourceModel
+import com.coinhub.android.domain.models.SourceModel
 import com.coinhub.android.presentation.home.HomeScreen
 import com.coinhub.android.presentation.menu.MenuScreen
 import com.coinhub.android.presentation.navigation.AppNavDestinations

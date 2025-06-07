@@ -1,6 +1,6 @@
 package com.coinhub.android.domain.use_cases
 
-import com.coinhub.android.data.models.SourceModel
+import com.coinhub.android.domain.models.SourceModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.math.BigInteger

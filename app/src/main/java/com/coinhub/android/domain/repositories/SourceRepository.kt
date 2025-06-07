@@ -1,7 +1,7 @@
 package com.coinhub.android.domain.repositories
 
-import com.coinhub.android.data.models.SourceModel
-import com.coinhub.android.data.models.TicketModel
+import com.coinhub.android.domain.models.SourceModel
+import com.coinhub.android.domain.models.TicketModel
 
 interface SourceRepository {
     suspend fun getSourceById(id: String): SourceModel?

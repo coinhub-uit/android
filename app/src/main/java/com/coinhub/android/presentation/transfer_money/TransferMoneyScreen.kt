@@ -27,8 +27,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.coinhub.android.data.models.SourceModel
-import com.coinhub.android.data.models.UserModel
+import com.coinhub.android.domain.models.SourceModel
+import com.coinhub.android.domain.models.UserModel
 import com.coinhub.android.presentation.navigation.app.LocalAnimatedVisibilityScope
 import com.coinhub.android.presentation.navigation.app.LocalSharedTransitionScope
 import com.coinhub.android.presentation.transfer_money.components.TransferMoneyEnterAmount
@@ -38,6 +38,7 @@ import com.coinhub.android.presentation.transfer_money.components.TransferMoneyT
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
 import java.math.BigInteger
+import java.time.LocalDate
 import java.time.ZonedDateTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -71,7 +72,7 @@ fun TransferMoneyScreen(
         }
     }
 
-    LaunchedEffect (Unit){
+    LaunchedEffect(Unit) {
         viewModel.toastMessage.collect { message ->
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         }
@@ -189,7 +190,7 @@ fun TransferMoneyScreenPreview() {
                     id = Uuid.random(),
                     fullName = "Nguyen Van A",
                     citizenId = "123456789",
-                    birthDate = java.time.LocalDate.now(),
+                    birthDate = LocalDate.now(),
                     avatar = "https://example.com/avatar.png",
                     address = "123 Street, City",
                     createdAt = ZonedDateTime.now(),

@@ -2,7 +2,7 @@ package com.coinhub.android.presentation.top_up_result
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.coinhub.android.data.models.TopUpModel
+import com.coinhub.android.domain.models.TopUpModel
 import com.coinhub.android.domain.use_cases.GetTopUpUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow

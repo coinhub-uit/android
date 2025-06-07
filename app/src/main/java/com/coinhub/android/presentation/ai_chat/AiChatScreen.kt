@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.coinhub.android.data.models.AiChatModel
+import com.coinhub.android.domain.models.AiChatModel
 import com.coinhub.android.presentation.ai_chat.components.AiChatMessageItem
 import com.coinhub.android.presentation.ai_chat.components.AiChatTopBar
 import com.coinhub.android.presentation.ai_chat.components.ChatInputField
@@ -121,10 +121,10 @@ fun AiChatScreenPreview() {
 
         AiChatScreen(
             messages = messages,
-                     onSendMessage = {},
-                     onBack = {},
-                     message = "Cool",
-                     onMessageChange = { _ -> },
-                     onDeleteSession = {})
+            onSendMessage = {},
+            onBack = {},
+            message = "Cool",
+            onMessageChange = { _ -> },
+            onDeleteSession = {})
     }
 }

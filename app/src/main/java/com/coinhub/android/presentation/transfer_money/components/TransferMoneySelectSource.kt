@@ -16,7 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.coinhub.android.data.models.SourceModel
+import com.coinhub.android.domain.models.SourceModel
 import com.coinhub.android.presentation.common.components.RowSelectBottomSheet
 
 @Composable

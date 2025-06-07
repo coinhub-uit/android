@@ -3,8 +3,10 @@ package com.coinhub.android.presentation.home
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.coinhub.android.data.models.SourceModel
-import com.coinhub.android.domain.managers.UserManager
+import com.coinhub.android.domain.models.SourceModel
+import com.coinhub.android.domain.models.UserModel
+import com.coinhub.android.domain.repositories.AuthRepository
+import com.coinhub.android.domain.repositories.UserRepository
 import com.coinhub.android.domain.use_cases.GetUserSourcesUseCase
 import com.coinhub.android.utils.copyToClipboard
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,9 +22,12 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getUserSourcesUseCase: GetUserSourcesUseCase,
-    private val userManager: UserManager,
+    private val userRepository: UserRepository,
+    private val authRepository: AuthRepository,
 ) : ViewModel() {
-    val user = userManager.user
+
+    private val _user = MutableStateFlow<UserModel?>(null)
+    val user = _user.asStateFlow()
 
     private val _sources = MutableStateFlow<List<SourceModel>>(emptyList())
     val sources = _sources.asStateFlow()
@@ -41,8 +46,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun fetch() {
-        // TODO: Clean?
-        if (userManager.user.value != null) {
+        if (_user.value != null) {
             return
         }
         viewModelScope.launch {
@@ -52,23 +56,26 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    // FIXME: No catch
     private suspend fun fetchUser() {
-        try {
-            userManager.reloadUser()
-        } catch (e: Exception) {
-            _toastMessage.emit("Error fetching user: ${e.message}")
+        when (val result = userRepository.getUserById(authRepository.getCurrentUserId())) {
+            is UserModel -> {
+                _user.value = result
+            }
+
+            null -> {
+                _toastMessage.emit("Failed to fetch user data")
+            }
         }
     }
 
     private suspend fun fetchSources() {
-        when (val result = getUserSourcesUseCase(false)) {
-            is GetUserSourcesUseCase.Result.Success -> {
-                _sources.value = result.sources
+        when (val result = userRepository.getUserSources(authRepository.getCurrentUserId(), false)) {
+            is List<SourceModel> -> {
+                _sources.value = result
             }
 
-            is GetUserSourcesUseCase.Result.Error -> {
-                _toastMessage.emit(result.message)
+            null -> {
+                _toastMessage.emit("Failed to fetch sources")
             }
         }
     }
@@ -82,17 +89,25 @@ class HomeViewModel @Inject constructor(
     }
 
     private suspend fun refreshUser() {
-        userManager.reloadUser()
+        when (val result = userRepository.getUserById(authRepository.getCurrentUserId(), true)) {
+            is UserModel -> {
+                _user.value = result
+            }
+
+            null -> {
+                _toastMessage.emit("Failed to fetch user data")
+            }
+        }
     }
 
     private suspend fun refreshSources() {
-        when (val result = getUserSourcesUseCase(true)) {
-            is GetUserSourcesUseCase.Result.Success -> {
-                _sources.value = result.sources
+        when (val result = userRepository.getUserSources(authRepository.getCurrentUserId(), true)) {
+            is List<SourceModel> -> {
+                _sources.value = result
             }
 
-            is GetUserSourcesUseCase.Result.Error -> {
-                _toastMessage.emit(result.message)
+            null -> {
+                _toastMessage.emit("Failed to fetch sources")
             }
         }
     }

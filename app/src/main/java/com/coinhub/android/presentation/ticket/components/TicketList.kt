@@ -22,11 +22,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.coinhub.android.data.models.MethodEnum
-import com.coinhub.android.data.models.PlanModel
-import com.coinhub.android.data.models.TicketHistoryModel
-import com.coinhub.android.data.models.TicketModel
-import com.coinhub.android.data.models.TicketStatus
+import com.coinhub.android.domain.models.MethodEnum
+import com.coinhub.android.domain.models.PlanModel
+import com.coinhub.android.domain.models.TicketHistoryModel
+import com.coinhub.android.domain.models.TicketModel
+import com.coinhub.android.domain.models.TicketStatus
 import com.coinhub.android.presentation.common.utils.calculateTicketProgress
 import com.coinhub.android.presentation.navigation.app.LocalAnimatedVisibilityScope
 import com.coinhub.android.presentation.navigation.app.LocalSharedTransitionScope

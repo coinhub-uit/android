@@ -2,7 +2,7 @@ package com.coinhub.android.presentation.ticket
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.coinhub.android.data.models.TicketModel
+import com.coinhub.android.domain.models.TicketModel
 import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.repositories.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel

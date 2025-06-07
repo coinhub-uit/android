@@ -20,7 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.coinhub.android.data.models.NotificationModel
+import com.coinhub.android.domain.models.NotificationModel
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.toDateString
 import java.time.ZonedDateTime

@@ -2,7 +2,7 @@ package com.coinhub.android.presentation.ai_chat
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
-import com.coinhub.android.data.models.AiChatModel
+import com.coinhub.android.domain.models.AiChatModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

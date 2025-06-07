@@ -1,7 +1,7 @@
 package com.coinhub.android.data.remote
 
-import com.coinhub.android.data.models.UserModel
 import com.coinhub.android.data.repositories.UserRepositoryImpl
+import com.coinhub.android.domain.models.UserModel
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import jakarta.inject.Inject

@@ -2,7 +2,7 @@ package com.coinhub.android.data.repositories
 
 import com.coinhub.android.common.toAvailablePlanModel
 import com.coinhub.android.data.api_services.PlanApiService
-import com.coinhub.android.data.models.AvailablePlanModel
+import com.coinhub.android.domain.models.AvailablePlanModel
 import com.coinhub.android.domain.repositories.PlanRepository
 import javax.inject.Inject
 

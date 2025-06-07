@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
-import com.coinhub.android.data.models.UserModel
+import com.coinhub.android.domain.models.UserModel
 import com.coinhub.android.ui.theme.CoinhubTheme
 import java.time.LocalDate
 import java.time.ZonedDateTime

@@ -6,8 +6,8 @@ import com.coinhub.android.common.toTopUpModel
 import com.coinhub.android.data.api_services.PaymentApiService
 import com.coinhub.android.data.dtos.request.CreateTopUpRequestDto
 import com.coinhub.android.data.dtos.request.TransferMoneyRequestDto
-import com.coinhub.android.data.models.CreateTopUpModel
-import com.coinhub.android.data.models.TopUpModel
+import com.coinhub.android.domain.models.CreateTopUpModel
+import com.coinhub.android.domain.models.TopUpModel
 import com.coinhub.android.domain.repositories.PaymentRepository
 import javax.inject.Inject
 

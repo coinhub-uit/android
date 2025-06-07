@@ -7,10 +7,10 @@ import com.coinhub.android.common.toUserModel
 import com.coinhub.android.data.api_services.UserApiService
 import com.coinhub.android.data.dtos.request.CreateDeviceRequestDto
 import com.coinhub.android.data.dtos.request.CreateUserRequestDto
-import com.coinhub.android.data.models.DeviceModel
-import com.coinhub.android.data.models.SourceModel
-import com.coinhub.android.data.models.TicketModel
-import com.coinhub.android.data.models.UserModel
+import com.coinhub.android.domain.models.DeviceModel
+import com.coinhub.android.domain.models.SourceModel
+import com.coinhub.android.domain.models.TicketModel
+import com.coinhub.android.domain.models.UserModel
 import com.coinhub.android.domain.repositories.UserRepository
 import jakarta.inject.Inject
 
@@ -22,7 +22,7 @@ class UserRepositoryImpl @Inject constructor(
     private var ticketModels: List<TicketModel>? = null
     private var sourceModels: List<SourceModel>? = null
 
-    override suspend fun getUserById(id: String, refresh: Boolean): UserModel {
+    override suspend fun getUserById(id: String, refresh: Boolean): UserModel? {
         if (refresh || userModel == null) {
             try {
                 userApiService.getUserById(id).toUserModel()
@@ -31,7 +31,7 @@ class UserRepositoryImpl @Inject constructor(
                 throw e
             }
         }
-        return this.userModel!!
+        return this.userModel
     }
 
     override suspend fun registerProfile(user: CreateUserRequestDto): UserModel {
@@ -66,7 +66,7 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getUserSources(id: String, refresh: Boolean): List<SourceModel> {
+    override suspend fun getUserSources(id: String, refresh: Boolean): List<SourceModel>? {
         if (refresh || sourceModels == null) {
             try {
                 sourceModels = userApiService.getUserSources(id).map {
@@ -76,7 +76,7 @@ class UserRepositoryImpl @Inject constructor(
                 throw e
             }
         }
-        return sourceModels!!
+        return sourceModels
     }
 
     override suspend fun getUserTickets(id: String, refresh: Boolean): List<TicketModel> {

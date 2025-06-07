@@ -1,6 +1,6 @@
 package com.coinhub.android.data.dtos.request
 
-import com.coinhub.android.data.models.MethodEnum
+import com.coinhub.android.domain.models.MethodEnum
 
 data class CreateTicketRequestDto(
     val sourceId: String,

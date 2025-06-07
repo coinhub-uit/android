@@ -1,6 +1,6 @@
 package com.coinhub.android.domain.repositories
 
-import com.coinhub.android.data.models.AvailablePlanModel
+import com.coinhub.android.domain.models.AvailablePlanModel
 
 interface PlanRepository {
     suspend fun getAvailablePlans(): List<AvailablePlanModel>

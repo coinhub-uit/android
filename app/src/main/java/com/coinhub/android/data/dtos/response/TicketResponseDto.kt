@@ -1,7 +1,7 @@
 package com.coinhub.android.data.dtos.response
 
-import com.coinhub.android.data.models.MethodEnum
-import com.coinhub.android.data.models.TicketStatus
+import com.coinhub.android.domain.models.MethodEnum
+import com.coinhub.android.domain.models.TicketStatus
 
 data class TicketResponseDto(
     val id: Int,

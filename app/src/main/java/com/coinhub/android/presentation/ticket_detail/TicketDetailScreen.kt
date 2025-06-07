@@ -22,12 +22,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.coinhub.android.data.models.AvailablePlanModel
-import com.coinhub.android.data.models.MethodEnum
-import com.coinhub.android.data.models.PlanModel
-import com.coinhub.android.data.models.TicketHistoryModel
-import com.coinhub.android.data.models.TicketModel
-import com.coinhub.android.data.models.TicketStatus
+import com.coinhub.android.domain.models.AvailablePlanModel
+import com.coinhub.android.domain.models.MethodEnum
+import com.coinhub.android.domain.models.PlanModel
+import com.coinhub.android.domain.models.TicketHistoryModel
+import com.coinhub.android.domain.models.TicketModel
+import com.coinhub.android.domain.models.TicketStatus
 import com.coinhub.android.presentation.navigation.app.LocalAnimatedVisibilityScope
 import com.coinhub.android.presentation.navigation.app.LocalSharedTransitionScope
 import com.coinhub.android.presentation.ticket_detail.components.TicketDetailChart
@@ -157,45 +157,45 @@ private fun TicketDetailScreenPreview() {
         Surface {
             TicketDetailScreen(
                 ticket = TicketModel(
-                id = 1,
-                openedAt = "01/01/2025".toLocalDate(),
-                closedAt = null,
-                status = TicketStatus.ACTIVE,
-                method = MethodEnum.PR,
-                ticketHistories = listOf(
-                    TicketHistoryModel(
-                        issuedAt = "01/09/2025".toLocalDate(),
-                        maturedAt = "01/11/2025".toLocalDate(),
-                        principal = BigInteger("1000000"),
-                        interest = BigInteger("40000")
-                    ), TicketHistoryModel(
-                        issuedAt = "01/07/2025".toLocalDate(),
-                        maturedAt = "01/09/2025".toLocalDate(),
-                        principal = BigInteger("1000000"),
-                        interest = BigInteger("90000")
-                    ), TicketHistoryModel(
-                        issuedAt = "01/05/2025".toLocalDate(),
-                        maturedAt = "01/07/2025".toLocalDate(),
-                        principal = BigInteger("1000000"),
-                        interest = BigInteger("23000")
-                    ), TicketHistoryModel(
-                        issuedAt = "01/03/2025".toLocalDate(),
-                        maturedAt = "01/05/2025".toLocalDate(),
-                        principal = BigInteger("1000000"),
-                        interest = BigInteger("54000")
-                    ), TicketHistoryModel(
-                        issuedAt = "01/01/2025".toLocalDate(),
-                        maturedAt = "01/03/2025".toLocalDate(),
-                        principal = BigInteger("1000000"),
-                        interest = BigInteger("50000")
+                    id = 1,
+                    openedAt = "01/01/2025".toLocalDate(),
+                    closedAt = null,
+                    status = TicketStatus.ACTIVE,
+                    method = MethodEnum.PR,
+                    ticketHistories = listOf(
+                        TicketHistoryModel(
+                            issuedAt = "01/09/2025".toLocalDate(),
+                            maturedAt = "01/11/2025".toLocalDate(),
+                            principal = BigInteger("1000000"),
+                            interest = BigInteger("40000")
+                        ), TicketHistoryModel(
+                            issuedAt = "01/07/2025".toLocalDate(),
+                            maturedAt = "01/09/2025".toLocalDate(),
+                            principal = BigInteger("1000000"),
+                            interest = BigInteger("90000")
+                        ), TicketHistoryModel(
+                            issuedAt = "01/05/2025".toLocalDate(),
+                            maturedAt = "01/07/2025".toLocalDate(),
+                            principal = BigInteger("1000000"),
+                            interest = BigInteger("23000")
+                        ), TicketHistoryModel(
+                            issuedAt = "01/03/2025".toLocalDate(),
+                            maturedAt = "01/05/2025".toLocalDate(),
+                            principal = BigInteger("1000000"),
+                            interest = BigInteger("54000")
+                        ), TicketHistoryModel(
+                            issuedAt = "01/01/2025".toLocalDate(),
+                            maturedAt = "01/03/2025".toLocalDate(),
+                            principal = BigInteger("1000000"),
+                            interest = BigInteger("50000")
+                        )
+                    ),
+                    plan = PlanModel(
+                        id = 2, days = 90
                     )
-                ),
-                plan = PlanModel(
-                    id = 2, days = 90
-                )
-            ), withdrawPlan = AvailablePlanModel(
-                planHistoryId = 1, rate = 0.04f, planId = 2, days = 90
-            ), onBack = {}, onWithdraw = {}, isLoading = false
+                ), withdrawPlan = AvailablePlanModel(
+                    planHistoryId = 1, rate = 0.04f, planId = 2, days = 90
+                ), onBack = {}, onWithdraw = {}, isLoading = false
             )
         }
     }

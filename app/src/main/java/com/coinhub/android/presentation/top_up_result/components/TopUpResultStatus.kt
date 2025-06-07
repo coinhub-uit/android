@@ -22,10 +22,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import com.coinhub.android.data.models.TopUpModel
+import com.coinhub.android.domain.models.TopUpModel
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.toDateString
 import com.coinhub.android.utils.toVndFormat
+import java.math.BigInteger
 import java.time.ZonedDateTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -154,7 +155,7 @@ fun TopUpResultStatusSuccessPreview() {
                 topUp = TopUpModel(
                     id = Uuid.random(),
                     provider = TopUpModel.ProviderEnum.vnpay,
-                    amount = java.math.BigInteger("1000000"),
+                    amount = BigInteger("1000000"),
                     status = TopUpModel.StatusEnum.success,
                     createdAt = ZonedDateTime.now()
                 )
@@ -173,9 +174,9 @@ fun TopUpResultStatusProcessingPreview() {
                 topUp = TopUpModel(
                     id = Uuid.random(),
                     provider = TopUpModel.ProviderEnum.momo,
-                    amount = java.math.BigInteger("500000"),
+                    amount = BigInteger("500000"),
                     status = TopUpModel.StatusEnum.proccesing,
-                    createdAt = java.time.ZonedDateTime.now()
+                    createdAt = ZonedDateTime.now()
                 )
             )
         }
@@ -192,9 +193,9 @@ fun TopUpResultStatusDeclinedPreview() {
                 topUp = TopUpModel(
                     id = Uuid.random(),
                     provider = TopUpModel.ProviderEnum.zalo,
-                    amount = java.math.BigInteger("200000"),
+                    amount = BigInteger("200000"),
                     status = TopUpModel.StatusEnum.declined,
-                    createdAt = java.time.ZonedDateTime.now()
+                    createdAt = ZonedDateTime.now()
                 )
             )
         }
@@ -211,9 +212,9 @@ fun TopUpResultStatusOverduePreview() {
                 topUp = TopUpModel(
                     id = Uuid.random(),
                     provider = TopUpModel.ProviderEnum.vnpay,
-                    amount = java.math.BigInteger("300000"),
+                    amount = BigInteger("300000"),
                     status = TopUpModel.StatusEnum.overdue,
-                    createdAt = java.time.ZonedDateTime.now()
+                    createdAt = ZonedDateTime.now()
                 )
             )
         }

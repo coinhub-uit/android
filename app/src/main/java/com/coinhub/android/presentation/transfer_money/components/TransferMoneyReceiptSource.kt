@@ -14,7 +14,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.coinhub.android.data.models.UserModel
+import com.coinhub.android.domain.models.UserModel
 import com.coinhub.android.ui.theme.CoinhubTheme
 import java.time.LocalDate
 import java.time.ZonedDateTime

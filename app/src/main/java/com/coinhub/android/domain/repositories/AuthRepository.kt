@@ -1,6 +1,6 @@
 package com.coinhub.android.domain.repositories
 
-import com.coinhub.android.data.models.GoogleNavigateResultModel
+import com.coinhub.android.domain.models.GoogleNavigateResultModel
 import kotlin.reflect.KSuspendFunction1
 
 interface AuthRepository {

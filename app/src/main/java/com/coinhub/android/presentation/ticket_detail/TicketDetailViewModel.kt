@@ -2,8 +2,8 @@ package com.coinhub.android.presentation.ticket_detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.coinhub.android.data.models.AvailablePlanModel
-import com.coinhub.android.data.models.TicketModel
+import com.coinhub.android.domain.models.AvailablePlanModel
+import com.coinhub.android.domain.models.TicketModel
 import com.coinhub.android.domain.repositories.PlanRepository
 import com.coinhub.android.domain.repositories.TicketRepository
 import com.coinhub.android.domain.use_cases.WithdrawTicketUseCase

@@ -12,7 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.coinhub.android.data.models.NotificationModel
+import com.coinhub.android.domain.models.NotificationModel
 import com.coinhub.android.presentation.notification.components.NotificationItem
 import com.coinhub.android.presentation.notification.components.NotificationTopBar
 import java.time.ZonedDateTime

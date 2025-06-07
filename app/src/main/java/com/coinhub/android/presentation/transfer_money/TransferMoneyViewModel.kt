@@ -2,8 +2,8 @@ package com.coinhub.android.presentation.transfer_money
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.coinhub.android.data.models.SourceModel
-import com.coinhub.android.data.models.UserModel
+import com.coinhub.android.domain.models.SourceModel
+import com.coinhub.android.domain.models.UserModel
 import com.coinhub.android.utils.DEBOUNCE_TYPING
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi

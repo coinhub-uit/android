@@ -1,7 +1,7 @@
 package com.coinhub.android.domain.use_cases
 
-import com.coinhub.android.data.models.SourceModel
 import com.coinhub.android.di.IoDispatcher
+import com.coinhub.android.domain.models.SourceModel
 import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.repositories.UserRepository
 import kotlinx.coroutines.CoroutineDispatcher

@@ -17,11 +17,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.coinhub.android.data.models.MethodEnum
-import com.coinhub.android.data.models.PlanModel
-import com.coinhub.android.data.models.TicketHistoryModel
-import com.coinhub.android.data.models.TicketModel
-import com.coinhub.android.data.models.TicketStatus
+import com.coinhub.android.domain.models.MethodEnum
+import com.coinhub.android.domain.models.PlanModel
+import com.coinhub.android.domain.models.TicketHistoryModel
+import com.coinhub.android.domain.models.TicketModel
+import com.coinhub.android.domain.models.TicketStatus
 import com.coinhub.android.presentation.ticket.components.TicketList
 import com.coinhub.android.presentation.ticket.components.TicketStatistics
 import com.coinhub.android.presentation.ticket.components.TicketTopBar

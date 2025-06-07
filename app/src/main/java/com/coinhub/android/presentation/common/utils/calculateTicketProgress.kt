@@ -1,6 +1,6 @@
 package com.coinhub.android.presentation.common.utils
 
-import com.coinhub.android.data.models.TicketHistoryModel
+import com.coinhub.android.domain.models.TicketHistoryModel
 import java.time.LocalDate
 
 fun calculateTicketProgress(

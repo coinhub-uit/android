@@ -4,9 +4,9 @@ import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.data.dtos.request.CreateTicketRequestDto
-import com.coinhub.android.data.models.AvailablePlanModel
-import com.coinhub.android.data.models.MethodEnum
-import com.coinhub.android.data.models.SourceModel
+import com.coinhub.android.domain.models.AvailablePlanModel
+import com.coinhub.android.domain.models.MethodEnum
+import com.coinhub.android.domain.models.SourceModel
 import com.coinhub.android.domain.use_cases.CreateTicketUseCase
 import com.coinhub.android.domain.use_cases.ValidateAmountCreateTicketUseCase
 import com.coinhub.android.utils.DEBOUNCE_TYPING

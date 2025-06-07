@@ -3,8 +3,8 @@ package com.coinhub.android.domain.use_cases
 import com.coinhub.android.common.toTicketModel
 import com.coinhub.android.data.api_services.TicketApiService
 import com.coinhub.android.data.dtos.request.CreateTicketRequestDto
-import com.coinhub.android.data.models.TicketModel
 import com.coinhub.android.di.IoDispatcher
+import com.coinhub.android.domain.models.TicketModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn

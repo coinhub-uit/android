@@ -24,9 +24,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.coinhub.android.data.models.AvailablePlanModel
-import com.coinhub.android.data.models.MethodEnum
-import com.coinhub.android.data.models.SourceModel
+import com.coinhub.android.domain.models.AvailablePlanModel
+import com.coinhub.android.domain.models.MethodEnum
+import com.coinhub.android.domain.models.SourceModel
 import com.coinhub.android.presentation.create_ticket.components.CreateTicketInputMoney
 import com.coinhub.android.presentation.create_ticket.components.CreateTicketSelections
 import com.coinhub.android.presentation.create_ticket.components.CreateTicketTopBar
@@ -108,18 +108,18 @@ private fun CreateTicketScreen(
 ) {
     Scaffold(
         topBar = {
-        CreateTicketTopBar(onBack = onBack)
-    }, floatingActionButton = {
-        AnimatedVisibility(
-            visible = isFormValid && !isLoading,
-        ) {
-            FloatingActionButton(onClick = onCreateTicket) {
-                Icon(
-                    imageVector = Icons.Filled.Check, contentDescription = "Create Ticket"
-                )
+            CreateTicketTopBar(onBack = onBack)
+        }, floatingActionButton = {
+            AnimatedVisibility(
+                visible = isFormValid && !isLoading,
+            ) {
+                FloatingActionButton(onClick = onCreateTicket) {
+                    Icon(
+                        imageVector = Icons.Filled.Check, contentDescription = "Create Ticket"
+                    )
+                }
             }
-        }
-    }, modifier = modifier
+        }, modifier = modifier
     ) { innerPadding ->
         Box(
             modifier = Modifier.padding(innerPadding)

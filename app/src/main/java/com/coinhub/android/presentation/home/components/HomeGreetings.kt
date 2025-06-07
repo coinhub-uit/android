@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
-import com.coinhub.android.data.models.UserModel
+import com.coinhub.android.domain.models.UserModel
 import com.coinhub.android.ui.theme.CoinhubTheme
 import java.time.LocalDate
 import java.time.ZonedDateTime

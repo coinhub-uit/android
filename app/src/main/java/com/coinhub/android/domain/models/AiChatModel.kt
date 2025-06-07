@@ -1,4 +1,4 @@
-package com.coinhub.android.data.models
+package com.coinhub.android.domain.models
 
 data class AiChatModel(
     val role: Role,

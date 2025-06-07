@@ -1,8 +1,8 @@
 package com.coinhub.android.domain.use_cases
 
 import com.coinhub.android.data.dtos.request.CreateTopUpRequestDto
-import com.coinhub.android.data.models.CreateTopUpModel
 import com.coinhub.android.di.IoDispatcher
+import com.coinhub.android.domain.models.CreateTopUpModel
 import com.coinhub.android.domain.repositories.PaymentRepository
 import jakarta.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher

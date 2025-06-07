@@ -1,4 +1,4 @@
-package com.coinhub.android.data.models
+package com.coinhub.android.domain.models
 
 import com.coinhub.android.data.serializers.BigIntegerSerializer
 import com.coinhub.android.data.serializers.LocalDateSerializer
