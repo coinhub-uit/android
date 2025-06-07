@@ -17,7 +17,7 @@ class GetUserSourcesUseCase @Inject constructor(
         return withContext(ioDispatcher) {
             try {
                 val userId = authRepository.getCurrentUserId()
-                Result.Success(userRepository.getUserSources(userId, refresh))
+                Result.Success(userRepository.getUserSources(userId, refresh)!!)
             } catch (e: Exception) {
                 Result.Error(e.message ?: "Unknown error occurred")
             }
