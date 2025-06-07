@@ -77,7 +77,10 @@ fun AppNavGraph(
                 // NOTE: I know this is complicated and it can be fixed by making AppNavDestinations inherit strictly
                 NavHost(
                     navController = navController,
-                    startDestination = if (startDestination != AppNavDestinations.MainGraph) startDestination else AppNavDestinations.MainGraph,
+                    startDestination = when (startDestination) {
+                        AppNavDestinations.Tickets -> AppNavDestinations.MainGraph
+                        else -> startDestination
+                    }
                 ) {
                     mainNavGraph(
                         navController = navController, startDestination = when (startDestination) {

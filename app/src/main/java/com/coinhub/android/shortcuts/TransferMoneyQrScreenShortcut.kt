@@ -11,9 +11,9 @@ import com.coinhub.android.presentation.navigation.AppNavDestinations
 
 object TransferMoneyQrScreenShortcut {
     private const val SHORTCUT_ID = "transferMoneyScreenDynamicShortcut"
-    private const val SHORTCUT_LABEL = "Transfer Money"
-    private const val SHORTCUT_LONG_LABEL = "Transfer Money QR Screen"
-    private val shortcutIcon = R.drawable.baseline_sell_24
+    private const val SHORTCUT_LABEL = "Transfer money"
+    private const val SHORTCUT_LONG_LABEL = "Transfer money QR"
+    private val shortcutIcon = R.drawable.baseline_qr_code_scanner_24
 
     fun add(
         context: Context,
@@ -29,7 +29,7 @@ object TransferMoneyQrScreenShortcut {
                     context, mainActivity
                 ).apply {
                     action = Intent.ACTION_VIEW
-                    putExtra("destination", AppNavDestinations.Tickets.toString())
+                    putExtra("destination", AppNavDestinations.TransferMoneyQrGraph.toString())
                 }).build()
 
         ShortcutManagerCompat.pushDynamicShortcut(context, shortcut)

@@ -11,9 +11,9 @@ import com.coinhub.android.presentation.navigation.AppNavDestinations
 
 object TicketScreenShortcut {
     private const val SHORTCUT_ID = "ticketScreenDynamicShortcut"
-    private const val SHORTCUT_LABEL = "Ticket Screen"
-    private const val SHORTCUT_LONG_LABEL = "Open Your Ticket Screen"
-    private val shortcutIcon = R.drawable.baseline_qr_code_scanner_24
+    private const val SHORTCUT_LABEL = "Tickets"
+    private const val SHORTCUT_LONG_LABEL = "Your tickets"
+    private val shortcutIcon = R.drawable.baseline_sell_24
 
     fun add(
         context: Context,

@@ -72,10 +72,8 @@ android {
 
     buildTypes {
         debug {
-            getByName("release") {
-                if (hasKeystore) { // Just use same signing config for debug
-                    signingConfig = signingConfigs.getByName("release")
-                }
+            if (hasKeystore) { // Just use same signing config for debug
+                signingConfig = signingConfigs.getByName("release")
             }
         }
         release {
