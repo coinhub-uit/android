@@ -117,10 +117,8 @@ object UseCaseModule {
     @Singleton
     fun provideGetTopUpUseCase(
         paymentRepository: PaymentRepository,
-        @IoDispatcher ioDispatcher: CoroutineDispatcher,
     ) = GetTopUpUseCase(
         paymentRepository = paymentRepository,
-        ioDispatcher = ioDispatcher
     )
 
     @Provides

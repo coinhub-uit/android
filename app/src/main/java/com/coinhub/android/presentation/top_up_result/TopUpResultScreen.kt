@@ -50,9 +50,7 @@ fun TopUpResultScreen(
 
     LaunchedEffect(Unit) {
         viewModel.toastMessage.collect { message ->
-            if (message != null) {
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-            }
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         }
     }
 

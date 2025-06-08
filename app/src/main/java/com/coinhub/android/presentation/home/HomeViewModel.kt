@@ -44,9 +44,6 @@ class HomeViewModel @Inject constructor(
     }
 
     fun fetch() {
-        if (_user.value != null) {
-            return
-        }
         viewModelScope.launch {
             _isLoading.value = true
             listOf(async { fetchSources() }, async { fetchUser() }).awaitAll()
@@ -67,15 +64,12 @@ class HomeViewModel @Inject constructor(
     }
 
     private suspend fun fetchSources() {
-        when (val result = userRepository.getUserSources(authRepository.getCurrentUserId(), false)) {
-            is List<SourceModel> -> {
-                _sources.value = result
-            }
-
-            null -> {
-                _toastMessage.emit("Failed to fetch sources")
-            }
+        val result = userRepository.getUserSources(authRepository.getCurrentUserId(), false)
+        if (result == null) {
+            _toastMessage.emit("Failed to fetch sources")
+            return
         }
+        _sources.value = result
     }
 
     fun refresh() {
@@ -87,26 +81,20 @@ class HomeViewModel @Inject constructor(
     }
 
     private suspend fun refreshUser() {
-        when (val result = userRepository.getUserById(authRepository.getCurrentUserId(), true)) {
-            is UserModel -> {
-                _user.value = result
-            }
-
-            null -> {
-                _toastMessage.emit("Failed to fetch user data")
-            }
+        val result = userRepository.getUserById(authRepository.getCurrentUserId(), true)
+        if (result == null) {
+            _toastMessage.emit("Failed to fetch user data")
+            return
         }
+        _user.value = result
     }
 
     private suspend fun refreshSources() {
-        when (val result = userRepository.getUserSources(authRepository.getCurrentUserId(), true)) {
-            is List<SourceModel> -> {
-                _sources.value = result
-            }
-
-            null -> {
-                _toastMessage.emit("Failed to fetch sources")
-            }
+        val result = userRepository.getUserSources(authRepository.getCurrentUserId(), true)
+        if (result == null) {
+            _toastMessage.emit("Failed to fetch sources")
+            return
         }
+        _sources.value = result
     }
 }

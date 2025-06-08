@@ -60,7 +60,7 @@ fun HomeListSource(
     Spacer(modifier = Modifier.height(8.dp))
 
     HorizontalPager(
-        state = pagerState, contentPadding = PaddingValues(horizontal = 8.dp), pageSpacing = 16.dp
+        state = pagerState, contentPadding = PaddingValues(horizontal = 32.dp), pageSpacing = 16.dp
     ) { page ->
         HomeSourceCard(
             sourceModel = sources[page],
