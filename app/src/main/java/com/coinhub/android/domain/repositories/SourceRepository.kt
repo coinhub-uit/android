@@ -7,4 +7,5 @@ interface SourceRepository {
     suspend fun getSourceById(id: String): SourceModel?
     suspend fun deleteSource(id: String): SourceModel
     suspend fun getSourceTickets(id: String): List<TicketModel>
+    suspend fun getSourceUser(id: String): SourceModel?
 }

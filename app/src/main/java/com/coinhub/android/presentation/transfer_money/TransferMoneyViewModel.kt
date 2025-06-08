@@ -2,8 +2,12 @@ package com.coinhub.android.presentation.transfer_money
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.coinhub.android.data.dtos.request.TransferMoneyRequestDto
 import com.coinhub.android.domain.models.SourceModel
-import com.coinhub.android.domain.models.UserModel
+import com.coinhub.android.domain.repositories.AuthRepository
+import com.coinhub.android.domain.repositories.SourceRepository
+import com.coinhub.android.domain.repositories.UserRepository
+import com.coinhub.android.domain.use_cases.TransferMoneyUseCase
 import com.coinhub.android.utils.DEBOUNCE_TYPING
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -19,22 +23,19 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.math.BigInteger
-import java.time.LocalDate
-import java.time.ZonedDateTime
 import javax.inject.Inject
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @HiltViewModel
-class TransferMoneyViewModel @Inject constructor() : ViewModel() {
+class TransferMoneyViewModel @Inject constructor(
+    private val sourceRepository: SourceRepository,
+    private val authRepository: AuthRepository,
+    private val userRepository: UserRepository,
+    private val transferMoneyUseCase: TransferMoneyUseCase,
+) : ViewModel() {
     // TODO: @NTGNguyen - Replace with real data source
-    private val _sources = MutableStateFlow(
-        listOf(
-            SourceModel("1", BigInteger("5000000")),
-            SourceModel("2", BigInteger("3000000")),
-            SourceModel("3", BigInteger("7500000"))
-        )
+    private val _sources = MutableStateFlow<List<SourceModel>>(
+        emptyList()
     )
     val sources = _sources.asStateFlow()
 
@@ -47,19 +48,9 @@ class TransferMoneyViewModel @Inject constructor() : ViewModel() {
     private val _amountText = MutableStateFlow("")
     val amountText = _amountText.asStateFlow()
 
-    // TODO: @NTGNguyen - Fetch user by source id
     @OptIn(FlowPreview::class, ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
     val receiptUser = _receiptSourceId.drop(1).debounce(DEBOUNCE_TYPING).mapLatest {
-        UserModel(
-            id = Uuid.random(),
-            fullName = "Nguyen Van A",
-            citizenId = "123456789",
-            birthDate = LocalDate.now(),
-            avatar = "https://example.com/avatar.png",
-            address = "123 Street, City",
-            createdAt = ZonedDateTime.now(),
-            deletedAt = null
-        )
+        sourceRepository.getSourceUser(_receiptSourceId.value)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
@@ -109,11 +100,47 @@ class TransferMoneyViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    init {
+        viewModelScope.launch {
+            _isLoading.value = true
+            fetchSources()
+            _isLoading.value = false
+        }
+    }
+
     fun transferMoney(onSuccess: () -> Unit) {
         viewModelScope.launch {
             _isProcessing.value = true
-            onSuccess()
+            transferMoneyUseCase(
+                TransferMoneyRequestDto(
+                    money = _amountText.value.toBigInteger(),
+                    fromSourceId = _selectedSourceId.value!!,
+                    toSourceId = _receiptSourceId.value,
+                )
+            ).let {
+                when (it) {
+                    is TransferMoneyUseCase.Result.Error -> {
+                        _isProcessing.value = false
+                        _toastMessage.emit(it.message)
+                    }
+
+                    TransferMoneyUseCase.Result.Success -> {
+                        _isProcessing.value = false
+                        onSuccess()
+                    }
+                }
+            }
             _isProcessing.value = false
         }
+    }
+
+    private suspend fun fetchSources() {
+        val userId = authRepository.getCurrentUserId()
+        val result = userRepository.getUserSources(userId, false)
+        if (result == null) {
+            _toastMessage.emit("Failed to load sources")
+            return
+        }
+        _sources.value = result
     }
 }

@@ -1,5 +1,6 @@
 package com.coinhub.android.di
 
+import com.coinhub.android.data.api_services.PaymentApiService
 import com.coinhub.android.data.api_services.SourceApiService
 import com.coinhub.android.data.api_services.TicketApiService
 import com.coinhub.android.domain.repositories.AuthRepository
@@ -15,6 +16,7 @@ import com.coinhub.android.domain.use_cases.GetTopUpUseCase
 import com.coinhub.android.domain.use_cases.SignInWithCredentialUseCase
 import com.coinhub.android.domain.use_cases.SignInWithGoogleUseCase
 import com.coinhub.android.domain.use_cases.SignUpWithCredentialUseCase
+import com.coinhub.android.domain.use_cases.TransferMoneyUseCase
 import com.coinhub.android.domain.use_cases.ValidateAmountCreateTicketUseCase
 import com.coinhub.android.domain.use_cases.ValidateConfirmPasswordUseCase
 import com.coinhub.android.domain.use_cases.ValidateEmailUseCase
@@ -161,5 +163,15 @@ object UseCaseModule {
     ) = WithdrawTicketUseCase(
         ticketApiService = ticketApiService,
         ioDispatcher = ioDispatcher,
+    )
+
+    @Provides
+    @Singleton
+    fun provideTransferMoneyUseCase(
+        paymentApiService: PaymentApiService,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher,
+    ) = TransferMoneyUseCase(
+        paymentApiService = paymentApiService,
+        ioDispatcher = ioDispatcher
     )
 }

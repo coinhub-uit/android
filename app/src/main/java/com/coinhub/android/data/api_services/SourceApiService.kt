@@ -21,4 +21,7 @@ interface SourceApiService {
 
     @GET("sources/{id}/tickets")
     suspend fun getSourceTickets(@Path("id") sourceId: String): List<TicketResponseDto>
+
+    @GET("sources/{id}/user")
+    suspend fun getSourceUser(@Path("id") sourceId: String): SourceResponseDto
 }

@@ -37,4 +37,12 @@ class SourceRepositoryImpl @Inject constructor(
             throw e
         }
     }
+
+    override suspend fun getSourceUser(id: String): SourceModel? {
+        return try {
+            sourceApiService.getSourceUser(id).toSourceModel()
+        } catch (e: Exception) {
+            throw e
+        }
+    }
 }
