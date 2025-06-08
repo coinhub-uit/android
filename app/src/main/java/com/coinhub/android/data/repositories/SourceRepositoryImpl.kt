@@ -2,9 +2,11 @@ package com.coinhub.android.data.repositories
 
 import com.coinhub.android.common.toSourceModel
 import com.coinhub.android.common.toTicketModel
+import com.coinhub.android.common.toUserModel
 import com.coinhub.android.data.api_services.SourceApiService
 import com.coinhub.android.domain.models.SourceModel
 import com.coinhub.android.domain.models.TicketModel
+import com.coinhub.android.domain.models.UserModel
 import com.coinhub.android.domain.repositories.SourceRepository
 import javax.inject.Inject
 
@@ -38,9 +40,9 @@ class SourceRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getSourceUser(id: String): SourceModel? {
+    override suspend fun getSourceUser(id: String): UserModel? {
         return try {
-            sourceApiService.getSourceUser(id).toSourceModel()
+            sourceApiService.getSourceUser(id).toUserModel()
         } catch (e: Exception) {
             throw e
         }
