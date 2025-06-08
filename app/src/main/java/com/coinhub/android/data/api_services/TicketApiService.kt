@@ -10,14 +10,14 @@ import retrofit2.http.Path
 
 interface TicketApiService {
     @POST("tickets")
-    fun createTicket(@Body createTicketDto: CreateTicketRequestDto): TicketResponseDto
+    suspend fun createTicket(@Body createTicketDto: CreateTicketRequestDto): TicketResponseDto
 
     @GET("tickets/{id}/source")
-    fun getSourceByTicketId(@Path("id") ticketId: String): SourceResponseDto?
+    suspend fun getSourceByTicketId(@Path("id") ticketId: String): SourceResponseDto?
 
     @GET("tickets/{id}/withdraw")
-    fun withdrawTicket(@Path("id") ticketId: Int)
+    suspend fun withdrawTicket(@Path("id") ticketId: Int)
 
     @GET("tickets/{id}")
-    fun getTicketById(@Path("id") ticketId: Int): TicketResponseDto
+    suspend fun getTicketById(@Path("id") ticketId: Int): TicketResponseDto
 }

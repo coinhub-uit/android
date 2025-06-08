@@ -128,7 +128,7 @@ fun TicketDetailScreen(
             HorizontalDivider()
             Spacer(modifier = Modifier.height(16.dp))
 
-            TicketDetailChart(ticket = ticket)
+//            TicketDetailChart(ticket = ticket)
 
             Spacer(modifier = Modifier.height(16.dp))
             HorizontalDivider()

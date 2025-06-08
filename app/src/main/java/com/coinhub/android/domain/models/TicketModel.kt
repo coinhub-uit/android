@@ -1,15 +1,10 @@
 package com.coinhub.android.domain.models
 
-import com.coinhub.android.data.serializers.LocalDateSerializer
-import kotlinx.serialization.Serializable
 import java.time.LocalDate
 
-@Serializable
 data class TicketModel(
     val id: Int,
-    @Serializable(with = LocalDateSerializer::class)
     val openedAt: LocalDate,
-    @Serializable(with = LocalDateSerializer::class)
     val closedAt: LocalDate?,
     val status: TicketStatus,
     val method: MethodEnum,

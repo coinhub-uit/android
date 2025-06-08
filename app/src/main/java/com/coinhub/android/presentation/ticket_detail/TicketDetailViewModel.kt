@@ -7,6 +7,7 @@ import com.coinhub.android.domain.models.TicketModel
 import com.coinhub.android.domain.repositories.PlanRepository
 import com.coinhub.android.domain.repositories.TicketRepository
 import com.coinhub.android.domain.use_cases.WithdrawTicketUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class TicketDetailViewModel @Inject constructor(
     private val ticketRepository: TicketRepository,
     private val withdrawTicketUseCase: WithdrawTicketUseCase,

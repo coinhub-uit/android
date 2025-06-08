@@ -15,15 +15,16 @@ import com.coinhub.android.domain.models.AiChatModel
 import com.coinhub.android.domain.models.AvailablePlanModel
 import com.coinhub.android.domain.models.CreateTopUpModel
 import com.coinhub.android.domain.models.DeviceModel
+import com.coinhub.android.domain.models.MethodEnum
 import com.coinhub.android.domain.models.NotificationModel
 import com.coinhub.android.domain.models.PlanModel
 import com.coinhub.android.domain.models.SourceModel
 import com.coinhub.android.domain.models.TicketHistoryModel
 import com.coinhub.android.domain.models.TicketModel
+import com.coinhub.android.domain.models.TicketStatus
 import com.coinhub.android.domain.models.TopUpModel
 import com.coinhub.android.domain.models.UserModel
 import java.math.BigInteger
-import java.time.LocalDate
 import java.time.ZonedDateTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -46,18 +47,32 @@ fun SourceResponseDto.toSourceModel() = SourceModel(
 )
 
 fun TicketHistoryResponseDto.toTicketHistoryModel() = TicketHistoryModel(
-    issuedAt = LocalDate.parse(this.issuedAt),
-    maturedAt = LocalDate.parse(this.maturedAt),
+    issuedAt = ZonedDateTime.parse(this.issuedAt).toLocalDate(),
+    maturedAt = ZonedDateTime.parse(this.maturedAt).toLocalDate(),
     principal = BigInteger(this.principal),
     interest = BigInteger(this.interest)
 )
+
+fun String.toTicketStatusEnum(): TicketStatus = when (this.lowercase()) {
+    "active" -> TicketStatus.ACTIVE
+    "early_with_drawn" -> TicketStatus.EARLY_WITH_DRAWN
+    "matured_with_drawn" -> TicketStatus.MATURED_WITH_DRAWN
+    else -> throw IllegalArgumentException("Unknown status: $this")
+}
+
+fun String.toMethodEnum(): MethodEnum = when (this.lowercase()) {
+    "nr" -> MethodEnum.NR
+    "pr" -> MethodEnum.PR
+    "pir" -> MethodEnum.PIR
+    else -> throw IllegalArgumentException("Unknown method: $this")
+}
 
 fun TicketResponseDto.toTicketModel() = TicketModel(
     id = this.id,
     openedAt = ZonedDateTime.parse(this.openedAt).toLocalDate(),
     closedAt = this.closedAt?.let { ZonedDateTime.parse(it).toLocalDate() },
-    status = this.status,
-    method = this.method,
+    status = this.status.toTicketStatusEnum(),
+    method = this.method.toMethodEnum(),
     ticketHistories = this.ticketHistories.map { it.toTicketHistoryModel() },
     plan = this.plan.toPlanModel()
 )

@@ -7,8 +7,8 @@ data class TicketResponseDto(
     val id: Int,
     val openedAt: String,
     val closedAt: String?,
-    val status: TicketStatus,
-    val method: MethodEnum,
+    val status: String,
+    val method: String,
     val ticketHistories: List<TicketHistoryResponseDto>,
     val plan: PlanResponseDto,
 )

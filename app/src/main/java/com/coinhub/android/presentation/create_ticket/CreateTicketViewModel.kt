@@ -25,9 +25,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -110,30 +108,28 @@ class CreateTicketViewModel @Inject constructor(
     }
 
     fun createTicket(onSuccess: () -> Unit) {
-        _isProcessing.value = true
-        createTicketUseCase(
-            CreateTicketRequestDto(
-                amount = _amountText.value.toLong(),
-                planHistoryId = _selectedAvailablePlan.value!!.planHistoryId,
-                methodEnum = _selectedMethod.value!!,
-                sourceId = _selectedSourceId.value!!
+        viewModelScope.launch {
+            _isProcessing.value = true
+            val result = createTicketUseCase(
+                // TODO: @NTGNguyen no dto here
+                CreateTicketRequestDto(
+                    amount = _amountText.value.toLong(),
+                    planHistoryId = _selectedAvailablePlan.value!!.planHistoryId,
+                    methodEnum = _selectedMethod.value!!,
+                    sourceId = _selectedSourceId.value!!
+                )
             )
-        ).onEach {
-            when (it) {
+            when (result) {
                 is CreateTicketUseCase.Result.Error -> {
-                    _toastMessage.emit(it.message)
-                    _isProcessing.value = false
-                }
-
-                CreateTicketUseCase.Result.Loading -> {
-                    // TODO: nah remove this block
+                    _toastMessage.emit(result.message)
                 }
 
                 is CreateTicketUseCase.Result.Success -> {
                     onSuccess()
                 }
             }
-        }.launchIn(viewModelScope)
+            _isProcessing.value = false
+        }
     }
 
     init {
@@ -153,7 +149,7 @@ class CreateTicketViewModel @Inject constructor(
             _toastMessage.emit("Failed to load available plans")
             return
         }
-        _availablePlans.value = result
+        _availablePlans.value = result.filter { it.days != -1 }
     }
 
     private suspend fun getUserSources() {

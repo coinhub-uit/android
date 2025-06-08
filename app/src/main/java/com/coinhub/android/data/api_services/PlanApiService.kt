@@ -5,6 +5,6 @@ import retrofit2.Response
 import retrofit2.http.GET
 
 interface PlanApiService {
-    @GET("available-plans")
+    @GET("plans/available-plans")
     suspend fun getAvailablePlans(): List<AvailablePlanResponseDto>
 }

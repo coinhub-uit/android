@@ -65,7 +65,6 @@ fun CreateTicketSelections(
             key = { it.id },
             selectedItem = selectedSourceId?.let { id -> sources.find { it.id == id } },
             getItemDescription = { source -> "${source.id} (Balance: ${source.balance} VNĐ)" },
-            getItemLongDescription = { source -> "Source ID: ${source.id}, Balance: ${source.balance} VNĐ" },
             onItemSelected = { source -> onSelectSourceId(source.id) },
             modifier = Modifier.padding(bottom = 16.dp)
         )
