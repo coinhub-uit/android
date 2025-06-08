@@ -15,7 +15,7 @@ class TicketRepositoryImpl @Inject constructor(
     private var ticketModel: TicketModel? = null
     private var oldTicketId: Int? = null
 
-    override fun getSourceByTicketId(id: String): SourceModel? {
+    override suspend fun getSourceByTicketId(id: String): SourceModel? {
         return try {
             ticketApiService.getSourceByTicketId(id)?.toSourceModel()
         } catch (e: Exception) {
@@ -23,7 +23,7 @@ class TicketRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getTicketById(id: Int, refresh: Boolean): TicketModel {
+    override suspend fun getTicketById(id: Int, refresh: Boolean): TicketModel {
         if (refresh || ticketModel == null || oldTicketId != id) {
             try {
                 ticketModel = ticketApiService.getTicketById(id).toTicketModel()
