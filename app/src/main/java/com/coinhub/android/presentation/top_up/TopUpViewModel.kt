@@ -8,11 +8,14 @@ import com.coinhub.android.data.dtos.request.CreateTopUpRequestDto
 import com.coinhub.android.domain.models.CreateTopUpModel
 import com.coinhub.android.domain.models.SourceModel
 import com.coinhub.android.domain.models.TopUpModel
+import com.coinhub.android.domain.repositories.AuthRepository
+import com.coinhub.android.domain.repositories.UserRepository
 import com.coinhub.android.domain.use_cases.CreateTopUpUseCase
-import com.coinhub.android.domain.use_cases.GetUserSourcesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
@@ -22,7 +25,8 @@ import javax.inject.Inject
 @HiltViewModel
 class TopUpViewModel @Inject constructor(
     private val createTopUpUseCase: CreateTopUpUseCase,
-    private val getUserSourcesUseCase: GetUserSourcesUseCase,
+    private val userRepository: UserRepository,
+    private val authRepository: AuthRepository,
 ) : ViewModel() {
     init {
         viewModelScope.launch {
@@ -47,6 +51,9 @@ class TopUpViewModel @Inject constructor(
 
     private val _amount = MutableStateFlow("")
     val amount = _amount.asStateFlow()
+
+    private val _toastMessage = MutableSharedFlow<String>(0)
+    val toastMessage = _toastMessage.asSharedFlow()
 
     val isFormValid = combine(
         _sourceId, topUpProvider, amount
@@ -102,13 +109,14 @@ class TopUpViewModel @Inject constructor(
 
     private fun getUserSources(refresh: Boolean = false) {
         viewModelScope.launch {
-            when (val result = getUserSourcesUseCase(refresh)) {
-                is GetUserSourcesUseCase.Result.Success -> {
-                    _sourceModels.value = result.sources
+            val userId = authRepository.getCurrentUserId()
+            when (val result = userRepository.getUserSources(userId, refresh)) {
+                is List<SourceModel> -> {
+                    _sourceModels.value = result
                 }
 
-                is GetUserSourcesUseCase.Result.Error -> {
-                    throw Exception(result.message)
+                null -> {
+                    _toastMessage.emit("Failed to fetch user data")
                 }
             }
         }

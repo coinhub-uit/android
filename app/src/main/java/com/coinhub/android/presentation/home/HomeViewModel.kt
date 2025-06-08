@@ -7,7 +7,6 @@ import com.coinhub.android.domain.models.SourceModel
 import com.coinhub.android.domain.models.UserModel
 import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.repositories.UserRepository
-import com.coinhub.android.domain.use_cases.GetUserSourcesUseCase
 import com.coinhub.android.utils.copyToClipboard
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -21,7 +20,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getUserSourcesUseCase: GetUserSourcesUseCase,
     private val userRepository: UserRepository,
     private val authRepository: AuthRepository,
 ) : ViewModel() {

@@ -1,6 +1,7 @@
 package com.coinhub.android.presentation.top_up
 
 import android.content.Intent
+import android.widget.Toast
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -40,12 +41,19 @@ fun TopUpScreen(
     onBack: () -> Unit,
     viewModel: TopUpViewModel = hiltViewModel(),
 ) {
+
     val sourceId = viewModel.vnpResponseCode.collectAsStateWithLifecycle().value
     val sourceModels = viewModel.sourceModels.collectAsStateWithLifecycle().value
     val topUpProvider = viewModel.topUpProvider.collectAsStateWithLifecycle().value
     val amount = viewModel.amount.collectAsStateWithLifecycle().value
     val isFormValid = viewModel.isFormValid.collectAsStateWithLifecycle().value
     val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        viewModel.toastMessage.collect { message ->
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
+    }
 
     val sharedTransitionScope =
         LocalSharedTransitionScope.current ?: error("SharedTransitionScope not provided via CompositionLocal")
