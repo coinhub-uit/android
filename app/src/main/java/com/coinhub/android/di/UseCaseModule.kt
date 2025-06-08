@@ -12,7 +12,6 @@ import com.coinhub.android.domain.use_cases.CreateSourceUseCase
 import com.coinhub.android.domain.use_cases.CreateTicketUseCase
 import com.coinhub.android.domain.use_cases.CreateTopUpUseCase
 import com.coinhub.android.domain.use_cases.GetTopUpUseCase
-import com.coinhub.android.domain.use_cases.GetUserSourcesUseCase
 import com.coinhub.android.domain.use_cases.SignInWithCredentialUseCase
 import com.coinhub.android.domain.use_cases.SignInWithGoogleUseCase
 import com.coinhub.android.domain.use_cases.SignUpWithCredentialUseCase
@@ -111,18 +110,6 @@ object UseCaseModule {
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
     ) = GetTopUpUseCase(
         paymentRepository = paymentRepository,
-        ioDispatcher = ioDispatcher
-    )
-
-    @Provides
-    @Singleton
-    fun provideGetUserSourcesUseCase(
-        userRepository: UserRepository,
-        authRepository: AuthRepository,
-        @IoDispatcher ioDispatcher: CoroutineDispatcher,
-    ) = GetUserSourcesUseCase(
-        userRepository = userRepository,
-        authRepository = authRepository,
         ioDispatcher = ioDispatcher
     )
 
