@@ -25,6 +25,8 @@ fun ChatInputField(
     value: String,
     onValueChange: (String) -> Unit,
     onSend: () -> Unit,
+    isLoading: Boolean,
+    isProcessing: Boolean,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically, modifier = Modifier
@@ -42,7 +44,7 @@ fun ChatInputField(
         Spacer(modifier = Modifier.width(8.dp))
 
         IconButton(
-            onClick = onSend, enabled = value.isNotBlank(), modifier = Modifier
+            onClick = onSend, enabled = value.isNotBlank() && !isLoading && !isProcessing, modifier = Modifier
                 .clip(CircleShape)
                 .background(
                     color = if (value.isNotBlank()) MaterialTheme.colorScheme.primary

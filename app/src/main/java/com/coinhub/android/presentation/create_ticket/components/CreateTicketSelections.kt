@@ -1,28 +1,18 @@
 package com.coinhub.android.presentation.create_ticket.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.coinhub.android.domain.models.AvailablePlanModel
 import com.coinhub.android.domain.models.MethodEnum
 import com.coinhub.android.domain.models.SourceModel
-import com.coinhub.android.presentation.common.components.RowSelectBottomSheet
+import com.coinhub.android.presentation.common.components.SelectWithBottomSheet
 import com.coinhub.android.ui.theme.CoinhubTheme
 import java.math.BigInteger
 
@@ -44,170 +34,40 @@ fun CreateTicketSelections(
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        SelectPlan(
-            selectedAvailablePlan = selectedAvailablePlan,
-            onAvailablePlanSelected = onSelectAvailablePlan,
-            availablePlans = availablePlans,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-
-        SelectMethod(
-            selectedMethod = selectedMethod,
-            onMethodSelected = onSelectMethod,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-
-        SelectSource(
-            selectedSourceId = selectedSourceId,
-            onSelectSourceId = onSelectSourceId,
-            sources = sources,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-    }
-}
-
-@Composable
-private fun SelectPlan(
-    selectedAvailablePlan: AvailablePlanModel?,
-    onAvailablePlanSelected: (AvailablePlanModel) -> Unit,
-    availablePlans: List<AvailablePlanModel>,
-    modifier: Modifier = Modifier,
-) {
-    var isBottomSheetOpen by remember {
-        mutableStateOf(false)
-    }
-
-    OutlinedTextField(
-        value = selectedAvailablePlan?.let { plan ->
-            "Rate: ${plan.rate}%, Days: ${plan.days}"
-        } ?: "Select Plan",
-        onValueChange = {},
-        readOnly = true,
-        label = { Text("Plan") },
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable {
-                isBottomSheetOpen = true
-            },
-        trailingIcon = {
-            Icon(
-                imageVector = Icons.Default.KeyboardArrowDown, contentDescription = "Select Plan"
-            )
-        })
-
-    if (isBottomSheetOpen) {
-        RowSelectBottomSheet(
+        SelectWithBottomSheet(
+            label = "Plan",
+            selectedLabel = { plan: AvailablePlanModel -> "Rate: ${plan.rate}%, Days: ${plan.days}" },
             items = availablePlans,
             key = { it.planHistoryId },
             selectedItem = selectedAvailablePlan,
-            getDescription = { plan ->
-                "Rate: ${plan.rate}%, Days: ${plan.days}"
-            },
-            getLongDescription = { plan ->
-                "Plan ID: ${plan.planHistoryId}"
-            },
-            onItemSelected = { plan ->
-                onAvailablePlanSelected(plan)
-                isBottomSheetOpen = false
-            },
+            getItemDescription = { plan -> "Rate: ${plan.rate}%, Days: ${plan.days}" },
+            getItemLongDescription = { plan -> "Plan ID: ${plan.planHistoryId}" },
+            onItemSelected = onSelectAvailablePlan,
+            modifier = Modifier.padding(bottom = 16.dp)
         )
-    }
-}
 
-@Composable
-private fun SelectMethod(
-    selectedMethod: MethodEnum?,
-    onMethodSelected: (MethodEnum) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    var isBottomSheetOpen by remember {
-        mutableStateOf(false)
-    }
-
-    OutlinedTextField(
-        value = selectedMethod?.description ?: "Select Method",
-        onValueChange = {},
-        readOnly = true,
-        label = { Text("Method") },
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable {
-                isBottomSheetOpen = true
-            },
-        trailingIcon = {
-            Icon(
-                imageVector = Icons.Default.KeyboardArrowDown, contentDescription = "Select Method"
-            )
-        })
-
-    if (isBottomSheetOpen) {
-        RowSelectBottomSheet(
+        SelectWithBottomSheet(
+            label = "Method",
+            selectedLabel = { method: MethodEnum -> method.description },
             items = MethodEnum.entries.toList(),
             key = { it.name },
             selectedItem = selectedMethod,
-            getDescription = { method ->
-                method.description
-            },
-            getLongDescription = { method ->
-                method.longDescription
-            },
-            onItemSelected = { method ->
-                onMethodSelected(method)
-                isBottomSheetOpen = false
-            },
+            getItemDescription = { method -> method.description },
+            getItemLongDescription = { method -> method.longDescription },
+            onItemSelected = onSelectMethod,
+            modifier = Modifier.padding(bottom = 16.dp)
         )
-    }
-}
 
-@Composable
-private fun SelectSource(
-    selectedSourceId: String?,
-    onSelectSourceId: (String) -> Unit,
-    sources: List<SourceModel>,
-    modifier: Modifier = Modifier,
-) {
-    var isBottomSheetOpen by remember {
-        mutableStateOf(false)
-    }
-
-    OutlinedTextField(
-        value = selectedSourceId?.let { id ->
-            sources.find { it.id == id }?.let {
-                "${it.id} (Balance: ${it.balance} VNĐ)"
-            }
-        } ?: "Select Source",
-        onValueChange = {},
-        readOnly = true,
-        label = { Text("Source") },
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable {
-                isBottomSheetOpen = true
-            },
-        trailingIcon = {
-            Icon(
-                imageVector = Icons.Default.KeyboardArrowDown, contentDescription = "Select Source"
-            )
-        }
-    )
-
-    if (isBottomSheetOpen) {
-        RowSelectBottomSheet(
+        SelectWithBottomSheet(
+            label = "Source",
+            selectedLabel = { source: SourceModel -> "${source.id} (Balance: ${source.balance} VNĐ)" },
             items = sources,
             key = { it.id },
-            selectedItem = selectedSourceId?.let { id ->
-                sources.find { it.id == id }
-            },
-            getDescription = { source ->
-                "${source.id} (Balance: ${source.balance} VNĐ)"
-            },
-            getLongDescription = { source ->
-                "Source ID: ${source.id}, Balance: ${source.balance} VNĐ"
-            },
-            onItemSelected = { source ->
-                onSelectSourceId(source.id)
-                isBottomSheetOpen = false
-            },
+            selectedItem = selectedSourceId?.let { id -> sources.find { it.id == id } },
+            getItemDescription = { source -> "${source.id} (Balance: ${source.balance} VNĐ)" },
+            getItemLongDescription = { source -> "Source ID: ${source.id}, Balance: ${source.balance} VNĐ" },
+            onItemSelected = { source -> onSelectSourceId(source.id) },
+            modifier = Modifier.padding(bottom = 16.dp)
         )
     }
 }

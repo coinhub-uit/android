@@ -94,7 +94,7 @@ class TransferMoneyViewModel @Inject constructor() : ViewModel() {
     private val _toastMessage = MutableSharedFlow<String>(0)
     val toastMessage = _toastMessage.asSharedFlow()
 
-    fun selectSource(sourceId: String) {
+    fun selectSourceId(sourceId: String) {
         _selectedSourceId.value = sourceId
     }
 

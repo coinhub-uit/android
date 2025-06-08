@@ -88,7 +88,7 @@ fun TransferMoneyScreen(
             isFormValid = isFormValid,
             isLoading = isLoading,
             isProcessing = isProcessing,
-            onSelectSource = viewModel::selectSource,
+            onSelectSourceId = viewModel::selectSourceId,
             onReceiptSourceIdChange = viewModel::updateReceiptSourceId,
             onAmountChange = viewModel::updateAmount,
             onTransfer = { viewModel.transferMoney(onBack) },
@@ -113,7 +113,7 @@ private fun TransferMoneyScreen(
     isFormValid: Boolean,
     isLoading: Boolean,
     isProcessing: Boolean,
-    onSelectSource: (String) -> Unit,
+    onSelectSourceId: (String) -> Unit,
     onReceiptSourceIdChange: (String) -> Unit,
     onAmountChange: (String) -> Unit,
     onTransfer: () -> Unit,
@@ -151,7 +151,7 @@ private fun TransferMoneyScreen(
                 TransferMoneySelectSource(
                     selectedSourceId = selectedSourceId,
                     sources = sources,
-                    onSelectSource = onSelectSource,
+                    onSelectSourceId = onSelectSourceId,
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -200,7 +200,7 @@ fun TransferMoneyScreenPreview() {
                 isFormValid = true,
                 isLoading = false,
                 isProcessing = false,
-                onSelectSource = {},
+                onSelectSourceId = {},
                 onReceiptSourceIdChange = {},
                 onAmountChange = {},
                 onTransfer = {},

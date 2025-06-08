@@ -1,5 +1,6 @@
 package com.coinhub.android.common
 
+import com.coinhub.android.data.dtos.response.AiChatResponseDto
 import com.coinhub.android.data.dtos.response.AvailablePlanResponseDto
 import com.coinhub.android.data.dtos.response.CreateTopUpResponseDto
 import com.coinhub.android.data.dtos.response.DeviceResponseDto
@@ -10,6 +11,7 @@ import com.coinhub.android.data.dtos.response.TicketHistoryResponseDto
 import com.coinhub.android.data.dtos.response.TicketResponseDto
 import com.coinhub.android.data.dtos.response.TopUpResponseDto
 import com.coinhub.android.data.dtos.response.UserResponseDto
+import com.coinhub.android.domain.models.AiChatModel
 import com.coinhub.android.domain.models.AvailablePlanModel
 import com.coinhub.android.domain.models.CreateTopUpModel
 import com.coinhub.android.domain.models.DeviceModel
@@ -114,4 +116,16 @@ fun NotificationResponseDto.toNotificationModel() = NotificationModel(
     title = this.title,
     body = this.body,
     isRead = this.isRead
+)
+
+fun String.toAiChatRoleEnum(): AiChatModel.Role = when (this.lowercase()) {
+    "user" -> AiChatModel.Role.USER
+    "assistant" -> AiChatModel.Role.ASSISTANT
+    "system" -> AiChatModel.Role.SYSTEM
+    else -> throw IllegalArgumentException("Unknown role: $this")
+}
+
+fun AiChatResponseDto.toAiChatModel() = AiChatModel(
+    message = this.message,
+    role = this.role.toAiChatRoleEnum(),
 )

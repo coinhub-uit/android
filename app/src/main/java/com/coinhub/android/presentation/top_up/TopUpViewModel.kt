@@ -40,8 +40,8 @@ class TopUpViewModel @Inject constructor(
     private val _selectedSourceId = MutableStateFlow<String?>(null)
     val selectedSourceId = _selectedSourceId.asStateFlow()
 
-    private val _createTopUp = MutableStateFlow<CreateTopUpModel?>(null)
-    val createTopUp = _createTopUp.asStateFlow()
+    private val _createTopUp = MutableSharedFlow<CreateTopUpModel>()
+    val createTopUp = _createTopUp.asSharedFlow()
 
     private val _topUpProvider = MutableStateFlow<TopUpModel.ProviderEnum?>(null)
     val topUpProvider = _topUpProvider.asStateFlow()
@@ -89,11 +89,11 @@ class TopUpViewModel @Inject constructor(
                 )
             )) {
                 is CreateTopUpUseCase.Result.Success -> {
-                    _createTopUp.value = result.createTopUpModel
+                    _createTopUp.emit(result.createTopUpModel)
                 }
 
                 is CreateTopUpUseCase.Result.Error -> {
-                    throw Exception(result.message)
+                    _toastMessage.emit(result.message)
                 }
             }
         }

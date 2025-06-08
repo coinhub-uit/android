@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,12 +31,16 @@ fun AiChatScreen(
     viewModel: AiChatViewModel = hiltViewModel(),
 ) {
     val message = viewModel.message.collectAsStateWithLifecycle().value
+    val isLoading = viewModel.isLoading.collectAsStateWithLifecycle().value
+    val isProcessing = viewModel.isProcessing.collectAsStateWithLifecycle().value
 
     AiChatScreen(
         message = message,
         onMessageChange = viewModel::onMessageChange,
         onSendMessage = viewModel::sendMessage,
         messages = viewModel.messages,
+        isLoading = isLoading,
+        isProcessing = isProcessing,
         onBack = onBack,
         onDeleteSession = viewModel::deleteSession,
     )
@@ -47,6 +52,8 @@ private fun AiChatScreen(
     onMessageChange: (String) -> Unit,
     onSendMessage: () -> Unit,
     messages: List<AiChatModel>,
+    isLoading: Boolean,
+    isProcessing: Boolean,
     onBack: () -> Unit,
     onDeleteSession: () -> Unit,
 ) {
@@ -65,11 +72,16 @@ private fun AiChatScreen(
                 onBack = onBack,
                 onDeleteSession = onDeleteSession,
             )
-        }) { paddingValues ->
+        }) { innerPadding ->
+        if (isLoading) {
+            LinearProgressIndicator(modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxWidth())
+        }
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+                .padding(innerPadding)
                 .padding(16.dp)
         ) {
             // Messages list
@@ -91,6 +103,8 @@ private fun AiChatScreen(
                 value = message,
                 onValueChange = onMessageChange,
                 onSend = onSendMessage,
+                isLoading = isLoading,
+                isProcessing = isProcessing,
             )
         }
     }
@@ -125,6 +139,8 @@ fun AiChatScreenPreview() {
             onBack = {},
             message = "Cool",
             onMessageChange = { _ -> },
+            isLoading = false,
+            isProcessing = false,
             onDeleteSession = {})
     }
 }

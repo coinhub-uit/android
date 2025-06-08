@@ -17,13 +17,6 @@ fun NavGraphBuilder.createTicketGraph(navController: NavHostController) {
                     onBack = {
                         navController.navigateUp()
                     },
-                    onMain = {
-                        navController.navigate(AppNavDestinations.MainGraph) {
-                            popUpTo(AppNavDestinations.CreateTicketGraph) {
-                                inclusive = true
-                            }
-                        }
-                    }
                 )
             }
         }

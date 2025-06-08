@@ -47,13 +47,8 @@ fun TopUpScreen(
     val amount = viewModel.amount.collectAsStateWithLifecycle().value
     val isFormValid = viewModel.isFormValid.collectAsStateWithLifecycle().value
 
-    val context = LocalContext.current
 
-    LaunchedEffect(Unit) {
-        viewModel.toastMessage.collect { message ->
-            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-        }
-    }
+    val context = LocalContext.current
 
     val sharedTransitionScope =
         LocalSharedTransitionScope.current ?: error("SharedTransitionScope not provided via CompositionLocal")
@@ -62,10 +57,14 @@ fun TopUpScreen(
 
     LaunchedEffect(Unit) {
         viewModel.createTopUp.collect {
-            if (it != null) {
-                val intent = Intent(Intent.ACTION_VIEW, it.url.toUri())
-                context.startActivity(intent)
-            }
+            val intent = Intent(Intent.ACTION_VIEW, it.url.toUri())
+            context.startActivity(intent)
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.toastMessage.collect { message ->
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -80,13 +79,10 @@ fun TopUpScreen(
             onSelectProvider = viewModel::selectProvider,
             onAmountChange = viewModel::updateAmount,
             onPresetAmountClick = viewModel::setPresetAmount,
-            onTopUpResult = {
-                viewModel.createTopUp()
-            },
+            onCreateTopUp = viewModel::createTopUp,
             onBack = onBack,
             modifier = Modifier.sharedBounds(
-                animatedVisibilityScope = animatedVisibilityScope,
-                sharedContentState = rememberSharedContentState(
+                animatedVisibilityScope = animatedVisibilityScope, sharedContentState = rememberSharedContentState(
                     key = "topUp",
                 )
             ),
@@ -106,7 +102,7 @@ private fun TopUpScreen(
     onSelectProvider: (TopUpModel.ProviderEnum) -> Unit,
     onAmountChange: (String) -> Unit,
     onPresetAmountClick: (String) -> Unit,
-    onTopUpResult: () -> Unit,
+    onCreateTopUp: () -> Unit,
     onBack: () -> Unit,
 ) {
     Scaffold(
@@ -114,15 +110,13 @@ private fun TopUpScreen(
             TopUpTopBar(
                 onBack = onBack,
             )
-        },
-        floatingActionButton = {
+        }, floatingActionButton = {
             if (isFormValid) {
                 FloatingActionButton(
-                    onClick = onTopUpResult,
+                    onClick = onCreateTopUp,
                 ) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                        contentDescription = "Next"
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Next"
                     )
                 }
             }
@@ -135,24 +129,19 @@ private fun TopUpScreen(
                 .fillMaxSize()
         ) {
             TopUpSelectSource(
-                selectedSourceId = selectedSourceId,
-                sources = sources,
-                onSelectSource = onSelectSource
+                selectedSourceId = selectedSourceId, sources = sources, onSelectSource = onSelectSource
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
             TopUpSelectProvider(
-                selectedProvider = selectedProvider,
-                onSelectProvider = onSelectProvider
+                selectedProvider = selectedProvider, onSelectProvider = onSelectProvider
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
             TopUpEnterAmount(
-                amountText = amountText,
-                onAmountChange = onAmountChange,
-                onPresetAmountClick = onPresetAmountClick
+                amountText = amountText, onAmountChange = onAmountChange, onPresetAmountClick = onPresetAmountClick
             )
         }
     }
@@ -178,9 +167,8 @@ fun TopUpScreenPreview() {
                 onSelectProvider = {},
                 onAmountChange = {},
                 onPresetAmountClick = {},
-                onTopUpResult = {},
-                onBack = {}
-            )
+                onCreateTopUp = {},
+                onBack = {})
         }
     }
 }

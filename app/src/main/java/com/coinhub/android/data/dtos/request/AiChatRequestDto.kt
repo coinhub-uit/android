@@ -1,5 +1,5 @@
 package com.coinhub.android.data.dtos.request
 
-data class AiChatDRequestDto(
+data class AiChatRequestDto(
     val message: String
 )

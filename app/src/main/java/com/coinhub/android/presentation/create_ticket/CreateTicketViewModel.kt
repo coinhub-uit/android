@@ -15,9 +15,13 @@ import com.coinhub.android.domain.use_cases.ValidateAmountCreateTicketUseCase
 import com.coinhub.android.utils.DEBOUNCE_TYPING
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
@@ -40,10 +44,7 @@ class CreateTicketViewModel @Inject constructor(
     private val _minimumAmount = MutableStateFlow(1_000_000L)
     val minimumAmount = _minimumAmount.asStateFlow()
 
-    // Mock data for demo/preview
-    private val _availablePlans = MutableStateFlow<List<AvailablePlanModel>>(
-        emptyList()
-    )
+    private val _availablePlans = MutableStateFlow<List<AvailablePlanModel>>(emptyList())
     val availablePlans: StateFlow<List<AvailablePlanModel>> = _availablePlans.asStateFlow()
 
     private val _sources = MutableStateFlow<List<SourceModel>>(
@@ -51,22 +52,16 @@ class CreateTicketViewModel @Inject constructor(
     )
     val sources: StateFlow<List<SourceModel>> = _sources.asStateFlow()
 
-    // State flows for UI state
     private val _amountText = MutableStateFlow("")
     val amountText: StateFlow<String> = _amountText.asStateFlow()
 
     @OptIn(FlowPreview::class)
     val amountError = _amountText.debounce(DEBOUNCE_TYPING).map { amountText ->
-        val result =
-            validateAmountCreateTicketUseCase(
-                amountText,
-                _minimumAmount.value,
-                _sources.value?.find { source -> source.id == _selectedSourceId.value })
+        val result = validateAmountCreateTicketUseCase(
+            amountText, _minimumAmount.value, _sources.value.find { source -> source.id == _selectedSourceId.value })
         return@map if (result is ValidateAmountCreateTicketUseCase.Result.Error) result.message else null
     }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = null
+        scope = viewModelScope, started = SharingStarted.WhileSubscribed(5000), initialValue = null
     )
 
     private val _selectedAvailablePlan = MutableStateFlow<AvailablePlanModel?>(null)
@@ -79,20 +74,21 @@ class CreateTicketViewModel @Inject constructor(
     val selectedSourceId: StateFlow<String?> = _selectedSourceId.asStateFlow()
 
     val isFormValid = combine(
-        amountError,
-        _selectedAvailablePlan,
-        _selectedMethod,
-        _selectedSourceId
+        amountError, _selectedAvailablePlan, _selectedMethod, _selectedSourceId
     ) { amountError, plan, method, sourceId ->
         plan != null && method != null && sourceId != null && amountError == null
     }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = false
+        scope = viewModelScope, started = SharingStarted.WhileSubscribed(5000), initialValue = false
     )
 
-    // TODO: @NGTNguyen add state or sth
-    val isLoading = MutableStateFlow(false)
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
+
+    private val _isProcessing = MutableStateFlow(false)
+    val isProcessing = _isProcessing.asStateFlow()
+
+    private val _toastMessage = MutableSharedFlow<String>()
+    val toastMessage = _toastMessage.asSharedFlow()
 
     fun updateAmount(amount: String) {
         if (!amount.isDigitsOnly()) {
@@ -113,10 +109,8 @@ class CreateTicketViewModel @Inject constructor(
         _selectedSourceId.value = sourceId
     }
 
-    private val _createTicketState = MutableStateFlow<CreateTicketState>(CreateTicketState.Loading)
-    val createTicketState: StateFlow<CreateTicketState> = _createTicketState.asStateFlow()
-
-    fun createTicket() {
+    fun createTicket(onSuccess: () -> Unit) {
+        _isProcessing.value = true
         createTicketUseCase(
             CreateTicketRequestDto(
                 amount = _amountText.value.toLong(),
@@ -127,56 +121,48 @@ class CreateTicketViewModel @Inject constructor(
         ).onEach {
             when (it) {
                 is CreateTicketUseCase.Result.Error -> {
-                    _createTicketState.value = CreateTicketState.Error(it.message)
+                    _toastMessage.emit(it.message)
+                    _isProcessing.value = false
                 }
 
                 CreateTicketUseCase.Result.Loading -> {
-                    _createTicketState.value = CreateTicketState.Loading
+                    // TODO: nah remove this block
                 }
 
                 is CreateTicketUseCase.Result.Success -> {
-                    _createTicketState.value = CreateTicketState.Success
-                    _amountText.value = ""
-                    _selectedAvailablePlan.value = null
-                    _selectedMethod.value = null
-                    _selectedSourceId.value = null
+                    onSuccess()
                 }
             }
         }.launchIn(viewModelScope)
     }
 
-    fun getAvailablePlans() {
+    init {
         viewModelScope.launch {
-            when (val result = planRepository.getAvailablePlans()) {
-                is List<AvailablePlanModel> -> {
-                    _availablePlans.value = result
-                }
-
-                null -> {
-                    //TODO: handle
-                }
-            }
+            _isLoading.value = true
+            listOf(
+                async { getAvailablePlans() },
+                async { getUserSources() }
+            ).awaitAll()
+            _isLoading.value = false
         }
     }
 
-    fun getUserSources() {
-        viewModelScope.launch {
-            val userId = authRepository.getCurrentUserId()
-            when (val result = userRepository.getUserSources(userId, false)) {
-                is List<SourceModel> -> {
-                    _sources.value = result
-                }
-
-                null -> {
-                    //TODO: handle
-                }
-            }
+    private suspend fun getAvailablePlans() {
+        val result = planRepository.getAvailablePlans()
+        if (result == null) {
+            _toastMessage.emit("Failed to load available plans")
+            return
         }
+        _availablePlans.value = result
     }
 
-    sealed class CreateTicketState {
-        data object Loading : CreateTicketState()
-        data object Success : CreateTicketState()
-        data class Error(val message: String) : CreateTicketState()
+    private suspend fun getUserSources() {
+        val userId = authRepository.getCurrentUserId()
+        val result = userRepository.getUserSources(userId, false)
+        if (result == null) {
+            _toastMessage.emit("Failed to load sources")
+            return
+        }
+        _sources.value = result
     }
 }

@@ -1,8 +1,8 @@
 package com.coinhub.android.presentation.create_ticket
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,6 +21,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -41,14 +42,8 @@ import java.math.BigInteger
 @Composable
 fun CreateTicketScreen(
     onBack: () -> Unit,
-    onMain: () -> Unit,
     viewModel: CreateTicketViewModel = hiltViewModel(),
 ) {
-    LaunchedEffect(Unit) {
-        viewModel.getUserSources()
-        viewModel.getAvailablePlans()
-    }
-
     val amount = viewModel.amountText.collectAsStateWithLifecycle().value
     val minimumAmount = viewModel.minimumAmount.collectAsStateWithLifecycle().value
     val selectedAvailablePlan = viewModel.selectedAvailablePlan.collectAsStateWithLifecycle().value
@@ -58,11 +53,20 @@ fun CreateTicketScreen(
     val sourceModels = viewModel.sources.collectAsStateWithLifecycle().value
     val isFormValid = viewModel.isFormValid.collectAsStateWithLifecycle().value
     val isLoading = viewModel.isLoading.collectAsStateWithLifecycle().value
+    val isProcessing = viewModel.isProcessing.collectAsStateWithLifecycle().value
+
+    val context = LocalContext.current
 
     val sharedTransitionScope =
         LocalSharedTransitionScope.current ?: error("SharedTransitionScope not provided via CompositionLocal")
     val animatedVisibilityScope =
         LocalAnimatedVisibilityScope.current ?: error("AnimatedVisibilityScope not provided via CompositionLocal")
+
+    LaunchedEffect(Unit) {
+        viewModel.toastMessage.collect { message ->
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
+    }
 
     with(sharedTransitionScope) {
         CreateTicketScreen(
@@ -78,11 +82,9 @@ fun CreateTicketScreen(
             onSelectAvailablePlan = viewModel::selectPlan,
             onSelectMethod = viewModel::selectMethod,
             onSelectSourceId = viewModel::selectSourceId,
-            onCreateTicket = {
-                viewModel.createTicket()
-                onMain()
-            },
+            onCreateTicket = { viewModel.createTicket(onBack) },
             isLoading = isLoading,
+            isProcessing = isProcessing,
             onBack = onBack,
             modifier = Modifier.sharedBounds(
                 animatedVisibilityScope = animatedVisibilityScope, sharedContentState = rememberSharedContentState(
@@ -110,14 +112,15 @@ private fun CreateTicketScreen(
     onSelectSourceId: (String) -> Unit,
     onCreateTicket: () -> Unit,
     onBack: () -> Unit,
-    isLoading: Boolean = false,
+    isLoading: Boolean,
+    isProcessing: Boolean,
 ) {
     Scaffold(
         topBar = {
             CreateTicketTopBar(onBack = onBack)
         }, floatingActionButton = {
             AnimatedVisibility(
-                visible = isFormValid && !isLoading,
+                visible = isFormValid && !isLoading && !isProcessing,
             ) {
                 FloatingActionButton(onClick = onCreateTicket) {
                     Icon(
@@ -127,35 +130,35 @@ private fun CreateTicketScreen(
             }
         }, modifier = modifier
     ) { innerPadding ->
-        Box(
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            if (isLoading) {
-                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-            }
-
-            Column(
+        if (isLoading) {
+            LinearProgressIndicator(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-                    .verticalScroll(rememberScrollState())
-            ) {
+                    .padding(innerPadding)
+                    .fillMaxWidth()
+            )
+        }
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .padding(16.dp)
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+        ) {
 
-                CreateTicketInputMoney(minimumAmount = minimumAmount, amount = amount, onAmountChange = onAmountChange)
+            CreateTicketInputMoney(minimumAmount = minimumAmount, amount = amount, onAmountChange = onAmountChange)
 
-                Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-                CreateTicketSelections(
-                    selectedAvailablePlan = selectedAvailablePlan,
-                    onSelectAvailablePlan = onSelectAvailablePlan,
-                    availablePlans = availablePlans,
-                    selectedMethod = selectedMethod,
-                    onSelectMethod = onSelectMethod,
-                    sources = sources,
-                    selectedSourceId = selectedSourceId,
-                    onSelectSourceId = onSelectSourceId,
-                )
-            }
+            CreateTicketSelections(
+                selectedAvailablePlan = selectedAvailablePlan,
+                onSelectAvailablePlan = onSelectAvailablePlan,
+                availablePlans = availablePlans,
+                selectedMethod = selectedMethod,
+                onSelectMethod = onSelectMethod,
+                sources = sources,
+                selectedSourceId = selectedSourceId,
+                onSelectSourceId = onSelectSourceId,
+            )
         }
     }
 }
@@ -187,6 +190,8 @@ fun CreateTicketScreenPreview() {
                 onSelectMethod = {},
                 onSelectSourceId = {},
                 onCreateTicket = {},
+                isLoading = false,
+                isProcessing = false,
                 onBack = {})
         }
     }
