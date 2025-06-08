@@ -1,16 +1,19 @@
 package com.coinhub.android.domain.use_cases
 
+import com.coinhub.android.di.DefaultDispatcher
 import com.coinhub.android.utils.toLocalDate
 import com.coinhub.android.utils.toMillis
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.util.Calendar
 import javax.inject.Inject
 
-class ValidateBirthDateUseCase @Inject constructor() {
+class ValidateBirthDateUseCase @Inject constructor(
+    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
+) {
     suspend operator fun invoke(birthDateInMillis: Long): Result {
-        return withContext(Dispatchers.Default) {
+        return withContext(defaultDispatcher) {
             val currentYear = Calendar.getInstance().get(Calendar.YEAR)
             val birthYear = birthDateInMillis.toLocalDate().year
 

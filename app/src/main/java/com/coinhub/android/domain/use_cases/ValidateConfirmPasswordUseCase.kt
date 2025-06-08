@@ -1,12 +1,15 @@
 package com.coinhub.android.domain.use_cases
 
-import kotlinx.coroutines.Dispatchers
+import com.coinhub.android.di.DefaultDispatcher
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class ValidateConfirmPasswordUseCase @Inject constructor() {
+class ValidateConfirmPasswordUseCase @Inject constructor(
+    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
+) {
     suspend operator fun invoke(confirmPassword: String, password: String): Result {
-        return withContext(Dispatchers.Default) {
+        return withContext(defaultDispatcher) {
             when {
                 confirmPassword.isEmpty() -> Result.Error("Confirm password cannot be empty")
                 confirmPassword.length < 4 -> Result.Error("Confirm password must be at least 4 characters long")

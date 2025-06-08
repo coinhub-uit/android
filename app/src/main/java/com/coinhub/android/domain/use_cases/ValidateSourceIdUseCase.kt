@@ -1,11 +1,15 @@
 package com.coinhub.android.domain.use_cases
 
-import kotlinx.coroutines.Dispatchers
+import com.coinhub.android.di.DefaultDispatcher
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class ValidateSourceIdUseCase {
+class ValidateSourceIdUseCase @Inject constructor(
+    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
+) {
     suspend operator fun invoke(sourceId: String): Result {
-        return withContext(Dispatchers.Default) {
+        return withContext(defaultDispatcher) {
             if (sourceId.isEmpty()) {
                 Result.Error("Source cannot be empty")
             } else if (sourceId.length > 20) {

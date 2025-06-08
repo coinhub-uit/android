@@ -34,23 +34,33 @@ import javax.inject.Singleton
 object UseCaseModule {
     @Provides
     @Singleton
-    fun provideValidateEmailUseCase() = ValidateEmailUseCase()
+    fun provideValidateEmailUseCase(
+        @DefaultDispatcher defaultDispatcher: CoroutineDispatcher,
+    ) = ValidateEmailUseCase(defaultDispatcher)
 
     @Provides
     @Singleton
-    fun provideValidatePasswordUseCase() = ValidatePasswordUseCase()
+    fun provideValidatePasswordUseCase(
+        @DefaultDispatcher defaultDispatcher: CoroutineDispatcher,
+    ) = ValidatePasswordUseCase(defaultDispatcher)
 
     @Provides
     @Singleton
-    fun provideValidateConfirmPasswordUseCase() = ValidateConfirmPasswordUseCase()
+    fun provideValidateConfirmPasswordUseCase(
+        @DefaultDispatcher defaultDispatcher: CoroutineDispatcher,
+    ) = ValidateConfirmPasswordUseCase(defaultDispatcher)
 
     @Provides
     @Singleton
-    fun provideValidateAmountCreateTicketUseCase() = ValidateAmountCreateTicketUseCase()
+    fun provideValidateAmountCreateTicketUseCase(
+        @DefaultDispatcher defaultDispatcher: CoroutineDispatcher,
+    ) = ValidateAmountCreateTicketUseCase(defaultDispatcher)
 
     @Provides
     @Singleton
-    fun provideValidateSourceIdUseCase() = ValidateSourceIdUseCase()
+    fun provideValidateSourceIdUseCase(
+        @DefaultDispatcher defaultDispatcher: CoroutineDispatcher,
+    ) = ValidateSourceIdUseCase(defaultDispatcher)
 
     @Provides
     @Singleton

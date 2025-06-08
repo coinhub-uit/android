@@ -1,12 +1,15 @@
 package com.coinhub.android.domain.use_cases
 
-import kotlinx.coroutines.Dispatchers
+import com.coinhub.android.di.DefaultDispatcher
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class ValidateFullNameUseCase @Inject constructor() {
+class ValidateFullNameUseCase @Inject constructor(
+    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
+) {
     suspend operator fun invoke(fullName: String): Result {
-        return withContext(Dispatchers.Default) {
+        return withContext(defaultDispatcher) {
             when {
                 fullName.isEmpty() -> Result.Error("Full name cannot be empty")
                 fullName.length < 2 -> Result.Error("Full name must be at least 2 characters long")

@@ -1,12 +1,15 @@
 package com.coinhub.android.domain.use_cases
 
-import kotlinx.coroutines.Dispatchers
+import com.coinhub.android.di.DefaultDispatcher
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class ValidateEmailUseCase @Inject constructor() {
+class ValidateEmailUseCase @Inject constructor(
+    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
+) {
     suspend operator fun invoke(email: String): Result {
-        return withContext(Dispatchers.Default) {
+        return withContext(defaultDispatcher) {
             if (email.isBlank()) {
                 Result.Error(message = "Email cannot be empty")
             } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {

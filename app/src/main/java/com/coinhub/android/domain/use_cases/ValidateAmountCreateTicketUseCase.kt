@@ -1,13 +1,17 @@
 package com.coinhub.android.domain.use_cases
 
+import com.coinhub.android.di.DefaultDispatcher
 import com.coinhub.android.domain.models.SourceModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import java.math.BigInteger
+import javax.inject.Inject
 
-class ValidateAmountCreateTicketUseCase {
+class ValidateAmountCreateTicketUseCase @Inject constructor(
+    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
+) {
     suspend operator fun invoke(amount: String, minimumAmount: Long, source: SourceModel?): Result {
-        return withContext(Dispatchers.Default) {
+        return withContext(defaultDispatcher) {
             if (amount.isEmpty()) {
                 Result.Error("Source cannot be empty")
             } else if ((amount.toLongOrNull() ?: 0L) < minimumAmount) {
