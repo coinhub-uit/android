@@ -45,7 +45,7 @@ class TicketDetailViewModel @Inject constructor(
             _ticket.update {
                 ticketRepository.getTicketById(ticketId, refresh)
             }
-            _withdrawPlan.value = planRepository.getAvailablePlans().find { it.days == -1 }
+            _withdrawPlan.value = planRepository.getAvailablePlans()?.find { it.days == -1 }
         }
     }
 
