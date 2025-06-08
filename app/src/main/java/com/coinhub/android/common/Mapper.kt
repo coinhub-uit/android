@@ -54,8 +54,8 @@ fun TicketHistoryResponseDto.toTicketHistoryModel() = TicketHistoryModel(
 
 fun TicketResponseDto.toTicketModel() = TicketModel(
     id = this.id,
-    openedAt = LocalDate.parse(this.openedAt),
-    closedAt = this.closedAt?.let { LocalDate.parse(it) },
+    openedAt = ZonedDateTime.parse(this.openedAt).toLocalDate(),
+    closedAt = this.closedAt?.let { ZonedDateTime.parse(it).toLocalDate() },
     status = this.status,
     method = this.method,
     ticketHistories = this.ticketHistories.map { it.toTicketHistoryModel() },
