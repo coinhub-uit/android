@@ -29,8 +29,8 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 fun AvailablePlanResponseDto.toAvailablePlanModel() = AvailablePlanModel(
-    planId = this.planId.toInt(),
-    planHistoryId = this.planHistoryId.toInt(),
+    planId = this.planId,
+    planHistoryId = this.planHistoryId,
     days = this.days,
     rate = this.rate
 )
