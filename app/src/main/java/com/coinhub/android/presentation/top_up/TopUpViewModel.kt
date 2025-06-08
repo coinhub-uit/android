@@ -34,17 +34,14 @@ class TopUpViewModel @Inject constructor(
         }
     }
 
-    private val _sourceModels = MutableStateFlow<List<SourceModel>>(emptyList())
-    val sourceModels = _sourceModels.asStateFlow()
+    private val _sources = MutableStateFlow<List<SourceModel>>(emptyList())
+    val sources = _sources.asStateFlow()
 
-    private val _sourceId = MutableStateFlow<String?>(null)
-    val sourceId = _sourceId.asStateFlow()
+    private val _selectedSourceId = MutableStateFlow<String?>(null)
+    val selectedSourceId = _selectedSourceId.asStateFlow()
 
-    private val _vnpResponseCode = MutableStateFlow<String?>(null)
-    val vnpResponseCode = _vnpResponseCode.asStateFlow()
-
-    private val _createTopUpModel = MutableStateFlow<CreateTopUpModel?>(null)
-    val createTopUpModel = _createTopUpModel.asStateFlow()
+    private val _createTopUp = MutableStateFlow<CreateTopUpModel?>(null)
+    val createTopUp = _createTopUp.asStateFlow()
 
     private val _topUpProvider = MutableStateFlow<TopUpModel.ProviderEnum?>(null)
     val topUpProvider = _topUpProvider.asStateFlow()
@@ -56,13 +53,13 @@ class TopUpViewModel @Inject constructor(
     val toastMessage = _toastMessage.asSharedFlow()
 
     val isFormValid = combine(
-        _sourceId, topUpProvider, amount
+        _selectedSourceId, topUpProvider, amount
     ) { selectedSourceId, selectedProvider, amountText ->
         selectedSourceId != null && selectedProvider != null && amountText.isNotEmpty()
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     fun selectSource(sourceId: String) {
-        _sourceId.value = sourceId
+        _selectedSourceId.value = sourceId
     }
 
     fun selectProvider(provider: TopUpModel.ProviderEnum) {
@@ -80,24 +77,19 @@ class TopUpViewModel @Inject constructor(
         _amount.value = amount.replace(".", "")
     }
 
-    fun refreshSources() {
-        getUserSources(true)
-    }
-
     fun createTopUp() {
         viewModelScope.launch {
             when (val result = createTopUpUseCase(
                 CreateTopUpRequestDto(
                     amount = _amount.value.toBigInteger(),
                     provider = _topUpProvider.value.toString(),
-                    sourceDestinationId = _sourceId.value!!,
+                    sourceDestinationId = _selectedSourceId.value!!,
                     ipAddress = "192.0.0.1", //TODO:How to get IP address in Android?
                     returnUrl = BuildConfig.vnpayReturnUrl
                 )
-            )
-            ) {
+            )) {
                 is CreateTopUpUseCase.Result.Success -> {
-                    _createTopUpModel.value = result.createTopUpModel
+                    _createTopUp.value = result.createTopUpModel
                 }
 
                 is CreateTopUpUseCase.Result.Error -> {
@@ -110,15 +102,12 @@ class TopUpViewModel @Inject constructor(
     private fun getUserSources(refresh: Boolean = false) {
         viewModelScope.launch {
             val userId = authRepository.getCurrentUserId()
-            when (val result = userRepository.getUserSources(userId, refresh)) {
-                is List<SourceModel> -> {
-                    _sourceModels.value = result
-                }
-
-                null -> {
-                    _toastMessage.emit("Failed to fetch user data")
-                }
+            val result = userRepository.getUserSources(userId, refresh)
+            if (result == null) {
+                _toastMessage.emit("Failed to fetch user data")
+                return@launch
             }
+            _sources.value = result
         }
     }
 }

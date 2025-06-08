@@ -41,12 +41,12 @@ fun TopUpScreen(
     onBack: () -> Unit,
     viewModel: TopUpViewModel = hiltViewModel(),
 ) {
-
-    val sourceId = viewModel.vnpResponseCode.collectAsStateWithLifecycle().value
-    val sourceModels = viewModel.sourceModels.collectAsStateWithLifecycle().value
+    val selectedSourceId = viewModel.selectedSourceId.collectAsStateWithLifecycle().value
+    val sources = viewModel.sources.collectAsStateWithLifecycle().value
     val topUpProvider = viewModel.topUpProvider.collectAsStateWithLifecycle().value
     val amount = viewModel.amount.collectAsStateWithLifecycle().value
     val isFormValid = viewModel.isFormValid.collectAsStateWithLifecycle().value
+
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
@@ -61,7 +61,7 @@ fun TopUpScreen(
         LocalAnimatedVisibilityScope.current ?: error("AnimatedVisibilityScope not provided via CompositionLocal")
 
     LaunchedEffect(Unit) {
-        viewModel.createTopUpModel.collect {
+        viewModel.createTopUp.collect {
             if (it != null) {
                 val intent = Intent(Intent.ACTION_VIEW, it.url.toUri())
                 context.startActivity(intent)
@@ -71,8 +71,8 @@ fun TopUpScreen(
 
     with(sharedTransitionScope) {
         TopUpScreen(
-            selectedSourceId = sourceId,
-            sources = sourceModels,
+            selectedSourceId = selectedSourceId,
+            sources = sources,
             selectedProvider = topUpProvider,
             amountText = amount,
             isFormValid = isFormValid,

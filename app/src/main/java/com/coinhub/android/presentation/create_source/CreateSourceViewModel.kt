@@ -11,8 +11,10 @@ import com.coinhub.android.utils.DEBOUNCE_TYPING
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.drop
@@ -31,6 +33,9 @@ class CreateSourceViewModel @Inject constructor(
 ) : ViewModel() {
     private val _sourceId = MutableStateFlow("")
     val sourceId = _sourceId.asStateFlow()
+
+    private val _toastMessage = MutableSharedFlow<String>(0)
+    val toastMessage = _toastMessage.asSharedFlow()
 
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     val sourceCheckState = sourceId.drop(1).debounce(DEBOUNCE_TYPING).mapLatest { sourceId ->
@@ -58,13 +63,14 @@ class CreateSourceViewModel @Inject constructor(
                 when (it) {
                     is CreateSourceUseCase.Result.Error -> {
                         _isProcessing.value = false
+                        _toastMessage.emit(it.message)
                     }
 
                     is CreateSourceUseCase.Result.Success -> {
-                        onSuccess()
                         _isProcessing.value = false
                         val userId = authRepository.getCurrentUserId()
                         userRepository.getUserSources(userId, true)
+                        onSuccess()
                     }
                 }
             }

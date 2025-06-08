@@ -1,5 +1,6 @@
 package com.coinhub.android.presentation.create_source
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.Box
@@ -18,12 +19,14 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.glance.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coinhub.android.presentation.create_source.components.CreateSourceTopBar
@@ -43,10 +46,18 @@ fun CreateSourceScreen(
     val isFormValid = viewModel.isFormValid.collectAsStateWithLifecycle().value
     val isProcessing = viewModel.isProcessing.collectAsStateWithLifecycle().value
 
+    val context = LocalContext.current
+
     val sharedTransitionScope =
         LocalSharedTransitionScope.current ?: error("SharedTransitionScope not provided via CompositionLocal")
     val animatedVisibilityScope =
         LocalAnimatedVisibilityScope.current ?: error("AnimatedVisibilityScope not provided via CompositionLocal")
+
+    LaunchedEffect(Unit) {
+        viewModel.toastMessage.collect { message ->
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
+    }
 
     with(sharedTransitionScope) {
         CreateSourceScreen(
