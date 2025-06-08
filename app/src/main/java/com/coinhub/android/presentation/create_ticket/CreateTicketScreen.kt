@@ -19,6 +19,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -43,6 +44,11 @@ fun CreateTicketScreen(
     onMain: () -> Unit,
     viewModel: CreateTicketViewModel = hiltViewModel(),
 ) {
+    LaunchedEffect(Unit) {
+        viewModel.getUserSources()
+        viewModel.getAvailablePlans()
+    }
+
     val amount = viewModel.amountText.collectAsStateWithLifecycle().value
     val minimumAmount = viewModel.minimumAmount.collectAsStateWithLifecycle().value
     val selectedAvailablePlan = viewModel.selectedAvailablePlan.collectAsStateWithLifecycle().value

@@ -7,6 +7,9 @@ import com.coinhub.android.data.dtos.request.CreateTicketRequestDto
 import com.coinhub.android.domain.models.AvailablePlanModel
 import com.coinhub.android.domain.models.MethodEnum
 import com.coinhub.android.domain.models.SourceModel
+import com.coinhub.android.domain.repositories.AuthRepository
+import com.coinhub.android.domain.repositories.PlanRepository
+import com.coinhub.android.domain.repositories.UserRepository
 import com.coinhub.android.domain.use_cases.CreateTicketUseCase
 import com.coinhub.android.domain.use_cases.ValidateAmountCreateTicketUseCase
 import com.coinhub.android.utils.DEBOUNCE_TYPING
@@ -22,36 +25,31 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
-import java.math.BigInteger
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateTicketViewModel @Inject constructor(
     private val validateAmountCreateTicketUseCase: ValidateAmountCreateTicketUseCase,
     private val createTicketUseCase: CreateTicketUseCase,
+    private val planRepository: PlanRepository,
+    private val userRepository: UserRepository,
+    private val authRepository: AuthRepository,
 ) : ViewModel() {
     // TODO: If have time, implement repository to fetch real data
     private val _minimumAmount = MutableStateFlow(1_000_000L)
     val minimumAmount = _minimumAmount.asStateFlow()
 
     // Mock data for demo/preview
-    private val _availablePlans = MutableStateFlow(
-        listOf(
-            AvailablePlanModel(1, 5.5f, 1, 30),
-            AvailablePlanModel(2, 7.2f, 2, 60),
-            AvailablePlanModel(3, 8.5f, 3, 90)
-        )
+    private val _availablePlans = MutableStateFlow<List<AvailablePlanModel>?>(
+        null
     )
-    val availablePlans: StateFlow<List<AvailablePlanModel>> = _availablePlans.asStateFlow()
+    val availablePlans: StateFlow<List<AvailablePlanModel>?> = _availablePlans.asStateFlow()
 
-    private val _sources = MutableStateFlow(
-        listOf(
-            SourceModel("1", BigInteger("5000000")),
-            SourceModel("2", BigInteger("3000000")),
-            SourceModel("3", BigInteger("7500000"))
-        )
+    private val _sources = MutableStateFlow<List<SourceModel>?>(
+        null
     )
-    val sources: StateFlow<List<SourceModel>> = _sources.asStateFlow()
+    val sources: StateFlow<List<SourceModel>?> = _sources.asStateFlow()
 
     // State flows for UI state
     private val _amountText = MutableStateFlow("")
@@ -63,7 +61,7 @@ class CreateTicketViewModel @Inject constructor(
             validateAmountCreateTicketUseCase(
                 amountText,
                 _minimumAmount.value,
-                _sources.value.find { source -> source.id == _selectedSourceId.value })
+                _sources.value?.find { source -> source.id == _selectedSourceId.value })
         return@map if (result is ValidateAmountCreateTicketUseCase.Result.Error) result.message else null
     }.stateIn(
         scope = viewModelScope,
@@ -145,6 +143,35 @@ class CreateTicketViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
+    }
+
+    fun getAvailablePlans() {
+        viewModelScope.launch {
+            when (val result = planRepository.getAvailablePlans()) {
+                is List<AvailablePlanModel> -> {
+                    _availablePlans.value = result
+                }
+
+                null -> {
+                    //TODO: handle
+                }
+            }
+        }
+    }
+
+    fun getUserSources() {
+        viewModelScope.launch {
+            val userId = authRepository.getCurrentUserId()
+            when (val result = userRepository.getUserSources(userId, false)) {
+                is List<SourceModel> -> {
+                    _sources.value = result
+                }
+
+                null -> {
+                    //TODO: handle
+                }
+            }
+        }
     }
 
     sealed class CreateTicketState {

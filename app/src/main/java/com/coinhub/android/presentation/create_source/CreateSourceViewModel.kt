@@ -3,6 +3,8 @@ package com.coinhub.android.presentation.create_source
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.data.dtos.request.CreateSourceRequestDto
+import com.coinhub.android.domain.repositories.AuthRepository
+import com.coinhub.android.domain.repositories.UserRepository
 import com.coinhub.android.domain.use_cases.CreateSourceUseCase
 import com.coinhub.android.domain.use_cases.ValidateSourceIdUseCase
 import com.coinhub.android.utils.DEBOUNCE_TYPING
@@ -24,6 +26,8 @@ import javax.inject.Inject
 class CreateSourceViewModel @Inject constructor(
     private val validateSourceIdUseCase: ValidateSourceIdUseCase,
     private val createSourceUseCase: CreateSourceUseCase,
+    private val userRepository: UserRepository,
+    private val authRepository: AuthRepository,
 ) : ViewModel() {
     private val _sourceId = MutableStateFlow("")
     val sourceId = _sourceId.asStateFlow()
@@ -59,6 +63,8 @@ class CreateSourceViewModel @Inject constructor(
                     is CreateSourceUseCase.Result.Success -> {
                         onSuccess()
                         _isProcessing.value = false
+                        val userId = authRepository.getCurrentUserId()
+                        userRepository.getUserSources(userId, true)
                     }
                 }
             }
