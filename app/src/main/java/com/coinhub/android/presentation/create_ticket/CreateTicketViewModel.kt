@@ -41,15 +41,15 @@ class CreateTicketViewModel @Inject constructor(
     val minimumAmount = _minimumAmount.asStateFlow()
 
     // Mock data for demo/preview
-    private val _availablePlans = MutableStateFlow<List<AvailablePlanModel>?>(
-        null
+    private val _availablePlans = MutableStateFlow<List<AvailablePlanModel>>(
+        emptyList()
     )
-    val availablePlans: StateFlow<List<AvailablePlanModel>?> = _availablePlans.asStateFlow()
+    val availablePlans: StateFlow<List<AvailablePlanModel>> = _availablePlans.asStateFlow()
 
-    private val _sources = MutableStateFlow<List<SourceModel>?>(
-        null
+    private val _sources = MutableStateFlow<List<SourceModel>>(
+        emptyList()
     )
-    val sources: StateFlow<List<SourceModel>?> = _sources.asStateFlow()
+    val sources: StateFlow<List<SourceModel>> = _sources.asStateFlow()
 
     // State flows for UI state
     private val _amountText = MutableStateFlow("")
