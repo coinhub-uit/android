@@ -17,6 +17,7 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coinhub.android.data.remote.SupabaseService
 import com.coinhub.android.domain.managers.ThemeManger
+import com.coinhub.android.presentation.lock.LockScreen
 import com.coinhub.android.presentation.navigation.app.AppNavGraph
 import com.coinhub.android.presentation.navigation.auth.AuthNavGraph
 import com.coinhub.android.shortcuts.TicketScreenShortcut
@@ -46,22 +47,28 @@ class MainActivity : AppCompatActivity() {
                 val isUserSignedIn = supabaseService.isUserSignedIn.collectAsStateWithLifecycle().value
                 Surface(modifier = Modifier.fillMaxSize()) {
                     when (isUserSignedIn) {
-                        true -> {
+                        SupabaseService.UserAppState.SIGNED_IN -> {
                             val destination = intent.getStringExtra("destination")
                             AppNavGraph(destination = destination)
                             addSignInShortcuts()
                         }
 
-                        false -> {
+                        SupabaseService.UserAppState.NOT_SIGNED_IN -> {
                             AuthNavGraph()
                             removeSignInShortcuts()
                         }
 
-                        null -> {
+                        SupabaseService.UserAppState.LOCKED -> {
+                            LockScreen()
+                        }
+
+                        SupabaseService.UserAppState.LOADING -> {
                             Box(contentAlignment = Alignment.Center) {
                                 CircularProgressIndicator(modifier = Modifier.width(32.dp))
                             }
                         }
+
+                        SupabaseService.UserAppState.FAILED -> {}
                     }
                 }
             }

@@ -29,10 +29,10 @@ class SupabaseService @Inject constructor(
         }
     }
 
-    private var _isUserSignedIn = MutableStateFlow<Boolean?>(null)
+    private var _isUserSignedIn = MutableStateFlow<UserAppState>(UserAppState.LOADING)
     val isUserSignedIn = _isUserSignedIn.asStateFlow()
 
-    fun setIsUserSignedIn(isSignedIn: Boolean) {
+    fun setIsUserSignedIn(isSignedIn: UserAppState) {
         _isUserSignedIn.value = isSignedIn
     }
 
@@ -55,7 +55,7 @@ class SupabaseService @Inject constructor(
             try {
                 supabaseClient.auth.signOut()
                 sharedPreferenceRepositoryImpl.clearPreferences()
-                _isUserSignedIn.value = false
+                _isUserSignedIn.value = UserAppState.NOT_SIGNED_IN
             } catch (e: Exception) {
                 throw Exception("Failed to sign out: ${e.message}")
             }
@@ -105,16 +105,26 @@ class SupabaseService @Inject constructor(
         try {
             val token = sharedPreferenceRepositoryImpl.getAccessToken()
             if (token.isNullOrEmpty()) {
-                _isUserSignedIn.value = false
+                _isUserSignedIn.value = UserAppState.NOT_SIGNED_IN
             } else {
                 getUserIdWithToken(token)
                 refreshSession()
                 val newToken = getToken()!!
                 sharedPreferenceRepositoryImpl.saveAccessToken(newToken)
-                _isUserSignedIn.value = true
+                _isUserSignedIn.value = UserAppState.LOCKED
             }
         } catch (e: Exception) {
-            _isUserSignedIn.value = false
+            _isUserSignedIn.value = UserAppState.NOT_SIGNED_IN
         }
     }
+
+    enum class UserAppState {
+        LOADING,
+        NOT_SIGNED_IN,
+        SIGNED_IN,
+        LOCKED,
+        FAILED
+    }
 }
+
+

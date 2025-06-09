@@ -118,12 +118,12 @@ class AuthViewModel @Inject constructor(
                 }
 
                 is SignInWithCredentialUseCase.Result.Success -> {
-                    when (val result = checkProfileAvailableUseCase()) {
+                    when (val userProfile = checkProfileAvailableUseCase()) {
                         is CheckProfileAvailableUseCase.Result.Error -> {}
                         is CheckProfileAvailableUseCase.Result.Success -> {
-                            when (result.user) {
+                            when (userProfile.user) {
                                 is UserModel -> {
-                                    supabaseService.setIsUserSignedIn(true)
+                                    supabaseService.setIsUserSignedIn(SupabaseService.UserAppState.SIGNED_IN)
                                 }
 
                                 null -> {
@@ -166,7 +166,7 @@ class AuthViewModel @Inject constructor(
 
                 is SignInWithGoogleUseCase.Result.Success -> {
                     if (result.googleNavigateResultModel.isUserRegisterProfile) {
-                        supabaseService.setIsUserSignedIn(true)
+                        supabaseService.setIsUserSignedIn(SupabaseService.UserAppState.SIGNED_IN)
                     } else {
                         onSignedUp()
                     }

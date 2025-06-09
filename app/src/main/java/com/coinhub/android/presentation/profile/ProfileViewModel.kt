@@ -136,7 +136,7 @@ class ProfileViewModel @Inject constructor(
                     }
 
                     is CreateProfileUseCase.Result.Success -> {
-                        supabaseService.setIsUserSignedIn(true)
+                        supabaseService.setIsUserSignedIn(SupabaseService.UserAppState.SIGNED_IN)
                     }
 
                     is CreateProfileUseCase.Result.Error -> {
