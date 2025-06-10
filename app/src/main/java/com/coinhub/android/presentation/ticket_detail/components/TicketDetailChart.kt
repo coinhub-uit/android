@@ -1,8 +1,7 @@
 package com.coinhub.android.presentation.ticket_detail.components
 
-import androidx.compose.animation.core.EaseInOutCubic
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -26,7 +25,6 @@ fun TicketDetailChart(ticket: TicketModel) {
     val firstGradientColor = MaterialTheme.colorScheme.primary
     val secondGradientColor = MaterialTheme.colorScheme.onPrimary
     val lineData = remember(interests, firstGradientColor) {
-
         listOf(
             Line(
                 label = "History",
@@ -34,18 +32,16 @@ fun TicketDetailChart(ticket: TicketModel) {
                 color = SolidColor(firstGradientColor),
                 firstGradientFillColor = firstGradientColor.copy(alpha = .5f),
                 secondGradientFillColor = secondGradientColor,
-                strokeAnimationSpec = tween(2000, easing = EaseInOutCubic),
-                gradientAnimationDelay = 1000,
             )
         )
     }
 
     Column {
         Text(
-            text = "Interest history", style = MaterialTheme.typography.titleMedium
+            text = "History", style = MaterialTheme.typography.titleMedium
         )
         LineChart(
-            modifier = Modifier.padding(horizontal = 22.dp),
+            modifier = Modifier.height(256.dp).padding(horizontal = 22.dp),
             data = lineData,
         )
     }

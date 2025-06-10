@@ -77,7 +77,7 @@ private fun MenuScreen(
     )
     Scaffold(
         topBar = { MenuTopBar(onSignOut = onSignOut) },
-        modifier = modifier.padding(16.dp)
+        modifier = modifier
     ) { innerPadding ->
         Column(
             modifier = Modifier

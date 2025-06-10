@@ -1,9 +1,11 @@
 package com.coinhub.android.presentation.ai_chat.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imeNestedScroll
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -20,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ChatInputField(
     value: String,
@@ -32,6 +35,7 @@ fun ChatInputField(
         verticalAlignment = Alignment.CenterVertically, modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
+            .imeNestedScroll()
     ) {
         OutlinedTextField(
             value = value,

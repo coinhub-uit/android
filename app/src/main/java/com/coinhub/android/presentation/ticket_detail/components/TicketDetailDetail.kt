@@ -52,7 +52,7 @@ fun TicketDetailDetail(ticket: TicketModel, withdrawPlan: AvailablePlanModel) {
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = "Interest detail", style = MaterialTheme.typography.titleMedium
+            text = "Detail", style = MaterialTheme.typography.titleMedium
         )
 
         Spacer(modifier = Modifier.height(16.dp))

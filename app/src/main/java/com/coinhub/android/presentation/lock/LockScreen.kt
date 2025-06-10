@@ -45,7 +45,7 @@ fun LockScreen(
         pin = pin,
         onPinChange = viewModel::setPin,
         isLoading = isLoading,
-        onUnlock = viewModel::unlock,
+        onUnlock = viewModel::tryPinUnlock,
         onBiometricClick = viewModel.getBiometricPromptCallback(context)
     )
 }

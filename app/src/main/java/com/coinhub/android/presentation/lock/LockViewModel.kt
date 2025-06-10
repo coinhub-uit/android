@@ -1,7 +1,6 @@
 package com.coinhub.android.presentation.lock
 
 import android.content.Context
-import android.util.Log
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
@@ -18,6 +17,9 @@ import javax.inject.Inject
 class LockViewModel @Inject constructor(
     private val supabaseService: SupabaseService,
 ) : ViewModel() {
+    // TODO: Replace with a secure way to store the pin
+    private val correctPin = "1234"
+
     private val _pin = MutableStateFlow("")
     val pin: StateFlow<String> = _pin.asStateFlow()
 
@@ -42,8 +44,7 @@ class LockViewModel @Inject constructor(
                     context as FragmentActivity, executor, object : BiometricPrompt.AuthenticationCallback() {
                         override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                             super.onAuthenticationSucceeded(result)
-                            // CAll unlock method on success
-                            Log.d("LockManager", "Authentication succeeded")
+                            unlock()
                         }
                     })
                 return { biometricPrompt.authenticate(promptInfo) }
@@ -59,7 +60,13 @@ class LockViewModel @Inject constructor(
         _pin.value = value
     }
 
-    fun unlock() {
+    fun tryPinUnlock() {
+        if (_pin.value == correctPin) {
+            unlock()
+        }
+    }
+
+    private fun unlock() {
         supabaseService.setIsUserSignedIn(SupabaseService.UserAppState.SIGNED_IN)
     }
 }

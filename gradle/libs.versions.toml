@@ -19,7 +19,6 @@ animationCoreLint = "1.8.2"
 retrofit = "3.0.0"
 navigationCompose = "2.9.0"
 accompanistPermissions = "0.37.3"
-coreSplashscreen = "1.2.0-beta02"
 datastore = "1.1.7"
 biometric = "1.4.0-alpha04"
 appcompat = "1.7.0"
@@ -28,6 +27,7 @@ constraintlayout = "2.2.1"
 zxingCore = "3.5.3"
 zxingAndroidEmbedded = "4.3.0"
 glance = "1.1.1"
+coreSplashscreenVersion = "1.0.1"
 
 [libraries]
 androidx-activity = { module = "androidx.activity:activity", version.ref = "activity" }
@@ -71,7 +71,7 @@ androidx-animation-core-lint = { group = "androidx.compose.animation", name = "a
 squareup-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 squareup-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanistPermissions" }
-androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
+androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreenVersion" }
 androidx-biometric = { group = "androidx.biometric", name = "biometric", version.ref = "biometric" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
@@ -80,6 +80,7 @@ zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxingCo
 zxing-android-embedded = { group = "com.journeyapps", name = "zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
 androidx-glance-appwidget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "glance" }
 androidx-glance-material3 = { group = "androidx.glance", name = "glance-material3", version.ref = "glance" }
+core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreenVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

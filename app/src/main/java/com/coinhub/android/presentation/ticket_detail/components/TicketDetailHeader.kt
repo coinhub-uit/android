@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.coinhub.android.domain.models.TicketModel
-import com.coinhub.android.utils.toVndFormat
 
 @Composable
 fun TicketDetailHeader(ticket: TicketModel) {
@@ -31,20 +30,5 @@ fun TicketDetailHeader(ticket: TicketModel) {
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        if (latestHistory != null) {
-            Column {
-                Text(
-                    text = "Principal", style = MaterialTheme.typography.labelMedium
-                )
-                Text(
-                    text = latestHistory.principal.toVndFormat(),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        }
     }
 }

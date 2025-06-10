@@ -121,6 +121,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.zxing.core)
     implementation(libs.zxing.android.embedded)
+    implementation(libs.core.splashscreen)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

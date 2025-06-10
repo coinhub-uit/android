@@ -96,7 +96,7 @@ private fun HomeScreen(
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
-        modifier = modifier.padding(16.dp), topBar = {
+        modifier = modifier, topBar = {
             HomeTopBar(
                 onNotification = onNotification, onAiChat = onAiChat
             )

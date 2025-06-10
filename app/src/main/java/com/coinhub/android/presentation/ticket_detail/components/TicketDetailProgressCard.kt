@@ -27,73 +27,74 @@ fun TicketDetailProgressCard(ticketModel: TicketModel) {
     val latestHistory = ticketModel.ticketHistories.firstOrNull() ?: return
     val progress = calculateTicketProgress(ticketHistory = latestHistory)
 
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-        ),
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+    Column {
+        Text(
+            text = "Progress", style = MaterialTheme.typography.titleMedium
+        )
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+            ),
         ) {
-            Text(
-                text = "Progress", style = MaterialTheme.typography.titleMedium
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Date labels above progress bar
-            Row(
-                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
             ) {
-                Text(
-                    text = "Issued: ${latestHistory.issuedAt.toDateString()}",
-                    style = MaterialTheme.typography.bodySmall
-                )
-                Text(
-                    text = "Matures: ${latestHistory.maturedAt.toDateString()}",
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }
+                Spacer(modifier = Modifier.height(8.dp))
 
-            Spacer(modifier = Modifier.height(4.dp))
-
-            // Progress bar
-            LinearProgressIndicator(
-                progress = { progress },
-                modifier = Modifier.fillMaxWidth(),
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Principal and Interest row
-            Row(
-                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                // Principal on left
-                Column {
+                // Date labels above progress bar
+                Row(
+                    modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+                ) {
                     Text(
-                        text = "Principal", style = MaterialTheme.typography.bodySmall
+                        text = "Issued: ${latestHistory.issuedAt.toDateString()}",
+                        style = MaterialTheme.typography.bodySmall
                     )
                     Text(
-                        text = latestHistory.principal.toVndFormat(),
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.Bold
+                        text = "Matures: ${latestHistory.maturedAt.toDateString()}",
+                        style = MaterialTheme.typography.bodySmall
                     )
                 }
 
-                // Interest on right
-                Column(horizontalAlignment = Alignment.End) {
-                    Text(
-                        text = "Interest", style = MaterialTheme.typography.bodySmall
-                    )
-                    Text(
-                        text = latestHistory.interest.toVndFormat(),
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.Bold
-                    )
+                Spacer(modifier = Modifier.height(4.dp))
+
+                // Progress bar
+                LinearProgressIndicator(
+                    progress = { progress },
+                    modifier = Modifier.fillMaxWidth(),
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Principal and Interest row
+                Row(
+                    modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    // Principal on left
+                    Column {
+                        Text(
+                            text = "Principal", style = MaterialTheme.typography.bodySmall
+                        )
+                        Text(
+                            text = latestHistory.principal.toVndFormat(),
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+
+                    // Interest on right
+                    Column(horizontalAlignment = Alignment.End) {
+                        Text(
+                            text = "Interest", style = MaterialTheme.typography.bodySmall
+                        )
+                        Text(
+                            text = latestHistory.interest.toVndFormat(),
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
             }
         }

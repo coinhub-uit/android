@@ -12,7 +12,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coinhub.android.data.remote.SupabaseService
@@ -37,8 +36,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        installSplashScreen()
-        actionBar?.hide()
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             val themeMode = themeManager.themeMode.collectAsStateWithLifecycle().value
