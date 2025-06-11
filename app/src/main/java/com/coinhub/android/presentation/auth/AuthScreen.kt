@@ -1,5 +1,6 @@
 package com.coinhub.android.presentation.auth
 
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,10 +14,12 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coinhub.android.presentation.auth.components.AuthCredentialInput
@@ -25,11 +28,13 @@ import com.coinhub.android.presentation.auth.components.AuthOAuth
 import com.coinhub.android.presentation.auth.components.AuthOrDivider
 import com.coinhub.android.presentation.auth.components.AuthSignInOrUpButton
 import com.coinhub.android.presentation.auth.components.AuthSignInOrUpPrompt
+import com.coinhub.android.presentation.auth.managers.AccountManager
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
 import io.github.jan.supabase.compose.auth.composable.NativeSignInState
 import io.github.jan.supabase.compose.auth.composable.rememberSignInWithGoogle
 import io.github.jan.supabase.compose.auth.composeAuth
+import kotlinx.coroutines.launch
 
 @Composable
 fun AuthScreen(
@@ -38,7 +43,6 @@ fun AuthScreen(
     viewModel: AuthViewModel = hiltViewModel(),
 ) {
     val isSignUp = viewModel.isSignUp.collectAsStateWithLifecycle().value
-    val setIsSignUp = viewModel::setIsSignUp
     val email = viewModel.email.collectAsStateWithLifecycle().value
     val emailCheckState = viewModel.emailCheckState.collectAsStateWithLifecycle().value
     val password = viewModel.password.collectAsStateWithLifecycle().value
@@ -55,9 +59,27 @@ fun AuthScreen(
             )
         })
 
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
+    val accountManager = remember {
+        AccountManager(context as ComponentActivity)
+    }
+
+    LaunchedEffect(Unit) {
+        val result = accountManager.signIn()
+        if (result is AccountManager.SignInResult.Success) {
+            viewModel.onEmailChange(result.email)
+            viewModel.onPasswordChange(result.password)
+            viewModel.signInWithCredential(
+                onProfileNotAvailable = onSignedUpWithOAuth
+            )
+        }
+    }
+
     AuthScreen(
         isSignUp = isSignUp,
-        setIsSignUp = setIsSignUp,
+        setIsSignUp = viewModel::setIsSignUp,
         email = email,
         onEmailChange = viewModel::onEmailChange,
         emailCheckState = emailCheckState,
@@ -68,12 +90,21 @@ fun AuthScreen(
         onConfirmPasswordChange = viewModel::onConfirmPasswordChange,
         confirmPasswordCheckState = confirmPasswordCheckState,
         isFormValid = isFormValid,
-        signUpWithCredential = viewModel::signUpWithCredential,
-        signInWithCredential = viewModel::signInWithCredential,
-        onSignedUpWithCredential = onSignedUpWithCredential,
+        signUpWithCredential = {
+            viewModel.signUpWithCredential {
+                scope.launch {
+                    accountManager.signUp(email, password)
+                    onSignedUpWithCredential()
+                }
+            }
+        },
+        signInWithCredential = {
+            viewModel.signInWithCredential(
+                onProfileNotAvailable = onSignedUpWithOAuth
+            )
+        },
         snackbarMessage = snackbarMessage,
         clearSnackBarMessage = viewModel::clearSnackbarMessage,
-        onProfileAvailable = onSignedUpWithOAuth,
         googleSignInState = googleSignInState
     )
 }
@@ -92,10 +123,8 @@ private fun AuthScreen(
     onConfirmPasswordChange: (String) -> Unit,
     confirmPasswordCheckState: AuthStates.ConfirmPasswordCheckState,
     isFormValid: Boolean,
-    signUpWithCredential: (() -> Unit) -> Unit,
-    signInWithCredential: (() -> Unit) -> Unit,
-    onSignedUpWithCredential: () -> Unit,
-    onProfileAvailable: () -> Unit,
+    signUpWithCredential: () -> Unit,
+    signInWithCredential: () -> Unit,
     snackbarMessage: String?,
     clearSnackBarMessage: () -> Unit,
     googleSignInState: NativeSignInState?,
@@ -141,9 +170,11 @@ private fun AuthScreen(
                     confirmPasswordCheckState = confirmPasswordCheckState
                 )
                 AuthSignInOrUpButton(
-                    modifier = Modifier.fillMaxWidth(), isSignUp = isSignUp, onSignUp = {
-                        signUpWithCredential(onSignedUpWithCredential)
-                    }, onSignIn = { signInWithCredential(onProfileAvailable) }, isFormValid = isFormValid
+                    modifier = Modifier.fillMaxWidth(),
+                    isSignUp = isSignUp,
+                    onSignUp = signUpWithCredential,
+                    onSignIn = signInWithCredential,
+                    isFormValid = isFormValid
                 )
                 AuthSignInOrUpPrompt(
                     modifier = Modifier.fillMaxWidth(),
@@ -187,12 +218,11 @@ fun SignInScreenPreview() {
                 isValid = false, errorMessage = "bad"
             ),
             isFormValid = true,
-            onSignedUpWithCredential = {},
             signInWithCredential = { },
             signUpWithCredential = { },
             googleSignInState = null,
             snackbarMessage = null,
             clearSnackBarMessage = {},
-            onProfileAvailable = {})
+        )
     }
 }
