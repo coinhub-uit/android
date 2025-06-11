@@ -144,3 +144,4 @@ fun AiChatResponseDto.toAiChatModel() = AiChatModel(
     message = this.message,
     role = this.role.toAiChatRoleEnum(),
 )
+

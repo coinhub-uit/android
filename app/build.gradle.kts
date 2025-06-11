@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.android.hilt)
     alias(libs.plugins.google.ksp)
+    id("com.google.gms.google-services")
 }
 
 val localProps = Properties()
@@ -156,4 +157,7 @@ dependencies {
     implementation(libs.compose.charts)
 
     implementation(libs.bundles.glance)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
 }

@@ -1,6 +1,7 @@
 [versions]
 activity = "1.10.1"
 composeCharts = "0.1.7"
+firebaseBom = "33.15.0"
 hilt = "2.56.2"
 agp = "8.10.1"
 ksp = "2.1.21-2.0.1"
@@ -33,6 +34,8 @@ coreSplashscreenVersion = "1.0.1"
 androidx-activity = { module = "androidx.activity:activity", version.ref = "activity" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 compose-charts = { module = "io.github.ehsannarmani:compose-charts", version.ref = "composeCharts" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
