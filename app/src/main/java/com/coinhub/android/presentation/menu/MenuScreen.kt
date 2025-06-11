@@ -4,15 +4,16 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Password
+import androidx.compose.material.icons.filled.Pin
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -29,6 +30,10 @@ import com.coinhub.android.presentation.menu.components.MenuItem
 import com.coinhub.android.presentation.menu.components.MenuTopBar
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
+import java.time.LocalDate
+import java.time.ZonedDateTime
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @Composable
 fun MenuScreen(
@@ -40,9 +45,11 @@ fun MenuScreen(
     val userModel = viewModel.userModel.collectAsStateWithLifecycle().value
 
     MenuScreen(
-        onEditProfile = onEditProfile,
         onSettings = onSettings,
+        onChangePin = {},// TODO: Later
+        onEditProfile = onEditProfile,
         onCredentialChange = onCredentialChange,
+        onDeleteAccount = viewModel::onDeleteAccount,
         onSignOut = viewModel::onSignOut,
         userModel = userModel,
         modifier = Modifier.padding(bottom = 64.dp)
@@ -51,29 +58,47 @@ fun MenuScreen(
 
 @Composable
 private fun MenuScreen(
-    onEditProfile: () -> Unit,
     onSettings: () -> Unit,
+    onChangePin: () -> Unit,
+    onEditProfile: () -> Unit,
+    onDeleteAccount: () -> Unit,
     onSignOut: () -> Unit,
     onCredentialChange: () -> Unit,
     userModel: UserModel,
     modifier: Modifier = Modifier,
 ) {
-    val menuItems = listOf(
-        MenuEntry(
-            icon = Icons.Default.Edit,
-            text = "Edit Profile",
-            onClick = onEditProfile
+    val menuSections = mapOf(
+        "App" to listOf(
+            MenuEntry(
+                icon = Icons.Default.Settings,
+                text = "Settings",
+                onClick = onSettings
+            ),
+            MenuEntry(
+                icon = Icons.Default.Pin,
+                text = "Change PIN",
+                onClick = onChangePin
+            ),
         ),
-        MenuEntry(
-            icon = Icons.Default.Password,
-            text = "Credentials",
-            onClick = onCredentialChange
+        "Account" to listOf(
+            MenuEntry(
+                icon = Icons.Default.Edit,
+                text = "Edit Profile",
+                onClick = onEditProfile
+            ),
+            MenuEntry(
+                icon = Icons.Default.Password,
+                text = "Credentials",
+                onClick = onCredentialChange
+            ),
         ),
-        MenuEntry(
-            icon = Icons.Default.Settings,
-            text = "Settings",
-            onClick = onSettings
-        ),
+        "Danger" to listOf(
+            MenuEntry(
+                icon = Icons.Default.Delete,
+                text = "Delete Account",
+                onClick = onDeleteAccount
+            ),
+        )
     )
     Scaffold(
         topBar = { MenuTopBar(onSignOut = onSignOut) },
@@ -93,20 +118,28 @@ private fun MenuScreen(
             HorizontalDivider(modifier = Modifier.padding(horizontal = 32.dp))
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Menu items
             LazyColumn(
-                modifier = Modifier
-                    .padding(horizontal = 32.dp)
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceBetween
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                items(menuItems) { item ->
-                    MenuItem(
-                        icon = item.icon,
-                        text = item.text,
-                        onClick = item.onClick
-                    )
+                menuSections.forEach { (_, items) ->
+                    item {
+                        Card {
+                            Column(
+                                modifier = Modifier.padding(24.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(24.dp)
+                            ) {
+                                items.forEach { item ->
+                                    MenuItem(
+                                        icon = item.icon,
+                                        text = item.text,
+                                        onClick = item.onClick
+                                    )
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -119,6 +152,7 @@ private data class MenuEntry(
     val onClick: () -> Unit,
 )
 
+@OptIn(ExperimentalUuidApi::class)
 @Preview(device = PreviewDeviceSpecs.DEVICE)
 @Composable
 fun MenuScreenPreview() {
@@ -126,7 +160,20 @@ fun MenuScreenPreview() {
         MenuScreen(
             onEditProfile = {},
             onSettings = {},
+            onChangePin = {},
             onCredentialChange = {},
+            onSignOut = {},
+            onDeleteAccount = {},
+            userModel = UserModel(
+                id = Uuid.NIL,
+                birthDate = LocalDate.parse("2000-01-01"),
+                citizenId = "1234567890123",
+                createdAt = ZonedDateTime.parse("2023-01-01T00:00:00Z"),
+                deletedAt = null,
+                avatar = "https://avatars.githubusercontent.com/u/86353526?v=4",
+                fullName = "NTGNguyen",
+                address = null
+            )
         )
     }
 }
