@@ -38,4 +38,10 @@ class MenuViewModel @Inject constructor(
             supabaseService.signOut()
         }
     }
+
+    fun onDeleteAccount() {
+        viewModelScope.launch {
+            // TODO: @NTGNguyen Logic to delete the user account
+        }
+    }
 }

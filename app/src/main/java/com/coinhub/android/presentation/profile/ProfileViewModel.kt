@@ -13,9 +13,11 @@ import com.coinhub.android.utils.DEBOUNCE_TYPING
 import com.coinhub.android.utils.toMillis
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
@@ -34,9 +36,6 @@ class ProfileViewModel @Inject constructor(
     private val createProfileUseCase: CreateProfileUseCase,
     private val supabaseService: SupabaseService,
 ) : ViewModel() {
-    var message = "" // WARN: Again check
-        private set
-
     private val _avatarUri = MutableStateFlow(
         "https://via.placeholder.com/150".toUri()
     )
@@ -97,8 +96,8 @@ class ProfileViewModel @Inject constructor(
         viewModelScope, SharingStarted.WhileSubscribed(5000), false
     )
 
-    private val _createProfileStatus = MutableStateFlow(ProfileStates.ProfileStatus.Ready)
-    val createProfileStatus = _createProfileStatus.asStateFlow()
+    private val _toastMessage = MutableSharedFlow<String>()
+    val toastMessage = _toastMessage.asSharedFlow()
 
     fun onAvatarUriChange(uri: Uri) {
         _avatarUri.value = uri
@@ -120,30 +119,28 @@ class ProfileViewModel @Inject constructor(
         _address.value = address
     }
 
-    fun onCreateProfile(onError: () -> Unit) {
-        if (!isFormValid.value) { // Actually in the UI will block this, so it's quite odd to check here
-            return
-        }
-
+    fun onCreateProfile() {
         viewModelScope.launch {
-            createProfileUseCase(
+            val result = createProfileUseCase(
                 fullName = fullName.value,
                 birthDateInMillis = birthDateInMillis.value,
                 citizenId = _citizenId.value,
-                address = _address.value.takeIf { it.isNotBlank() }).collect { result ->
-                when (result) {
-                    is CreateProfileUseCase.Result.Loading -> {
-                    }
+                address = _address.value.takeIf { it.isNotBlank() })
 
-                    is CreateProfileUseCase.Result.Success -> {
-                        supabaseService.setIsUserSignedIn(SupabaseService.UserAppState.SIGNED_IN)
-                    }
+            when (result) {
+                is CreateProfileUseCase.Result.Success -> {
+                    supabaseService.setIsUserSignedIn(SupabaseService.UserAppState.SIGNED_IN)
+                }
 
-                    is CreateProfileUseCase.Result.Error -> {
-                        onError()
-                    }
+                is CreateProfileUseCase.Result.Error -> {
                 }
             }
         }
+    }
+
+    fun onUpdateProfile(
+        onSuccess: () -> Unit,
+    ) {
+        // TODO: @NTNguyen call PATCH method here. Use .value.takeIf { it.isNotBlank() } to avoid empty strings
     }
 }

@@ -1,26 +1,18 @@
 package com.coinhub.android.presentation.profile
 
-sealed class ProfileStates {
-    sealed class ProfileStatus : ProfileStates() {
-        data object Ready : ProfileStates()
-
-        data object Success : ProfileStates()
-
-        data class Error(val errorMessage: String?) : ProfileStates()
-    }
-
+sealed interface ProfileStates {
     data class FullNameCheckState(
         val isValid: Boolean = true,
         val errorMessage: String? = null,
-    ) : ProfileStates()
+    ) : ProfileStates
 
     data class BirthDateCheckState(
         val isValid: Boolean = true,
         val errorMessage: String? = null,
-    ) : ProfileStates()
+    ) : ProfileStates
 
     data class CitizenIdCheckState(
         val isValid: Boolean = true,
         val errorMessage: String? = null,
-    ) : ProfileStates()
+    ) : ProfileStates
 }

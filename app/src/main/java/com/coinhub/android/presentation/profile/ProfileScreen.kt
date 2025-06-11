@@ -1,10 +1,10 @@
 package com.coinhub.android.presentation.profile
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
@@ -16,20 +16,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
-import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentType
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
@@ -46,52 +43,53 @@ import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
 import com.coinhub.android.utils.datePattern
 import com.coinhub.android.utils.toDateString
-import kotlinx.coroutines.launch
 
+/**
+ * @param onProfileCreated Null means for creating profile, else for editing profile.
+ */
 @Composable
 fun ProfileScreen(
-    isEdit: Boolean,
-    onSuccess: () -> Unit,
+    onProfileCreated: (() -> Unit)?,
     viewModel: ProfileViewModel = hiltViewModel(),
 ) {
     val avatarUri = viewModel.avatarUri.collectAsStateWithLifecycle().value
-    val onAvatarUriChange = viewModel::onAvatarUriChange
     val fullName = viewModel.fullName.collectAsStateWithLifecycle().value
-    val onFullNameChange = viewModel::onFullNameChange
     val fullNameCheckState = viewModel.fullNameCheckState.collectAsStateWithLifecycle().value
     val birthDateInMillis = viewModel.birthDateInMillis.collectAsStateWithLifecycle().value
-    val onBirthDateInMillisChange = viewModel::onBirthDateInMillisChange
     val birthDateCheckState = viewModel.birthDateCheckState.collectAsStateWithLifecycle().value
     val citizenId = viewModel.citizenId.collectAsStateWithLifecycle().value
-    val onCitizenIdChange = viewModel::onCitizenIdChange
     val citizenIdCheckState = viewModel.citizenIdCheckState.collectAsStateWithLifecycle().value
     val address = viewModel.address.collectAsStateWithLifecycle().value
-    val onAddressChange = viewModel::onAddressChange
     val isFormValid = viewModel.isFormValid.collectAsStateWithLifecycle().value
-    val onCreateProfile = viewModel::onCreateProfile
 
-    val message = viewModel.message // WARN: Check this, will it be updated?
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        viewModel.toastMessage.collect {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+        }
+    }
 
     ProfileScreen(
-        isEdit = isEdit,
+        isEdit = onProfileCreated != null,
         avatarUri = avatarUri,
-        onAvatarUriChange = onAvatarUriChange,
+        onAvatarUriChange = viewModel::onAvatarUriChange,
         fullName = fullName,
-        onFullNameChange = onFullNameChange,
+        onFullNameChange = viewModel::onFullNameChange,
         fullNameCheckState = fullNameCheckState,
         birthDateInMillis = birthDateInMillis,
-        onBirthDateInMillisChange = onBirthDateInMillisChange,
+        onBirthDateInMillisChange = viewModel::onBirthDateInMillisChange,
         birthDateCheckState = birthDateCheckState,
         citizenId = citizenId,
-        onCitizenIdChange = onCitizenIdChange,
+        onCitizenIdChange = viewModel::onCitizenIdChange,
         citizenIdCheckState = citizenIdCheckState,
         address = address,
-        onAddressChange = onAddressChange,
+        onAddressChange = viewModel::onAddressChange,
         isFormValid = isFormValid,
-        message = message,
-        onCreateProfile = onCreateProfile,
-        onProfileCreated = onSuccess,
-    )
+        onCreateProfile = viewModel::onCreateProfile,
+        onUpdateProfile = {
+            viewModel.onUpdateProfile { onProfileCreated!! }
+        })
 }
 
 @Composable
@@ -111,43 +109,24 @@ private fun ProfileScreen(
     address: String,
     onAddressChange: (String) -> Unit,
     isFormValid: Boolean,
-    message: String,
-    onCreateProfile: (onError: () -> Unit) -> Unit,
-    onProfileCreated: () -> Unit,
+    onCreateProfile: () -> Unit,
+    onUpdateProfile: () -> Unit,
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
     var isDatePickerShowed by remember { mutableStateOf(false) }
 
-    val coroutineScope = rememberCoroutineScope()
-
-    val focusManager = LocalFocusManager.current
-    fun showSnackbar() {
-        coroutineScope.launch {
-            snackbarHostState.showSnackbar(message)
-        }
-    }
-
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = { ProfileTopBar(isEdit = isEdit) },
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-        floatingActionButton = {
-            if (isFormValid) {
-                ExtendedFloatingActionButton(
-                    onClick = {
-                        onCreateProfile(
-                        ) { showSnackbar() }
-                    },
-                ) {
-                    Text("Next")
-                }
+    Scaffold(modifier = Modifier.fillMaxSize(), topBar = { ProfileTopBar(isEdit = isEdit) }, floatingActionButton = {
+        if (isFormValid) {
+            ExtendedFloatingActionButton(
+                onClick = if (isEdit) onUpdateProfile else onCreateProfile,
+            ) {
+                Text("Next")
             }
-        }) { paddingValues ->
+        }
+    }) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(paddingValues), horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AvatarPicker(avatarUri = avatarUri, onAvatarUriChange = onAvatarUriChange)
             OutlinedTextField(
@@ -159,7 +138,6 @@ private fun ProfileScreen(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text, imeAction = ImeAction.Next
                 ),
-                keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Next) }),
                 supportingText = {
                     fullNameCheckState.errorMessage?.let { Text(it) }
                 },
@@ -226,8 +204,8 @@ private fun ProfileScreen(
                     .padding(bottom = 8.dp)
                     .semantics {
                         contentType = ContentType.AddressStreet
-                    })
-
+                    },
+            )
         }
     }
 
@@ -264,11 +242,9 @@ fun CreateProfileScreenPreview() {
             address = "",
             onAddressChange = {},
             isFormValid = true,
-            message = "Wow",
-            onCreateProfile = { _ -> },
-            onProfileCreated = {},
+            onCreateProfile = {},
+            onUpdateProfile = {},
             avatarUri = "https://placehold.co/150".toUri(),
-            onAvatarUriChange = {}
-        )
+            onAvatarUriChange = {})
     }
 }
