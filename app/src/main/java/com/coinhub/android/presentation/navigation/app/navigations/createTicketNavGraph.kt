@@ -9,7 +9,7 @@ import com.coinhub.android.presentation.create_ticket.CreateTicketScreen
 import com.coinhub.android.presentation.navigation.AppNavDestinations
 import com.coinhub.android.presentation.navigation.app.LocalAnimatedVisibilityScope
 
-fun NavGraphBuilder.createTicketGraph(navController: NavHostController) {
+fun NavGraphBuilder.createTicketNavGraph(navController: NavHostController) {
     navigation<AppNavDestinations.CreateTicketGraph>(startDestination = AppNavDestinations.CreateTicket) {
         composable<AppNavDestinations.CreateTicket> {
             CompositionLocalProvider(LocalAnimatedVisibilityScope provides this@composable) {

@@ -1,6 +1,5 @@
 package com.coinhub.android.presentation.navigation.app.navigations
 
-import android.annotation.SuppressLint
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -14,8 +13,7 @@ import com.coinhub.android.presentation.navigation.app.LocalAnimatedVisibilitySc
 import com.coinhub.android.presentation.top_up.TopUpScreen
 import com.coinhub.android.presentation.top_up_result.TopUpResultScreen
 
-@SuppressLint("UnrememberedGetBackStackEntry")
-fun NavGraphBuilder.topUpGraph(navController: NavHostController) {
+fun NavGraphBuilder.topUpNavGraph(navController: NavHostController) {
     navigation<AppNavDestinations.TopUpGraph>(startDestination = AppNavDestinations.TopUp) {
         composable<AppNavDestinations.TopUp> {
             CompositionLocalProvider(LocalAnimatedVisibilityScope provides this@composable) {

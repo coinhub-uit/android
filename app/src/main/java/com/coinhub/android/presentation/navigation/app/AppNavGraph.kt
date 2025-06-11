@@ -22,8 +22,8 @@ import com.coinhub.android.presentation.navigation.AppNavDestinations
 import com.coinhub.android.presentation.navigation.app.components.AppBottomBar
 import com.coinhub.android.presentation.navigation.app.components.bottomNavItems
 import com.coinhub.android.presentation.navigation.app.navigations.aiChatNav
-import com.coinhub.android.presentation.navigation.app.navigations.createSourceGraph
-import com.coinhub.android.presentation.navigation.app.navigations.createTicketGraph
+import com.coinhub.android.presentation.navigation.app.navigations.createSourceNavGraph
+import com.coinhub.android.presentation.navigation.app.navigations.createTicketNavGraph
 import com.coinhub.android.presentation.navigation.app.navigations.credentialChangeNav
 import com.coinhub.android.presentation.navigation.app.navigations.editProfileNav
 import com.coinhub.android.presentation.navigation.app.navigations.mainNavGraph
@@ -31,8 +31,8 @@ import com.coinhub.android.presentation.navigation.app.navigations.notificationN
 import com.coinhub.android.presentation.navigation.app.navigations.settingNav
 import com.coinhub.android.presentation.navigation.app.navigations.sourceDetailNav
 import com.coinhub.android.presentation.navigation.app.navigations.ticketDetailNav
-import com.coinhub.android.presentation.navigation.app.navigations.topUpGraph
-import com.coinhub.android.presentation.navigation.app.navigations.transferMoneyGraph
+import com.coinhub.android.presentation.navigation.app.navigations.topUpNavGraph
+import com.coinhub.android.presentation.navigation.app.navigations.transferMoneyNavGraph
 import com.coinhub.android.presentation.navigation.app.navigations.transferMoneyQrNav
 
 // The inner padding of scaffold isn't needed.. grammar
@@ -89,11 +89,11 @@ fun AppNavGraph(
                         }
                     )
                     transferMoneyQrNav(navController = navController)
-                    createSourceGraph(navController = navController)
-                    topUpGraph(navController = navController)
+                    createSourceNavGraph(navController = navController)
+                    topUpNavGraph(navController = navController)
                     sourceDetailNav(navController = navController)
-                    transferMoneyGraph(navController = navController)
-                    createTicketGraph(navController = navController)
+                    transferMoneyNavGraph(navController = navController)
+                    createTicketNavGraph(navController = navController)
                     ticketDetailNav(navController = navController)
                     notificationNav(navController = navController)
                     aiChatNav(navController = navController)
