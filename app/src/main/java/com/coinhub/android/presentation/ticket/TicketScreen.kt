@@ -3,6 +3,7 @@ package com.coinhub.android.presentation.ticket
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -58,6 +59,7 @@ fun TicketScreen(
     }
 
     PullToRefreshBox(
+        modifier = Modifier.fillMaxSize(),
         isRefreshing = isRefreshing,
         onRefresh = viewModel::refresh,
     ) {

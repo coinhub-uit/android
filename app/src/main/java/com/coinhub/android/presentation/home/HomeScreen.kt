@@ -62,6 +62,7 @@ fun HomeScreen(
     PullToRefreshBox(
         isRefreshing = isRefreshing,
         onRefresh = viewModel::refresh,
+        modifier = Modifier.fillMaxSize()
     ) {
         HomeScreen(
             user = user,
