@@ -99,6 +99,10 @@ android {
         compose = true
         buildConfig = true
     }
+
+    lint {
+        disable += listOf("CredManMissingDal")
+    }
 }
 
 dependencies {
