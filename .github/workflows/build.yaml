@@ -53,6 +53,9 @@ jobs:
           KEY_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}
           EOF
 
+      - name: Setup google-services.json
+        run: echo '${{ secrets.GOOGLE_SERVICES }}' | base64 --decode > app/google-services.json
+
       - name: Build project
         run: ./gradlew build
 
@@ -63,4 +66,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: apk-${{ matrix.buildType }}
-          path: ${{ env.main_project_module }}/build/outputs/*/release/*.apk
+          path: |
+            ${{ env.main_project_module }}/build/outputs/apk/debug/*.apk
+            ${{ env.main_project_module }}/build/outputs/apk/release/*.apk
