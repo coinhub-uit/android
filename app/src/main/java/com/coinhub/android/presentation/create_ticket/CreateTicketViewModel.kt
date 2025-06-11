@@ -115,7 +115,7 @@ class CreateTicketViewModel @Inject constructor(
                 CreateTicketRequestDto(
                     amount = _amountText.value.toLong(),
                     planHistoryId = _selectedAvailablePlan.value!!.planHistoryId,
-                    methodEnum = _selectedMethod.value!!,
+                    methodEnum = _selectedMethod.value!!.toString(),
                     sourceId = _selectedSourceId.value!!
                 )
             )
