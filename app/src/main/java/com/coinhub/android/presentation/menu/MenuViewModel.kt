@@ -4,38 +4,45 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.data.remote.SupabaseService
 import com.coinhub.android.domain.models.UserModel
+import com.coinhub.android.domain.repositories.AuthRepository
+import com.coinhub.android.domain.repositories.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.ZonedDateTime
 import javax.inject.Inject
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @HiltViewModel
 class MenuViewModel @Inject constructor(
     private val supabaseService: SupabaseService,
+    private val userRepository: UserRepository,
+    private val authRepository: AuthRepository,
 ) : ViewModel() {
-    @OptIn(ExperimentalUuidApi::class)
-    private val _userModel = MutableStateFlow(
-        UserModel(
-            id = Uuid.random(),
-            birthDate = LocalDate.parse("2000-01-01"),
-            citizenId = "1234567890123",
-            createdAt = ZonedDateTime.parse("2023-01-01T00:00:00Z"),
-            deletedAt = null,
-            avatar = "https://avatars.githubusercontent.com/u/86353526?v=4",
-            fullName = "NTGNguyen",
-            address = null
-        )
-    )
-    val userModel = _userModel.asStateFlow()
+    private val _user = MutableStateFlow<UserModel?>(null)
+    val user = _user.asStateFlow()
+
+    private val _toastMessage = MutableSharedFlow<String>(0)
+    val toastMessage = _toastMessage.asSharedFlow()
 
     fun onSignOut() {
         viewModelScope.launch {
             supabaseService.signOut()
+        }
+    }
+
+    fun fetch() {
+        viewModelScope.launch {
+            when (val result = userRepository.getUserById(authRepository.getCurrentUserId())) {
+                is UserModel -> {
+                    _user.value = result
+                }
+
+                null -> {
+                    _toastMessage.emit("Failed to fetch user data")
+                }
+            }
         }
     }
 

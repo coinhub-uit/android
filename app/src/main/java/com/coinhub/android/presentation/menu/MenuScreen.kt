@@ -1,5 +1,6 @@
 package com.coinhub.android.presentation.menu
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,9 +20,11 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -44,7 +47,19 @@ fun MenuScreen(
     onCredentialChange: () -> Unit,
     viewModel: MenuViewModel = hiltViewModel(),
 ) {
-    val userModel = viewModel.userModel.collectAsStateWithLifecycle().value
+
+    val context = LocalContext.current
+    val userModel = viewModel.user.collectAsStateWithLifecycle().value
+
+    LaunchedEffect(Unit) {
+        viewModel.toastMessage.collect { message ->
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.fetch()
+    }
 
     MenuScreen(
         onSettings = onSettings,
@@ -66,7 +81,7 @@ private fun MenuScreen(
     onDeleteAccount: () -> Unit,
     onSignOut: () -> Unit,
     onCredentialChange: () -> Unit,
-    userModel: UserModel,
+    userModel: UserModel?,
     modifier: Modifier = Modifier,
 ) {
     val menuSections = mapOf(

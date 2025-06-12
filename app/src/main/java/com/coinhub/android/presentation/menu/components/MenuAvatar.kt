@@ -30,14 +30,14 @@ import kotlin.uuid.Uuid
 
 @Composable
 fun MenuAvatar(
-    userModel: UserModel,
+    userModel: UserModel?,
 ) {
     val avatarSize = 128.dp
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        if (userModel.avatar != null) {
+        if (userModel?.avatar != null) {
             AvatarImage(
                 avatarUrl = userModel.avatar,
                 fullName = userModel.fullName,
@@ -45,7 +45,7 @@ fun MenuAvatar(
             )
         } else {
             InitialAvatar(
-                fullName = userModel.fullName,
+                fullName = userModel!!.fullName,
                 avatarSize = avatarSize,
             )
         }
