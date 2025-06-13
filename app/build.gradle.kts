@@ -119,7 +119,6 @@ dependencies {
     implementation(libs.androidx.credential.play.service.auth)
     implementation(libs.androidx.animation.core.lint)
     implementation(libs.accompanist.permissions)
-    implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.biometric)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
