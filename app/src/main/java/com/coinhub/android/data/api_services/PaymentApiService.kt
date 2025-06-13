@@ -10,7 +10,7 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface PaymentApiService {
-    @POST("payments/transfer-money")
+    @POST("payment/transfer")
     suspend fun transferMoney(@Body transferMoneyDto: TransferMoneyRequestDto)
 
     @POST("payment/top-up")
