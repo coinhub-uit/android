@@ -20,6 +20,10 @@ interface PreferenceDataStore {
     suspend fun getTotalInterest(): Flow<BigInteger?>
 
     suspend fun saveTotalInterest(value: BigInteger)
+
+    suspend fun saveLockPin(value: String)
+
+    suspend fun getLockPin(): String?
     
     suspend fun clearPreferences()
 }

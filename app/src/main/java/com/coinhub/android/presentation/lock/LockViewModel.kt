@@ -6,26 +6,44 @@ import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.coinhub.android.data.remote.SupabaseService
+import com.coinhub.android.di.IoDispatcher
+import com.coinhub.android.domain.managers.LockHashingManager
+import com.coinhub.android.domain.repositories.PreferenceDataStore
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LockViewModel @Inject constructor(
     private val supabaseService: SupabaseService,
+    private val lockHashingManager: LockHashingManager,
+    private val preferenceDataStore: PreferenceDataStore,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
-    // TODO: Replace with a secure way to store the pin
-    private val correctPin = "1234"
+    init {
+        viewModelScope.launch(ioDispatcher) {
+            correctPin = preferenceDataStore.getLockPin()
+        }
+    }
+
+    private var correctPin: String? = null
 
     private val _pin = MutableStateFlow("")
     val pin: StateFlow<String> = _pin.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
-
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
+    private val _toastMessage = MutableSharedFlow<String>()
+    val toastMessage = _toastMessage.asSharedFlow()
 
     private val promptInfo: BiometricPrompt.PromptInfo by lazy {
         BiometricPrompt.PromptInfo.Builder()
@@ -61,8 +79,13 @@ class LockViewModel @Inject constructor(
     }
 
     fun tryPinUnlock() {
-        if (_pin.value == correctPin) {
-            unlock()
+        viewModelScope.launch {
+            val checkHashResult = lockHashingManager.check(_pin.value) ?: return@launch
+            if (checkHashResult.verified) {
+                unlock()
+            } else {
+                _toastMessage.emit("Incorrect PIN: ${checkHashResult.formatErrorMessage}")
+            }
         }
     }
 

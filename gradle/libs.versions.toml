@@ -29,6 +29,7 @@ zxingCore = "3.5.3"
 zxingAndroidEmbedded = "4.3.0"
 glance = "1.1.1"
 coreSplashscreenVersion = "1.0.1"
+bcrypt = "0.10.2"
 
 [libraries]
 androidx-activity = { module = "androidx.activity:activity", version.ref = "activity" }
@@ -84,6 +85,7 @@ zxing-android-embedded = { group = "com.journeyapps", name = "zxing-android-embe
 androidx-glance-appwidget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "glance" }
 androidx-glance-material3 = { group = "androidx.glance", name = "glance-material3", version.ref = "glance" }
 core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreenVersion" }
+bcrypt = { group = "at.favre.lib", name = "bcrypt", version.ref = "bcrypt" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

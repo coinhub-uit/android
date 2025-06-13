@@ -30,6 +30,7 @@ class PreferenceDataStoreImpl @Inject constructor(
         private val THEME_MODE = stringPreferencesKey("theme_mode")
         private val TOTAL_PRINCIPAL = stringPreferencesKey("total_principal")
         private val TOTAL_INTEREST = stringPreferencesKey("total_interest")
+        private val LOCK_PIN = stringPreferencesKey("lock_password")
     }
 
     override suspend fun saveAccessToken(value: String) {
@@ -83,6 +84,18 @@ class PreferenceDataStoreImpl @Inject constructor(
         context.dataStore.edit { preferences ->
             preferences[TOTAL_INTEREST] = value.toString()
         }
+    }
+
+    override suspend fun saveLockPin(value: String) {
+        context.dataStore.edit { preferences ->
+            preferences[LOCK_PIN] = value
+        }
+    }
+
+    override suspend fun getLockPin(): String? {
+        return context.dataStore.data.map { preferences ->
+            preferences[LOCK_PIN]
+        }.first()
     }
 
     override suspend fun clearPreferences() {
