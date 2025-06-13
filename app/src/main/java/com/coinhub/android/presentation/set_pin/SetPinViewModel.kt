@@ -41,7 +41,7 @@ class SetPinViewModel @Inject constructor(
         initialValue = SetPinStates.PinCheckState()
     )
 
-    val isFormValid = pinCheckState.map { it.isValid }
+    val isFormValid = pinCheckState.drop(1).map { it.isValid }
         .stateIn(viewModelScope, started = WhileSubscribed(5000), initialValue = false)
 
     fun onPinChange(pin: String) {

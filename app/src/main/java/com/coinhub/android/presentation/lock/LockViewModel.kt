@@ -7,7 +7,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import com.coinhub.android.data.remote.SupabaseService
-import com.coinhub.android.domain.managers.LockHashingManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,13 +18,9 @@ import javax.inject.Inject
 @HiltViewModel
 class LockViewModel @Inject constructor(
     private val supabaseService: SupabaseService,
-    private val lockHashingManager: LockHashingManager,
 ) : ViewModel() {
     private val _pin = MutableStateFlow("")
     val pin: StateFlow<String> = _pin.asStateFlow()
-
-    private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     private val _toastMessage = MutableSharedFlow<String>()
     val toastMessage = _toastMessage.asSharedFlow()

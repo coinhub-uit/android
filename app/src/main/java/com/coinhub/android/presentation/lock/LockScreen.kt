@@ -10,7 +10,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Fingerprint
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -39,7 +38,6 @@ fun LockScreen(
     viewModel: LockViewModel = hiltViewModel(),
 ) {
     val pin by viewModel.pin.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
 
     val context = LocalContext.current
 
@@ -52,7 +50,6 @@ fun LockScreen(
     LockScreen(
         pin = pin,
         onPinChange = viewModel::setPin,
-        isLoading = isLoading,
         onUnlock = viewModel::tryPinUnlock,
         onBiometricClick = viewModel.getBiometricPromptCallback(context)
     )
@@ -62,7 +59,6 @@ fun LockScreen(
 private fun LockScreen(
     pin: String,
     onPinChange: (String) -> Unit,
-    isLoading: Boolean,
     onUnlock: () -> Unit,
     onBiometricClick: (() -> Unit)?,
 ) {
@@ -73,10 +69,10 @@ private fun LockScreen(
                 .padding(paddingValues)
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Top
         ) {
             Banner(
-                modifier = Modifier.padding(bottom = 24.dp),
+                modifier = Modifier.padding(top = 128.dp, bottom = 24.dp),
                 imageSize = 64.dp
             )
 
@@ -109,15 +105,8 @@ private fun LockScreen(
             )
 
             Button(
-                onClick = onUnlock, enabled = !isLoading, modifier = Modifier.fillMaxWidth()
+                onClick = onUnlock, modifier = Modifier.fillMaxWidth()
             ) {
-                if (isLoading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .padding(end = 8.dp)
-                            .align(Alignment.CenterVertically), strokeWidth = 2.dp
-                    )
-                }
                 Text("Unlock")
             }
         }
@@ -132,7 +121,6 @@ fun LockScreenPreview() {
             LockScreen(
                 pin = "123",
                 onPinChange = {},
-                isLoading = false,
                 onUnlock = {},
                 onBiometricClick = {},
             )

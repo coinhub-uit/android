@@ -119,9 +119,7 @@ private fun CreateTicketScreen(
         topBar = {
             CreateTicketTopBar(onBack = onBack)
         }, floatingActionButton = {
-            AnimatedVisibility(
-                visible = isFormValid && !isLoading && !isProcessing,
-            ) {
+            if (isFormValid && !isLoading && !isProcessing) {
                 FloatingActionButton(onClick = onCreateTicket) {
                     Icon(
                         imageVector = Icons.Filled.Check, contentDescription = "Create Ticket"
@@ -130,7 +128,7 @@ private fun CreateTicketScreen(
             }
         }, modifier = modifier
     ) { innerPadding ->
-        if (isLoading) {
+        if (isLoading || isProcessing) {
             LinearProgressIndicator(
                 modifier = Modifier
                     .padding(innerPadding)

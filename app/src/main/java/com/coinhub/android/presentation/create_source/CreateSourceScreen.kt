@@ -1,7 +1,6 @@
 package com.coinhub.android.presentation.create_source
 
 import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -93,9 +92,7 @@ private fun CreateSourceScreen(
         topBar = {
             CreateSourceTopBar(onBack = onBack)
         }, floatingActionButton = {
-            AnimatedVisibility(
-                visible = isFormValid && !isProcessing,
-            ) {
+            if (isFormValid && !isProcessing) {
                 ExtendedFloatingActionButton(onClick = onCreate, icon = {
                     Icon(
                         imageVector = Icons.Default.Add, contentDescription = "Create Source"
@@ -107,7 +104,7 @@ private fun CreateSourceScreen(
         Box(
             modifier = Modifier.padding(innerPadding)
         ) {
-            if (isProcessing) {
+            if (isProcessing || isProcessing) {
                 LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             }
 

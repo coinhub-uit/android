@@ -47,7 +47,6 @@ fun TopUpScreen(
     val amount = viewModel.amount.collectAsStateWithLifecycle().value
     val isFormValid = viewModel.isFormValid.collectAsStateWithLifecycle().value
 
-
     val context = LocalContext.current
 
     val sharedTransitionScope =

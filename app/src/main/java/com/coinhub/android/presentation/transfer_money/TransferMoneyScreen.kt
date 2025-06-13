@@ -123,9 +123,7 @@ private fun TransferMoneyScreen(
         topBar = {
             TransferMoneyTopBar(onBack = onBack)
         }, floatingActionButton = {
-            AnimatedVisibility(
-                visible = isFormValid && !isLoading && !isProcessing,
-            ) {
+            if (isFormValid && !isLoading && !isProcessing) {
                 FloatingActionButton(onClick = onTransfer) {
                     Icon(
                         imageVector = Icons.Filled.Check, contentDescription = "Transfer Money"
@@ -137,9 +135,8 @@ private fun TransferMoneyScreen(
         Box(
             modifier = Modifier.padding(innerPadding)
         ) {
-            if (isLoading) {
+            if (isLoading || isProcessing) {
                 LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-                return@Box
             }
 
             Column(

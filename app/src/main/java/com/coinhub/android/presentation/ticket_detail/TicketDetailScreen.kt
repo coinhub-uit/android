@@ -100,7 +100,6 @@ fun TicketDetailScreen(
     ) { innerPadding ->
         if (isLoading) {
             LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-            return@Scaffold
         }
 
         if (ticket == null || withdrawPlan == null) {
