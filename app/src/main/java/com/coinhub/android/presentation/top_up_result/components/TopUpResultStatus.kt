@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.coinhub.android.domain.models.TopUpModel
 import com.coinhub.android.ui.theme.CoinhubTheme
+import com.coinhub.android.utils.CurrencySymbol
 import com.coinhub.android.utils.toDateString
 import com.coinhub.android.utils.toVndFormat
 import java.math.BigInteger
@@ -121,7 +122,7 @@ fun TopUpResultStatus(topUp: TopUpModel?) {
                 modifier = Modifier.weight(1f),
             )
             Text(
-                text = topUp.amount.toVndFormat(),
+                text = topUp.amount.toVndFormat(currencySymbol = CurrencySymbol.VND),
             )
         }
         Row(

@@ -32,6 +32,7 @@ import androidx.glance.unit.ColorProvider
 import com.coinhub.android.MainActivity
 import com.coinhub.android.R
 import com.coinhub.android.presentation.navigation.AppNavDestinations
+import com.coinhub.android.utils.CurrencySymbol
 import com.coinhub.android.utils.toVndFormat
 import com.coinhub.android.widgets.repositories.TicketWidgetRepository
 
@@ -73,7 +74,7 @@ class TicketWidget : GlanceAppWidget() {
                             modifier = GlanceModifier.padding(start = 16.dp),
                         ) {
                             Text(
-                                totalPrincipal?.toVndFormat() ?: "0 VND",
+                                totalPrincipal?.toVndFormat(currencySymbol = CurrencySymbol.D) ?: "0 VND",
                                 style = defaultTextStyle.copy(
                                     color = ColorProvider(GlanceTheme.colors.primary.getColor(context)),
                                     fontSize = MaterialTheme.typography.headlineSmall.fontSize,
@@ -89,7 +90,7 @@ class TicketWidget : GlanceAppWidget() {
                                     colorFilter = ColorFilter.tint(GlanceTheme.colors.onSurfaceVariant)
                                 )
                                 Text(
-                                    totalInterest?.toVndFormat() ?: "0 VND", maxLines = 1,
+                                    totalInterest?.toVndFormat(currencySymbol = CurrencySymbol.D) ?: "0 VND", maxLines = 1,
                                     style = defaultTextStyle.copy(
                                         color = ColorProvider(GlanceTheme.colors.onSurfaceVariant.getColor(context)),
                                         fontSize = MaterialTheme.typography.labelMedium.fontSize,

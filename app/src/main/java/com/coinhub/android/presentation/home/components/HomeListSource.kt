@@ -38,6 +38,7 @@ import com.coinhub.android.domain.models.SourceModel
 import com.coinhub.android.presentation.navigation.app.LocalAnimatedVisibilityScope
 import com.coinhub.android.presentation.navigation.app.LocalSharedTransitionScope
 import com.coinhub.android.ui.theme.CoinhubTheme
+import com.coinhub.android.utils.CurrencySymbol
 import com.coinhub.android.utils.toVndFormat
 import java.math.BigInteger
 
@@ -124,7 +125,7 @@ private fun HomeSourceCard(
                 )
 
                 Text(
-                    text = if (isBalanceVisible) sourceModel.balance.toVndFormat() else "****** VNĐ",
+                    text = if (isBalanceVisible) sourceModel.balance.toVndFormat(currencySymbol = CurrencySymbol.VND) else "****** VNĐ",
                     style = MaterialTheme.typography.bodyMedium,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier

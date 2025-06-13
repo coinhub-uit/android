@@ -2,15 +2,13 @@ package com.coinhub.android.presentation.transfer_money.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.coinhub.android.presentation.common.components.CurrencyInputBox
 
 @Composable
 fun TransferMoneyEnterAmount(
@@ -23,14 +21,10 @@ fun TransferMoneyEnterAmount(
         modifier = Modifier.padding(bottom = 16.dp)
     )
 
-    OutlinedTextField(
+    CurrencyInputBox(
         value = amount,
         onValueChange = onAmountChange,
-        label = { Text("Amount (VNĐ)") },
-        singleLine = true,
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Number, imeAction = ImeAction.Done
-        ),
+        imeAction = ImeAction.Done,
         modifier = Modifier.fillMaxWidth()
     )
 }

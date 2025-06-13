@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.coinhub.android.domain.models.SourceModel
 import com.coinhub.android.presentation.navigation.app.LocalAnimatedVisibilityScope
 import com.coinhub.android.presentation.navigation.app.LocalSharedTransitionScope
+import com.coinhub.android.utils.CurrencySymbol
 import com.coinhub.android.utils.PreviewDeviceSpecs
 import com.coinhub.android.utils.toVndFormat
 
@@ -80,7 +81,7 @@ fun SourceDetailCard(
                     Spacer(modifier = Modifier.height(32.dp))
 
                     Text(
-                        text = sourceModel.balance.toVndFormat(),
+                        text = sourceModel.balance.toVndFormat(currencySymbol = CurrencySymbol.VND),
                         style = MaterialTheme.typography.titleMedium,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier
