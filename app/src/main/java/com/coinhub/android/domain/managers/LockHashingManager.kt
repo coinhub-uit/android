@@ -2,8 +2,10 @@ package com.coinhub.android.domain.managers
 
 import at.favre.lib.crypto.bcrypt.BCrypt
 import com.coinhub.android.domain.repositories.PreferenceDataStore
+import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 
+@ViewModelScoped
 class LockHashingManager @Inject constructor(
     private val preferenceDataStore: PreferenceDataStore,
 ) {

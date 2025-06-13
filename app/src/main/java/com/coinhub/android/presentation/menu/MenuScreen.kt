@@ -129,7 +129,7 @@ private fun MenuScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Avatar
-            MenuAvatar(userModel = userModel)
+            MenuAvatar(user = userModel)
 
             Spacer(modifier = Modifier.height(16.dp))
             HorizontalDivider(modifier = Modifier.padding(horizontal = 32.dp))

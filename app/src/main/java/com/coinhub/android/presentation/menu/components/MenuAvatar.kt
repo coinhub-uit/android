@@ -30,27 +30,27 @@ import kotlin.uuid.Uuid
 
 @Composable
 fun MenuAvatar(
-    userModel: UserModel?,
+    user: UserModel?,
 ) {
     val avatarSize = 128.dp
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        if (userModel?.avatar != null) {
+        if (user?.avatar != null) {
             AvatarImage(
-                avatarUrl = userModel.avatar,
-                fullName = userModel.fullName,
+                avatarUrl = user.avatar,
+                fullName = user.fullName,
                 avatarSize = avatarSize,
             )
         } else {
             InitialAvatar(
-                fullName = userModel!!.fullName,
+                fullName = user?.fullName ?: "...",
                 avatarSize = avatarSize,
             )
         }
         Text(
-            text = userModel.fullName,
+            text = user?.fullName ?: "...",
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurface,
             softWrap = true,
@@ -112,7 +112,7 @@ private fun InitialAvatar(
 fun MenuAvatarPreview() {
     CoinhubTheme {
         MenuAvatar(
-            userModel = UserModel(
+            user = UserModel(
                 id = Uuid.random(),
                 birthDate = LocalDate.parse("2000-01-01"),
                 citizenId = "1234567890123",
@@ -132,7 +132,7 @@ fun MenuAvatarPreview() {
 fun MenuAvatarNoImagePreview() {
     CoinhubTheme {
         MenuAvatar(
-            userModel = UserModel(
+            user = UserModel(
                 id = Uuid.random(),
                 birthDate = LocalDate.parse("2000-01-01"),
                 citizenId = "1234567890123",

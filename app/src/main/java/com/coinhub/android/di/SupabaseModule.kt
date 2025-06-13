@@ -3,6 +3,7 @@ package com.coinhub.android.di
 import com.coinhub.android.BuildConfig
 import com.coinhub.android.data.remote.SupabaseService
 import com.coinhub.android.data.repositories.PreferenceDataStoreImpl
+import com.coinhub.android.domain.repositories.UserRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,6 +14,7 @@ import io.github.jan.supabase.compose.auth.ComposeAuth
 import io.github.jan.supabase.compose.auth.googleNativeLogin
 import io.github.jan.supabase.createSupabaseClient
 import kotlinx.coroutines.CoroutineDispatcher
+import javax.inject.Provider
 import javax.inject.Singleton
 
 @Module
@@ -43,5 +45,6 @@ object SupabaseModule {
         supabaseClient: SupabaseClient,
         sharedPreferenceRepositoryImpl: PreferenceDataStoreImpl,
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
-    ) = SupabaseService(supabaseClient, sharedPreferenceRepositoryImpl, ioDispatcher)
+        userRepository: Provider<UserRepository>,
+    ) = SupabaseService(supabaseClient, sharedPreferenceRepositoryImpl, userRepository, ioDispatcher)
 }

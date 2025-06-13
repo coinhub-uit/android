@@ -1,7 +1,7 @@
 package com.coinhub.android.data.remote
 
-import com.coinhub.android.data.repositories.PreferenceDataStoreImpl
 import com.coinhub.android.di.IoDispatcher
+import com.coinhub.android.domain.repositories.PreferenceDataStore
 import com.coinhub.android.domain.repositories.UserRepository
 import com.coinhub.android.utils.ACCESS_TOKEN_KEY
 import io.github.jan.supabase.SupabaseClient
@@ -16,11 +16,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Provider
 
 class SupabaseService @Inject constructor(
     private val supabaseClient: SupabaseClient,
-    private val sharedPreferenceRepositoryImpl: PreferenceDataStoreImpl,
-    private val userRepository: UserRepository,
+    private val preferenceDataStore: PreferenceDataStore,
+    private val userRepository: Provider<UserRepository>,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) {
     private val supabaseServiceScope = CoroutineScope(SupervisorJob() + ioDispatcher)
@@ -56,7 +57,7 @@ class SupabaseService @Inject constructor(
         supabaseServiceScope.launch {
             try {
                 supabaseClient.auth.signOut()
-                sharedPreferenceRepositoryImpl.clearPreferences()
+                preferenceDataStore.clearPreferences()
                 _isUserSignedIn.value = UserAppState.NOT_SIGNED_IN
             } catch (e: Exception) {
                 throw Exception("Failed to sign out: ${e.message}")
@@ -105,14 +106,14 @@ class SupabaseService @Inject constructor(
 
     private suspend fun checkUserSignedIn() {
         try {
-            val token = sharedPreferenceRepositoryImpl.getAccessToken()
-            if (token.isNullOrEmpty() || userRepository.getUserById(getUserIdWithToken(token), true) == null) {
+            val token = preferenceDataStore.getAccessToken()
+            if (token.isNullOrEmpty() || userRepository.get().getUserById(getUserIdWithToken(token), true) == null) {
                 _isUserSignedIn.value = UserAppState.NOT_SIGNED_IN
             } else {
                 getUserIdWithToken(token)
                 refreshSession()
                 val newToken = getToken()!!
-                sharedPreferenceRepositoryImpl.saveAccessToken(newToken)
+                preferenceDataStore.saveAccessToken(newToken)
                 _isUserSignedIn.value = UserAppState.LOCKED
             }
         } catch (e: Exception) {
