@@ -27,7 +27,7 @@ fun AuthNavGraph() {
 
         composable<AppNavDestinations.CreateProfile> {
             ProfileScreen(
-                onProfileCreated = null
+                onBack = null,
             )
         }
     }

@@ -44,6 +44,7 @@ import kotlin.uuid.Uuid
 fun MenuScreen(
     onEditProfile: () -> Unit,
     onSettings: () -> Unit,
+    onChangePin: () -> Unit,
     onCredentialChange: () -> Unit,
     viewModel: MenuViewModel = hiltViewModel(),
 ) {
@@ -63,7 +64,7 @@ fun MenuScreen(
 
     MenuScreen(
         onSettings = onSettings,
-        onChangePin = {},// TODO: Later
+        onChangePin = onChangePin,
         onEditProfile = onEditProfile,
         onCredentialChange = onCredentialChange,
         onDeleteAccount = viewModel::onDeleteAccount,

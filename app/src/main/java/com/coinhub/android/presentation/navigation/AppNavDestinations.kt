@@ -16,6 +16,11 @@ open class AppNavDestinations {
     @Serializable
     data object CreateProfile : AppNavDestinations()
 
+    // TODO: Is it necessary? or @NTGNguyen handled in the global state
+    // Auth - Create PIN
+    @Serializable
+    data object CreatePin : AppNavDestinations()
+
     // ------- //
 
     // App - Main Graph
@@ -123,6 +128,10 @@ open class AppNavDestinations {
     // App - Main Graph - Menu - Credential Change
     @Serializable
     data object CredentialChange : AppNavDestinations()
+
+    // App - Main Graph - Menu - Change PIN
+    @Serializable
+    data object ChangePin : AppNavDestinations()
 
     // App - Main Graph - Notifications
     @Serializable

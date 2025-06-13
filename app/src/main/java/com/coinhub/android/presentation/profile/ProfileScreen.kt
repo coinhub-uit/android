@@ -44,12 +44,9 @@ import com.coinhub.android.utils.PreviewDeviceSpecs
 import com.coinhub.android.utils.datePattern
 import com.coinhub.android.utils.toDateString
 
-/**
- * @param onProfileCreated Null means for creating profile, else for editing profile.
- */
 @Composable
 fun ProfileScreen(
-    onProfileCreated: (() -> Unit)?,
+    onBack: (() -> Unit)? = null,
     viewModel: ProfileViewModel = hiltViewModel(),
 ) {
     val avatarUri = viewModel.avatarUri.collectAsStateWithLifecycle().value
@@ -71,7 +68,7 @@ fun ProfileScreen(
     }
 
     ProfileScreen(
-        isEdit = onProfileCreated != null,
+        onBack = onBack,
         avatarUri = avatarUri,
         onAvatarUriChange = viewModel::onAvatarUriChange,
         fullName = fullName,
@@ -87,14 +84,15 @@ fun ProfileScreen(
         onAddressChange = viewModel::onAddressChange,
         isFormValid = isFormValid,
         onCreateProfile = viewModel::onCreateProfile,
-        onUpdateProfile = {
-            viewModel.onUpdateProfile { onProfileCreated!! }
-        })
+        onUpdateProfile = if (onBack != null) {
+            { viewModel.onUpdateProfile(onSuccess = onBack) }
+        } else null,
+    )
 }
 
 @Composable
 private fun ProfileScreen(
-    isEdit: Boolean,
+    onBack: (() -> Unit)?,
     avatarUri: Uri,
     onAvatarUriChange: (Uri) -> Unit,
     fullName: String,
@@ -110,19 +108,23 @@ private fun ProfileScreen(
     onAddressChange: (String) -> Unit,
     isFormValid: Boolean,
     onCreateProfile: () -> Unit,
-    onUpdateProfile: () -> Unit,
+    onUpdateProfile: (() -> Unit)?,
 ) {
+    val isEdit = remember(onBack, onUpdateProfile) { onBack != null && onUpdateProfile != null }
     var isDatePickerShowed by remember { mutableStateOf(false) }
 
-    Scaffold(modifier = Modifier.fillMaxSize(), topBar = { ProfileTopBar(isEdit = isEdit) }, floatingActionButton = {
-        if (isFormValid) {
-            ExtendedFloatingActionButton(
-                onClick = if (isEdit) onUpdateProfile else onCreateProfile,
-            ) {
-                Text("Next")
-            }
-        }
-    }) { paddingValues ->
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+             topBar = { ProfileTopBar(isEdit = isEdit, onBack = onBack) },
+             floatingActionButton = {
+                 if (isFormValid) {
+                     ExtendedFloatingActionButton(
+                         onClick = if (isEdit) onUpdateProfile!! else onCreateProfile,
+                     ) {
+                         Text(if (isEdit) "Save" else "Next")
+                     }
+                 }
+             }) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -153,24 +155,24 @@ private fun ProfileScreen(
                     })
             OutlinedTextField(
                 value = birthDateInMillis.toDateString(),
-                onValueChange = {},
-                readOnly = true,
-                label = { Text("Birth Date") },
-                placeholder = { Text(datePattern) },
-                isError = !birthDateCheckState.isValid,
-                supportingText = {
-                    birthDateCheckState.errorMessage?.let {
-                        Text(it)
-                    }
-                },
-                trailingIcon = {
-                    IconButton(onClick = { isDatePickerShowed = true }) {
-                        Icon(
-                            imageVector = Icons.Default.DateRange, contentDescription = "Select date"
-                        )
-                    }
-                },
-                modifier = Modifier.padding(bottom = 8.dp)
+                              onValueChange = {},
+                              readOnly = true,
+                              label = { Text("Birth Date") },
+                              placeholder = { Text(datePattern) },
+                              isError = !birthDateCheckState.isValid,
+                              supportingText = {
+                                  birthDateCheckState.errorMessage?.let {
+                                      Text(it)
+                                  }
+                              },
+                              trailingIcon = {
+                                  IconButton(onClick = { isDatePickerShowed = true }) {
+                                      Icon(
+                                          imageVector = Icons.Default.DateRange, contentDescription = "Select date"
+                                      )
+                                  }
+                              },
+                              modifier = Modifier.padding(bottom = 8.dp)
             )
             OutlinedTextField(
                 value = citizenId,
@@ -223,7 +225,7 @@ private fun ProfileScreen(
 fun CreateProfileScreenPreview() {
     CoinhubTheme {
         ProfileScreen(
-            isEdit = true,
+            onBack = {},
             fullName = "KevinNitro",
             onFullNameChange = {},
             fullNameCheckState = ProfileStates.FullNameCheckState(
@@ -243,8 +245,9 @@ fun CreateProfileScreenPreview() {
             onAddressChange = {},
             isFormValid = true,
             onCreateProfile = {},
-            onUpdateProfile = {},
+            onUpdateProfile = null,
             avatarUri = "https://placehold.co/150".toUri(),
-            onAvatarUriChange = {})
+            onAvatarUriChange = {},
+        )
     }
 }

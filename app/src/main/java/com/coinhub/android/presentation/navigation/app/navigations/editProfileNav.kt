@@ -9,6 +9,7 @@ import com.coinhub.android.presentation.profile.ProfileScreen
 fun NavGraphBuilder.editProfileNav(navController: NavHostController) {
     composable<AppNavDestinations.EditProfile> {
         ProfileScreen(
-            onProfileCreated = { navController.navigateUp() })
+            onBack = { navController.navigateUp() },
+        )
     }
 }

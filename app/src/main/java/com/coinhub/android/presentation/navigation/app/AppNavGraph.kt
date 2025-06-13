@@ -27,8 +27,8 @@ import com.coinhub.android.presentation.navigation.app.navigations.createTicketN
 import com.coinhub.android.presentation.navigation.app.navigations.credentialChangeNav
 import com.coinhub.android.presentation.navigation.app.navigations.editProfileNav
 import com.coinhub.android.presentation.navigation.app.navigations.mainNavGraph
+import com.coinhub.android.presentation.navigation.app.navigations.menuNavGraph
 import com.coinhub.android.presentation.navigation.app.navigations.notificationNav
-import com.coinhub.android.presentation.navigation.app.navigations.settingNav
 import com.coinhub.android.presentation.navigation.app.navigations.sourceDetailNav
 import com.coinhub.android.presentation.navigation.app.navigations.ticketDetailNav
 import com.coinhub.android.presentation.navigation.app.navigations.topUpNavGraph
@@ -99,7 +99,7 @@ fun AppNavGraph(
                     aiChatNav(navController = navController)
                     editProfileNav(navController = navController)
                     credentialChangeNav(navController = navController)
-                    settingNav(navController = navController)
+                    menuNavGraph(navController = navController)
                 }
             }
         }

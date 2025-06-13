@@ -63,6 +63,7 @@ fun NavGraphBuilder.mainNavGraph(
             MenuScreen(
                 onEditProfile = { navController.navigate(AppNavDestinations.EditProfile) },
                 onSettings = { navController.navigate(AppNavDestinations.Settings) },
+                onChangePin = { navController.navigate(AppNavDestinations.ChangePin) },
                 onCredentialChange = { navController.navigate(AppNavDestinations.CredentialChange) },
             )
         }

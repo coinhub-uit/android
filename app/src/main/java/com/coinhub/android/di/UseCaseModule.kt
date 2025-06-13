@@ -22,6 +22,7 @@ import com.coinhub.android.domain.use_cases.ValidateAmountCreateTicketUseCase
 import com.coinhub.android.domain.use_cases.ValidateConfirmPasswordUseCase
 import com.coinhub.android.domain.use_cases.ValidateEmailUseCase
 import com.coinhub.android.domain.use_cases.ValidatePasswordUseCase
+import com.coinhub.android.domain.use_cases.ValidatePinUseCase
 import com.coinhub.android.domain.use_cases.ValidateSourceIdUseCase
 import com.coinhub.android.domain.use_cases.WithdrawTicketUseCase
 import dagger.Module
@@ -52,6 +53,12 @@ object UseCaseModule {
     fun provideValidateConfirmPasswordUseCase(
         @DefaultDispatcher defaultDispatcher: CoroutineDispatcher,
     ) = ValidateConfirmPasswordUseCase(defaultDispatcher)
+
+    @Provides
+    @Singleton
+    fun provideValidatePinUseCase(
+        @DefaultDispatcher defaultDispatcher: CoroutineDispatcher,
+    ) = ValidatePinUseCase(defaultDispatcher)
 
     @Provides
     @Singleton
