@@ -9,13 +9,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -37,6 +34,7 @@ import com.coinhub.android.presentation.ticket_detail.components.TicketDetailDet
 import com.coinhub.android.presentation.ticket_detail.components.TicketDetailHeader
 import com.coinhub.android.presentation.ticket_detail.components.TicketDetailProgressCard
 import com.coinhub.android.presentation.ticket_detail.components.TicketDetailTopBar
+import com.coinhub.android.presentation.ticket_detail.components.TicketDetailWithdrawButton
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
 import com.coinhub.android.utils.toLocalDate
@@ -139,19 +137,13 @@ fun TicketDetailScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            OutlinedButton(
-                onClick = {
-                    onWithdraw()
-                    onBack()
-                },
-                modifier = Modifier
-                    .fillMaxWidth(),
-                colors = ButtonDefaults.outlinedButtonColors()
-            ) {
-                Text(text = "Withdraw Now")
-            }
+            TicketDetailWithdrawButton(
+                onWithdraw = onWithdraw,
+                onBack = onBack,
+                modifier = Modifier.fillMaxWidth(),
+            )
 
-            Spacer(modifier = Modifier.height(64.dp)) // For pushing up a little bit :))
+            Spacer(modifier = Modifier.height(128.dp)) // For pushing up a little bit :))
         }
     }
 }

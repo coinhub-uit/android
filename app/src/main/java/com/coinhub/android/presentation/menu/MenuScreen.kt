@@ -14,13 +14,19 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Password
 import androidx.compose.material.icons.filled.Pin
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -85,6 +91,10 @@ private fun MenuScreen(
     userModel: UserModel?,
     modifier: Modifier = Modifier,
 ) {
+    val showDeleteAccountDialog = remember {
+        mutableStateOf(false)
+    }
+
     val menuSections = mapOf(
         "App" to listOf(
             MenuEntry(
@@ -114,7 +124,9 @@ private fun MenuScreen(
             MenuEntry(
                 icon = Icons.Default.Delete,
                 text = "Delete Account",
-                onClick = onDeleteAccount
+                onClick = {
+                    showDeleteAccountDialog.value = true
+                }
             ),
         )
     )
@@ -163,6 +175,31 @@ private fun MenuScreen(
                     }
                 }
             }
+        }
+
+        if (showDeleteAccountDialog.value) {
+            AlertDialog(
+                onDismissRequest = { showDeleteAccountDialog.value = false },
+                title = { Text("Delete Account") },
+                text = { Text("Are you sure you want to delete your account? This action cannot be undone.") },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            showDeleteAccountDialog.value = false
+                            onDeleteAccount()
+                        }
+                    ) {
+                        Text("Delete")
+                    }
+                },
+                dismissButton = {
+                    OutlinedButton(
+                        onClick = { showDeleteAccountDialog.value = false }
+                    ) {
+                        Text("Cancel")
+                    }
+                }
+            )
         }
     }
 }
