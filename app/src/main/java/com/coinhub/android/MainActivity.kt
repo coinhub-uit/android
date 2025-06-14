@@ -19,6 +19,7 @@ import com.coinhub.android.domain.managers.ThemeManger
 import com.coinhub.android.presentation.lock.LockScreen
 import com.coinhub.android.presentation.navigation.app.AppNavGraph
 import com.coinhub.android.presentation.navigation.auth.AuthNavGraph
+import com.coinhub.android.presentation.set_pin.SetPinScreen
 import com.coinhub.android.shortcuts.TicketScreenShortcut
 import com.coinhub.android.shortcuts.TransferMoneyQrScreenShortcut
 import com.coinhub.android.ui.theme.CoinhubTheme
@@ -66,6 +67,9 @@ class MainActivity : AppCompatActivity() {
                         }
 
                         SupabaseService.UserAppState.FAILED -> {}
+                        SupabaseService.UserAppState.SET_LOCKED_PIN -> {
+                            SetPinScreen()
+                        }
                     }
                 }
             }

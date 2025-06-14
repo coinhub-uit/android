@@ -114,7 +114,10 @@ class SupabaseService @Inject constructor(
                 refreshSession()
                 val newToken = getToken()!!
                 preferenceDataStore.saveAccessToken(newToken)
-                _isUserSignedIn.value = UserAppState.LOCKED
+                if (preferenceDataStore.getLockPin().isNullOrEmpty())
+                    _isUserSignedIn.value = UserAppState.SET_LOCKED_PIN
+                else
+                    _isUserSignedIn.value = UserAppState.LOCKED
             }
         } catch (e: Exception) {
             _isUserSignedIn.value = UserAppState.NOT_SIGNED_IN
@@ -126,7 +129,8 @@ class SupabaseService @Inject constructor(
         NOT_SIGNED_IN,
         SIGNED_IN,
         LOCKED,
-        FAILED
+        FAILED,
+        SET_LOCKED_PIN
     }
 }
 

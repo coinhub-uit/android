@@ -2,6 +2,7 @@ package com.coinhub.android.presentation.set_pin
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.coinhub.android.data.remote.SupabaseService
 import com.coinhub.android.di.IoDispatcher
 import com.coinhub.android.domain.repositories.PreferenceDataStore
 import com.coinhub.android.domain.use_cases.ValidatePinUseCase
@@ -21,6 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SetPinViewModel @Inject constructor(
+    private val supabaseService: SupabaseService,
     private val preferenceDataStore: PreferenceDataStore,
     private val validatePinUseCase: ValidatePinUseCase,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
@@ -58,7 +60,10 @@ class SetPinViewModel @Inject constructor(
     fun onCreatePin() {
         viewModelScope.launch(ioDispatcher) {
             preferenceDataStore.saveLockPin(_pin.value)
-            // TODO: @NTGNguyen: Navigate
+            supabaseService.setIsUserSignedIn(
+                SupabaseService.UserAppState
+                    .SIGNED_IN
+            )
         }
     }
 }
