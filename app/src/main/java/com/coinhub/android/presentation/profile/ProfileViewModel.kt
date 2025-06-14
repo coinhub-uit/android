@@ -5,6 +5,7 @@ import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.data.remote.SupabaseService
+import com.coinhub.android.domain.repositories.PreferenceDataStore
 import com.coinhub.android.domain.use_cases.CreateProfileUseCase
 import com.coinhub.android.domain.use_cases.ValidateBirthDateUseCase
 import com.coinhub.android.domain.use_cases.ValidateCitizenIdUseCase
@@ -34,6 +35,7 @@ class ProfileViewModel @Inject constructor(
     private val validateBirthDateUseCase: ValidateBirthDateUseCase,
     private val validateCitizenIdUseCase: ValidateCitizenIdUseCase,
     private val createProfileUseCase: CreateProfileUseCase,
+    private val preferenceDataStore: PreferenceDataStore,
     private val supabaseService: SupabaseService,
 ) : ViewModel() {
     private val _avatarUri = MutableStateFlow(
@@ -129,7 +131,10 @@ class ProfileViewModel @Inject constructor(
 
             when (result) {
                 is CreateProfileUseCase.Result.Success -> {
-                    supabaseService.setIsUserSignedIn(SupabaseService.UserAppState.SIGNED_IN)
+                    if (preferenceDataStore.getLockPin().isNullOrEmpty())
+                        supabaseService.setIsUserSignedIn(SupabaseService.UserAppState.SET_LOCKED_PIN)
+                    else
+                        supabaseService.setIsUserSignedIn(SupabaseService.UserAppState.SIGNED_IN)
                 }
 
                 is CreateProfileUseCase.Result.Error -> {

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.data.remote.SupabaseService
 import com.coinhub.android.domain.models.UserModel
+import com.coinhub.android.domain.repositories.PreferenceDataStore
 import com.coinhub.android.domain.use_cases.CheckProfileAvailableUseCase
 import com.coinhub.android.domain.use_cases.SignInWithCredentialUseCase
 import com.coinhub.android.domain.use_cases.SignInWithGoogleUseCase
@@ -39,6 +40,7 @@ class AuthViewModel @Inject constructor(
     private val supabaseService: SupabaseService,
     private val checkProfileAvailableUseCase: CheckProfileAvailableUseCase,
     val supabaseClient: SupabaseClient,
+    val preferenceDataStore: PreferenceDataStore,
 ) : ViewModel() {
     private val _isSignUp = MutableStateFlow(false)
     val isSignUp: StateFlow<Boolean> = _isSignUp.asStateFlow()
@@ -123,7 +125,10 @@ class AuthViewModel @Inject constructor(
                         is CheckProfileAvailableUseCase.Result.Success -> {
                             when (userProfile.user) {
                                 is UserModel -> {
-                                    supabaseService.setIsUserSignedIn(SupabaseService.UserAppState.SIGNED_IN)
+                                    if (preferenceDataStore.getLockPin().isNullOrEmpty())
+                                        supabaseService.setIsUserSignedIn(SupabaseService.UserAppState.SET_LOCKED_PIN)
+                                    else
+                                        supabaseService.setIsUserSignedIn(SupabaseService.UserAppState.SIGNED_IN)
                                 }
 
                                 null -> {
@@ -166,7 +171,10 @@ class AuthViewModel @Inject constructor(
 
                 is SignInWithGoogleUseCase.Result.Success -> {
                     if (result.googleNavigateResultModel.isUserRegisterProfile) {
-                        supabaseService.setIsUserSignedIn(SupabaseService.UserAppState.SIGNED_IN)
+                        if (preferenceDataStore.getLockPin().isNullOrEmpty())
+                            supabaseService.setIsUserSignedIn(SupabaseService.UserAppState.SET_LOCKED_PIN)
+                        else
+                            supabaseService.setIsUserSignedIn(SupabaseService.UserAppState.SIGNED_IN)
                     } else {
                         onSignedUp()
                     }
