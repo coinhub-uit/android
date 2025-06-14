@@ -19,11 +19,11 @@ import com.coinhub.android.utils.PreviewDeviceSpecs
 @Composable
 fun SourceDetailTopBar(
     onBack: () -> Unit,
-    onDelete: () -> Unit,
-    showDeleteDialog: Boolean,
+    onClose: () -> Unit,
+    showCloseDialog: Boolean,
     showBalanceErrorDialog: Boolean,
-    onDeleteConfirm: () -> Unit,
-    dismissDeleteDialog: () -> Unit,
+    onCloseConfirm: () -> Unit,
+    dismissCloseDialog: () -> Unit,
     dismissBalanceErrorDialog: () -> Unit,
 ) {
     TopAppBar(
@@ -41,28 +41,28 @@ fun SourceDetailTopBar(
             }
         },
         actions = {
-            IconButton(onClick = onDelete) {
+            IconButton(onClick = onClose) {
                 Icon(
                     imageVector = Icons.Default.Delete,
-                    contentDescription = "Delete Source"
+                    contentDescription = "Close Source"
                 )
             }
         }
     )
 
-    // Delete confirmation dialog
-    if (showDeleteDialog) {
+    // Close confirmation dialog
+    if (showCloseDialog) {
         AlertDialog(
-            onDismissRequest = dismissDeleteDialog,
-            title = { Text("Delete Source") },
-            text = { Text("Are you sure you want to delete this source? This action cannot be undone.") },
+            onDismissRequest = dismissCloseDialog,
+            title = { Text("Close Source") },
+            text = { Text("Are you sure you want to close this source? This action cannot be undone.") },
             confirmButton = {
-                TextButton(onClick = onDeleteConfirm) {
+                TextButton(onClick = onCloseConfirm) {
                     Text("OK")
                 }
             },
             dismissButton = {
-                TextButton(onClick = dismissDeleteDialog) {
+                TextButton(onClick = dismissCloseDialog) {
                     Text("Cancel")
                 }
             })
@@ -72,8 +72,8 @@ fun SourceDetailTopBar(
     if (showBalanceErrorDialog) {
         AlertDialog(
             onDismissRequest = dismissBalanceErrorDialog,
-            title = { Text("Cannot Delete Source") },
-            text = { Text("You cannot delete this source while its balance is not zero.") },
+            title = { Text("Cannot Close Source") },
+            text = { Text("You cannot Close this source while its balance is not zero.") },
             confirmButton = {
                 TextButton(onClick = dismissBalanceErrorDialog) {
                     Text("OK")
@@ -88,11 +88,11 @@ fun SourceDetailTopBarPreview() {
     CoinhubTheme {
         SourceDetailTopBar(
             onBack = {},
-            onDelete = {},
-            showDeleteDialog = false,
+            onClose = {},
+            showCloseDialog = false,
             showBalanceErrorDialog = false,
-            onDeleteConfirm = {},
-            dismissDeleteDialog = {},
+            onCloseConfirm = {},
+            dismissCloseDialog = {},
             dismissBalanceErrorDialog = {}
         )
     }

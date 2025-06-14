@@ -29,23 +29,25 @@ import java.math.BigInteger
 fun SourceDetailScreen(
     source: SourceModel,
     onBack: () -> Unit,
+    onSourceQr: () -> Unit,
     viewModel: SourceDetailViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
 
     val isLoading = viewModel.isLoading.collectAsState().value
-    val showDeleteDialog = viewModel.showDeleteDialog.collectAsState().value
+    val showCloseDialog = viewModel.showCloseDialog.collectAsState().value
     val showBalanceErrorDialog = viewModel.showBalanceErrorDialog.collectAsState().value
 
     SourceDetailScreen(
         source = source,
         isLoading = isLoading,
-        showDeleteDialog = showDeleteDialog,
+        showCloseDialog = showCloseDialog,
         showBalanceErrorDialog = showBalanceErrorDialog,
         onBack = onBack,
-        onDeleteClick = { viewModel.onDeleteClick(source) },
-        onDeleteConfirm = viewModel::onDeleteConfirm,
-        dismissDeleteDialog = viewModel::dismissDeleteDialog,
+        onSourceQr = onSourceQr,
+        onCloseClick = { viewModel.onCloseClick(source) },
+        onCloseConfirm = viewModel::onCloseConfirm,
+        dismissCloseDialog = viewModel::dismissCloseDialog,
         dismissBalanceErrorDialog = viewModel::dismissBalanceErrorDialog,
         copySourceIdToClipboard = {
             viewModel.copySourceIdToClipboard(context, source.id)
@@ -54,14 +56,15 @@ fun SourceDetailScreen(
 
 @Composable
 private fun SourceDetailScreen(
-    source: SourceModel?,
+    source: SourceModel,
     isLoading: Boolean,
-    showDeleteDialog: Boolean,
+    showCloseDialog: Boolean,
     showBalanceErrorDialog: Boolean,
     onBack: () -> Unit,
-    onDeleteClick: () -> Unit,
-    onDeleteConfirm: () -> Unit,
-    dismissDeleteDialog: () -> Unit,
+    onSourceQr: () -> Unit,
+    onCloseClick: () -> Unit,
+    onCloseConfirm: () -> Unit,
+    dismissCloseDialog: () -> Unit,
     dismissBalanceErrorDialog: () -> Unit,
     copySourceIdToClipboard: () -> Unit,
 ) {
@@ -70,34 +73,32 @@ private fun SourceDetailScreen(
             LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
         }
 
-        source?.let { sourceModel ->
-            Scaffold(
-                topBar = {
-                    SourceDetailTopBar(
-                        onBack = onBack,
-                        onDelete = onDeleteClick,
-                        showDeleteDialog = showDeleteDialog,
-                        showBalanceErrorDialog = showBalanceErrorDialog,
-                        onDeleteConfirm = onDeleteConfirm,
-                        dismissDeleteDialog = dismissDeleteDialog,
-                        dismissBalanceErrorDialog = dismissBalanceErrorDialog
-                    )
-                }) { paddingValues ->
-                Column(
-                    modifier = Modifier
-                        .padding(paddingValues)
-                        .padding(16.dp)
-                        .fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    SourceDetailCard(
-                        sourceModel = sourceModel, copySourceIdToClipboard = copySourceIdToClipboard
-                    )
+        Scaffold(
+            topBar = {
+                SourceDetailTopBar(
+                    onBack = onBack,
+                    onClose = onCloseClick,
+                    showCloseDialog = showCloseDialog,
+                    showBalanceErrorDialog = showBalanceErrorDialog,
+                    onCloseConfirm = onCloseConfirm,
+                    dismissCloseDialog = dismissCloseDialog,
+                    dismissBalanceErrorDialog = dismissBalanceErrorDialog
+                )
+            }) { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .padding(16.dp)
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                SourceDetailCard(
+                    source = source, copySourceIdToClipboard = copySourceIdToClipboard
+                )
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-                    SourceDetailActions(onQr = {})
-                }
+                SourceDetailActions(onSourceQr = onSourceQr)
             }
         }
     }
@@ -110,49 +111,55 @@ fun SourceDetailScreenPreview() {
         SourceDetailScreen(
             source = SourceModel("123456789012345", BigInteger("5000000")),
             isLoading = false,
-            showDeleteDialog = false,
+            showCloseDialog = false,
             showBalanceErrorDialog = false,
             onBack = {},
-            onDeleteClick = {},
-            onDeleteConfirm = {},
-            dismissDeleteDialog = {},
+            onSourceQr = {},
+            onCloseClick = {},
+            onCloseConfirm = {},
+            dismissCloseDialog = {},
             dismissBalanceErrorDialog = {},
-            copySourceIdToClipboard = {})
+            copySourceIdToClipboard = {},
+        )
     }
 }
 
 @Preview(device = PreviewDeviceSpecs.DEVICE)
 @Composable
-fun SourceDetailScreenDeleteDialogPreview() {
+private fun Preview() {
     CoinhubTheme {
         SourceDetailScreen(
             source = SourceModel("123456789012345", BigInteger.ZERO),
             isLoading = false,
-            showDeleteDialog = true,
+            showCloseDialog = true,
             showBalanceErrorDialog = false,
             onBack = {},
-            onDeleteClick = {},
-            onDeleteConfirm = {},
-            dismissDeleteDialog = {},
+            onSourceQr = {},
+            onCloseClick = {},
+            onCloseConfirm = {},
+            dismissCloseDialog = {},
             dismissBalanceErrorDialog = {},
-            copySourceIdToClipboard = { })
+            copySourceIdToClipboard = {},
+        )
     }
 }
 
 @Preview(device = PreviewDeviceSpecs.DEVICE)
 @Composable
-fun SourceDetailScreenBalanceErrorDialogPreview() {
+private fun ErrorPreview() {
     CoinhubTheme {
         SourceDetailScreen(
             source = SourceModel("123456789012345", BigInteger("1000000")),
             isLoading = false,
-            showDeleteDialog = false,
+            showCloseDialog = false,
             showBalanceErrorDialog = true,
             onBack = {},
-            onDeleteClick = {},
-            onDeleteConfirm = {},
-            dismissDeleteDialog = {},
+            onSourceQr = {},
+            onCloseClick = {},
+            onCloseConfirm = {},
+            dismissCloseDialog = {},
             dismissBalanceErrorDialog = {},
-            copySourceIdToClipboard = {})
+            copySourceIdToClipboard = {},
+        )
     }
 }

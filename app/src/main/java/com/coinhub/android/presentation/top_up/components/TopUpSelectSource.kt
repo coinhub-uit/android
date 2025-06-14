@@ -16,7 +16,9 @@ import androidx.compose.ui.unit.dp
 import com.coinhub.android.domain.models.SourceModel
 import com.coinhub.android.presentation.common.components.SelectWithBottomSheet
 import com.coinhub.android.ui.theme.CoinhubTheme
+import com.coinhub.android.utils.CurrencySymbol
 import com.coinhub.android.utils.PreviewDeviceSpecs
+import com.coinhub.android.utils.toVndFormat
 import java.math.BigInteger
 
 @Composable
@@ -34,13 +36,11 @@ fun TopUpSelectSource(
 
         SelectWithBottomSheet(
             label = "Select Source",
-            selectedLabel = {
-                "${it.id} (Balance: ${it.balance} VNĐ)"
-            },
+            selectedLabel = { source: SourceModel -> "${source.id} (Balance: ${source.balance.toVndFormat(currencySymbol = CurrencySymbol.VND)})" },
             items = sources,
             key = { it.id },
             selectedItem = sources.find { it.id == selectedSourceId },
-            getItemDescription = { "Source ID: ${it.id} (Balance: ${it.balance} VNĐ)" },
+            getItemDescription = { "Source ID: ${it.id} (Balance: ${it.balance.toVndFormat(currencySymbol = CurrencySymbol.VND)})" },
             getItemLongDescription = { "ID: ${it.id}" },
             onItemSelected = { onSelectSource(it.id) },
         )

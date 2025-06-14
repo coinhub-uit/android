@@ -20,21 +20,21 @@ class SourceDetailViewModel @Inject constructor() : ViewModel() {
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
-    private val _showDeleteDialog = MutableStateFlow(false)
-    val showDeleteDialog: StateFlow<Boolean> = _showDeleteDialog.asStateFlow()
+    private val _showCloseDialog = MutableStateFlow(false)
+    val showCloseDialog: StateFlow<Boolean> = _showCloseDialog.asStateFlow()
 
     private val _showBalanceErrorDialog = MutableStateFlow(false)
     val showBalanceErrorDialog: StateFlow<Boolean> = _showBalanceErrorDialog.asStateFlow()
 
-    fun onDeleteClick(source: SourceModel) {
+    fun onCloseClick(source: SourceModel) {
         if (source.balance == BigInteger.ZERO) {
-            _showDeleteDialog.value = true
+            _showCloseDialog.value = true
         } else {
             _showBalanceErrorDialog.value = true
         }
     }
 
-    fun onDeleteConfirm() {
+    fun onCloseConfirm() {
         viewModelScope.launch {
             _isLoading.value = true
             delay(1000) // Simulate network delay
@@ -47,8 +47,8 @@ class SourceDetailViewModel @Inject constructor() : ViewModel() {
         Toast.makeText(context, "Source ID copied", Toast.LENGTH_SHORT).show()
     }
 
-    fun dismissDeleteDialog() {
-        _showDeleteDialog.value = false
+    fun dismissCloseDialog() {
+        _showCloseDialog.value = false
     }
 
     fun dismissBalanceErrorDialog() {

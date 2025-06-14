@@ -1,5 +1,6 @@
 package com.coinhub.android.presentation.source_qr
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -16,20 +17,35 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.coinhub.android.presentation.navigation.app.LocalAnimatedVisibilityScope
+import com.coinhub.android.presentation.navigation.app.LocalSharedTransitionScope
 import com.coinhub.android.presentation.source_qr.components.SourceQrTopBar
 import com.coinhub.android.presentation.source_qr.utils.sourceQrGenerate
 import com.coinhub.android.ui.theme.CoinhubTheme
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SourceQrScreen(
     sourceId: String,
     onBack: () -> Unit,
 ) {
-    SourceQrScreen(
-        sourceId = sourceId,
-        onBack = onBack,
-        modifier = Modifier // Avoid calling itself :v
-    )
+    val sharedTransitionScope =
+        LocalSharedTransitionScope.current ?: error("SharedTransitionScope not provided via CompositionLocal")
+    val animatedVisibilityScope =
+        LocalAnimatedVisibilityScope.current ?: error("AnimatedVisibilityScope not provided via CompositionLocal")
+
+    with(sharedTransitionScope) {
+        SourceQrScreen(
+            sourceId = sourceId,
+            onBack = onBack,
+            modifier = Modifier.sharedBounds(
+                sharedContentState = rememberSharedContentState(
+                    key = "sourceQr-$sourceId",
+                ),
+                animatedVisibilityScope = animatedVisibilityScope,
+            )
+        )
+    }
 }
 
 @Composable

@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -54,7 +55,7 @@ class CreateTicketViewModel @Inject constructor(
     val amountText: StateFlow<String> = _amountText.asStateFlow()
 
     @OptIn(FlowPreview::class)
-    val amountError = _amountText.debounce(DEBOUNCE_TYPING).map { amountText ->
+    val amountError = _amountText.drop(1).debounce(DEBOUNCE_TYPING).map { amountText ->
         val result = validateAmountCreateTicketUseCase(
             amountText, _minimumAmount.value, _sources.value.find { source -> source.id == _selectedSourceId.value })
         return@map if (result is ValidateAmountCreateTicketUseCase.Result.Error) result.message else null
@@ -125,6 +126,8 @@ class CreateTicketViewModel @Inject constructor(
                 }
 
                 is CreateTicketUseCase.Result.Success -> {
+                    val userId = authRepository.getCurrentUserId()
+                    userRepository.getUserTickets(userId, true)
                     onSuccess()
                 }
             }

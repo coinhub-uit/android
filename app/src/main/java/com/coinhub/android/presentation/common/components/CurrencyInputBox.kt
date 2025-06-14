@@ -22,6 +22,7 @@ fun CurrencyInputBox(
     label: @Composable (() -> Unit)? = null,
     value: String,
     onValueChange: (String) -> Unit,
+    supportingText: @Composable (() -> Unit)? = null,
     imeAction: ImeAction,
 ) {
     val currencyTransformation = remember {
@@ -32,6 +33,7 @@ fun CurrencyInputBox(
         label = label,
         value = value,
         onValueChange = onValueChange,
+        supportingText = supportingText,
         modifier = modifier,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Number,
@@ -79,7 +81,7 @@ private class CurrencyOffsetMapping(originalText: String, formattedText: String)
     }
 }
 
-private class CurrencyVisualTransformation() : VisualTransformation {
+private class CurrencyVisualTransformation : VisualTransformation {
 
     override fun filter(text: AnnotatedString): TransformedText {
         val originalText = text.text.trim()

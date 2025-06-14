@@ -18,6 +18,7 @@ import com.coinhub.android.utils.toVndFormat
 fun CreateTicketInputMoney(
     minimumAmount: Long,
     amount: String,
+    amountError: String?,
     onAmountChange: (String) -> Unit,
 ) {
     Column {
@@ -38,6 +39,15 @@ fun CreateTicketInputMoney(
         CurrencyInputBox(
             value = amount,
             onValueChange = onAmountChange,
+            supportingText = {
+                if (amountError != null) {
+                    Text(
+                        text = amountError,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            },
             imeAction = ImeAction.Done,
             modifier = Modifier.fillMaxWidth()
         )

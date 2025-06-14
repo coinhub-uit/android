@@ -32,7 +32,7 @@ import com.coinhub.android.utils.toVndFormat
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SourceDetailCard(
-    sourceModel: SourceModel,
+    source: SourceModel,
     copySourceIdToClipboard: () -> Unit,
 ) {
     val sharedTransitionScope =
@@ -45,7 +45,7 @@ fun SourceDetailCard(
             modifier = Modifier
                 .sharedBounds(
                     sharedContentState = rememberSharedContentState(
-                        key = "homeSourceCard-${sourceModel.id}",
+                        key = "homeSourceCard-${source.id}",
                     ),
                     animatedVisibilityScope = animatedVisibilityScope,
                 )
@@ -66,13 +66,13 @@ fun SourceDetailCard(
                         .padding(8.dp)
                 ) {
                     Text(
-                        text = sourceModel.id,
+                        text = source.id,
                         style = MaterialTheme.typography.headlineMedium,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.sharedBounds(
                             sharedContentState = rememberSharedContentState(
-                                key = "homeSourceId-${sourceModel.id}",
+                                key = "homeSourceId-${source.id}",
                             ),
                             animatedVisibilityScope = animatedVisibilityScope,
                         )
@@ -81,13 +81,13 @@ fun SourceDetailCard(
                     Spacer(modifier = Modifier.height(32.dp))
 
                     Text(
-                        text = sourceModel.balance.toVndFormat(currencySymbol = CurrencySymbol.VND),
+                        text = source.balance.toVndFormat(currencySymbol = CurrencySymbol.VND),
                         style = MaterialTheme.typography.titleMedium,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier
                             .sharedBounds(
                                 sharedContentState = rememberSharedContentState(
-                                    key = "homeSourceBalance-${sourceModel.id}",
+                                    key = "homeSourceBalance-${source.id}",
                                 ),
                                 animatedVisibilityScope = animatedVisibilityScope,
                             )
@@ -110,7 +110,7 @@ fun SourceDetailCard(
 @Composable
 fun SourceDetailCardPreview() {
     SourceDetailCard(
-        sourceModel = SourceModel(
+        source = SourceModel(
             id = "source_1234567890", balance = 1000000.toBigInteger()
         ), copySourceIdToClipboard = {})
 }

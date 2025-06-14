@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import com.coinhub.android.presentation.navigation.app.LocalAnimatedVisibilityScope
 import com.coinhub.android.presentation.navigation.app.LocalSharedTransitionScope
 import com.coinhub.android.ui.theme.CoinhubTheme
+import com.coinhub.android.utils.CurrencySymbol
 import com.coinhub.android.utils.PreviewDeviceSpecs
 import com.coinhub.android.utils.toVndFormat
 import java.math.BigInteger
@@ -83,7 +84,7 @@ fun TicketStatistics(
                         .weight(1f)
                 ) {
                     Text(
-                        text = totalPrincipal.toVndFormat(),
+                        text = totalPrincipal.toVndFormat(currencySymbol = CurrencySymbol.VND),
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
@@ -97,11 +98,11 @@ fun TicketStatistics(
                             imageVector = Icons.Default.AttachMoney,
                             contentDescription = "Interest",
                             modifier = Modifier
-                                .size(16.dp),
+                                .size(12.dp),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                         Text(
-                            text = totalInterest.toVndFormat(),
+                            text = totalInterest.toVndFormat(currencySymbol = CurrencySymbol.VND),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             maxLines = 1,

@@ -1,7 +1,6 @@
 package com.coinhub.android.presentation.create_ticket
 
 import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -45,6 +44,7 @@ fun CreateTicketScreen(
     viewModel: CreateTicketViewModel = hiltViewModel(),
 ) {
     val amount = viewModel.amountText.collectAsStateWithLifecycle().value
+    val amountError = viewModel.amountError.collectAsStateWithLifecycle().value
     val minimumAmount = viewModel.minimumAmount.collectAsStateWithLifecycle().value
     val selectedAvailablePlan = viewModel.selectedAvailablePlan.collectAsStateWithLifecycle().value
     val selectedMethod = viewModel.selectedMethod.collectAsStateWithLifecycle().value
@@ -72,6 +72,7 @@ fun CreateTicketScreen(
         CreateTicketScreen(
             minimumAmount = minimumAmount,
             amount = amount,
+            amountError = amountError,
             selectedAvailablePlan = selectedAvailablePlan,
             selectedMethod = selectedMethod,
             selectedSourceId = selectedSourceId,
@@ -100,6 +101,7 @@ private fun CreateTicketScreen(
     modifier: Modifier = Modifier,
     minimumAmount: Long,
     amount: String,
+    amountError: String?,
     selectedAvailablePlan: AvailablePlanModel?,
     selectedMethod: MethodEnum?,
     selectedSourceId: String?,
@@ -143,7 +145,10 @@ private fun CreateTicketScreen(
                 .verticalScroll(rememberScrollState())
         ) {
 
-            CreateTicketInputMoney(minimumAmount = minimumAmount, amount = amount, onAmountChange = onAmountChange)
+            CreateTicketInputMoney(
+                minimumAmount = minimumAmount, amount = amount,
+                amountError = amountError, onAmountChange = onAmountChange,
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -169,6 +174,7 @@ fun CreateTicketScreenPreview() {
             CreateTicketScreen(
                 minimumAmount = 1_000_000L,
                 amount = "1000",
+                amountError = null,
                 selectedAvailablePlan = AvailablePlanModel(1, 5.5f, 1, 30),
                 selectedMethod = MethodEnum.PIR,
                 selectedSourceId = "1",

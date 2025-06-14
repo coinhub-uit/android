@@ -1,5 +1,6 @@
 package com.coinhub.android.presentation.source_detail.components
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -27,14 +28,27 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.coinhub.android.presentation.navigation.app.LocalAnimatedVisibilityScope
+import com.coinhub.android.presentation.navigation.app.LocalSharedTransitionScope
 import com.coinhub.android.ui.theme.CoinhubTheme
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SourceDetailActions(
-    onQr: () -> Unit,
+    onSourceQr: () -> Unit,
 ) {
+    val sharedTransitionScope =
+        LocalSharedTransitionScope.current ?: error("SharedTransitionScope not provided via CompositionLocal")
+    val animatedVisibilityScope =
+        LocalAnimatedVisibilityScope.current ?: error("AnimatedVisibilityScope not provided via CompositionLocal")
+
     val cardItems = listOf(
-        CardItem("QR", Icons.Default.QrCode, onQr),
+        CardItem(
+            "QR",
+            Icons.Default.QrCode,
+            onSourceQr,
+            transitionKey = { sourceId: String -> "sourceQr-$sourceId" },
+        ),
     )
 
     Column {
@@ -53,13 +67,26 @@ fun SourceDetailActions(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.wrapContentSize()
         ) {
-            items(cardItems) { item ->
-                FeatureCard(
-                    title = item.title,
-                    icon = item.icon,
-                    onClick = item.onClick,
-                    modifier = Modifier.fillMaxWidth()
-                )
+            with(sharedTransitionScope) {
+                items(cardItems) { item ->
+                    FeatureCard(
+                        title = item.title,
+                        icon = item.icon,
+                        onClick = item.onClick,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .apply {
+                                item.transitionKey?.let { key ->
+                                    sharedBounds(
+                                        sharedContentState = rememberSharedContentState(
+                                            key = key(item.title),
+                                        ),
+                                        animatedVisibilityScope = animatedVisibilityScope,
+                                    )
+                                }
+                            }
+                    )
+                }
             }
         }
     }
@@ -73,7 +100,8 @@ private fun FeatureCard(
     onClick: () -> Unit,
 ) {
     Card(
-        modifier = modifier.wrapContentHeight(),
+        modifier = modifier
+            .wrapContentHeight(),
         onClick = onClick
     ) {
         Column(
@@ -107,7 +135,7 @@ fun HomeFeaturesPreview() {
     Surface {
         CoinhubTheme {
             SourceDetailActions(
-                onQr = {},
+                onSourceQr = {},
             )
         }
     }
@@ -117,4 +145,5 @@ private data class CardItem(
     val title: String,
     val icon: ImageVector,
     val onClick: () -> Unit,
+    val transitionKey: ((String) -> String)?,
 )

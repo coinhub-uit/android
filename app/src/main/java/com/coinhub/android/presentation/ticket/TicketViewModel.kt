@@ -2,11 +2,13 @@ package com.coinhub.android.presentation.ticket
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.coinhub.android.di.IoDispatcher
 import com.coinhub.android.domain.models.TicketModel
 import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.repositories.PreferenceDataStore
 import com.coinhub.android.domain.repositories.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -19,24 +21,27 @@ import javax.inject.Inject
 class TicketViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val authRepository: AuthRepository,
-    private val preferenceDataStore: PreferenceDataStore
+    private val preferenceDataStore: PreferenceDataStore,
+   @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
     private val _tickets = MutableStateFlow<List<TicketModel>>(emptyList())
     val tickets = _tickets.asStateFlow()
 
-    private val _totalPrincipal = MutableStateFlow<BigInteger>(BigInteger("0"))
+    private val _totalPrincipal = MutableStateFlow(BigInteger("0"))
     val totalPrincipal = _totalPrincipal.asStateFlow()
 
-    private val _totalInterest = MutableStateFlow<BigInteger>(BigInteger("0"))
+    private val _totalInterest = MutableStateFlow(BigInteger("0"))
     val totalInterest = _totalInterest.asStateFlow()
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(ioDispatcher) {
             preferenceDataStore.getTotalPrincipal().collect { value ->
                 if (value != null) {
                     _totalPrincipal.value = value
                 }
             }
+        }
+        viewModelScope.launch(ioDispatcher) {
             preferenceDataStore.getTotalInterest().collect { value ->
                 if (value != null) {
                     _totalInterest.value = value
@@ -58,9 +63,6 @@ class TicketViewModel @Inject constructor(
         viewModelScope.launch {
             val userId = authRepository.getCurrentUserId()
             val tickets = userRepository.getUserTickets(userId, false)
-            if (tickets == null) {
-                _toastMessage.emit("No tickets found")
-            }
             _tickets.value = tickets
         }
     }
