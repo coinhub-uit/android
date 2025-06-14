@@ -29,7 +29,6 @@ import com.coinhub.android.presentation.home.components.HomeTopBar
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     onToSourceDetail: (SourceModel) -> Unit,
@@ -59,28 +58,25 @@ fun HomeScreen(
         viewModel.fetch()
     }
 
-    PullToRefreshBox(
+    HomeScreen(
+        user = user,
+        sources = sources,
+        onToSourceDetail = onToSourceDetail,
+        onTopUp = onTopUp,
+        onCreateSource = onCreateSource,
+        onTransferMoney = onTransferMoney,
+        onTransferMoneyQr = onTransferMoneyQr,
+        onNotification = onNotification,
+        onAiChat = onAiChat,
+        copySourceIdToClipboard = copySourceIdToClipboard,
+        isLoading = isLoading,
         isRefreshing = isRefreshing,
-        onRefresh = viewModel::refresh,
-        modifier = Modifier.fillMaxSize()
-    ) {
-        HomeScreen(
-            user = user,
-            sources = sources,
-            onToSourceDetail = onToSourceDetail,
-            onTopUp = onTopUp,
-            onCreateSource = onCreateSource,
-            onTransferMoney = onTransferMoney,
-            onTransferMoneyQr = onTransferMoneyQr,
-            onNotification = onNotification,
-            onAiChat = onAiChat,
-            copySourceIdToClipboard = copySourceIdToClipboard,
-            isLoading = isLoading,
-            modifier = Modifier.padding(bottom = 64.dp) // Trick
-        )
-    }
+        refresh = viewModel::refresh,
+        modifier = Modifier.padding(bottom = 64.dp) // Trick
+    )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HomeScreen(
     user: UserModel?,
@@ -94,36 +90,49 @@ private fun HomeScreen(
     onAiChat: () -> Unit,
     copySourceIdToClipboard: (Context, String) -> Unit,
     isLoading: Boolean,
+    isRefreshing: Boolean,
+    refresh: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
-        modifier = modifier, topBar = {
+        modifier = modifier,
+        topBar = {
             HomeTopBar(
                 onNotification = onNotification, onAiChat = onAiChat
             )
-        }) { innerPadding ->
-        if (isLoading) {
-            LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-        }
-        Column(
+        },
+    ) { innerPadding ->
+        PullToRefreshBox(
+            isRefreshing = isRefreshing,
+            onRefresh = refresh,
             modifier = Modifier
                 .padding(innerPadding)
-                .padding(16.dp)
                 .fillMaxSize()
         ) {
-            HomeGreeting(user = user)
-            Spacer(modifier = Modifier.height(32.dp))
-            HomeListSource(
-                sources = sources,
-                onToSourceDetail = onToSourceDetail,
-                copySourceIdToClipboard = copySourceIdToClipboard
-            )
-            HomeFeatures(
-                onTopUp = onTopUp,
-                onCreateSource = onCreateSource,
-                onTransferMoney = onTransferMoney,
-                onTransferMoneyQr = onTransferMoneyQr
-            )
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxSize()
+            ) {
+                if (isLoading) {
+                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                }
+
+                HomeGreeting(user = user)
+                Spacer(modifier = Modifier.height(32.dp))
+                HomeListSource(
+                    sources = sources,
+                    onToSourceDetail = onToSourceDetail,
+                    copySourceIdToClipboard = copySourceIdToClipboard
+                )
+                HomeFeatures(
+                    onTopUp = onTopUp,
+                    onCreateSource = onCreateSource,
+                    onTransferMoney = onTransferMoney,
+                    onTransferMoneyQr = onTransferMoneyQr
+                )
+                Spacer(modifier = Modifier.weight(1f))
+            }
         }
     }
 }

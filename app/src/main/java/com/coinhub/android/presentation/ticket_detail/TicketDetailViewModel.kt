@@ -8,6 +8,8 @@ import com.coinhub.android.domain.repositories.PlanRepository
 import com.coinhub.android.domain.repositories.TicketRepository
 import com.coinhub.android.domain.use_cases.WithdrawTicketUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -34,20 +36,23 @@ class TicketDetailViewModel @Inject constructor(
     val isLoading = combine(
         _ticket, _withdrawPlan
     ) { ticket, plan -> ticket == null || plan == null }.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(5000),
-        false
+        viewModelScope, SharingStarted.WhileSubscribed(5000), true
     )
 
-    private val _toastMessage = MutableSharedFlow<String>(0)
+    private val _toastMessage = MutableSharedFlow<String>()
     val toastMessage = _toastMessage.asSharedFlow()
 
-    fun getTicketAndWithdrawPlan(ticketId: Int, refresh: Boolean = false) {
+    fun getTicketAndWithdrawPlan(ticketId: Int) {
         viewModelScope.launch {
-            _ticket.update {
-                ticketRepository.getTicketById(ticketId, refresh)
-            }
-            _withdrawPlan.value = planRepository.getAvailablePlans()?.find { it.days == -1 }
+            listOf(async {
+                _ticket.update {
+                    ticketRepository.getTicketById(ticketId, false)
+                }
+            }, async {
+                _withdrawPlan.update {
+                    planRepository.getAvailablePlans()?.find { it.days == -1 }
+                }
+            }).awaitAll()
         }
     }
 

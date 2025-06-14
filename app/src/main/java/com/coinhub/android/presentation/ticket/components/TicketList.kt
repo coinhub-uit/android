@@ -44,12 +44,12 @@ fun TicketList(
     currentDate: LocalDate = LocalDate.now(),
     onTicketDetail: (Int) -> Unit,
 ) {
-    if (tickets.isEmpty()) {
-        return
-    }
     Column(
         modifier = modifier.fillMaxWidth()
     ) {
+        if (tickets.isEmpty()) {
+            return@Column
+        }
         Text(
             text = "Your Tickets",
             style = MaterialTheme.typography.titleMedium,
@@ -68,6 +68,8 @@ fun TicketList(
                     onTicketClick = { onTicketDetail(ticket.id) })
             }
         }
+
+        Spacer(modifier = Modifier.height(32.dp)) // Add some space at the bottom bcs the bottom bar of the outer scaffold
     }
 }
 

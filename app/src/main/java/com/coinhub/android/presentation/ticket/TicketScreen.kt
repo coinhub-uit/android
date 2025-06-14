@@ -33,7 +33,6 @@ import com.coinhub.android.utils.PreviewDeviceSpecs
 import com.coinhub.android.utils.toLocalDate
 import java.math.BigInteger
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TicketScreen(
     onCreateTicket: () -> Unit,
@@ -58,23 +57,19 @@ fun TicketScreen(
         }
     }
 
-    PullToRefreshBox(
-        modifier = Modifier.fillMaxSize(),
+    TicketScreen(
+        tickets = tickets,
+        totalPrincipal = totalPrincipal,
+        totalInterest = totalInterest,
+        onCreateTicket = onCreateTicket,
+        onTicketDetail = onTicketDetail,
+        isLoading = isLoading,
         isRefreshing = isRefreshing,
-        onRefresh = viewModel::refresh,
-    ) {
-        TicketScreen(
-            tickets = tickets,
-            totalPrincipal = totalPrincipal,
-            totalInterest = totalInterest,
-            onCreateTicket = onCreateTicket,
-            onTicketDetail = onTicketDetail,
-            isLoading = isLoading,
-            modifier = Modifier.padding(bottom = 64.dp)
-        )
-    }
+        refresh = viewModel::refresh,
+    )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TicketScreen(
     tickets: List<TicketModel>,
@@ -83,29 +78,39 @@ private fun TicketScreen(
     onCreateTicket: () -> Unit,
     onTicketDetail: (Int) -> Unit,
     isLoading: Boolean,
-    modifier: Modifier = Modifier,
+    isRefreshing: Boolean,
+    refresh: () -> Unit,
 ) {
-    Scaffold(modifier = modifier, topBar = {
-        TicketTopBar()
-    }) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .padding(16.dp)
+    Scaffold(
+        topBar = {
+            TicketTopBar()
+        },
+    ) { innerPadding ->
+        PullToRefreshBox(
+            modifier = Modifier.padding(innerPadding).fillMaxSize(),
+            isRefreshing = isRefreshing,
+            onRefresh = refresh,
         ) {
-            if (isLoading) {
-                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+            ) {
+                if (isLoading) {
+                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                }
+
+                TicketStatistics(
+                    totalPrincipal = totalPrincipal, totalInterest = totalInterest, onCreateTicket = onCreateTicket
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                TicketList(
+                    tickets = tickets,
+                    onTicketDetail = onTicketDetail,
+                    modifier = Modifier.weight(1f),
+                )
             }
-
-            TicketStatistics(
-                totalPrincipal = totalPrincipal, totalInterest = totalInterest, onCreateTicket = onCreateTicket
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            TicketList(
-                tickets = tickets, onTicketDetail = onTicketDetail, modifier = Modifier.padding(bottom = 32.dp) // Trick
-            )
         }
     }
 }
@@ -179,7 +184,10 @@ private fun Preview() {
                 totalInterest = BigInteger("130000"),
                 onCreateTicket = {},
                 isLoading = false,
-                onTicketDetail = {})
+                isRefreshing = false,
+                refresh = {},
+                onTicketDetail = {},
+            )
         }
     }
 }
