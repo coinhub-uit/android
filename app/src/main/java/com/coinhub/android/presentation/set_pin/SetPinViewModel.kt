@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.data.remote.SupabaseService
 import com.coinhub.android.di.IoDispatcher
-import com.coinhub.android.domain.repositories.PreferenceDataStore
+import com.coinhub.android.domain.managers.LockHashingManager
 import com.coinhub.android.domain.use_cases.ValidatePinUseCase
 import com.coinhub.android.utils.DEBOUNCE_TYPING
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,9 +23,9 @@ import javax.inject.Inject
 @HiltViewModel
 class SetPinViewModel @Inject constructor(
     private val supabaseService: SupabaseService,
-    private val preferenceDataStore: PreferenceDataStore,
     private val validatePinUseCase: ValidatePinUseCase,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    private val lockHashingManager: LockHashingManager,
 ) : ViewModel() {
     private val _pin = MutableStateFlow("")
     val pin = _pin.asStateFlow()
@@ -43,7 +43,7 @@ class SetPinViewModel @Inject constructor(
         initialValue = SetPinStates.PinCheckState()
     )
 
-    val isFormValid = pinCheckState.drop(1).map { it.isValid }
+    val isFormValid = pinCheckState.map { it.isValid }
         .stateIn(viewModelScope, started = WhileSubscribed(5000), initialValue = false)
 
     fun onPinChange(pin: String) {
@@ -53,13 +53,13 @@ class SetPinViewModel @Inject constructor(
 
     fun onChangePin() {
         viewModelScope.launch(ioDispatcher) {
-            preferenceDataStore.saveLockPin(_pin.value)
+            lockHashingManager.save(_pin.value)
         }
     }
 
     fun onCreatePin() {
         viewModelScope.launch(ioDispatcher) {
-            preferenceDataStore.saveLockPin(_pin.value)
+            lockHashingManager.save(_pin.value)
             supabaseService.setIsUserSignedIn(
                 SupabaseService.UserAppState
                     .SIGNED_IN

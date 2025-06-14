@@ -1,6 +1,7 @@
 package com.coinhub.android.presentation.menu.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,8 +35,7 @@ fun MenuAvatar(
 ) {
     val avatarSize = 128.dp
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center
     ) {
         if (user?.avatar != null) {
             AvatarImage(
@@ -68,18 +68,17 @@ private fun AvatarImage(
     avatarSize: Dp,
 ) {
     SubcomposeAsyncImage(
-        model = avatarUrl,
-        contentDescription = "Avatar for $fullName",
-        contentScale = ContentScale.Crop,
-        loading = {
+        model = avatarUrl, contentDescription = "Avatar for $fullName", contentScale = ContentScale.Crop, loading = {
             CircularProgressIndicator(
                 modifier = Modifier.size(24.dp),
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.onPrimary,
             )
-        },
-        modifier = Modifier
+        }, modifier = Modifier
             .size(avatarSize)
             .clip(CircleShape)
+            .border(
+                width = 3.dp, color = MaterialTheme.colorScheme.primary, shape = CircleShape
+            )
     )
 }
 
@@ -94,8 +93,10 @@ private fun InitialAvatar(
         modifier = Modifier
             .size(avatarSize)
             .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.secondary),
-        contentAlignment = Alignment.Center
+            .background(MaterialTheme.colorScheme.onSecondary)
+            .border(
+                width = 3.dp, color = MaterialTheme.colorScheme.secondary, shape = CircleShape
+            ), contentAlignment = Alignment.Center
     ) {
         Text(
             text = initial,

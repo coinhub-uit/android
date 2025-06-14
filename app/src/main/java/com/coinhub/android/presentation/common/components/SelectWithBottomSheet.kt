@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -102,7 +103,7 @@ fun <T> SelectWithBottomSheet(
 
                                 if (selectedItem != null && key?.invoke(selectedItem) == key?.invoke(item)) {
                                     Icon(
-                                        imageVector = Icons.Default.Check,
+                                        imageVector = Icons.Default.Done,
                                         contentDescription = "Selected",
                                         tint = MaterialTheme.colorScheme.primary
                                     )
