@@ -1,11 +1,14 @@
 package com.coinhub.android.presentation.auth
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.coinhub.android.data.dtos.request.CreateDeviceRequestDto
 import com.coinhub.android.data.remote.SupabaseService
 import com.coinhub.android.domain.models.UserModel
 import com.coinhub.android.domain.repositories.PreferenceDataStore
 import com.coinhub.android.domain.use_cases.CheckProfileAvailableUseCase
+import com.coinhub.android.domain.use_cases.RegisterDeviceUseCase
 import com.coinhub.android.domain.use_cases.SignInWithCredentialUseCase
 import com.coinhub.android.domain.use_cases.SignInWithGoogleUseCase
 import com.coinhub.android.domain.use_cases.SignUpWithCredentialUseCase
@@ -13,6 +16,8 @@ import com.coinhub.android.domain.use_cases.ValidateConfirmPasswordUseCase
 import com.coinhub.android.domain.use_cases.ValidateEmailUseCase
 import com.coinhub.android.domain.use_cases.ValidatePasswordUseCase
 import com.coinhub.android.utils.DEBOUNCE_TYPING
+import com.coinhub.android.utils.DeviceHelper
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.compose.auth.composable.NativeSignInResult
@@ -39,8 +44,10 @@ class AuthViewModel @Inject constructor(
     private val signInWithGoogleUseCase: SignInWithGoogleUseCase,
     private val supabaseService: SupabaseService,
     private val checkProfileAvailableUseCase: CheckProfileAvailableUseCase,
+    private val registerDeviceUseCase: RegisterDeviceUseCase,
     val supabaseClient: SupabaseClient,
     val preferenceDataStore: PreferenceDataStore,
+    private val deviceHelper: DeviceHelper,
 ) : ViewModel() {
     private val _isSignUp = MutableStateFlow(false)
     val isSignUp: StateFlow<Boolean> = _isSignUp.asStateFlow()
@@ -125,6 +132,7 @@ class AuthViewModel @Inject constructor(
                         is CheckProfileAvailableUseCase.Result.Success -> {
                             when (userProfile.user) {
                                 is UserModel -> {
+                                    registerDevice()
                                     if (preferenceDataStore.getLockPin().isNullOrEmpty())
                                         supabaseService.setIsUserSignedIn(SupabaseService.UserAppState.SET_LOCKED_PIN)
                                     else
@@ -152,6 +160,7 @@ class AuthViewModel @Inject constructor(
                 }
 
                 is SignUpWithCredentialUseCase.Result.Success -> {
+                    registerDevice()
                     onSignedUp()
                 }
             }
@@ -171,6 +180,7 @@ class AuthViewModel @Inject constructor(
 
                 is SignInWithGoogleUseCase.Result.Success -> {
                     if (result.googleNavigateResultModel.isUserRegisterProfile) {
+                        registerDevice()
                         if (preferenceDataStore.getLockPin().isNullOrEmpty())
                             supabaseService.setIsUserSignedIn(SupabaseService.UserAppState.SET_LOCKED_PIN)
                         else
@@ -181,5 +191,29 @@ class AuthViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun registerDevice() {
+        FirebaseMessaging.getInstance()
+            .token.addOnSuccessListener {
+                viewModelScope.launch {
+                    Log.d("dawk", "registerDevice: $it")
+                    when (val result = registerDeviceUseCase(
+                        CreateDeviceRequestDto(
+                            fcmToken = it,
+                            deviceId = deviceHelper.generateDeviceId(),
+                        )
+                    )) {
+                        is RegisterDeviceUseCase.Result.Success -> {
+                            // Successfully registered device, you can handle the result if needed
+                        }
+
+                        is RegisterDeviceUseCase.Result.Error -> {
+                            _snackbarMessage.value = result.message
+                        }
+                    }
+                }
+
+            }
     }
 }
