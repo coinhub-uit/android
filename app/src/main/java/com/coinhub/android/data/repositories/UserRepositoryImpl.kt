@@ -1,6 +1,7 @@
 package com.coinhub.android.data.repositories
 
 import com.coinhub.android.common.toDeviceModel
+import com.coinhub.android.common.toNotificationModel
 import com.coinhub.android.common.toSourceModel
 import com.coinhub.android.common.toTicketModel
 import com.coinhub.android.common.toUserModel
@@ -8,6 +9,7 @@ import com.coinhub.android.data.api_services.UserApiService
 import com.coinhub.android.data.dtos.request.CreateDeviceRequestDto
 import com.coinhub.android.data.dtos.request.CreateUserRequestDto
 import com.coinhub.android.domain.models.DeviceModel
+import com.coinhub.android.domain.models.NotificationModel
 import com.coinhub.android.domain.models.SourceModel
 import com.coinhub.android.domain.models.TicketModel
 import com.coinhub.android.domain.models.UserModel
@@ -23,6 +25,7 @@ class UserRepositoryImpl @Inject constructor(
     private var userModel: UserModel? = null
     private var ticketModels: List<TicketModel>? = null
     private var sourceModels: List<SourceModel>? = null
+    private var notificationModels: List<NotificationModel>? = null
 
     override suspend fun getUserById(id: String, refresh: Boolean): UserModel? {
         if (refresh || userModel == null) {
@@ -93,6 +96,19 @@ class UserRepositoryImpl @Inject constructor(
         }
         saveTotalPrincipalAndInterest(ticketModels!!)
         return ticketModels!!
+    }
+
+    override suspend fun getUserNotification(id: String, refresh: Boolean): List<NotificationModel> {
+        if (refresh || notificationModels == null) {
+            try {
+                notificationModels = userApiService.getUserNotification(id).map {
+                    it.toNotificationModel()
+                }
+            } catch (e: Exception) {
+                throw e
+            }
+        }
+        return notificationModels!!
     }
 
     override suspend fun registerDevice(id: String, dto: CreateDeviceRequestDto): DeviceModel {
