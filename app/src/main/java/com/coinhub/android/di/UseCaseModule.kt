@@ -30,50 +30,42 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
-import javax.inject.Singleton
 
 // TODO: Maybe scoped to view model
 @Module
 @InstallIn(SingletonComponent::class)
 object UseCaseModule {
     @Provides
-    @Singleton
     fun provideValidateEmailUseCase(
         @DefaultDispatcher defaultDispatcher: CoroutineDispatcher,
     ) = ValidateEmailUseCase(defaultDispatcher)
 
     @Provides
-    @Singleton
     fun provideValidatePasswordUseCase(
         @DefaultDispatcher defaultDispatcher: CoroutineDispatcher,
     ) = ValidatePasswordUseCase(defaultDispatcher)
 
     @Provides
-    @Singleton
     fun provideValidateConfirmPasswordUseCase(
         @DefaultDispatcher defaultDispatcher: CoroutineDispatcher,
     ) = ValidateConfirmPasswordUseCase(defaultDispatcher)
 
     @Provides
-    @Singleton
     fun provideValidatePinUseCase(
         @DefaultDispatcher defaultDispatcher: CoroutineDispatcher,
     ) = ValidatePinUseCase(defaultDispatcher)
 
     @Provides
-    @Singleton
     fun provideValidateAmountCreateTicketUseCase(
         @DefaultDispatcher defaultDispatcher: CoroutineDispatcher,
     ) = ValidateAmountCreateTicketUseCase(defaultDispatcher)
 
     @Provides
-    @Singleton
     fun provideValidateSourceIdUseCase(
         @DefaultDispatcher defaultDispatcher: CoroutineDispatcher,
     ) = ValidateSourceIdUseCase(defaultDispatcher)
 
     @Provides
-    @Singleton
     fun provideSignInWithCredentialUseCase(
         authRepository: AuthRepository,
         preferenceDataStore: PreferenceDataStore,
@@ -84,7 +76,6 @@ object UseCaseModule {
         )
 
     @Provides
-    @Singleton
     fun provideSignUpWithCredentialUseCase(
         authRepository: AuthRepository, preferenceDataStore: PreferenceDataStore,
     ) = SignUpWithCredentialUseCase(
@@ -93,7 +84,6 @@ object UseCaseModule {
     )
 
     @Provides
-    @Singleton
     fun provideHandleResultOnSignInWithGoogleUseCase(
         authRepository: AuthRepository,
         preferenceDataStore: PreferenceDataStore,
@@ -104,7 +94,6 @@ object UseCaseModule {
         )
 
     @Provides
-    @Singleton
     fun provideCheckUserSignedInUseCase(
         authRepository: AuthRepository,
         preferenceDataStore: PreferenceDataStore,
@@ -114,7 +103,6 @@ object UseCaseModule {
     )
 
     @Provides
-    @Singleton
     fun provideCreateTopUpUseCase(
         paymentRepository: PaymentRepository,
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
@@ -124,7 +112,6 @@ object UseCaseModule {
     )
 
     @Provides
-    @Singleton
     fun provideGetTopUpUseCase(
         paymentRepository: PaymentRepository,
     ) = GetTopUpUseCase(
@@ -132,7 +119,6 @@ object UseCaseModule {
     )
 
     @Provides
-    @Singleton
     fun provideCreateSourceUseCase(
         sourceApiService: SourceApiService,
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
@@ -142,7 +128,6 @@ object UseCaseModule {
     )
 
     @Provides
-    @Singleton
     fun provideCheckUserRegisterProfileUseCase(
         userRepository: UserRepository,
         authRepository: AuthRepository,
@@ -154,7 +139,6 @@ object UseCaseModule {
     )
 
     @Provides
-    @Singleton
     fun provideCreateTicketUseCase(
         ticketApiService: TicketApiService,
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
@@ -164,7 +148,6 @@ object UseCaseModule {
     )
 
     @Provides
-    @Singleton
     fun provideWithdrawTicketUseCase(
         ticketApiService: TicketApiService,
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
@@ -174,7 +157,6 @@ object UseCaseModule {
     )
 
     @Provides
-    @Singleton
     fun provideTransferMoneyUseCase(
         paymentApiService: PaymentApiService,
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
@@ -184,7 +166,6 @@ object UseCaseModule {
     )
 
     @Provides
-    @Singleton
     fun provideRegisterDeviceUseCase(
         userRepository: UserRepository,
         authRepository: AuthRepository,

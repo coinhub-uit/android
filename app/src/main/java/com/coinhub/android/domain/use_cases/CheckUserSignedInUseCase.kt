@@ -4,8 +4,10 @@ import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.repositories.PreferenceDataStore
 import com.coinhub.android.domain.use_cases.SignInWithCredentialUseCase.Result
 import javax.inject.Inject
+import dagger.hilt.android.scopes.ViewModelScoped
 
 //WARN: Maybe don't use this use case, but rather check the token directly in the view model, get it directly from supabase service
+@ViewModelScoped
 class CheckUserSignedInUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     private val preferenceDataStore: PreferenceDataStore,

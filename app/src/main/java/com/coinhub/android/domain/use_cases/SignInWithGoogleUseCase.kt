@@ -7,7 +7,9 @@ import io.github.jan.supabase.compose.auth.composable.NativeSignInResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import dagger.hilt.android.scopes.ViewModelScoped
 
+@ViewModelScoped
 class SignInWithGoogleUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     private val preferenceDataStore: PreferenceDataStore,

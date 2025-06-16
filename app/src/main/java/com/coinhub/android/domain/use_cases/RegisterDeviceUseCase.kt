@@ -8,7 +8,9 @@ import com.coinhub.android.domain.repositories.UserRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import dagger.hilt.android.scopes.ViewModelScoped
 
+@ViewModelScoped
 class RegisterDeviceUseCase @Inject constructor(
     private val userRepository: UserRepository,
     private val authRepository: AuthRepository,

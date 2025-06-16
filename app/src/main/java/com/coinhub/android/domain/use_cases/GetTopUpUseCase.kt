@@ -3,7 +3,9 @@ package com.coinhub.android.domain.use_cases
 import com.coinhub.android.domain.models.TopUpModel
 import com.coinhub.android.domain.repositories.PaymentRepository
 import jakarta.inject.Inject
+import dagger.hilt.android.scopes.ViewModelScoped
 
+@ViewModelScoped
 class GetTopUpUseCase @Inject constructor(
     private val paymentRepository: PaymentRepository,
 ) {

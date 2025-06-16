@@ -6,7 +6,9 @@ import com.coinhub.android.di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import dagger.hilt.android.scopes.ViewModelScoped
 
+@ViewModelScoped
 class TransferMoneyUseCase @Inject constructor(
     private val paymentApiService: PaymentApiService,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,

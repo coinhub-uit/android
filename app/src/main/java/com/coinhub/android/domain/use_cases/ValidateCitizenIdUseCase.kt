@@ -4,7 +4,9 @@ import com.coinhub.android.di.DefaultDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import dagger.hilt.android.scopes.ViewModelScoped
 
+@ViewModelScoped
 class ValidateCitizenIdUseCase @Inject constructor(
     @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
 ) {

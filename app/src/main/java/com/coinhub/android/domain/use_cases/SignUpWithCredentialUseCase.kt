@@ -5,7 +5,9 @@ import com.coinhub.android.domain.repositories.PreferenceDataStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import dagger.hilt.android.scopes.ViewModelScoped
 
+@ViewModelScoped
 class SignUpWithCredentialUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     private val preferenceDataStore: PreferenceDataStore,

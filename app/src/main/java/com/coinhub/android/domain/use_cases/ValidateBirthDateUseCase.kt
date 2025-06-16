@@ -8,7 +8,9 @@ import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.util.Calendar
 import javax.inject.Inject
+import dagger.hilt.android.scopes.ViewModelScoped
 
+@ViewModelScoped
 class ValidateBirthDateUseCase @Inject constructor(
     @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
 ) {

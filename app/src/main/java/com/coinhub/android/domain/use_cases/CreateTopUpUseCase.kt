@@ -7,7 +7,9 @@ import com.coinhub.android.domain.repositories.PaymentRepository
 import jakarta.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import dagger.hilt.android.scopes.ViewModelScoped
 
+@ViewModelScoped
 class CreateTopUpUseCase @Inject constructor(
     private val paymentRepository: PaymentRepository,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
