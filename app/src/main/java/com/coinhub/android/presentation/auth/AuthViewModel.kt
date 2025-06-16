@@ -1,6 +1,8 @@
 package com.coinhub.android.presentation.auth
 
-import android.util.Log
+import android.annotation.SuppressLint
+import android.content.Context
+import android.provider.Settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.data.dtos.request.CreateDeviceRequestDto
@@ -16,9 +18,9 @@ import com.coinhub.android.domain.use_cases.ValidateConfirmPasswordUseCase
 import com.coinhub.android.domain.use_cases.ValidateEmailUseCase
 import com.coinhub.android.domain.use_cases.ValidatePasswordUseCase
 import com.coinhub.android.utils.DEBOUNCE_TYPING
-import com.coinhub.android.utils.DeviceHelper
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.compose.auth.composable.NativeSignInResult
 import kotlinx.coroutines.FlowPreview
@@ -47,7 +49,7 @@ class AuthViewModel @Inject constructor(
     private val registerDeviceUseCase: RegisterDeviceUseCase,
     val supabaseClient: SupabaseClient,
     val preferenceDataStore: PreferenceDataStore,
-    private val deviceHelper: DeviceHelper,
+    @ApplicationContext private val context: Context,
 ) : ViewModel() {
     private val _isSignUp = MutableStateFlow(false)
     val isSignUp: StateFlow<Boolean> = _isSignUp.asStateFlow()
@@ -98,6 +100,9 @@ class AuthViewModel @Inject constructor(
 
     private val _snackbarMessage = MutableStateFlow<String?>(null)
     var snackbarMessage = _snackbarMessage.asStateFlow()
+
+    @SuppressLint("HardwareIds")
+    private val deviceId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
 
     fun setIsSignUp(isSignUp: Boolean) {
         _isSignUp.value = isSignUp
@@ -197,11 +202,10 @@ class AuthViewModel @Inject constructor(
         FirebaseMessaging.getInstance()
             .token.addOnSuccessListener {
                 viewModelScope.launch {
-                    Log.d("dawk", "registerDevice: $it")
                     when (val result = registerDeviceUseCase(
                         CreateDeviceRequestDto(
                             fcmToken = it,
-                            deviceId = deviceHelper.generateDeviceId(),
+                            deviceId = deviceId,
                         )
                     )) {
                         is RegisterDeviceUseCase.Result.Success -> {

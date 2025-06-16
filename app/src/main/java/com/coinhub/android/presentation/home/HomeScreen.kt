@@ -109,15 +109,15 @@ private fun HomeScreen(
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
+            if (isLoading) {
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            }
+
             Column(
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxSize()
             ) {
-                if (isLoading) {
-                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-                }
-
                 HomeGreeting(user = user)
                 Spacer(modifier = Modifier.height(32.dp))
                 HomeListSource(

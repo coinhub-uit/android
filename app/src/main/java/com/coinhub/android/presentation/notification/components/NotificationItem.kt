@@ -1,5 +1,6 @@
 package com.coinhub.android.presentation.notification.components
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
@@ -29,19 +34,22 @@ import kotlin.uuid.Uuid
 
 @Composable
 fun NotificationItem(notification: NotificationModel, modifier: Modifier = Modifier) {
+    var expanded by remember { mutableStateOf(false) }
+
     Card(
-        modifier = modifier.fillMaxWidth(),
-        onClick = {}
-    ) {
+        modifier = modifier.fillMaxWidth(), onClick = {
+            expanded = !expanded
+        }) {
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
             Row {
                 Text(
-                    text = notification.title, style = MaterialTheme.typography.titleMedium,
-                    maxLines = 2,
+                    text = notification.title,
+                    style = MaterialTheme.typography.titleLarge,
+                    maxLines = if (expanded) Int.MAX_VALUE else 1,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f).animateContentSize()
                 )
                 if (!notification.isRead) {
                     Box(
@@ -55,12 +63,13 @@ fun NotificationItem(notification: NotificationModel, modifier: Modifier = Modif
                     )
                 }
             }
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = notification.body,
                 style = MaterialTheme.typography.bodyMedium,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
+                maxLines = if (expanded) Int.MAX_VALUE else 2,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.animateContentSize()
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(

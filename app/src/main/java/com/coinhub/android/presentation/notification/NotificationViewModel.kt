@@ -19,21 +19,31 @@ class NotificationViewModel @Inject constructor(
     private val _notifications = MutableStateFlow<List<NotificationModel>>(emptyList())
     val notifications = _notifications.asStateFlow()
 
-    fun getNotifications() {
+    private val _isLoading = MutableStateFlow(true)
+    val isLoading = _isLoading.asStateFlow()
+
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing = _isRefreshing.asStateFlow()
+
+    fun fetch() {
         viewModelScope.launch {
+            _isLoading.value = true
             _notifications.value = userRepository.getUserNotification(
                 authRepository.getCurrentUserId(),
                 refresh = false
             )
+            _isLoading.value = false
         }
     }
 
-    fun refreshNotifications() {
+    fun refresh() {
         viewModelScope.launch {
+            _isRefreshing.value = true
             _notifications.value = userRepository.getUserNotification(
                 authRepository.getCurrentUserId(),
                 refresh = true
             )
+            _isRefreshing.value = false
         }
     }
 }

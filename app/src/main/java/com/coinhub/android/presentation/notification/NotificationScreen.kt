@@ -2,11 +2,16 @@ package com.coinhub.android.presentation.notification
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,16 +30,29 @@ fun NotificationScreen(
     viewModel: NotificationViewModel = hiltViewModel(),
 ) {
     val notifications = viewModel.notifications.collectAsStateWithLifecycle().value
+    val isLoading = viewModel.isLoading.collectAsStateWithLifecycle().value
+    val isRefreshing = viewModel.isRefreshing.collectAsStateWithLifecycle().value
+
+    LaunchedEffect(Unit) {
+        viewModel.fetch()
+    }
 
     NotificationScreen(
-        onBack = onBack, notifications = notifications
+        onBack = onBack,
+        isLoading = isLoading,
+        isRefreshing = isRefreshing,
+        refresh = viewModel::refresh,
+        notifications = notifications,
     )
 }
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationScreen(
     onBack: () -> Unit,
+    isLoading: Boolean,
+    isRefreshing: Boolean,
+    refresh: () -> Unit,
     notifications: List<NotificationModel>,
 ) {
     Scaffold(
@@ -42,18 +60,30 @@ fun NotificationScreen(
             NotificationTopBar(
                 onBack = onBack
             )
-        }) { innerPadding ->
-        LazyColumn(
+        },
+    ) { innerPadding ->
+        PullToRefreshBox(
             modifier = Modifier
-                .fillMaxSize()
                 .padding(innerPadding)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+                .fillMaxSize(),
+            isRefreshing = isRefreshing,
+            onRefresh = refresh,
         ) {
-            items(notifications, key = {
-                it.id.toString()
-            }) { notification ->
-                NotificationItem(notification)
+            if (isLoading) {
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            }
+
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(notifications, key = {
+                    it.id.toString()
+                }) { notification ->
+                    NotificationItem(notification)
+                }
             }
         }
     }
@@ -65,6 +95,9 @@ fun NotificationScreen(
 private fun Preview() {
     NotificationScreen(
         onBack = {},
+        isLoading = false,
+        isRefreshing = false,
+        refresh = {},
         notifications = listOf(
             NotificationModel(
                 id = Uuid.parse("123e4567-e89b-12d3-a456-426614174000"),
