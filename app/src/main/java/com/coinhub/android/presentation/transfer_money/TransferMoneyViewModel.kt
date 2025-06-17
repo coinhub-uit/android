@@ -33,7 +33,6 @@ class TransferMoneyViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val transferMoneyUseCase: TransferMoneyUseCase,
 ) : ViewModel() {
-    // TODO: @NTGNguyen - Replace with real data source
     private val _sources = MutableStateFlow<List<SourceModel>>(
         emptyList()
     )
