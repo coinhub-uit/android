@@ -7,12 +7,15 @@ import com.coinhub.android.data.dtos.response.NotificationResponseDto
 import com.coinhub.android.data.dtos.response.SourceResponseDto
 import com.coinhub.android.data.dtos.response.TicketResponseDto
 import com.coinhub.android.data.dtos.response.UserResponseDto
+import okhttp3.MultipartBody
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Path
 
 interface UserApiService {
@@ -52,4 +55,12 @@ interface UserApiService {
         @Path("id") userId: String,
         @Body registerDeviceDto: CreateDeviceRequestDto,
     ): DeviceResponseDto
+
+    @Multipart
+    @POST("users/{id}/avatar")
+    suspend fun uploadAvatar(
+        @Path("id") userId: String,
+        @Part avatar: MultipartBody.Part,
+    ): UserResponseDto
 }
+

@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.data.dtos.request.CreateSourceRequestDto
 import com.coinhub.android.domain.repositories.AuthRepository
-import com.coinhub.android.domain.repositories.SourceRepository
 import com.coinhub.android.domain.repositories.UserRepository
 import com.coinhub.android.domain.use_cases.CheckSourceExistedUseCase
 import com.coinhub.android.domain.use_cases.CreateSourceUseCase
@@ -32,7 +31,6 @@ class CreateSourceViewModel @Inject constructor(
     private val createSourceUseCase: CreateSourceUseCase,
     private val userRepository: UserRepository,
     private val authRepository: AuthRepository,
-    private val sourceRepository: SourceRepository,
     private val checkSourceExistedUseCase: CheckSourceExistedUseCase,
 ) : ViewModel() {
     private val _sourceId = MutableStateFlow("")
