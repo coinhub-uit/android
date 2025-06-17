@@ -12,5 +12,5 @@ refresh-dependencies:
 build:
   {{gradlew}} build
 
-run-hot:
-  {{gradlew}} runHot
+gen-ctags:
+  ctags -R --languages=Kotlin --kinds-Kotlin=+p ./app
