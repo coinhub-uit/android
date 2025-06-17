@@ -14,7 +14,7 @@ class ValidateConfirmPasswordUseCase @Inject constructor(
         return withContext(defaultDispatcher) {
             when {
                 confirmPassword.isEmpty() -> Result.Error("Confirm password cannot be empty")
-                confirmPassword.length < 4 -> Result.Error("Confirm password must be at least 4 characters long")
+                confirmPassword.length < 6 -> Result.Error("Confirm password must be at least 6 characters long")
                 confirmPassword != password -> Result.Error("Confirm password does not match the original password")
                 else -> Result.Success
             }
