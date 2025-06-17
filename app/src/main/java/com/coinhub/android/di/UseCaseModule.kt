@@ -1,8 +1,10 @@
 package com.coinhub.android.di
 
+import android.content.Context
 import com.coinhub.android.data.api_services.PaymentApiService
 import com.coinhub.android.data.api_services.SourceApiService
 import com.coinhub.android.data.api_services.TicketApiService
+import com.coinhub.android.data.api_services.UserApiService
 import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.repositories.PaymentRepository
 import com.coinhub.android.domain.repositories.PreferenceDataStore
@@ -19,6 +21,7 @@ import com.coinhub.android.domain.use_cases.SignInWithCredentialUseCase
 import com.coinhub.android.domain.use_cases.SignInWithGoogleUseCase
 import com.coinhub.android.domain.use_cases.SignUpWithCredentialUseCase
 import com.coinhub.android.domain.use_cases.TransferMoneyUseCase
+import com.coinhub.android.domain.use_cases.UploadAvatarUseCase
 import com.coinhub.android.domain.use_cases.ValidateAmountCreateTicketUseCase
 import com.coinhub.android.domain.use_cases.ValidateConfirmPasswordUseCase
 import com.coinhub.android.domain.use_cases.ValidateEmailUseCase
@@ -29,6 +32,7 @@ import com.coinhub.android.domain.use_cases.WithdrawTicketUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 
@@ -184,5 +188,18 @@ object UseCaseModule {
     ) = CheckSourceExistedUseCase(
         sourceApiService = sourceApiService,
         ioDispatcher = ioDispatcher
+    )
+
+    @Provides
+    fun uploadAvatarUseCase(
+        userApiService: UserApiService,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher,
+        @DefaultDispatcher defaultDispatcher: CoroutineDispatcher,
+        @ApplicationContext context: Context,
+    ) = UploadAvatarUseCase(
+        userApiService = userApiService,
+        ioDispatcher = ioDispatcher,
+        defaultDispatcher = defaultDispatcher,
+        context = context
     )
 }

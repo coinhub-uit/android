@@ -87,13 +87,14 @@ fun ProfileScreen(
         onUpdateProfile = if (onBack != null) {
             { viewModel.onUpdateProfile(onSuccess = onBack) }
         } else null,
+        uploadAvatar = viewModel::uploadAvatar
     )
 }
 
 @Composable
 private fun ProfileScreen(
     onBack: (() -> Unit)?,
-    avatarUri: Uri,
+    avatarUri: Uri?,
     onAvatarUriChange: (Uri) -> Unit,
     fullName: String,
     onFullNameChange: (String) -> Unit,
@@ -109,28 +110,29 @@ private fun ProfileScreen(
     isFormValid: Boolean,
     onCreateProfile: () -> Unit,
     onUpdateProfile: (() -> Unit)?,
+    uploadAvatar: (Uri) -> Unit,
 ) {
     val isEdit = remember(onBack, onUpdateProfile) { onBack != null && onUpdateProfile != null }
     var isDatePickerShowed by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-             topBar = { ProfileTopBar(isEdit = isEdit, onBack = onBack) },
-             floatingActionButton = {
-                 if (isFormValid) {
-                     ExtendedFloatingActionButton(
-                         onClick = if (isEdit) onUpdateProfile!! else onCreateProfile,
-                     ) {
-                         Text(if (isEdit) "Save" else "Next")
-                     }
-                 }
-             }) { paddingValues ->
+        topBar = { ProfileTopBar(isEdit = isEdit, onBack = onBack) },
+        floatingActionButton = {
+            if (isFormValid) {
+                ExtendedFloatingActionButton(
+                    onClick = if (isEdit) onUpdateProfile!! else onCreateProfile,
+                ) {
+                    Text(if (isEdit) "Save" else "Next")
+                }
+            }
+        }) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues), horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            AvatarPicker(avatarUri = avatarUri, onAvatarUriChange = onAvatarUriChange)
+            AvatarPicker(avatarUri = avatarUri, onAvatarUriChange = onAvatarUriChange, uploadAvatar = uploadAvatar)
             OutlinedTextField(
                 value = fullName,
                 onValueChange = onFullNameChange,
@@ -155,24 +157,24 @@ private fun ProfileScreen(
                     })
             OutlinedTextField(
                 value = birthDateInMillis.toDateString(),
-                              onValueChange = {},
-                              readOnly = true,
-                              label = { Text("Birth Date") },
-                              placeholder = { Text(datePattern) },
-                              isError = !birthDateCheckState.isValid,
-                              supportingText = {
-                                  birthDateCheckState.errorMessage?.let {
-                                      Text(it)
-                                  }
-                              },
-                              trailingIcon = {
-                                  IconButton(onClick = { isDatePickerShowed = true }) {
-                                      Icon(
-                                          imageVector = Icons.Default.DateRange, contentDescription = "Select date"
-                                      )
-                                  }
-                              },
-                              modifier = Modifier.padding(bottom = 8.dp)
+                onValueChange = {},
+                readOnly = true,
+                label = { Text("Birth Date") },
+                placeholder = { Text(datePattern) },
+                isError = !birthDateCheckState.isValid,
+                supportingText = {
+                    birthDateCheckState.errorMessage?.let {
+                        Text(it)
+                    }
+                },
+                trailingIcon = {
+                    IconButton(onClick = { isDatePickerShowed = true }) {
+                        Icon(
+                            imageVector = Icons.Default.DateRange, contentDescription = "Select date"
+                        )
+                    }
+                },
+                modifier = Modifier.padding(bottom = 8.dp)
             )
             OutlinedTextField(
                 value = citizenId,
@@ -248,6 +250,7 @@ fun CreateProfileScreenPreview() {
             onUpdateProfile = null,
             avatarUri = "https://placehold.co/150".toUri(),
             onAvatarUriChange = {},
+            uploadAvatar = {}
         )
     }
 }

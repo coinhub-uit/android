@@ -1,12 +1,13 @@
 package com.coinhub.android.presentation.profile
 
 import android.net.Uri
-import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.data.remote.SupabaseService
+import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.repositories.PreferenceDataStore
 import com.coinhub.android.domain.use_cases.CreateProfileUseCase
+import com.coinhub.android.domain.use_cases.UploadAvatarUseCase
 import com.coinhub.android.domain.use_cases.ValidateBirthDateUseCase
 import com.coinhub.android.domain.use_cases.ValidateCitizenIdUseCase
 import com.coinhub.android.domain.use_cases.ValidateFullNameUseCase
@@ -37,9 +38,11 @@ class ProfileViewModel @Inject constructor(
     private val createProfileUseCase: CreateProfileUseCase,
     private val preferenceDataStore: PreferenceDataStore,
     private val supabaseService: SupabaseService,
+    private val uploadAvatarUseCase: UploadAvatarUseCase,
+    private val authRepository: AuthRepository,
 ) : ViewModel() {
-    private val _avatarUri = MutableStateFlow(
-        "https://via.placeholder.com/150".toUri()
+    private val _avatarUri = MutableStateFlow<Uri?>(
+        null
     )
     val avatarUri = _avatarUri.asStateFlow()
 
@@ -138,6 +141,22 @@ class ProfileViewModel @Inject constructor(
                 }
 
                 is CreateProfileUseCase.Result.Error -> {
+                }
+            }
+        }
+    }
+
+    fun uploadAvatar(uri: Uri) {
+        viewModelScope.launch {
+            uri.let { uri ->
+                when (val result = uploadAvatarUseCase(authRepository.getCurrentUserId(), uri)) {
+                    is UploadAvatarUseCase.Result.Error -> {
+                        _toastMessage.emit(result.message)
+                    }
+
+                    is UploadAvatarUseCase.Result.Success -> {
+                        _toastMessage.emit(result.message)
+                    }
                 }
             }
         }

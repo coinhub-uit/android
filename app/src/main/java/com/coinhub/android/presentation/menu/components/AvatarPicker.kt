@@ -20,13 +20,15 @@ import androidx.core.net.toUri
 import coil.compose.rememberAsyncImagePainter
 
 @Composable
-fun AvatarPicker(avatarUri: Uri?, onAvatarUriChange: (Uri) -> Unit) {
+fun AvatarPicker(avatarUri: Uri?, onAvatarUriChange: (Uri) -> Unit, uploadAvatar: (Uri) -> Unit) {
     val imagePickerLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.PickVisualMedia()
     ) { uri: Uri? ->
         run {
-            if (uri != null)
+            if (uri != null) {
                 onAvatarUriChange(uri)
+                uploadAvatar(uri)
+            }
         }
     }
 
@@ -57,6 +59,7 @@ fun AvatarPicker(avatarUri: Uri?, onAvatarUriChange: (Uri) -> Unit) {
 fun AvatarPickerPreview() {
     AvatarPicker(
         avatarUri = "https://placehold.co/150".toUri(),
-        onAvatarUriChange = {}
+        onAvatarUriChange = {},
+        uploadAvatar = {}
     )
 }
