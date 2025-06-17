@@ -44,6 +44,7 @@ import com.coinhub.android.utils.PreviewDeviceSpecs
 import com.coinhub.android.utils.datePattern
 import com.coinhub.android.utils.toDateString
 
+// NOTE: This screen is bruh with is "edit" or not. It's suck
 @Composable
 fun ProfileScreen(
     onBack: (() -> Unit)? = null,
@@ -64,6 +65,12 @@ fun ProfileScreen(
     LaunchedEffect(Unit) {
         viewModel.toastMessage.collect {
             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        if (onBack != null) {
+            viewModel.loadProfile() // It means user is editing his profile
         }
     }
 

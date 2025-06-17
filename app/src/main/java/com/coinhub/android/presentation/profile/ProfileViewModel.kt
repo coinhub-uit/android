@@ -1,11 +1,13 @@
 package com.coinhub.android.presentation.profile
 
 import android.net.Uri
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.data.remote.SupabaseService
 import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.repositories.PreferenceDataStore
+import com.coinhub.android.domain.repositories.UserRepository
 import com.coinhub.android.domain.use_cases.CreateProfileUseCase
 import com.coinhub.android.domain.use_cases.UploadAvatarUseCase
 import com.coinhub.android.domain.use_cases.ValidateBirthDateUseCase
@@ -40,6 +42,7 @@ class ProfileViewModel @Inject constructor(
     private val supabaseService: SupabaseService,
     private val uploadAvatarUseCase: UploadAvatarUseCase,
     private val authRepository: AuthRepository,
+    private val userRepository: UserRepository,
 ) : ViewModel() {
     private val _avatarUri = MutableStateFlow<Uri?>(
         null
@@ -122,6 +125,20 @@ class ProfileViewModel @Inject constructor(
 
     fun onAddressChange(address: String) {
         _address.value = address
+    }
+
+    fun loadProfile() {
+        viewModelScope.launch {
+            val userId = authRepository.getCurrentUserId()
+            val user = userRepository.getUserById(userId)
+            user?.let {
+                _fullName.value = it.fullName
+                _citizenId.value = it.citizenId
+                _birthDateInMillis.value = it.birthDate.toMillis()
+                _avatarUri.value = it.avatar?.toUri()
+                _address.value = it.address ?: ""
+            }
+        }
     }
 
     fun onCreateProfile() {
