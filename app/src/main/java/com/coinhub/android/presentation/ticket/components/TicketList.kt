@@ -69,7 +69,7 @@ fun TicketList(
             }
         }
 
-        Spacer(modifier = Modifier.height(32.dp)) // Add some space at the bottom bcs the bottom bar of the outer scaffold
+        Spacer(modifier = Modifier.height(64.dp)) // Add some space at the bottom bcs the bottom bar of the outer scaffold
     }
 }
 
