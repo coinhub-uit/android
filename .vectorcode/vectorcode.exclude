@@ -1,0 +1,4 @@
+app/build/
+app/gitignore
+app/src/test
+app/src/androidTest

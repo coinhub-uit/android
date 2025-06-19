@@ -1,0 +1,4 @@
+build.gradle.kts
+app/
+gradle/libs.versions.toml
+gradle/wrapper/gradle-wrapper.properties
