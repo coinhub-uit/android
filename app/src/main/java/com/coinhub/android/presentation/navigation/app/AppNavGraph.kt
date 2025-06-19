@@ -8,10 +8,12 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.NavHost
@@ -61,15 +63,18 @@ fun AppNavGraph(
         }
     } == true
 
-    Scaffold(bottomBar = {
-        AnimatedVisibility(
-            visible = isInMainGraph,
-            enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
-            exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
-        ) {
-            AppBottomBar(navController = navController)
-        }
-    }) {
+    Scaffold(
+        bottomBar = {
+            AnimatedVisibility(
+                visible = isInMainGraph,
+                enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
+                exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
+            ) {
+                AppBottomBar(navController = navController)
+            }
+        },
+        modifier = Modifier.imePadding()
+    ) {
         SharedTransitionLayout {
             CompositionLocalProvider(LocalSharedTransitionScope provides this@SharedTransitionLayout) {
                 // NOTE: I know this is complicated and it can be fixed by making AppNavDestinations inherit strictly

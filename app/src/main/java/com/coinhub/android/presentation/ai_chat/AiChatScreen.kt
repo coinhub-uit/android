@@ -72,11 +72,14 @@ private fun AiChatScreen(
                 onBack = onBack,
                 onDeleteSession = onDeleteSession,
             )
-        }) { innerPadding ->
+        },
+    ) { innerPadding ->
         if (isLoading) {
-            LinearProgressIndicator(modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxWidth())
+            LinearProgressIndicator(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxWidth()
+            )
         }
         Column(
             modifier = Modifier

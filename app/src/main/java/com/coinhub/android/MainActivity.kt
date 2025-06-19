@@ -66,10 +66,11 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
 
-                        SupabaseService.UserAppState.FAILED -> {}
                         SupabaseService.UserAppState.SET_LOCKED_PIN -> {
                             SetPinScreen()
                         }
+
+                        SupabaseService.UserAppState.FAILED -> {}
                     }
                 }
             }
