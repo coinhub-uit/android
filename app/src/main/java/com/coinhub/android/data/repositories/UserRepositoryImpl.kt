@@ -55,14 +55,6 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updatePartialProfile(id: String, user: CreateUserRequestDto): UserModel {
-        return try {
-            userApiService.updatePartialProfile(id, user).toUserModel()
-        } catch (e: Exception) {
-            throw e
-        }
-    }
-
     override suspend fun delete(id: String): UserModel {
         return try {
             userApiService.delete(id).toUserModel()

@@ -21,6 +21,7 @@ import com.coinhub.android.domain.use_cases.SignInWithCredentialUseCase
 import com.coinhub.android.domain.use_cases.SignInWithGoogleUseCase
 import com.coinhub.android.domain.use_cases.SignUpWithCredentialUseCase
 import com.coinhub.android.domain.use_cases.TransferMoneyUseCase
+import com.coinhub.android.domain.use_cases.UpdateProfileUseCase
 import com.coinhub.android.domain.use_cases.UploadAvatarUseCase
 import com.coinhub.android.domain.use_cases.ValidateAmountCreateTicketUseCase
 import com.coinhub.android.domain.use_cases.ValidateConfirmPasswordUseCase
@@ -201,5 +202,14 @@ object UseCaseModule {
         ioDispatcher = ioDispatcher,
         defaultDispatcher = defaultDispatcher,
         context = context
+    )
+
+    @Provides
+    fun updatePartialProfileUseCase(
+        userApiService: UserApiService,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher,
+    ) = UpdateProfileUseCase(
+        userApiService = userApiService,
+        ioDispatcher = ioDispatcher
     )
 }

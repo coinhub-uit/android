@@ -9,6 +9,7 @@ import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.repositories.PreferenceDataStore
 import com.coinhub.android.domain.repositories.UserRepository
 import com.coinhub.android.domain.use_cases.CreateProfileUseCase
+import com.coinhub.android.domain.use_cases.UpdateProfileUseCase
 import com.coinhub.android.domain.use_cases.UploadAvatarUseCase
 import com.coinhub.android.domain.use_cases.ValidateBirthDateUseCase
 import com.coinhub.android.domain.use_cases.ValidateCitizenIdUseCase
@@ -43,6 +44,7 @@ class ProfileViewModel @Inject constructor(
     private val uploadAvatarUseCase: UploadAvatarUseCase,
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
+    private val updateProfileUseCase: UpdateProfileUseCase,
 ) : ViewModel() {
     private val _avatarUri = MutableStateFlow<Uri?>(
         null
@@ -147,7 +149,9 @@ class ProfileViewModel @Inject constructor(
                 fullName = fullName.value,
                 birthDateInMillis = birthDateInMillis.value,
                 citizenId = _citizenId.value,
-                address = _address.value.takeIf { it.isNotBlank() })
+                address = _address.value.takeIf { it.isNotBlank() }, avatar = _avatarUri.value.toString().takeIf {
+                    it.isNotBlank()
+                })
 
             when (result) {
                 is CreateProfileUseCase.Result.Success -> {
@@ -182,6 +186,26 @@ class ProfileViewModel @Inject constructor(
     fun onUpdateProfile(
         onSuccess: () -> Unit,
     ) {
-        // TODO: @NTNguyen call PATCH method here. Use .value.takeIf { it.isNotBlank() } to avoid empty strings
+        viewModelScope.launch {
+            when (val result = updateProfileUseCase(
+                userId = authRepository.getCurrentUserId(),
+                fullName = _fullName.value.takeIf { it.isNotBlank() },
+                birthDateInMillis = _birthDateInMillis.value,
+                citizenId = _citizenId.value.takeIf { it.isNotBlank() },
+                avatar = avatarUri.value.toString().takeIf {
+                    it.isNotBlank()
+                },
+                address = _address.value.takeIf { it.isNotBlank() }
+            )) {
+                is UpdateProfileUseCase.Result.Error -> {
+                    _toastMessage.emit(result.message)
+                }
+
+                is UpdateProfileUseCase.Result.Success -> {
+                    _toastMessage.emit(result.message)
+                    onSuccess()
+                }
+            }
+        }
     }
 }

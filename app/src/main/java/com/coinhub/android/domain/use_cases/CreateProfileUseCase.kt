@@ -4,11 +4,11 @@ import com.coinhub.android.data.dtos.request.CreateUserRequestDto
 import com.coinhub.android.di.IoDispatcher
 import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.repositories.UserRepository
+import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import java.util.Date
 import javax.inject.Inject
-import dagger.hilt.android.scopes.ViewModelScoped
 
 @ViewModelScoped
 class CreateProfileUseCase @Inject constructor(
@@ -21,7 +21,8 @@ class CreateProfileUseCase @Inject constructor(
         birthDateInMillis: Long,
         citizenId: String,
         address: String?,
-    ) :Result {
+        avatar: String?,
+    ): Result {
         return withContext(ioDispatcher) {
             try {
                 userRepository.registerProfile(
@@ -31,7 +32,7 @@ class CreateProfileUseCase @Inject constructor(
                         birthDate = Date(birthDateInMillis),
                         citizenId = citizenId,
                         address = address,
-                        avatar = null
+                        avatar = avatar
                     )
                 )
                 Result.Success

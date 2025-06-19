@@ -2,6 +2,7 @@ package com.coinhub.android.data.api_services
 
 import com.coinhub.android.data.dtos.request.CreateDeviceRequestDto
 import com.coinhub.android.data.dtos.request.CreateUserRequestDto
+import com.coinhub.android.data.dtos.request.UpdatePartialUserRequestDto
 import com.coinhub.android.data.dtos.response.DeviceResponseDto
 import com.coinhub.android.data.dtos.response.NotificationResponseDto
 import com.coinhub.android.data.dtos.response.SourceResponseDto
@@ -34,7 +35,7 @@ interface UserApiService {
     @PATCH("users/{id}")
     suspend fun updatePartialProfile(
         @Path("id") userId: String,
-        @Body user: CreateUserRequestDto,
+        @Body user: UpdatePartialUserRequestDto,
     ): UserResponseDto
 
     @DELETE("users/{id}")
