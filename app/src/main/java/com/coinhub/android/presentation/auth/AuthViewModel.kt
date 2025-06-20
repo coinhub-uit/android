@@ -136,10 +136,10 @@ class AuthViewModel @Inject constructor(
                             when (userProfile.user) {
                                 is UserModel -> {
                                     registerDevice()
-                                    if (preferenceDataStore.getLockPin().isNullOrEmpty())
-                                        supabaseService.setIsUserSignedIn(SupabaseService.UserAppState.SET_LOCKED_PIN)
-                                    else
-                                        supabaseService.setIsUserSignedIn(SupabaseService.UserAppState.SIGNED_IN)
+                                    if (preferenceDataStore.getLockPin()
+                                            .isNullOrEmpty()
+                                    ) supabaseService.setIsUserSignedIn(SupabaseService.UserAppState.SET_LOCKED_PIN)
+                                    else supabaseService.setIsUserSignedIn(SupabaseService.UserAppState.SIGNED_IN)
                                 }
 
                                 null -> {
@@ -163,7 +163,6 @@ class AuthViewModel @Inject constructor(
                 }
 
                 is SignUpWithCredentialUseCase.Result.Success -> {
-                    registerDevice()
                     onSignedUp()
                 }
             }
@@ -184,10 +183,10 @@ class AuthViewModel @Inject constructor(
                 is SignInWithGoogleUseCase.Result.Success -> {
                     if (result.googleNavigateResultModel.isUserRegisterProfile) {
                         registerDevice()
-                        if (preferenceDataStore.getLockPin().isNullOrEmpty())
-                            supabaseService.setIsUserSignedIn(SupabaseService.UserAppState.SET_LOCKED_PIN)
-                        else
-                            supabaseService.setIsUserSignedIn(SupabaseService.UserAppState.SIGNED_IN)
+                        if (preferenceDataStore.getLockPin().isNullOrEmpty()) supabaseService.setIsUserSignedIn(
+                            SupabaseService.UserAppState.SET_LOCKED_PIN
+                        )
+                        else supabaseService.setIsUserSignedIn(SupabaseService.UserAppState.SIGNED_IN)
                     } else {
                         onSignedUp()
                     }
@@ -197,8 +196,7 @@ class AuthViewModel @Inject constructor(
     }
 
     private fun registerDevice() {
-        FirebaseMessaging.getInstance()
-            .token.addOnSuccessListener {
+        FirebaseMessaging.getInstance().token.addOnSuccessListener {
                 viewModelScope.launch {
                     when (val result = registerDeviceUseCase(
                         CreateDeviceRequestDto(
@@ -215,7 +213,6 @@ class AuthViewModel @Inject constructor(
                         }
                     }
                 }
-
             }
     }
 }

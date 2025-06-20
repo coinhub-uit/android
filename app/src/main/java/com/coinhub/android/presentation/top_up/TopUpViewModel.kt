@@ -102,12 +102,7 @@ class TopUpViewModel @Inject constructor(
     private fun getUserSources(refresh: Boolean = false) {
         viewModelScope.launch {
             val userId = authRepository.getCurrentUserId()
-            val result = userRepository.getUserSources(userId, refresh)
-            if (result == null) {
-                _toastMessage.emit("Failed to fetch user data")
-                return@launch
-            }
-            _sources.value = result
+            _sources.value = userRepository.getUserSources(userId, refresh)
         }
     }
 }

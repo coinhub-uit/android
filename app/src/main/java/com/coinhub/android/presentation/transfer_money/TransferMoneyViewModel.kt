@@ -133,11 +133,6 @@ class TransferMoneyViewModel @Inject constructor(
 
     private suspend fun fetchSources() {
         val userId = authRepository.getCurrentUserId()
-        val result = userRepository.getUserSources(userId, false)
-        if (result == null) {
-            _toastMessage.emit("Failed to load sources")
-            return
-        }
-        _sources.value = result
+        _sources.value = userRepository.getUserSources(userId, false)
     }
 }

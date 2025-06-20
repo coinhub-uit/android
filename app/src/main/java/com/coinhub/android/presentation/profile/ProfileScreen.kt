@@ -143,7 +143,7 @@ private fun ProfileScreen(
                 onValueChange = onFullNameChange,
                 label = { Text("Full Name") },
                 singleLine = true,
-                isError = !fullNameCheckState.isValid,
+                isError = fullNameCheckState.errorMessage != null,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text, imeAction = ImeAction.Next
                 ),
@@ -159,14 +159,15 @@ private fun ProfileScreen(
                     .padding(bottom = 8.dp)
                     .semantics {
                         contentType = ContentType.PersonFullName
-                    })
+                    },
+            )
             OutlinedTextField(
                 value = birthDateInMillis.toDateString(),
                 onValueChange = {},
                 readOnly = true,
                 label = { Text("Birth Date") },
                 placeholder = { Text(datePattern) },
-                isError = !birthDateCheckState.isValid,
+                isError = birthDateCheckState.errorMessage != null,
                 supportingText = {
                     birthDateCheckState.errorMessage?.let {
                         Text(it)
@@ -185,7 +186,7 @@ private fun ProfileScreen(
                 value = citizenId,
                 onValueChange = onCitizenIdChange,
                 label = { Text("Citizen ID") },
-                isError = !citizenIdCheckState.isValid,
+                isError = citizenIdCheckState.errorMessage != null,
                 supportingText = {
                     citizenIdCheckState.errorMessage?.let { Text(it) }
                 },

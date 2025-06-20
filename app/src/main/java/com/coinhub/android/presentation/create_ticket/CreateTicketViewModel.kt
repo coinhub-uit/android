@@ -157,11 +157,6 @@ class CreateTicketViewModel @Inject constructor(
 
     private suspend fun getUserSources() {
         val userId = authRepository.getCurrentUserId()
-        val result = userRepository.getUserSources(userId, false)
-        if (result == null) {
-            _toastMessage.emit("Failed to load sources")
-            return
-        }
-        _sources.value = result
+        _sources.value = userRepository.getUserSources(userId, false)
     }
 }
