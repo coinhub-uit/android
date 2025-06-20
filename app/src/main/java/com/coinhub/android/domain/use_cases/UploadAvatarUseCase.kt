@@ -26,9 +26,7 @@ class UploadAvatarUseCase @Inject constructor(
             try {
                 val multipartBody = uriToMultipartBody(uri)
                 userApiService.uploadAvatar(userId, multipartBody)
-                Result.Success(
-                    message = "Avatar uploaded successfully"
-                )
+                Result.Success
             } catch (e: CancellationException) {
                 throw e
             } catch (e: HttpException) {
@@ -62,7 +60,7 @@ class UploadAvatarUseCase @Inject constructor(
     }
 
     sealed class Result {
-        data class Success(val message: String) : Result()
+        data object Success : Result()
         data class Error(val message: String) : Result()
     }
 }

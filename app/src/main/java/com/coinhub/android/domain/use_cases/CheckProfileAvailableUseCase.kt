@@ -20,7 +20,7 @@ class CheckProfileAvailableUseCase @Inject constructor(
         return withContext(ioDispatcher) {
             try {
                 val userId = authRepository.getCurrentUserId()
-                val user = userRepository.getUserById(userId)
+                val user = userRepository.getUserById(userId, true)
                 Result.Success(user = user)
             } catch (e: HttpException) {
                 if (e.code() == 404) {

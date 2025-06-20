@@ -32,7 +32,7 @@ class UpdateProfileUseCase @Inject constructor(
                         address = address
                     )
                 )
-                Result.Success("Profile updated successfully")
+                Result.Success
             } catch (e: Exception) {
                 Result.Error(e.message ?: "Unknown error occurred")
             }
@@ -40,7 +40,7 @@ class UpdateProfileUseCase @Inject constructor(
     }
 
     sealed class Result {
-        data class Success(val message: String) : Result()
+        data object Success : Result()
         data class Error(val message: String) : Result()
     }
 }

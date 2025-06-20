@@ -32,7 +32,7 @@ fun MenuAvatar(
             Avatar(
                 modifier = modifier,
                 onClick = null,
-                url = user.avatar,
+                model = user.avatar,
                 fullName = user.fullName,
             )
         } else if (user != null) {

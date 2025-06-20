@@ -35,6 +35,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.coinhub.android.domain.models.SourceModel
+import com.coinhub.android.domain.models.TicketModel
 import com.coinhub.android.domain.models.UserModel
 import com.coinhub.android.presentation.menu.components.MenuAvatar
 import com.coinhub.android.presentation.menu.components.MenuItem
@@ -56,7 +58,9 @@ fun MenuScreen(
 ) {
 
     val context = LocalContext.current
-    val userModel = viewModel.user.collectAsStateWithLifecycle().value
+    val user = viewModel.user.collectAsStateWithLifecycle().value
+    val sources = viewModel.sources.collectAsStateWithLifecycle().value
+    val tickets = viewModel.ticket.collectAsStateWithLifecycle().value
 
     LaunchedEffect(Unit) {
         viewModel.toastMessage.collect { message ->
@@ -75,7 +79,9 @@ fun MenuScreen(
         onCredentialChange = onCredentialChange,
         onDeleteAccount = viewModel::onDeleteAccount,
         onSignOut = viewModel::onSignOut,
-        userModel = userModel,
+        user = user,
+        sources = sources,
+        tickets = tickets,
         modifier = Modifier.padding(bottom = 64.dp)
     )
 }
@@ -88,7 +94,9 @@ private fun MenuScreen(
     onDeleteAccount: () -> Unit,
     onSignOut: () -> Unit,
     onCredentialChange: () -> Unit,
-    userModel: UserModel?,
+    user: UserModel?,
+    sources: List<SourceModel>,
+    tickets: List<TicketModel>,
     modifier: Modifier = Modifier,
 ) {
     val showDeleteAccountDialog = remember {
@@ -142,7 +150,7 @@ private fun MenuScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Avatar
-            MenuAvatar(user = userModel)
+            MenuAvatar(user = user)
 
             Spacer(modifier = Modifier.height(16.dp))
             HorizontalDivider(modifier = Modifier.padding(horizontal = 32.dp))
@@ -178,28 +186,43 @@ private fun MenuScreen(
         }
 
         if (showDeleteAccountDialog.value) {
-            AlertDialog(
-                onDismissRequest = { showDeleteAccountDialog.value = false },
-                title = { Text("Delete Account") },
-                text = { Text("Are you sure you want to delete your account? This action cannot be undone.") },
-                confirmButton = {
-                    Button(
-                        onClick = {
-                            showDeleteAccountDialog.value = false
-                            onDeleteAccount()
+            if (user == null || sources.isEmpty() || tickets.isEmpty()) {
+                AlertDialog(
+                    onDismissRequest = { showDeleteAccountDialog.value = false },
+                    title = { Text("Error") },
+                    text = { Text("You must close all your sources and withdraw all tickets to delete your account!") },
+                    confirmButton = {
+                        Button(
+                            onClick = { showDeleteAccountDialog.value = false }
+                        ) {
+                            Text("OK")
                         }
-                    ) {
-                        Text("Delete")
                     }
-                },
-                dismissButton = {
-                    OutlinedButton(
-                        onClick = { showDeleteAccountDialog.value = false }
-                    ) {
-                        Text("Cancel")
+                )
+            } else {
+                AlertDialog(
+                    onDismissRequest = { showDeleteAccountDialog.value = false },
+                    title = { Text("Delete Account") },
+                    text = { Text("Are you sure you want to delete your account? This action cannot be undone.") },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                showDeleteAccountDialog.value = false
+                                onDeleteAccount()
+                            }
+                        ) {
+                            Text("Delete")
+                        }
+                    },
+                    dismissButton = {
+                        OutlinedButton(
+                            onClick = { showDeleteAccountDialog.value = false }
+                        ) {
+                            Text("Cancel")
+                        }
                     }
-                }
-            )
+                )
+            }
         }
     }
 }
@@ -222,7 +245,7 @@ fun MenuScreenPreview() {
             onCredentialChange = {},
             onSignOut = {},
             onDeleteAccount = {},
-            userModel = UserModel(
+            user = UserModel(
                 id = Uuid.NIL,
                 birthDate = LocalDate.parse("2000-01-01"),
                 citizenId = "1234567890123",
@@ -231,7 +254,9 @@ fun MenuScreenPreview() {
                 avatar = "https://avatars.githubusercontent.com/u/86353526?v=4",
                 fullName = "NTGNguyen",
                 address = null
-            )
+            ),
+            sources = emptyList(),
+            tickets = emptyList()
         )
     }
 }

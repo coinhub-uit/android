@@ -46,13 +46,16 @@ class HomeViewModel @Inject constructor(
     fun fetch() {
         viewModelScope.launch {
             _isLoading.value = true
-            listOf(async { fetchSources() }, async { fetchUser() }).awaitAll()
+            listOf(
+                async { fetchUser() },
+                async { fetchSources() },
+            ).awaitAll()
             _isLoading.value = false
         }
     }
 
     private suspend fun fetchUser() {
-        when (val result = userRepository.getUserById(authRepository.getCurrentUserId())) {
+        when (val result = userRepository.getUserById(authRepository.getCurrentUserId(), false)) {
             is UserModel -> {
                 _user.value = result
             }
@@ -64,12 +67,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private suspend fun fetchSources() {
-        val result = userRepository.getUserSources(authRepository.getCurrentUserId(), false)
-        if (result == null) {
-            _toastMessage.emit("Failed to fetch sources")
-            return
-        }
-        _sources.value = result
+        _sources.value = userRepository.getUserSources(authRepository.getCurrentUserId(), false)
     }
 
     fun refresh() {
@@ -90,11 +88,6 @@ class HomeViewModel @Inject constructor(
     }
 
     private suspend fun refreshSources() {
-        val result = userRepository.getUserSources(authRepository.getCurrentUserId(), true)
-        if (result == null) {
-            _toastMessage.emit("Failed to fetch sources")
-            return
-        }
-        _sources.value = result
+        _sources.value = userRepository.getUserSources(authRepository.getCurrentUserId(), true)
     }
 }

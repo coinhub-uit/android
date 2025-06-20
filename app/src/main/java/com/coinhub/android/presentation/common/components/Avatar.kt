@@ -6,7 +6,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,11 +26,11 @@ import coil.compose.SubcomposeAsyncImage
 fun Avatar(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)?,
-    url: String,
+    model: Any,
     fullName: String? = null,
 ) {
     SubcomposeAsyncImage(
-        model = url,
+        model = model,
         contentDescription = if (fullName != null) "Avatar for $fullName" else null,
         contentScale = ContentScale.Crop,
         loading = {
@@ -82,6 +85,36 @@ fun Avatar(
             fontWeight = FontWeight.Bold,
             fontSize = fontSize,
             maxLines = 1
+        )
+    }
+}
+
+@Composable
+fun Avatar(
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
+) {
+    BoxWithConstraints(
+        modifier = modifier
+            .clip(CircleShape)
+            .background(MaterialTheme.colorScheme.onSecondary)
+            .border(
+                width = 3.dp, color = MaterialTheme.colorScheme.secondary, shape = CircleShape
+            )
+            .let {
+                if (onClick != null) {
+                    it.clickable { onClick() }
+                } else {
+                    it
+                }
+            },
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(
+            imageVector = Icons.Default.Person,
+            contentDescription = "Empty Avatar",
+            tint = MaterialTheme.colorScheme.secondary,
+            modifier = Modifier.size((minOf(maxWidth, maxHeight).value * 0.6f).dp)
         )
     }
 }

@@ -44,7 +44,7 @@ class SourceRepositoryImpl @Inject constructor(
         return try {
             sourceApiService.getSourceUser(id).toUserModel()
         } catch (e: Exception) {
-            throw e
+            return null
         }
     }
 }

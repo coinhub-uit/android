@@ -132,7 +132,7 @@ class ProfileViewModel @Inject constructor(
     fun loadProfile() {
         viewModelScope.launch {
             val userId = authRepository.getCurrentUserId()
-            val user = userRepository.getUserById(userId)
+            val user = userRepository.getUserById(userId, false)
             user?.let {
                 _fullName.value = it.fullName
                 _citizenId.value = it.citizenId
@@ -145,7 +145,7 @@ class ProfileViewModel @Inject constructor(
 
     fun onCreateProfile() {
         viewModelScope.launch {
-            val result = createProfileUseCase(
+            val createProfileResult = createProfileUseCase(
                 fullName = fullName.value,
                 birthDateInMillis = birthDateInMillis.value,
                 citizenId = _citizenId.value,
@@ -153,31 +153,18 @@ class ProfileViewModel @Inject constructor(
                     it.isNotBlank()
                 })
 
-            when (result) {
+            uploadAvatar()
+
+            when (createProfileResult) {
                 is CreateProfileUseCase.Result.Success -> {
-                    if (preferenceDataStore.getLockPin().isNullOrEmpty())
+                    if (preferenceDataStore.getLockPin().isNullOrEmpty()) {
                         supabaseService.setIsUserSignedIn(SupabaseService.UserAppState.SET_LOCKED_PIN)
-                    else
+                    } else {
                         supabaseService.setIsUserSignedIn(SupabaseService.UserAppState.SIGNED_IN)
+                    }
                 }
 
                 is CreateProfileUseCase.Result.Error -> {
-                }
-            }
-        }
-    }
-
-    fun uploadAvatar(uri: Uri) {
-        viewModelScope.launch {
-            uri.let { uri ->
-                when (val result = uploadAvatarUseCase(authRepository.getCurrentUserId(), uri)) {
-                    is UploadAvatarUseCase.Result.Error -> {
-                        _toastMessage.emit(result.message)
-                    }
-
-                    is UploadAvatarUseCase.Result.Success -> {
-                        _toastMessage.emit(result.message)
-                    }
                 }
             }
         }
@@ -187,7 +174,7 @@ class ProfileViewModel @Inject constructor(
         onSuccess: () -> Unit,
     ) {
         viewModelScope.launch {
-            when (val result = updateProfileUseCase(
+            val createProfileResult = updateProfileUseCase(
                 userId = authRepository.getCurrentUserId(),
                 fullName = _fullName.value.takeIf { it.isNotBlank() },
                 birthDateInMillis = _birthDateInMillis.value,
@@ -195,17 +182,25 @@ class ProfileViewModel @Inject constructor(
                 avatar = avatarUri.value.toString().takeIf {
                     it.isNotBlank()
                 },
-                address = _address.value.takeIf { it.isNotBlank() }
-            )) {
+                address = _address.value.takeIf { it.isNotBlank() })
+            uploadAvatar()
+
+            when (createProfileResult) {
                 is UpdateProfileUseCase.Result.Error -> {
-                    _toastMessage.emit(result.message)
+                    _toastMessage.emit(createProfileResult.message)
                 }
 
                 is UpdateProfileUseCase.Result.Success -> {
-                    _toastMessage.emit(result.message)
+                    _toastMessage.emit("Profile updated successfully")
                     onSuccess()
                 }
             }
+        }
+    }
+
+    private suspend fun uploadAvatar() {
+        _avatarUri.value?.let { uri ->
+            uploadAvatarUseCase(authRepository.getCurrentUserId(), uri)
         }
     }
 }

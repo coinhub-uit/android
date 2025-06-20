@@ -32,7 +32,11 @@ fun CurrencyInputBox(
     OutlinedTextField(
         label = label,
         value = value,
-        onValueChange = onValueChange,
+        onValueChange = {
+            if (it != "00") {
+                onValueChange(it)
+            }
+        },
         supportingText = supportingText,
         modifier = modifier,
         keyboardOptions = KeyboardOptions(

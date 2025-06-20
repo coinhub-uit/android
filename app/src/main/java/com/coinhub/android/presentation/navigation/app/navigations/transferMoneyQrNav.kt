@@ -22,7 +22,7 @@ fun NavGraphBuilder.transferMoneyQrNav(navController: NavHostController) {
                                 sourceId = sourceId
                             ),
                         ) {
-                            popUpTo(AppNavDestinations.MainGraph) {
+                            popUpTo(AppNavDestinations.TransferMoneyQrScan) {
                                 inclusive = true
                             }
                         }
@@ -39,7 +39,14 @@ fun NavGraphBuilder.transferMoneyQrNav(navController: NavHostController) {
                 TransferMoneyScreen(
                     sourceId = transferMoneyQr.sourceId,
                     onBack = {
-                        navController.navigateUp()
+                        navController.navigate(
+                            AppNavDestinations.MainGraph,
+                        ) {
+                            popUpTo(AppNavDestinations.TransferMoneyQrGraph) {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
+                        }
                     }
                 )
             }

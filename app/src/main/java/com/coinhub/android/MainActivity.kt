@@ -6,6 +6,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
@@ -43,7 +44,11 @@ class MainActivity : AppCompatActivity() {
 
             CoinhubTheme(themeMode = themeMode) {
                 val isUserSignedIn = supabaseService.isUserSignedIn.collectAsStateWithLifecycle().value
-                Surface(modifier = Modifier.fillMaxSize()) {
+                Surface(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .imePadding(),
+                ) {
                     when (isUserSignedIn) {
                         SupabaseService.UserAppState.SIGNED_IN -> {
                             val destination = intent.getStringExtra("destination")

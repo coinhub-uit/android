@@ -32,7 +32,7 @@ class SupabaseService @Inject constructor(
         }
     }
 
-    private var _isUserSignedIn = MutableStateFlow<UserAppState>(UserAppState.LOADING)
+    private var _isUserSignedIn = MutableStateFlow(UserAppState.LOADING)
     val isUserSignedIn = _isUserSignedIn.asStateFlow()
 
     fun setIsUserSignedIn(isSignedIn: UserAppState) {
@@ -114,10 +114,11 @@ class SupabaseService @Inject constructor(
                 refreshSession()
                 val newToken = getToken()!!
                 preferenceDataStore.saveAccessToken(newToken)
-                if (preferenceDataStore.getLockPin().isNullOrEmpty())
+                if (preferenceDataStore.getLockPin().isNullOrEmpty()) {
                     _isUserSignedIn.value = UserAppState.SET_LOCKED_PIN
-                else
+                } else {
                     _isUserSignedIn.value = UserAppState.LOCKED
+                }
             }
         } catch (e: Exception) {
             _isUserSignedIn.value = UserAppState.NOT_SIGNED_IN

@@ -37,7 +37,7 @@ import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coinhub.android.presentation.common.components.DatePickerModal
-import com.coinhub.android.presentation.menu.components.AvatarPicker
+import com.coinhub.android.presentation.menu.components.MenuAvatarPicker
 import com.coinhub.android.presentation.profile.components.ProfileTopBar
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
@@ -94,7 +94,6 @@ fun ProfileScreen(
         onUpdateProfile = if (onBack != null) {
             { viewModel.onUpdateProfile(onSuccess = onBack) }
         } else null,
-        uploadAvatar = viewModel::uploadAvatar
     )
 }
 
@@ -117,7 +116,6 @@ private fun ProfileScreen(
     isFormValid: Boolean,
     onCreateProfile: () -> Unit,
     onUpdateProfile: (() -> Unit)?,
-    uploadAvatar: (Uri) -> Unit,
 ) {
     val isEdit = remember(onBack, onUpdateProfile) { onBack != null && onUpdateProfile != null }
     var isDatePickerShowed by remember { mutableStateOf(false) }
@@ -139,7 +137,7 @@ private fun ProfileScreen(
                 .fillMaxSize()
                 .padding(paddingValues), horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            AvatarPicker(avatarUri = avatarUri, onAvatarUriChange = onAvatarUriChange, uploadAvatar = uploadAvatar)
+            MenuAvatarPicker(avatarUri = avatarUri, onAvatarUriChange = onAvatarUriChange)
             OutlinedTextField(
                 value = fullName,
                 onValueChange = onFullNameChange,
@@ -257,7 +255,6 @@ fun CreateProfileScreenPreview() {
             onUpdateProfile = null,
             avatarUri = "https://placehold.co/150".toUri(),
             onAvatarUriChange = {},
-            uploadAvatar = {}
         )
     }
 }

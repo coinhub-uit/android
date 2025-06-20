@@ -19,12 +19,10 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.uuid.ExperimentalUuidApi
 
 @HiltViewModel
 class TransferMoneyViewModel @Inject constructor(
@@ -47,8 +45,8 @@ class TransferMoneyViewModel @Inject constructor(
     private val _amountText = MutableStateFlow("")
     val amountText = _amountText.asStateFlow()
 
-    @OptIn(FlowPreview::class, ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
-    val receiptUser = _receiptSourceId.drop(1).debounce(DEBOUNCE_TYPING).mapLatest {
+    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
+    val receiptUser = _receiptSourceId.debounce(DEBOUNCE_TYPING).mapLatest {
         sourceRepository.getSourceUser(_receiptSourceId.value)
     }.stateIn(
         scope = viewModelScope,

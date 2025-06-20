@@ -63,17 +63,20 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getUserSources(id: String, refresh: Boolean): List<SourceModel>? {
+    override suspend fun getUserSources(id: String, refresh: Boolean): List<SourceModel> {
         if (refresh || sourceModels == null) {
             try {
-                sourceModels = userApiService.getUserSources(id).map {
+                val sources = userApiService.getUserSources(id).map {
                     it.toSourceModel()
                 }
+                sourceModels = sources
+                return sources
             } catch (e: Exception) {
                 throw e
             }
+        } else {
+            return sourceModels ?: emptyList()
         }
-        return sourceModels
     }
 
     override suspend fun getUserTickets(id: String, refresh: Boolean): List<TicketModel> {

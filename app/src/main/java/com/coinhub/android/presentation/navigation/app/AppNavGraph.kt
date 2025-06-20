@@ -73,7 +73,6 @@ fun AppNavGraph(
                 AppBottomBar(navController = navController)
             }
         },
-        modifier = Modifier.imePadding()
     ) {
         SharedTransitionLayout {
             CompositionLocalProvider(LocalSharedTransitionScope provides this@SharedTransitionLayout) {
