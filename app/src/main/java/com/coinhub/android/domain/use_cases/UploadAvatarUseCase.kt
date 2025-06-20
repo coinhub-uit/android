@@ -12,6 +12,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import retrofit2.HttpException
 import javax.inject.Inject
 
 class UploadAvatarUseCase @Inject constructor(
@@ -30,6 +31,10 @@ class UploadAvatarUseCase @Inject constructor(
                 )
             } catch (e: CancellationException) {
                 throw e
+            } catch (e: HttpException) {
+                Result.Error(
+                    message = "Failed to upload avatar: ${e.message()}"
+                )
             } catch (e: Exception) {
                 Result.Error(e.message ?: "Unknown error occurred")
             }
