@@ -35,8 +35,6 @@ class PaymentRepositoryImpl @Inject constructor(
         try {
             return paymentApiService.getTopUpById(id)?.toTopUpModel()
         } catch (e: Exception) {
-            // TODO: Clean?
-            Log.d("dwhlakwajda", "getTopUpById: ${e.message}")
             throw e
         }
     }

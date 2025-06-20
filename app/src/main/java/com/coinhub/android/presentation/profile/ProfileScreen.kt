@@ -37,7 +37,7 @@ import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coinhub.android.presentation.common.components.DatePickerModal
-import com.coinhub.android.presentation.menu.components.MenuAvatarPicker
+import com.coinhub.android.presentation.profile.components.ProfileAvatarPicker
 import com.coinhub.android.presentation.profile.components.ProfileTopBar
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
@@ -137,7 +137,7 @@ private fun ProfileScreen(
                 .fillMaxSize()
                 .padding(paddingValues), horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            MenuAvatarPicker(avatarUri = avatarUri, onAvatarUriChange = onAvatarUriChange)
+            ProfileAvatarPicker(avatarUri = avatarUri, onAvatarUriChange = onAvatarUriChange)
             OutlinedTextField(
                 value = fullName,
                 onValueChange = onFullNameChange,

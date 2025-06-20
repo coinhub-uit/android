@@ -1,5 +1,6 @@
 package com.coinhub.android.presentation.auth
 
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,9 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -50,8 +48,6 @@ fun AuthScreen(
     val confirmPassword = viewModel.confirmPassword.collectAsStateWithLifecycle().value
     val confirmPasswordCheckState = viewModel.confirmPasswordCheckState.collectAsStateWithLifecycle().value
     val isFormValid = viewModel.isFormValid.collectAsStateWithLifecycle().value
-    val snackbarMessage = viewModel.snackbarMessage.collectAsStateWithLifecycle().value
-
     val googleSignInState = viewModel.supabaseClient.composeAuth.rememberSignInWithGoogle(
         onResult = { signInResult ->
             viewModel.onSignInWithGoogle(
@@ -74,6 +70,12 @@ fun AuthScreen(
             viewModel.signInWithCredential(
                 onProfileNotAvailable = onSignedUpWithOAuth
             )
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.toastMessage.collect { message ->
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -103,8 +105,6 @@ fun AuthScreen(
                 onProfileNotAvailable = onSignedUpWithOAuth
             )
         },
-        snackbarMessage = snackbarMessage,
-        clearSnackBarMessage = viewModel::clearSnackbarMessage,
         googleSignInState = googleSignInState
     )
 }
@@ -125,23 +125,11 @@ private fun AuthScreen(
     isFormValid: Boolean,
     signUpWithCredential: () -> Unit,
     signInWithCredential: () -> Unit,
-    snackbarMessage: String?,
-    clearSnackBarMessage: () -> Unit,
     googleSignInState: NativeSignInState?,
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
-
-    if (snackbarMessage != null) {
-        LaunchedEffect(snackbarMessage) {
-            snackbarHostState.showSnackbar(
-                snackbarMessage, duration = SnackbarDuration.Short
-            )
-            clearSnackBarMessage()
-        }
-    }
-
     Scaffold(
-        modifier = Modifier.fillMaxSize(), snackbarHost = { SnackbarHost(snackbarHostState) }) { paddingValues ->
+        modifier = Modifier.fillMaxSize(),
+    ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -221,8 +209,6 @@ fun SignInScreenPreview() {
             signInWithCredential = { },
             signUpWithCredential = { },
             googleSignInState = null,
-            snackbarMessage = null,
-            clearSnackBarMessage = {},
         )
     }
 }

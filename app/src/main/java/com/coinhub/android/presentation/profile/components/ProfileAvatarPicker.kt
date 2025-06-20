@@ -1,4 +1,4 @@
-package com.coinhub.android.presentation.menu.components
+package com.coinhub.android.presentation.profile.components
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -13,7 +13,7 @@ import androidx.core.net.toUri
 import com.coinhub.android.presentation.common.components.Avatar
 
 @Composable
-fun MenuAvatarPicker(avatarUri: Uri?, onAvatarUriChange: (Uri) -> Unit) {
+fun ProfileAvatarPicker(avatarUri: Uri?, onAvatarUriChange: (Uri) -> Unit) {
     val imagePickerLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.PickVisualMedia()
     ) { uri: Uri? ->
@@ -46,7 +46,7 @@ fun MenuAvatarPicker(avatarUri: Uri?, onAvatarUriChange: (Uri) -> Unit) {
 @Preview
 @Composable
 private fun Preview() {
-    MenuAvatarPicker(
+    ProfileAvatarPicker(
         avatarUri = "https://placehold.co/150".toUri(),
         onAvatarUriChange = {},
     )

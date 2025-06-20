@@ -24,9 +24,11 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.compose.auth.composable.NativeSignInResult
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
@@ -98,8 +100,8 @@ class AuthViewModel @Inject constructor(
         emailCheckState.isValid && passwordCheckState.isValid && (!isSignup or confirmPasswordCheckState.isValid)
     }.drop(1).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
-    private val _snackbarMessage = MutableStateFlow<String?>(null)
-    var snackbarMessage = _snackbarMessage.asStateFlow()
+    private val _toastMessage = MutableSharedFlow<String>()
+    var toastMessage = _toastMessage.asSharedFlow()
 
     @SuppressLint("HardwareIds")
     private val deviceId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
@@ -120,15 +122,11 @@ class AuthViewModel @Inject constructor(
         _confirmPassword.value = confirmPassword
     }
 
-    fun clearSnackbarMessage() {
-        _snackbarMessage.value = null
-    }
-
     fun signInWithCredential(onProfileNotAvailable: () -> Unit) {
         viewModelScope.launch {
             when (signInWithCredentialUseCase(email = _email.value, password = _password.value)) {
                 is SignInWithCredentialUseCase.Result.Error -> {
-                    _snackbarMessage.value = "Wrong email or password"
+                    _toastMessage.emit("Wrong email or password")
                 }
 
                 is SignInWithCredentialUseCase.Result.Success -> {
@@ -161,7 +159,7 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = signUpWithCredentialUseCase(email = _email.value, password = _password.value)) {
                 is SignUpWithCredentialUseCase.Result.Error -> {
-                    _snackbarMessage.value = result.message
+                    _toastMessage.emit(result.message)
                 }
 
                 is SignUpWithCredentialUseCase.Result.Success -> {
@@ -180,7 +178,7 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = signInWithGoogleUseCase(signInResult)) {
                 is SignInWithGoogleUseCase.Result.Error -> {
-                    _snackbarMessage.value = result.message
+                    _toastMessage.emit(result.message)
                 }
 
                 is SignInWithGoogleUseCase.Result.Success -> {
@@ -213,7 +211,7 @@ class AuthViewModel @Inject constructor(
                         }
 
                         is RegisterDeviceUseCase.Result.Error -> {
-                            _snackbarMessage.value = result.message
+                            _toastMessage.emit(result.message)
                         }
                     }
                 }
