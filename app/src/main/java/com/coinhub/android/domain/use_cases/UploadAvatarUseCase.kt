@@ -45,8 +45,8 @@ class UploadAvatarUseCase @Inject constructor(
                 val contentResolver = context.contentResolver
                 val inputStream = contentResolver.openInputStream(uri)
                 val fileName = "avatar_${System.currentTimeMillis()}.jpg"
-                val requestBody = inputStream?.readBytes()?.toRequestBody("image/*".toMediaTypeOrNull())
-                MultipartBody.Part.createFormData("avatar", fileName, requestBody!!)
+                val requestBody = inputStream?.readBytes()?.toRequestBody("image/jpg".toMediaTypeOrNull())
+                MultipartBody.Part.createFormData("file", fileName, requestBody!!)
             } catch (
                 e: CancellationException,
             ) {
