@@ -35,7 +35,7 @@ class NotificationService : FirebaseMessagingService() {
         notificationIntent.putExtra("message", body)
         val pendingIntent = PendingIntent.getActivity(
             this, 0, notificationIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         builder?.setContentIntent(pendingIntent)
         val manager =
