@@ -3,6 +3,7 @@ package com.coinhub.android.domain.use_cases
 import com.coinhub.android.data.dtos.request.CreateUserRequestDto
 import com.coinhub.android.di.IoDispatcher
 import com.coinhub.android.domain.repositories.AuthRepository
+import com.coinhub.android.domain.repositories.PreferenceDataStore
 import com.coinhub.android.domain.repositories.UserRepository
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.CoroutineDispatcher
@@ -15,6 +16,7 @@ class CreateProfileUseCase @Inject constructor(
     private val userRepository: UserRepository,
     private val authRepository: AuthRepository,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    private val preferenceDataStore: PreferenceDataStore,
 ) {
     suspend operator fun invoke(
         fullName: String,
@@ -35,6 +37,7 @@ class CreateProfileUseCase @Inject constructor(
                         avatar = avatar
                     )
                 )
+                preferenceDataStore.saveAccessToken(authRepository.getToken()!!)
                 Result.Success
             } catch (e: Exception) {
                 Result.Error(e.message ?: "Unknown error occurred")

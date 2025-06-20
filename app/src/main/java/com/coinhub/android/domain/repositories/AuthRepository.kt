@@ -6,7 +6,7 @@ import kotlin.reflect.KSuspendFunction1
 interface AuthRepository {
     suspend fun getUserOnSignInWithCredential(email: String, password: String): String
 
-    suspend fun getUserOnSignUpWithCredential(email: String, password: String): String
+    suspend fun signUpWithCredential(email: String, password: String)
 
     suspend fun getUserOnSignInWithGoogle(saveToken: KSuspendFunction1<String, Unit>): GoogleNavigateResultModel
 

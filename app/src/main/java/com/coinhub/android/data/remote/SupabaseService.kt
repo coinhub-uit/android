@@ -67,7 +67,7 @@ class SupabaseService @Inject constructor(
     }
 
     suspend fun getCurrentUserId(): String {
-        val token = supabaseClient.auth.currentAccessTokenOrNull() ?: throw Exception("")
+        val token = supabaseClient.auth.currentAccessTokenOrNull() ?: throw Exception("Failed to retrieve access token")
         return supabaseClient.auth.retrieveUser(token).id
     }
 

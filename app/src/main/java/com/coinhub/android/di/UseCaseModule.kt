@@ -12,6 +12,7 @@ import com.coinhub.android.domain.repositories.UserRepository
 import com.coinhub.android.domain.use_cases.CheckProfileAvailableUseCase
 import com.coinhub.android.domain.use_cases.CheckSourceExistedUseCase
 import com.coinhub.android.domain.use_cases.CheckUserSignedInUseCase
+import com.coinhub.android.domain.use_cases.CreateProfileUseCase
 import com.coinhub.android.domain.use_cases.CreateSourceUseCase
 import com.coinhub.android.domain.use_cases.CreateTicketUseCase
 import com.coinhub.android.domain.use_cases.CreateTopUpUseCase
@@ -211,5 +212,18 @@ object UseCaseModule {
     ) = UpdateProfileUseCase(
         userApiService = userApiService,
         ioDispatcher = ioDispatcher
+    )
+
+    @Provides
+    fun provideCreateProfileUseCase(
+        userRepository: UserRepository,
+        authRepository: AuthRepository,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher,
+        preferenceDataStore: PreferenceDataStore,
+    ) = CreateProfileUseCase(
+        userRepository = userRepository,
+        authRepository = authRepository,
+        ioDispatcher = ioDispatcher,
+        preferenceDataStore = preferenceDataStore
     )
 }

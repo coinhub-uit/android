@@ -16,9 +16,8 @@ class AuthRepositoryImpl @Inject constructor(
         return supabaseService.getCurrentUserId()
     }
 
-    override suspend fun getUserOnSignUpWithCredential(email: String, password: String): String {
+    override suspend fun signUpWithCredential(email: String, password: String) {
         supabaseService.signUp(email, password)
-        return supabaseService.getCurrentUserId()
     }
 
     override suspend fun getUserOnSignInWithGoogle(
