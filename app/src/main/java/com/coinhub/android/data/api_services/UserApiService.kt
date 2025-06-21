@@ -62,6 +62,9 @@ interface UserApiService {
     suspend fun uploadAvatar(
         @Path("id") userId: String,
         @Part file: MultipartBody.Part,
-    ): UserResponseDto
+    )
+
+    @DELETE("users/{id}/avatar")
+    suspend fun deleteAvatar(@Path("id") userId: String)
 }
 

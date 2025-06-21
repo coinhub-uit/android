@@ -8,6 +8,8 @@ import com.coinhub.android.domain.models.TicketModel
 import com.coinhub.android.domain.models.UserModel
 import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.repositories.UserRepository
+import com.coinhub.android.domain.use_cases.DeleteAccountUseCase
+import com.coinhub.android.domain.use_cases.DeleteAvatarUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -23,6 +25,8 @@ class MenuViewModel @Inject constructor(
     private val supabaseService: SupabaseService,
     private val userRepository: UserRepository,
     private val authRepository: AuthRepository,
+    private val deleteAccountUseCase: DeleteAccountUseCase,
+    private val deleteAvatarUseCase: DeleteAvatarUseCase,
 ) : ViewModel() {
     private val _user = MutableStateFlow<UserModel?>(null)
     val user = _user.asStateFlow()
@@ -53,9 +57,42 @@ class MenuViewModel @Inject constructor(
         }
     }
 
+    fun refresh() {
+        viewModelScope.launch {
+            val userId = authRepository.getCurrentUserId()
+            listOf(
+                async { _user.value = userRepository.getUserById(userId, true) },
+                async { _sources.value = userRepository.getUserSources(userId, true) },
+                async { _tickets.value = userRepository.getUserTickets(userId, true) }
+            ).awaitAll()
+        }
+    }
+
     fun onDeleteAccount() {
         viewModelScope.launch {
-            // TODO: @NTGNguyen Logic to delete the user account
+            when (val result = deleteAccountUseCase(authRepository.getCurrentUserId())) {
+                is DeleteAccountUseCase.Result.Error ->
+                    _toastMessage.emit(result.message)
+
+                is DeleteAccountUseCase.Result.Success -> {
+                    _toastMessage.emit("Account deleted successfully")
+                    onSignOut()
+                }
+            }
+        }
+    }
+
+    fun onDeleteAvatar() {
+        viewModelScope.launch {
+            when (val result = deleteAvatarUseCase(authRepository.getCurrentUserId())) {
+                is DeleteAvatarUseCase.Result.Error ->
+                    _toastMessage.emit(result.message)
+
+                is DeleteAvatarUseCase.Result.Success -> {
+                    _toastMessage.emit("Avatar deleted successfully")
+                    fetch()
+                }
+            }
         }
     }
 }

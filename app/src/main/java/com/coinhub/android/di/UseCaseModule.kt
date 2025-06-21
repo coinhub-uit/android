@@ -16,6 +16,8 @@ import com.coinhub.android.domain.use_cases.CreateProfileUseCase
 import com.coinhub.android.domain.use_cases.CreateSourceUseCase
 import com.coinhub.android.domain.use_cases.CreateTicketUseCase
 import com.coinhub.android.domain.use_cases.CreateTopUpUseCase
+import com.coinhub.android.domain.use_cases.DeleteAccountUseCase
+import com.coinhub.android.domain.use_cases.DeleteAvatarUseCase
 import com.coinhub.android.domain.use_cases.GetTopUpUseCase
 import com.coinhub.android.domain.use_cases.RegisterDeviceUseCase
 import com.coinhub.android.domain.use_cases.SignInWithCredentialUseCase
@@ -225,5 +227,23 @@ object UseCaseModule {
         authRepository = authRepository,
         ioDispatcher = ioDispatcher,
         preferenceDataStore = preferenceDataStore
+    )
+
+    @Provides
+    fun provideDeleteAccountUseCase(
+        userApiService: UserApiService,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher,
+    ) = DeleteAccountUseCase(
+        userApiService = userApiService,
+        ioDispatcher = ioDispatcher
+    )
+
+    @Provides
+    fun provideDeleteAvatarUseCase(
+        userApiService: UserApiService,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher,
+    ) = DeleteAvatarUseCase(
+        userApiService = userApiService,
+        ioDispatcher = ioDispatcher
     )
 }
