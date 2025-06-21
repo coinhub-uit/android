@@ -17,7 +17,6 @@ class UpdateProfileUseCase @Inject constructor(
         fullName: String?,
         birthDateInMillis: Long?,
         citizenId: String?,
-        avatar: String?,
         address: String?,
     ): Result {
         return withContext(ioDispatcher) {
@@ -28,7 +27,6 @@ class UpdateProfileUseCase @Inject constructor(
                         fullName = fullName,
                         birthDate = birthDateInMillis?.let { Date(it) },
                         citizenId = citizenId,
-                        avatar = avatar,
                         address = address
                     )
                 )

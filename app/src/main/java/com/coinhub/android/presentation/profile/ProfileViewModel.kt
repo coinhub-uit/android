@@ -46,8 +46,9 @@ class ProfileViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val updateProfileUseCase: UpdateProfileUseCase,
 ) : ViewModel() {
+    private var originalAvatar: Uri? = null
     private val _avatarUri = MutableStateFlow<Uri?>(
-        null
+        Uri.EMPTY
     )
     val avatarUri = _avatarUri.asStateFlow()
 
@@ -138,6 +139,7 @@ class ProfileViewModel @Inject constructor(
                 _citizenId.value = it.citizenId
                 _birthDateInMillis.value = it.birthDate.toMillis()
                 _avatarUri.value = it.avatar?.toUri()
+                originalAvatar = it.avatar?.toUri()
                 _address.value = it.address ?: ""
             }
         }
@@ -154,8 +156,6 @@ class ProfileViewModel @Inject constructor(
                     it.isNotBlank()
                 },
             )
-
-            uploadAvatar()
 
             when (createProfileResult) {
                 is CreateProfileUseCase.Result.Success -> {
@@ -181,10 +181,10 @@ class ProfileViewModel @Inject constructor(
                 fullName = _fullName.value.takeIf { it.isNotBlank() },
                 birthDateInMillis = _birthDateInMillis.value,
                 citizenId = _citizenId.value.takeIf { it.isNotBlank() },
-                avatar = if (_avatarUri.value != null) _avatarUri.value.toString() else null,
                 address = _address.value.takeIf { it.isNotBlank() })
 
-            if (_avatarUri.value != null) {
+            // FIXME: This is bruh, it doesn't check success or not
+            if (_avatarUri.value != null && _avatarUri.value != originalAvatar) {
                 uploadAvatar()
             }
 

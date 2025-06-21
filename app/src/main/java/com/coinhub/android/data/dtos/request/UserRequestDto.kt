@@ -16,5 +16,4 @@ data class UpdatePartialUserRequestDto(
     val citizenId: String? = null,
     val birthDate: Date? = null,
     val address: String? = null,
-    val avatar: String? = null,
 )

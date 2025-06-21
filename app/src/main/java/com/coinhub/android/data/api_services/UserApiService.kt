@@ -24,7 +24,7 @@ interface UserApiService {
     suspend fun getUserById(@Path("id") userId: String): UserResponseDto
 
     @POST("users")
-    suspend fun registerProfile(@Body() user: CreateUserRequestDto): UserResponseDto
+    suspend fun registerProfile(@Body user: CreateUserRequestDto): UserResponseDto
 
     @PUT("users/{id}")
     suspend fun updateProfile(
