@@ -35,6 +35,7 @@ fun NavGraphBuilder.topUpNavGraph(navController: NavHostController) {
                         popUpTo(AppNavDestinations.TopUpGraph) {
                             inclusive = true
                         }
+                        launchSingleTop = true
                     }
                 }
             )

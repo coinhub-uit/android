@@ -186,7 +186,7 @@ private fun MenuScreen(
         }
 
         if (showDeleteAccountDialog.value) {
-            if (user == null || sources.isEmpty() || tickets.isEmpty()) {
+            if (sources.isNotEmpty() || tickets.isNotEmpty()) {
                 AlertDialog(
                     onDismissRequest = { showDeleteAccountDialog.value = false },
                     title = { Text("Error") },

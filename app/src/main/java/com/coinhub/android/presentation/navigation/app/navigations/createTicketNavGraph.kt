@@ -15,7 +15,7 @@ fun NavGraphBuilder.createTicketNavGraph(navController: NavHostController) {
             CompositionLocalProvider(LocalAnimatedVisibilityScope provides this@composable) {
                 CreateTicketScreen(
                     onBack = {
-                        navController.navigateUp()
+                        navController.popBackStack()
                     },
                 )
             }

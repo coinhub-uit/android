@@ -1,5 +1,6 @@
 package com.coinhub.android
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -25,6 +26,8 @@ import com.coinhub.android.shortcuts.TicketScreenShortcut
 import com.coinhub.android.shortcuts.TransferMoneyQrScreenShortcut
 import com.coinhub.android.ui.theme.CoinhubTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -35,10 +38,18 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var themeManager: ThemeManger
 
+    private val _navigationDestination = MutableSharedFlow<String>(replay = 1)
+    private val navigationDestination = _navigationDestination.asSharedFlow()
+
+    private val _intent = MutableSharedFlow<Intent>(replay = 1)
+    private val intentFlow = _intent.asSharedFlow()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         WindowCompat.setDecorFitsSystemWindows(window, false)
+        processIntent(intent)
+
         setContent {
             val themeMode = themeManager.themeMode.collectAsStateWithLifecycle().value
 
@@ -51,13 +62,17 @@ class MainActivity : AppCompatActivity() {
                 ) {
                     when (isUserSignedIn) {
                         SupabaseService.UserAppState.SIGNED_IN -> {
-                            val destination = intent.getStringExtra("destination")
-                            AppNavGraph(destination = destination)
+                            AppNavGraph(
+                                destinationFlow = navigationDestination,
+                                intentFlow = intentFlow,
+                            )
                             addSignInShortcuts()
                         }
 
                         SupabaseService.UserAppState.NOT_SIGNED_IN -> {
-                            AuthNavGraph()
+                            AuthNavGraph(
+                                destinationFlow = navigationDestination,
+                            )
                             removeSignInShortcuts()
                         }
 
@@ -79,6 +94,26 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        processIntent(intent)
+    }
+
+    private fun processIntent(intent: Intent) {
+        if (supabaseService.isUserSignedIn.value == SupabaseService.UserAppState.SIGNED_IN) {
+            val destination = intent.getStringExtra("destination")
+            if (!destination.isNullOrBlank()) {
+                _navigationDestination.tryEmit(destination)
+            }
+            if (intent.action == Intent.ACTION_VIEW && intent.data != null) {
+                _intent.tryEmit(intent)
+            }
+        } else if (supabaseService.isUserSignedIn.value == SupabaseService.UserAppState.NOT_SIGNED_IN) {
+            _navigationDestination.tryEmit("") // Yeah trick ;/ like, to trigger the auth graph to navigate to auth screen
         }
     }
 

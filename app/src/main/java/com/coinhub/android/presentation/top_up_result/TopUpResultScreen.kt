@@ -33,6 +33,7 @@ import com.coinhub.android.domain.models.TopUpModel
 import com.coinhub.android.presentation.top_up_result.components.TopUpResultStatus
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
+import kotlinx.coroutines.delay
 import java.math.BigInteger
 import java.time.ZonedDateTime
 import kotlin.uuid.ExperimentalUuidApi
@@ -56,6 +57,7 @@ fun TopUpResultScreen(
 
     LaunchedEffect(topUpId) {
         if (topUpId != null) {
+            delay(2000L)
             viewModel.checkTopUpStatus(topUpId)
         }
     }

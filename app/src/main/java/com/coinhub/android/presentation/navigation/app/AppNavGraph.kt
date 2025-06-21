@@ -1,6 +1,7 @@
 package com.coinhub.android.presentation.navigation.app
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
@@ -8,12 +9,11 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.NavHost
@@ -34,21 +34,17 @@ import com.coinhub.android.presentation.navigation.app.navigations.ticketDetailN
 import com.coinhub.android.presentation.navigation.app.navigations.topUpNavGraph
 import com.coinhub.android.presentation.navigation.app.navigations.transferMoneyNavGraph
 import com.coinhub.android.presentation.navigation.app.navigations.transferMoneyQrNav
+import kotlinx.coroutines.flow.SharedFlow
 
 // The inner padding of scaffold isn't needed.. grammar
 @OptIn(ExperimentalSharedTransitionApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AppNavGraph(
-    destination: String?,
+    destinationFlow: SharedFlow<String>,
+    intentFlow: SharedFlow<Intent>,
 ) {
     RequestNotificationPermissionDialog()
-
-    val startDestination = when (destination) {
-        AppNavDestinations.Tickets.toString() -> AppNavDestinations.Tickets
-        AppNavDestinations.TransferMoneyQrGraph.toString() -> AppNavDestinations.TransferMoneyQrGraph
-        else -> AppNavDestinations.MainGraph
-    }
 
     val navController = rememberNavController()
 
@@ -62,6 +58,29 @@ fun AppNavGraph(
             navDestination.hasRoute(it::class)
         }
     } == true
+
+    LaunchedEffect(Unit) {
+        destinationFlow.collect {
+            val appDestination = when (it) {
+                AppNavDestinations.Tickets.toString() -> AppNavDestinations.Tickets
+                AppNavDestinations.TransferMoneyQrGraph.toString() -> AppNavDestinations.TransferMoneyQrGraph
+                else -> null
+            }
+            if (appDestination != null) {
+                navController.navigate(appDestination) {
+                    popUpTo(AppNavDestinations.MainGraph) {
+                        inclusive = true
+                    }
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        intentFlow.collect { intent ->
+            navController.handleDeepLink(intent)
+        }
+    }
 
     Scaffold(
         bottomBar = {
@@ -78,18 +97,9 @@ fun AppNavGraph(
             CompositionLocalProvider(LocalSharedTransitionScope provides this@SharedTransitionLayout) {
                 // NOTE: I know this is complicated and it can be fixed by making AppNavDestinations inherit strictly
                 NavHost(
-                    navController = navController,
-                    startDestination = when (startDestination) {
-                        AppNavDestinations.Tickets -> AppNavDestinations.MainGraph
-                        else -> startDestination
-                    }
+                    navController = navController, startDestination = AppNavDestinations.MainGraph
                 ) {
-                    mainNavGraph(
-                        navController = navController, startDestination = when (startDestination) {
-                            AppNavDestinations.Tickets -> AppNavDestinations.Tickets
-                            else -> null
-                        }
-                    )
+                    mainNavGraph(navController = navController)
                     transferMoneyQrNav(navController = navController)
                     createSourceNavGraph(navController = navController)
                     topUpNavGraph(navController = navController)
