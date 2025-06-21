@@ -149,9 +149,11 @@ class ProfileViewModel @Inject constructor(
                 fullName = fullName.value,
                 birthDateInMillis = birthDateInMillis.value,
                 citizenId = _citizenId.value,
-                address = _address.value.takeIf { it.isNotBlank() }, avatar = _avatarUri.value.toString().takeIf {
+                address = _address.value.takeIf { it.isNotBlank() },
+                avatar = _avatarUri.value.toString().takeIf {
                     it.isNotBlank()
-                })
+                },
+            )
 
             uploadAvatar()
 
@@ -174,20 +176,21 @@ class ProfileViewModel @Inject constructor(
         onSuccess: () -> Unit,
     ) {
         viewModelScope.launch {
-            val createProfileResult = updateProfileUseCase(
+            val updateProfileResult = updateProfileUseCase(
                 userId = authRepository.getCurrentUserId(),
                 fullName = _fullName.value.takeIf { it.isNotBlank() },
                 birthDateInMillis = _birthDateInMillis.value,
                 citizenId = _citizenId.value.takeIf { it.isNotBlank() },
-                avatar = avatarUri.value.toString().takeIf {
-                    it.isNotBlank()
-                },
+                avatar = if (_avatarUri.value != null) _avatarUri.value.toString() else null,
                 address = _address.value.takeIf { it.isNotBlank() })
-            uploadAvatar()
 
-            when (createProfileResult) {
+            if (_avatarUri.value != null) {
+                uploadAvatar()
+            }
+
+            when (updateProfileResult) {
                 is UpdateProfileUseCase.Result.Error -> {
-                    _toastMessage.emit(createProfileResult.message)
+                    _toastMessage.emit(updateProfileResult.message)
                 }
 
                 is UpdateProfileUseCase.Result.Success -> {
