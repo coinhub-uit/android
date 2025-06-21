@@ -90,7 +90,7 @@ class MenuViewModel @Inject constructor(
 
                 is DeleteAvatarUseCase.Result.Success -> {
                     _toastMessage.emit("Avatar deleted successfully")
-                    fetch()
+                    refresh()
                 }
             }
         }

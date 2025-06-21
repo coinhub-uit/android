@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.domain.models.SourceModel
+import com.coinhub.android.domain.use_cases.DeleteSourceUseCase
 import com.coinhub.android.utils.copyToClipboard
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -16,7 +17,9 @@ import java.math.BigInteger
 import javax.inject.Inject
 
 @HiltViewModel
-class SourceDetailViewModel @Inject constructor() : ViewModel() {
+class SourceDetailViewModel @Inject constructor(
+    private val deleteSourceUseCase: DeleteSourceUseCase,
+) : ViewModel() {
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
@@ -53,5 +56,20 @@ class SourceDetailViewModel @Inject constructor() : ViewModel() {
 
     fun dismissBalanceErrorDialog() {
         _showBalanceErrorDialog.value = false
+    }
+
+    fun deleteSource(source: SourceModel) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            when (deleteSourceUseCase(source.id)) {
+                is DeleteSourceUseCase.Result.Error -> {
+                    _isLoading.value = false
+                }
+
+                is DeleteSourceUseCase.Result.Success -> {
+                    _isLoading.value = false
+                }
+            }
+        }
     }
 }
