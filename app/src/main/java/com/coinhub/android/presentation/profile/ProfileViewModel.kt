@@ -109,7 +109,7 @@ class ProfileViewModel @Inject constructor(
     private val _toastMessage = MutableSharedFlow<String>()
     val toastMessage = _toastMessage.asSharedFlow()
 
-    fun onAvatarUriChange(uri: Uri) {
+    fun onAvatarUriChange(uri: Uri?) {
         _avatarUri.value = uri
     }
 

@@ -101,7 +101,7 @@ fun ProfileScreen(
 private fun ProfileScreen(
     onBack: (() -> Unit)?,
     avatarUri: Uri?,
-    onAvatarUriChange: (Uri) -> Unit,
+    onAvatarUriChange: (Uri?) -> Unit,
     fullName: String,
     onFullNameChange: (String) -> Unit,
     fullNameCheckState: ProfileStates.FullNameCheckState,
@@ -137,7 +137,11 @@ private fun ProfileScreen(
                 .fillMaxSize()
                 .padding(paddingValues), horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            ProfileAvatarPicker(avatarUri = avatarUri, onAvatarUriChange = onAvatarUriChange)
+            ProfileAvatarPicker(
+                avatarUri = avatarUri,
+                onAvatarUriChange = onAvatarUriChange,
+                isEdit = isEdit,
+            )
             OutlinedTextField(
                 value = fullName,
                 onValueChange = onFullNameChange,
