@@ -9,7 +9,6 @@ import com.coinhub.android.domain.models.UserModel
 import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.repositories.UserRepository
 import com.coinhub.android.domain.use_cases.DeleteAccountUseCase
-import com.coinhub.android.domain.use_cases.DeleteAvatarUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -26,7 +25,6 @@ class MenuViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val authRepository: AuthRepository,
     private val deleteAccountUseCase: DeleteAccountUseCase,
-    private val deleteAvatarUseCase: DeleteAvatarUseCase,
 ) : ViewModel() {
     private val _user = MutableStateFlow<UserModel?>(null)
     val user = _user.asStateFlow()
@@ -36,6 +34,12 @@ class MenuViewModel @Inject constructor(
 
     private val _tickets = MutableStateFlow<List<TicketModel>>(emptyList())
     val ticket = _tickets.asStateFlow()
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
+
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing = _isRefreshing.asStateFlow()
 
     private val _toastMessage = MutableSharedFlow<String>()
     val toastMessage = _toastMessage.asSharedFlow()
@@ -48,23 +52,27 @@ class MenuViewModel @Inject constructor(
 
     fun fetch() {
         viewModelScope.launch {
+            _isLoading.value = true
             val userId = authRepository.getCurrentUserId()
             listOf(
                 async { _user.value = userRepository.getUserById(userId, false) },
                 async { _sources.value = userRepository.getUserSources(userId, false) },
                 async { _tickets.value = userRepository.getUserTickets(userId, false) }
             ).awaitAll()
+            _isLoading.value = false
         }
     }
 
     fun refresh() {
         viewModelScope.launch {
+            _isRefreshing.value = true
             val userId = authRepository.getCurrentUserId()
             listOf(
                 async { _user.value = userRepository.getUserById(userId, true) },
                 async { _sources.value = userRepository.getUserSources(userId, true) },
                 async { _tickets.value = userRepository.getUserTickets(userId, true) }
             ).awaitAll()
+            _isRefreshing.value = false
         }
     }
 
@@ -77,20 +85,6 @@ class MenuViewModel @Inject constructor(
                 is DeleteAccountUseCase.Result.Success -> {
                     _toastMessage.emit("Account deleted successfully")
                     onSignOut()
-                }
-            }
-        }
-    }
-
-    fun onDeleteAvatar() {
-        viewModelScope.launch {
-            when (val result = deleteAvatarUseCase(authRepository.getCurrentUserId())) {
-                is DeleteAvatarUseCase.Result.Error ->
-                    _toastMessage.emit(result.message)
-
-                is DeleteAvatarUseCase.Result.Success -> {
-                    _toastMessage.emit("Avatar deleted successfully")
-                    refresh()
                 }
             }
         }

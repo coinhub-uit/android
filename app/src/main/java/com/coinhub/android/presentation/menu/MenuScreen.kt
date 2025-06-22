@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,11 +19,14 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -61,6 +65,8 @@ fun MenuScreen(
     val user = viewModel.user.collectAsStateWithLifecycle().value
     val sources = viewModel.sources.collectAsStateWithLifecycle().value
     val tickets = viewModel.ticket.collectAsStateWithLifecycle().value
+    val isLoading = viewModel.isLoading.collectAsStateWithLifecycle().value
+    val isRefreshing = viewModel.isRefreshing.collectAsStateWithLifecycle().value
 
     LaunchedEffect(Unit) {
         viewModel.toastMessage.collect { message ->
@@ -82,10 +88,14 @@ fun MenuScreen(
         user = user,
         sources = sources,
         tickets = tickets,
+        isLoading = isLoading,
+        refresh = viewModel::refresh,
+        isRefreshing = isRefreshing,
         modifier = Modifier.padding(bottom = 64.dp)
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MenuScreen(
     onSettings: () -> Unit,
@@ -97,6 +107,9 @@ private fun MenuScreen(
     user: UserModel?,
     sources: List<SourceModel>,
     tickets: List<TicketModel>,
+    isLoading: Boolean,
+    isRefreshing: Boolean,
+    refresh: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val showDeleteAccountDialog = remember {
@@ -140,43 +153,53 @@ private fun MenuScreen(
     )
     Scaffold(
         topBar = { MenuTopBar(onSignOut = onSignOut) },
-        modifier = modifier
+        modifier = modifier,
     ) { innerPadding ->
-        Column(
+        PullToRefreshBox(
             modifier = Modifier
                 .padding(innerPadding)
-                .padding(16.dp)
                 .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            isRefreshing = isRefreshing,
+            onRefresh = refresh,
         ) {
-            // Avatar
-            MenuAvatar(user = user)
-
-            Spacer(modifier = Modifier.height(16.dp))
-            HorizontalDivider(modifier = Modifier.padding(horizontal = 32.dp))
-            Spacer(modifier = Modifier.height(16.dp))
-
-            LazyColumn(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(32.dp)
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                menuSections.forEach { (_, items) ->
-                    item {
-                        Card(
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                            ),
-                        ) {
-                            Column(
-                                modifier = Modifier.padding(8.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally,
+                if (isLoading) {
+                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                }
+                // Avatar
+                MenuAvatar(user = user)
+
+                Spacer(modifier = Modifier.height(16.dp))
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 32.dp))
+                Spacer(modifier = Modifier.height(16.dp))
+
+                LazyColumn(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(32.dp)
+                ) {
+                    menuSections.forEach { (_, items) ->
+                        item {
+                            Card(
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                                ),
                             ) {
-                                items.forEach { item ->
-                                    MenuItem(
-                                        icon = item.icon,
-                                        text = item.text,
-                                        onClick = item.onClick
-                                    )
+                                Column(
+                                    modifier = Modifier.padding(8.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                ) {
+                                    items.forEach { item ->
+                                        MenuItem(
+                                            icon = item.icon,
+                                            text = item.text,
+                                            onClick = item.onClick
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -256,7 +279,10 @@ fun MenuScreenPreview() {
                 address = null
             ),
             sources = emptyList(),
-            tickets = emptyList()
+            tickets = emptyList(),
+            isLoading = false,
+            refresh = {},
+            isRefreshing = false,
         )
     }
 }

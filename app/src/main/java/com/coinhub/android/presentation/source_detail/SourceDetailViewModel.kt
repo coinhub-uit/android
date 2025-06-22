@@ -5,71 +5,50 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.domain.models.SourceModel
-import com.coinhub.android.domain.use_cases.DeleteSourceUseCase
+import com.coinhub.android.domain.repositories.AuthRepository
+import com.coinhub.android.domain.repositories.UserRepository
+import com.coinhub.android.domain.use_cases.CloseSourceUseCase
 import com.coinhub.android.utils.copyToClipboard
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.math.BigInteger
 import javax.inject.Inject
 
 @HiltViewModel
 class SourceDetailViewModel @Inject constructor(
-    private val deleteSourceUseCase: DeleteSourceUseCase,
+    private val closeSourceUseCase: CloseSourceUseCase,
+    private val authRepository: AuthRepository,
+    private val userRepository: UserRepository,
 ) : ViewModel() {
-    private val _isLoading = MutableStateFlow(true)
-    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+    private val _isProcessing = MutableStateFlow(false)
+    val isProcessing = _isProcessing.asStateFlow()
 
-    private val _showCloseDialog = MutableStateFlow(false)
-    val showCloseDialog: StateFlow<Boolean> = _showCloseDialog.asStateFlow()
-
-    private val _showBalanceErrorDialog = MutableStateFlow(false)
-    val showBalanceErrorDialog: StateFlow<Boolean> = _showBalanceErrorDialog.asStateFlow()
-
-    fun onCloseClick(source: SourceModel) {
-        if (source.balance == BigInteger.ZERO) {
-            _showCloseDialog.value = true
-        } else {
-            _showBalanceErrorDialog.value = true
-        }
-    }
-
-    fun onCloseConfirm() {
-        viewModelScope.launch {
-            _isLoading.value = true
-            delay(1000) // Simulate network delay
-            _isLoading.value = false
-        }
-    }
+    private val _toastMessage = MutableSharedFlow<String>()
+    val toastMessage = _toastMessage.asSharedFlow()
 
     fun copySourceIdToClipboard(context: Context, sourceId: String) {
         copyToClipboard(context, sourceId, label = "Source ID")
         Toast.makeText(context, "Source ID copied", Toast.LENGTH_SHORT).show()
     }
 
-    fun dismissCloseDialog() {
-        _showCloseDialog.value = false
-    }
-
-    fun dismissBalanceErrorDialog() {
-        _showBalanceErrorDialog.value = false
-    }
-
-    fun deleteSource(source: SourceModel) {
+    fun closeSource(source: SourceModel, onClosed: () -> Unit) {
         viewModelScope.launch {
-            _isLoading.value = true
-            when (deleteSourceUseCase(source.id)) {
-                is DeleteSourceUseCase.Result.Error -> {
-                    _isLoading.value = false
+            _isProcessing.value = true
+            when (val result = closeSourceUseCase(source.id)) {
+                is CloseSourceUseCase.Result.Error -> {
+                    _toastMessage.emit(result.message)
                 }
 
-                is DeleteSourceUseCase.Result.Success -> {
-                    _isLoading.value = false
+                is CloseSourceUseCase.Result.Success -> {
+                    val userId = authRepository.getCurrentUserId()
+                    userRepository.getUserSources(userId, true)
+                    onClosed()
                 }
             }
+            _isProcessing.value = false
         }
     }
 }

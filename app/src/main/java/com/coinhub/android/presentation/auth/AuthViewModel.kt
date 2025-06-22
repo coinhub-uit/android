@@ -124,9 +124,9 @@ class AuthViewModel @Inject constructor(
 
     fun signInWithCredential(onProfileNotAvailable: () -> Unit) {
         viewModelScope.launch {
-            when (signInWithCredentialUseCase(email = _email.value, password = _password.value)) {
+            when (val result = signInWithCredentialUseCase(email = _email.value, password = _password.value)) {
                 is SignInWithCredentialUseCase.Result.Error -> {
-                    _toastMessage.emit("Wrong email or password")
+                    _toastMessage.emit(result.message)
                 }
 
                 is SignInWithCredentialUseCase.Result.Success -> {

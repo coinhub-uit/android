@@ -15,40 +15,64 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.QrCode
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.coinhub.android.domain.models.SourceModel
 import com.coinhub.android.presentation.navigation.app.LocalAnimatedVisibilityScope
 import com.coinhub.android.presentation.navigation.app.LocalSharedTransitionScope
 import com.coinhub.android.ui.theme.CoinhubTheme
+import java.math.BigInteger
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SourceDetailActions(
     onSourceQr: () -> Unit,
+    source: SourceModel,
+    onCloseSource: () -> Unit,
 ) {
     val sharedTransitionScope =
         LocalSharedTransitionScope.current ?: error("SharedTransitionScope not provided via CompositionLocal")
     val animatedVisibilityScope =
         LocalAnimatedVisibilityScope.current ?: error("AnimatedVisibilityScope not provided via CompositionLocal")
 
+    var showCloseDialog by remember {
+        mutableStateOf(false)
+    }
+
     val cardItems = listOf(
         CardItem(
-            "QR",
-            Icons.Default.QrCode,
-            onSourceQr,
+            title = "QR",
+            icon = Icons.Default.QrCode,
+            onClick = onSourceQr,
             transitionKey = { sourceId: String -> "sourceQr-$sourceId" },
         ),
+        CardItem(
+            title = "Close",
+            icon = Icons.Default.Delete,
+            onClick = {
+                showCloseDialog = true
+            },
+        )
     )
 
     Column {
@@ -89,6 +113,53 @@ fun SourceDetailActions(
                 }
             }
         }
+    }
+
+    if (showCloseDialog) {
+        CloseSourceDialog(
+            source = source,
+            onDismissRequest = { showCloseDialog = false },
+            onConfirm = {
+                onCloseSource()
+                showCloseDialog = false
+            }
+        )
+    }
+}
+
+@Composable
+private fun CloseSourceDialog(
+    source: SourceModel,
+    onDismissRequest: () -> Unit,
+    onConfirm: () -> Unit,
+) {
+    if (source.balance != BigInteger.ZERO) {
+        AlertDialog(
+            onDismissRequest = onDismissRequest,
+            title = { Text("Cannot Close Source") },
+            text = { Text("You cannot close this source while its balance is not zero.") },
+            confirmButton = {
+                TextButton(onClick = onDismissRequest) {
+                    Text("OK")
+                }
+            }
+        )
+    } else {
+        AlertDialog(
+            onDismissRequest = onDismissRequest,
+            title = { Text("Close Source") },
+            text = { Text("Are you sure you want to close this source? This action cannot be undone.") },
+            confirmButton = {
+                Button(onClick = onConfirm) {
+                    Text("OK")
+                }
+            },
+            dismissButton = {
+                OutlinedButton(onClick = onDismissRequest) {
+                    Text("Cancel")
+                }
+            }
+        )
     }
 }
 
@@ -136,6 +207,11 @@ fun HomeFeaturesPreview() {
         CoinhubTheme {
             SourceDetailActions(
                 onSourceQr = {},
+                onCloseSource = {},
+                source = SourceModel(
+                    id = "1",
+                    balance = BigInteger.ZERO,
+                )
             )
         }
     }
@@ -145,5 +221,5 @@ private data class CardItem(
     val title: String,
     val icon: ImageVector,
     val onClick: () -> Unit,
-    val transitionKey: ((String) -> String)?,
+    val transitionKey: ((String) -> String)? = null,
 )

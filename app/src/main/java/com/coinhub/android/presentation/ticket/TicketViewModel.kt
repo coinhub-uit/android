@@ -1,5 +1,6 @@
 package com.coinhub.android.presentation.ticket
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.di.IoDispatcher
@@ -22,7 +23,7 @@ class TicketViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val authRepository: AuthRepository,
     private val preferenceDataStore: PreferenceDataStore,
-   @IoDispatcher private val ioDispatcher: CoroutineDispatcher
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
     private val _tickets = MutableStateFlow<List<TicketModel>>(emptyList())
     val tickets = _tickets.asStateFlow()
@@ -56,27 +57,25 @@ class TicketViewModel @Inject constructor(
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()
 
-    private val _toastMessage = MutableSharedFlow<String>(0)
+    private val _toastMessage = MutableSharedFlow<String>()
     val toastMessage = _toastMessage.asSharedFlow()
 
     fun fetch() {
         viewModelScope.launch {
+            _isLoading.value = true
             val userId = authRepository.getCurrentUserId()
-            val tickets = userRepository.getUserTickets(userId, false)
-            _tickets.value = tickets
+            _tickets.value = userRepository.getUserTickets(userId, false)
+            _isLoading.value = false
+            Log.d("TicketVM", "Fetched tickets: ${System.identityHashCode(_tickets.value)}")
         }
     }
 
     fun refresh() {
         viewModelScope.launch {
             _isRefreshing.value = true
-            try {
-                // TODO: refresh here, and no catch
-            } catch (e: Exception) {
-                _toastMessage.emit("Error refreshing tickets: ${e.message}")
-            } finally {
-                _isRefreshing.value = false
-            }
+            val userId = authRepository.getCurrentUserId()
+            _tickets.value = userRepository.getUserTickets(userId, true)
+            _isRefreshing.value = false
         }
     }
 }

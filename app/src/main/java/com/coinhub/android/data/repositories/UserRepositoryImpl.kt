@@ -16,6 +16,7 @@ import com.coinhub.android.domain.models.UserModel
 import com.coinhub.android.domain.repositories.PreferenceDataStore
 import com.coinhub.android.domain.repositories.UserRepository
 import jakarta.inject.Inject
+import retrofit2.HttpException
 import java.math.BigInteger
 
 class UserRepositoryImpl @Inject constructor(
@@ -82,15 +83,16 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun getUserTickets(id: String, refresh: Boolean): List<TicketModel> {
         if (refresh || ticketModels == null) {
             try {
-                ticketModels = userApiService.getUserTickets(id).map {
+                val tickets = userApiService.getUserTickets(id).map {
                     it.toTicketModel()
                 }
-            } catch (e: Exception) {
-                throw e
+                saveTotalPrincipalAndInterest(tickets)
+                ticketModels = tickets
+            } catch (e: HttpException) {
+                return emptyList() // FIXME: bruh
             }
         }
-        saveTotalPrincipalAndInterest(ticketModels!!)
-        return ticketModels!!
+        return ticketModels ?: emptyList()
     }
 
     override suspend fun getUserNotification(id: String, refresh: Boolean): List<NotificationModel> {

@@ -6,7 +6,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class DeleteSourceUseCase @Inject constructor(
+class CloseSourceUseCase @Inject constructor(
     private val sourceApiService: SourceApiService,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) {
