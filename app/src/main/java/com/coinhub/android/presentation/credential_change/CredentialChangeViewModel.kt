@@ -2,6 +2,7 @@ package com.coinhub.android.presentation.credential_change
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.coinhub.android.data.remote.SupabaseService
 import com.coinhub.android.domain.use_cases.ValidatePasswordUseCase
 import com.coinhub.android.utils.DEBOUNCE_TYPING
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,6 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CredentialChangeViewModel @Inject constructor(
     private val validatePasswordUseCase: ValidatePasswordUseCase,
+    private val supabaseService: SupabaseService,
 ) : ViewModel() {
 
     private val _currentPassword = MutableStateFlow("")
@@ -77,7 +79,7 @@ class CredentialChangeViewModel @Inject constructor(
         confirmPasswordState,
     ) { currentState, newState, confirmState ->
         currentState.isValid && newState.isValid && confirmState.isValid &&
-        _currentPassword.value.isNotEmpty() && _newPassword.value.isNotEmpty() && _confirmPassword.value.isNotEmpty()
+                _currentPassword.value.isNotEmpty() && _newPassword.value.isNotEmpty() && _confirmPassword.value.isNotEmpty()
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     fun updateCurrentPassword(password: String) {
@@ -99,7 +101,9 @@ class CredentialChangeViewModel @Inject constructor(
     fun changeCredential() {
         viewModelScope.launch {
             try {
-                // TODO: Implement actual credential change with API
+                supabaseService.changeCredential(
+                    _newPassword.value
+                )
                 _toastMessage.emit("Password changed successfully!")
             } catch (e: Exception) {
                 _toastMessage.emit("Failed to change password: ${e.message}")

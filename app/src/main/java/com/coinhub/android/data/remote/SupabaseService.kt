@@ -66,6 +66,18 @@ class SupabaseService @Inject constructor(
         }
     }
 
+    fun changeCredential(password: String) {
+        supabaseServiceScope.launch {
+            try {
+                supabaseClient.auth.updateUser {
+                    this.password = password
+                }
+            } catch (e: Exception) {
+                throw Exception("Failed to change credentials: ${e.message}")
+            }
+        }
+    }
+
     suspend fun getCurrentUserId(): String {
         val token = supabaseClient.auth.currentAccessTokenOrNull() ?: throw Exception("Failed to retrieve access token")
         return supabaseClient.auth.retrieveUser(token).id
