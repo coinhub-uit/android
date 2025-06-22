@@ -5,20 +5,22 @@ import com.coinhub.android.data.api_services.PaymentApiService
 import com.coinhub.android.data.api_services.SourceApiService
 import com.coinhub.android.data.api_services.TicketApiService
 import com.coinhub.android.data.api_services.UserApiService
+import com.coinhub.android.data.remote.SupabaseService
 import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.repositories.PaymentRepository
 import com.coinhub.android.domain.repositories.PreferenceDataStore
 import com.coinhub.android.domain.repositories.UserRepository
+import com.coinhub.android.domain.use_cases.ChangeCredentialUseCase
 import com.coinhub.android.domain.use_cases.CheckProfileAvailableUseCase
 import com.coinhub.android.domain.use_cases.CheckSourceExistedUseCase
 import com.coinhub.android.domain.use_cases.CheckUserSignedInUseCase
+import com.coinhub.android.domain.use_cases.CloseSourceUseCase
 import com.coinhub.android.domain.use_cases.CreateProfileUseCase
 import com.coinhub.android.domain.use_cases.CreateSourceUseCase
 import com.coinhub.android.domain.use_cases.CreateTicketUseCase
 import com.coinhub.android.domain.use_cases.CreateTopUpUseCase
 import com.coinhub.android.domain.use_cases.DeleteAccountUseCase
 import com.coinhub.android.domain.use_cases.DeleteAvatarUseCase
-import com.coinhub.android.domain.use_cases.CloseSourceUseCase
 import com.coinhub.android.domain.use_cases.GetTopUpUseCase
 import com.coinhub.android.domain.use_cases.RegisterDeviceUseCase
 import com.coinhub.android.domain.use_cases.SignInWithCredentialUseCase
@@ -254,6 +256,15 @@ object UseCaseModule {
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
     ) = CloseSourceUseCase(
         sourceApiService = sourceApiService,
+        ioDispatcher = ioDispatcher
+    )
+
+    @Provides
+    fun provideChangeCredentialUseCase(
+        supabaseService: SupabaseService,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher,
+    ) = ChangeCredentialUseCase(
+        supabaseService = supabaseService,
         ioDispatcher = ioDispatcher
     )
 }
