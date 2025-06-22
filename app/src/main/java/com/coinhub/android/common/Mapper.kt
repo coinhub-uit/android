@@ -43,7 +43,9 @@ fun PlanResponseDto.toPlanModel() = PlanModel(
 
 fun SourceResponseDto.toSourceModel() = SourceModel(
     id = this.id,
-    balance = BigInteger(this.balance)
+    balance = BigInteger(this.balance),
+    openedAt = ZonedDateTime.parse(this.openedAt),
+    closedAt = this.closedAt?.let { ZonedDateTime.parse(it) }
 )
 
 fun TicketHistoryResponseDto.toTicketHistoryModel() = TicketHistoryModel(

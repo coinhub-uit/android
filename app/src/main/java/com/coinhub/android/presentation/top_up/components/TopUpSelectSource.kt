@@ -20,6 +20,7 @@ import com.coinhub.android.utils.CurrencySymbol
 import com.coinhub.android.utils.PreviewDeviceSpecs
 import com.coinhub.android.utils.toVndFormat
 import java.math.BigInteger
+import java.time.ZonedDateTime
 
 @Composable
 fun TopUpSelectSource(
@@ -53,9 +54,21 @@ private fun TopUpSelectSourcePreview() {
     CoinhubTheme {
         var selectedSourceId by remember { mutableStateOf<String?>("1") }
         val sources = listOf(
-            SourceModel("1", BigInteger("1000000")),
-            SourceModel("2", BigInteger("500000")),
-            SourceModel("3", BigInteger("750000"))
+            SourceModel(
+                "1",
+                BigInteger("5000000"),
+                openedAt = ZonedDateTime.parse("2023-01-01T00:00:00Z"),
+            ),
+            SourceModel(
+                "2",
+                BigInteger("3000000"),
+                openedAt = ZonedDateTime.parse("2023-01-01T00:00:00Z"),
+            ),
+            SourceModel(
+                "3",
+                BigInteger("7500000"),
+                openedAt = ZonedDateTime.parse("2023-01-01T00:00:00Z"),
+            )
         )
         Surface {
             TopUpSelectSource(

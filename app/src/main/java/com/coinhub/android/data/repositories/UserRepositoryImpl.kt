@@ -67,7 +67,9 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun getUserSources(id: String, refresh: Boolean): List<SourceModel> {
         if (refresh || sourceModels == null) {
             try {
-                val sources = userApiService.getUserSources(id).map {
+                val sources = userApiService.getUserSources(id).filter {
+                    it.closedAt == null // NOTE: Filter out closed sources
+                }.map {
                     it.toSourceModel()
                 }
                 sourceModels = sources

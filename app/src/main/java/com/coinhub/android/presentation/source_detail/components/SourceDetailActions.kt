@@ -42,6 +42,7 @@ import com.coinhub.android.presentation.navigation.app.LocalAnimatedVisibilitySc
 import com.coinhub.android.presentation.navigation.app.LocalSharedTransitionScope
 import com.coinhub.android.ui.theme.CoinhubTheme
 import java.math.BigInteger
+import java.time.ZonedDateTime
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -211,6 +212,7 @@ fun HomeFeaturesPreview() {
                 source = SourceModel(
                     id = "1",
                     balance = BigInteger.ZERO,
+                    openedAt = ZonedDateTime.parse("2023-01-01T00:00:00Z"),
                 )
             )
         }

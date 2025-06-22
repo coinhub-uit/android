@@ -28,6 +28,7 @@ import com.coinhub.android.presentation.navigation.app.LocalSharedTransitionScop
 import com.coinhub.android.utils.CurrencySymbol
 import com.coinhub.android.utils.PreviewDeviceSpecs
 import com.coinhub.android.utils.toVndFormat
+import java.time.ZonedDateTime
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -111,7 +112,11 @@ fun SourceDetailCard(
 fun SourceDetailCardPreview() {
     SourceDetailCard(
         source = SourceModel(
-            id = "source_1234567890", balance = 1000000.toBigInteger()
-        ), copySourceIdToClipboard = {})
+            id = "source_1234567890",
+            balance = 1000000.toBigInteger(),
+            openedAt = ZonedDateTime.parse("2023-01-01T00:00:00Z"),
+        ),
+        copySourceIdToClipboard = {},
+    )
 }
 

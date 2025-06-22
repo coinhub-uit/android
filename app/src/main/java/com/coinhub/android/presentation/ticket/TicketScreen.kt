@@ -87,18 +87,19 @@ private fun TicketScreen(
         },
     ) { innerPadding ->
         PullToRefreshBox(
-            modifier = Modifier.padding(innerPadding).fillMaxSize(),
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize(),
             isRefreshing = isRefreshing,
             onRefresh = refresh,
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(16.dp)
-            ) {
-                if (isLoading) {
-                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-                }
+            if (isLoading) {
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            }
 
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
                 TicketStatistics(
                     totalPrincipal = totalPrincipal, totalInterest = totalInterest, onCreateTicket = onCreateTicket
                 )

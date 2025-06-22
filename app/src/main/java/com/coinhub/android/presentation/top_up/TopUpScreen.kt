@@ -34,6 +34,7 @@ import com.coinhub.android.presentation.top_up.components.TopUpTopBar
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
 import java.math.BigInteger
+import java.time.ZonedDateTime
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -152,9 +153,21 @@ fun TopUpScreenPreview() {
     CoinhubTheme {
         Surface {
             val sources = listOf(
-                SourceModel("1", BigInteger("1000000")),
-                SourceModel("2", BigInteger("500000")),
-                SourceModel("3", BigInteger("750000"))
+                SourceModel(
+                    "1",
+                    BigInteger("5000000"),
+                    openedAt = ZonedDateTime.parse("2023-01-01T00:00:00Z"),
+                ),
+                SourceModel(
+                    "2",
+                    BigInteger("3000000"),
+                    openedAt = ZonedDateTime.parse("2023-01-01T00:00:00Z"),
+                ),
+                SourceModel(
+                    "3",
+                    BigInteger("7500000"),
+                    openedAt = ZonedDateTime.parse("2023-01-01T00:00:00Z"),
+                )
             )
             TopUpScreen(
                 selectedSourceId = "1",

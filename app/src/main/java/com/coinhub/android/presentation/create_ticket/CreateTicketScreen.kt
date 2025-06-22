@@ -36,6 +36,7 @@ import com.coinhub.android.presentation.navigation.app.LocalSharedTransitionScop
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
 import java.math.BigInteger
+import java.time.ZonedDateTime
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -184,9 +185,21 @@ fun CreateTicketScreenPreview() {
                     AvailablePlanModel(3, 8.5f, 3, 90)
                 ),
                 sources = listOf(
-                    SourceModel("1", BigInteger("5000000")),
-                    SourceModel("2", BigInteger("3000000")),
-                    SourceModel("3", BigInteger("7500000"))
+                    SourceModel(
+                        "1",
+                        BigInteger("5000000"),
+                        openedAt = ZonedDateTime.parse("2023-01-01T00:00:00Z"),
+                    ),
+                    SourceModel(
+                        "2",
+                        BigInteger("3000000"),
+                        openedAt = ZonedDateTime.parse("2023-01-01T00:00:00Z"),
+                    ),
+                    SourceModel(
+                        "3",
+                        BigInteger("7500000"),
+                        openedAt = ZonedDateTime.parse("2023-01-01T00:00:00Z"),
+                    )
                 ),
                 isFormValid = true,
                 onAmountChange = {},

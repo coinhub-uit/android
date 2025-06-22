@@ -23,6 +23,7 @@ import com.coinhub.android.presentation.source_detail.components.SourceDetailTop
 import com.coinhub.android.ui.theme.CoinhubTheme
 import com.coinhub.android.utils.PreviewDeviceSpecs
 import java.math.BigInteger
+import java.time.ZonedDateTime
 
 @Composable
 fun SourceDetailScreen(
@@ -102,7 +103,11 @@ private fun SourceDetailScreen(
 fun SourceDetailScreenPreview() {
     CoinhubTheme {
         SourceDetailScreen(
-            source = SourceModel("123456789012345", BigInteger("5000000")),
+            source = SourceModel(
+                id = "123456789012345",
+                balance = BigInteger("5000000"),
+                openedAt = ZonedDateTime.parse("2023-01-01T00:00:00Z"),
+            ),
             isProcessing = false,
             onBack = {},
             onSourceQr = {},
