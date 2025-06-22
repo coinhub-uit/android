@@ -32,14 +32,20 @@ import java.time.ZonedDateTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 @Composable
-fun NotificationItem(notification: NotificationModel, modifier: Modifier = Modifier) {
+fun NotificationItem(notification: NotificationModel, markAsRead: (Uuid) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
 
     Card(
-        modifier = modifier.fillMaxWidth(), onClick = {
+        modifier = Modifier.fillMaxWidth(),
+        onClick = {
             expanded = !expanded
-        }) {
+            if (!notification.isRead) {
+                markAsRead(notification.id)
+            }
+        },
+    ) {
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
@@ -49,7 +55,9 @@ fun NotificationItem(notification: NotificationModel, modifier: Modifier = Modif
                     style = MaterialTheme.typography.titleLarge,
                     maxLines = if (expanded) Int.MAX_VALUE else 1,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f).animateContentSize()
+                    modifier = Modifier
+                        .weight(1f)
+                        .animateContentSize()
                 )
                 if (!notification.isRead) {
                     Box(
@@ -94,7 +102,8 @@ private fun Preview() {
                     body = "This is a sample notification body to demonstrate the layout.",
                     createdAt = ZonedDateTime.now(),
                     isRead = false
-                )
+                ),
+                markAsRead = {}
             )
         }
     }
