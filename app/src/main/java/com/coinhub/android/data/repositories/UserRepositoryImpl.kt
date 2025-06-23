@@ -16,6 +16,8 @@ import com.coinhub.android.domain.models.UserModel
 import com.coinhub.android.domain.repositories.PreferenceDataStore
 import com.coinhub.android.domain.repositories.UserRepository
 import jakarta.inject.Inject
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import retrofit2.HttpException
 import java.math.BigInteger
 
@@ -23,6 +25,8 @@ class UserRepositoryImpl @Inject constructor(
     private val userApiService: UserApiService,
     private val preferenceDataStore: PreferenceDataStore,
 ) : UserRepository {
+    private val mutex = Mutex()
+
     private var userModel: UserModel? = null
     private var ticketModels: List<TicketModel>? = null
     private var sourceModels: List<SourceModel>? = null
@@ -31,13 +35,17 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun getUserById(id: String, refresh: Boolean): UserModel? {
         if (refresh || userModel == null) {
             try {
-                userApiService.getUserById(id).toUserModel()
-                this.userModel = userApiService.getUserById(id).toUserModel()
+                val user = userApiService.getUserById(id).toUserModel()
+                mutex.withLock {
+                    this.userModel = user
+                }
             } catch (e: Exception) {
                 throw e
             }
         }
-        return this.userModel
+        return mutex.withLock {
+            userModel
+        }
     }
 
     override suspend fun registerProfile(user: CreateUserRequestDto): UserModel {
@@ -72,13 +80,17 @@ class UserRepositoryImpl @Inject constructor(
                 }.map {
                     it.toSourceModel()
                 }
-                sourceModels = sources
+                mutex.withLock {
+                    sourceModels = sources
+                }
                 return sources
             } catch (e: Exception) {
                 throw e
             }
         } else {
-            return sourceModels ?: emptyList()
+            return mutex.withLock {
+                sourceModels ?: emptyList()
+            }
         }
     }
 
@@ -89,25 +101,34 @@ class UserRepositoryImpl @Inject constructor(
                     it.toTicketModel()
                 }
                 saveTotalPrincipalAndInterest(tickets)
-                ticketModels = tickets
+                mutex.withLock {
+                    ticketModels = tickets
+                }
             } catch (e: HttpException) {
-                return emptyList() // FIXME: bruh
+                return emptyList()
             }
         }
-        return ticketModels ?: emptyList()
+        return mutex.withLock {
+            ticketModels ?: emptyList()
+        }
     }
 
     override suspend fun getUserNotification(id: String, refresh: Boolean): List<NotificationModel> {
         if (refresh || notificationModels == null) {
             try {
-                notificationModels = userApiService.getUserNotification(id).map {
+                val notifications = userApiService.getUserNotification(id).map {
                     it.toNotificationModel()
+                }
+                mutex.withLock {
+                    notificationModels = notifications
                 }
             } catch (e: Exception) {
                 throw e
             }
         }
-        return notificationModels!!
+        return mutex.withLock {
+            notificationModels ?: emptyList()
+        }
     }
 
     override suspend fun registerDevice(id: String, dto: CreateDeviceRequestDto): DeviceModel {
