@@ -1,6 +1,7 @@
 package com.coinhub.android.data.remote
 
 import android.app.Notification
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
@@ -25,21 +26,33 @@ class NotificationService : FirebaseMessagingService() {
     }
 
     private fun showNotification(title: String, body: String) {
-        val builder: Notification.Builder? = Notification.Builder(this, "")
+        val channelId = "CoinHubChannel"
+        val channelName = "CoinHub Channel"
+
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel(channelId, channelName, importance)
+        val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        manager.createNotificationChannel(channel)
+
+        val notificationIntent = Intent(this, MainActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            putExtra("message", body)
+        }
+
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            0,
+            notificationIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val builder = Notification.Builder(this, channelId) // Use the channelId here!
             .setSmallIcon(R.drawable.coinhub)
             .setContentTitle(title)
             .setContentText(body)
             .setAutoCancel(true)
-        val notificationIntent = Intent(this, MainActivity::class.java)
-        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        notificationIntent.putExtra("message", body)
-        val pendingIntent = PendingIntent.getActivity(
-            this, 0, notificationIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-        builder?.setContentIntent(pendingIntent)
-        val manager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        manager.notify(0, builder?.build())
+            .setContentIntent(pendingIntent)
+
+        manager.notify(0, builder.build())
     }
 }
