@@ -135,6 +135,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    implementation(libs.logging.interceptor)
     implementation(platform(libs.supabase.bom))
     implementation(libs.auth.kt)
     implementation(libs.postgrest.kt)

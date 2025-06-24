@@ -1,10 +1,10 @@
 package com.coinhub.android.domain.use_cases
 
 import com.coinhub.android.data.dtos.request.CreateUserRequestDto
+import com.coinhub.android.data.repositories.UserRepositoryImpl
 import com.coinhub.android.di.IoDispatcher
 import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.repositories.PreferenceDataStore
-import com.coinhub.android.data.repositories.UserRepositoryImpl
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -31,7 +31,7 @@ class CreateProfileUseCase @Inject constructor(
                     user = CreateUserRequestDto(
                         id = authRepository.getCurrentUserId(),
                         fullName = fullName,
-                        birthDate = Date(birthDateInMillis),
+                        birthDate = Date(birthDateInMillis).toString(),
                         citizenId = citizenId,
                         address = address,
                         avatar = avatar

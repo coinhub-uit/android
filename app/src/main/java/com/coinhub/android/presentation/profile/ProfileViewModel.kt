@@ -5,9 +5,9 @@ import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.data.remote.SupabaseService
+import com.coinhub.android.data.repositories.UserRepositoryImpl
 import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.repositories.PreferenceDataStore
-import com.coinhub.android.data.repositories.UserRepositoryImpl
 import com.coinhub.android.domain.use_cases.CreateProfileUseCase
 import com.coinhub.android.domain.use_cases.UpdateProfileUseCase
 import com.coinhub.android.domain.use_cases.UploadAvatarUseCase
@@ -159,6 +159,7 @@ class ProfileViewModel @Inject constructor(
 
             when (createProfileResult) {
                 is CreateProfileUseCase.Result.Success -> {
+                    _toastMessage.emit("Profile created successfully")
                     if (preferenceDataStore.getLockPin().isNullOrEmpty()) {
                         supabaseService.setIsUserSignedIn(SupabaseService.UserAppState.SET_LOCKED_PIN)
                     } else {
@@ -167,6 +168,7 @@ class ProfileViewModel @Inject constructor(
                 }
 
                 is CreateProfileUseCase.Result.Error -> {
+                    _toastMessage.emit(createProfileResult.message)
                 }
             }
         }

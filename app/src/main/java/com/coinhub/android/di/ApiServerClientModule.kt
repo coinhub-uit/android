@@ -25,15 +25,25 @@ object ApiServerClientModule {
 
     @Singleton
     @Provides
-    fun provideHttpClient(supabaseService: SupabaseService) = OkHttpClient.Builder().addInterceptor { chain ->
-            var token = supabaseService.getToken()
-            if (token.isNullOrEmpty()) {
-                token = ""
+    fun provideHttpClient(supabaseService: SupabaseService): OkHttpClient {
+        val loggingInterceptor = HttpLoggingInterceptor().apply {
+            level = if (BuildConfig.DEBUG)
+                HttpLoggingInterceptor.Level.BODY
+            else
+                HttpLoggingInterceptor.Level.NONE
+        }
+
+        return OkHttpClient.Builder()
+            .addInterceptor { chain ->
+                val token = supabaseService.getToken().orEmpty()
+                val request = chain.request().newBuilder()
+                    .addHeader("Authorization", "Bearer $token")
+                    .build()
+                chain.proceed(request)
             }
-            val request = chain.request().newBuilder().addHeader("Authorization", "Bearer $token") // FIXME: token here
-                .build()
-            chain.proceed(request)
-        }.build()
+            .addInterceptor(loggingInterceptor)
+            .build()
+    }
 
     // TODO: https://freedium.cfd/https://medium.com/@ramadan123sayed/retrofit-with-hilt-in-kotlin-f1046ae9b2be
     @Singleton

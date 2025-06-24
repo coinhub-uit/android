@@ -25,7 +25,7 @@ class UpdateProfileUseCase @Inject constructor(
                     userId,
                     UpdatePartialUserRequestDto(
                         fullName = fullName,
-                        birthDate = birthDateInMillis?.let { Date(it) },
+                        birthDate = birthDateInMillis?.let { Date(it) }.toString(),
                         citizenId = citizenId,
                         address = address
                     )
