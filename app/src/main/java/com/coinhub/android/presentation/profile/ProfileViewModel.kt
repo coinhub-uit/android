@@ -107,6 +107,12 @@ class ProfileViewModel @Inject constructor(
         viewModelScope, SharingStarted.WhileSubscribed(5000), false
     )
 
+    private val _isLoading = MutableStateFlow(true)
+    val isLoading = _isLoading.asStateFlow()
+
+    private val _isProcessing = MutableStateFlow(false)
+    val isProcessing = _isProcessing.asStateFlow()
+
     private val _toastMessage = MutableSharedFlow<String>()
     val toastMessage = _toastMessage.asSharedFlow()
 
@@ -130,8 +136,11 @@ class ProfileViewModel @Inject constructor(
         _address.value = address
     }
 
+    /** This method is called only when user editing profile!!
+     */
     fun loadProfile() {
         viewModelScope.launch {
+            _isLoading.value = true
             val userId = authRepository.getCurrentUserId()
             val user = userRepository.getUserById(userId, false)
             user?.let {
@@ -142,14 +151,16 @@ class ProfileViewModel @Inject constructor(
                 originalAvatar = it.avatar?.toUri()
                 _address.value = it.address ?: ""
             }
+            _isLoading.value = false
         }
     }
 
     fun onCreateProfile() {
         viewModelScope.launch {
+            _isProcessing.value = true
             val createProfileResult = createProfileUseCase(
                 fullName = fullName.value,
-                birthDateInMillis = birthDateInMillis.value,
+                birthDateInMillis = _birthDateInMillis.value,
                 citizenId = _citizenId.value,
                 address = _address.value.takeIf { it.isNotBlank() },
                 avatar = _avatarUri.value.toString().takeIf {
@@ -171,6 +182,7 @@ class ProfileViewModel @Inject constructor(
                     _toastMessage.emit(createProfileResult.message)
                 }
             }
+            _isProcessing.value = false
         }
     }
 
@@ -178,6 +190,7 @@ class ProfileViewModel @Inject constructor(
         onSuccess: () -> Unit,
     ) {
         viewModelScope.launch {
+            _isProcessing.value = true
             val updateProfileResult = updateProfileUseCase(
                 userId = authRepository.getCurrentUserId(),
                 fullName = _fullName.value.takeIf { it.isNotBlank() },
@@ -200,6 +213,7 @@ class ProfileViewModel @Inject constructor(
                     onSuccess()
                 }
             }
+            _isProcessing.value = false
         }
     }
 

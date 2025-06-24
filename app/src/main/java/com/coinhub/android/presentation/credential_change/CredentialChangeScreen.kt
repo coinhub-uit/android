@@ -40,6 +40,7 @@ fun CredentialChangeScreen(
     val newPasswordState = viewModel.newPasswordState.collectAsStateWithLifecycle().value
     val confirmPasswordState = viewModel.confirmPasswordState.collectAsStateWithLifecycle().value
     val isFormValid = viewModel.isFormValid.collectAsStateWithLifecycle().value
+    val isProcessing = viewModel.isProcessing.collectAsStateWithLifecycle().value
 
     val context = LocalContext.current
 
@@ -65,6 +66,7 @@ fun CredentialChangeScreen(
         showPasswords = showPasswords,
         onToggleShowPasswords = viewModel::toggleShowPasswords,
         isFormValid = isFormValid,
+        isProcessing = isProcessing,
         onChangeCredential = viewModel::changeCredential,
         onBack = onBack
     )
@@ -84,6 +86,7 @@ private fun CredentialChangeScreen(
     showPasswords: Boolean,
     onToggleShowPasswords: () -> Unit,
     isFormValid: Boolean,
+    isProcessing: Boolean,
     onChangeCredential: () -> Unit,
     onBack: () -> Unit,
 ) {
@@ -92,7 +95,7 @@ private fun CredentialChangeScreen(
             TopUpTopBar(onBack = onBack)
         },
         floatingActionButton = {
-            if (isFormValid) {
+            if (isFormValid && !isProcessing) {
                 FloatingActionButton(
                     onClick = onChangeCredential,
                 ) {
@@ -176,6 +179,7 @@ private fun Preview() {
                 showPasswords = false,
                 onToggleShowPasswords = {},
                 isFormValid = false,
+                isProcessing = false,
                 onChangeCredential = {},
                 onBack = {}
             )

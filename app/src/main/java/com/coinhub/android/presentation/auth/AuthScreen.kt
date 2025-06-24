@@ -54,6 +54,7 @@ fun AuthScreen(
                 signInResult, onSignedUpWithOAuth
             )
         })
+    val isProcessing = viewModel.isProcessing.collectAsStateWithLifecycle().value
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -92,6 +93,7 @@ fun AuthScreen(
         onConfirmPasswordChange = viewModel::onConfirmPasswordChange,
         confirmPasswordCheckState = confirmPasswordCheckState,
         isFormValid = isFormValid,
+        isProcessing = isProcessing,
         signUpWithCredential = {
             viewModel.signUpWithCredential {
                 scope.launch {
@@ -123,6 +125,7 @@ private fun AuthScreen(
     onConfirmPasswordChange: (String) -> Unit,
     confirmPasswordCheckState: AuthStates.ConfirmPasswordCheckState,
     isFormValid: Boolean,
+    isProcessing: Boolean,
     signUpWithCredential: () -> Unit,
     signInWithCredential: () -> Unit,
     googleSignInState: NativeSignInState?,
@@ -162,7 +165,8 @@ private fun AuthScreen(
                     isSignUp = isSignUp,
                     onSignUp = signUpWithCredential,
                     onSignIn = signInWithCredential,
-                    isFormValid = isFormValid
+                    isFormValid = isFormValid,
+                    isProcessing = isProcessing,
                 )
                 AuthSignInOrUpPrompt(
                     modifier = Modifier.fillMaxWidth(),
@@ -178,9 +182,8 @@ private fun AuthScreen(
                     onClick = {
                         googleSignInState?.startFlow()
                     },
-                    modifier = Modifier.width(
-                        80.dp
-                    ),
+                    isProcessing = isProcessing,
+                    modifier = Modifier.padding(16.dp).width(80.dp),
                 )
             }
         }
@@ -206,6 +209,7 @@ fun SignInScreenPreview() {
                 isValid = false, errorMessage = "bad"
             ),
             isFormValid = true,
+            isProcessing = false,
             signInWithCredential = { },
             signUpWithCredential = { },
             googleSignInState = null,

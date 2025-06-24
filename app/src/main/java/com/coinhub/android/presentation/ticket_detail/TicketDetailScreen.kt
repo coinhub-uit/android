@@ -49,6 +49,7 @@ fun TicketDetailScreen(
     val ticket = viewModel.ticket.collectAsStateWithLifecycle().value
     val withdrawPlan = viewModel.withdrawPlan.collectAsStateWithLifecycle().value
     val isLoading = viewModel.isLoading.collectAsStateWithLifecycle().value
+    val isWithdrawing = viewModel.isWithdrawing.collectAsStateWithLifecycle().value
 
     val context = LocalContext.current
 
@@ -58,7 +59,7 @@ fun TicketDetailScreen(
         LocalAnimatedVisibilityScope.current ?: error("AnimatedVisibilityScope not provided via CompositionLocal")
 
     LaunchedEffect(ticketId) {
-        viewModel.getTicketAndWithdrawPlan(ticketId)
+        viewModel.fetch(ticketId)
     }
 
     LaunchedEffect(Unit) {
@@ -74,6 +75,7 @@ fun TicketDetailScreen(
             isLoading = isLoading,
             onBack = onBack,
             onWithdraw = { viewModel.withdrawTicket(onBack) },
+            isWithdrawing = isWithdrawing,
             modifier = Modifier.sharedBounds(
                 animatedVisibilityScope = animatedVisibilityScope, sharedContentState = rememberSharedContentState(
                     key = "ticketDetail-$ticketId",
@@ -91,6 +93,7 @@ fun TicketDetailScreen(
     isLoading: Boolean,
     onBack: () -> Unit,
     onWithdraw: () -> Unit,
+    isWithdrawing: Boolean,
 ) {
     Scaffold(
         topBar = {
@@ -98,7 +101,7 @@ fun TicketDetailScreen(
         },
         modifier = modifier,
     ) { innerPadding ->
-        if (isLoading) {
+        if (isLoading || isWithdrawing) {
             LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
         }
 
@@ -139,6 +142,7 @@ fun TicketDetailScreen(
 
             TicketDetailWithdrawButton(
                 onWithdraw = onWithdraw,
+                isWithdrawing = isWithdrawing,
                 onBack = onBack,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -191,9 +195,17 @@ private fun TicketDetailScreenPreview() {
                     plan = PlanModel(
                         id = 2, days = 90
                     )
-                ), withdrawPlan = AvailablePlanModel(
-                    planHistoryId = 1, rate = 0.04f, planId = 2, days = 90
-                ), onBack = {}, onWithdraw = {}, isLoading = false
+                ),
+                withdrawPlan = AvailablePlanModel(
+                    planHistoryId = 1,
+                    rate = 0.04f,
+                    planId = 2,
+                    days = 90,
+                ),
+                onBack = {},
+                onWithdraw = {},
+                isWithdrawing = false,
+                isLoading = false,
             )
         }
     }

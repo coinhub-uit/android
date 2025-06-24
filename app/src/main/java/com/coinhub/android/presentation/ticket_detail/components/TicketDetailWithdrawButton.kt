@@ -17,12 +17,16 @@ import androidx.compose.ui.Modifier
 fun TicketDetailWithdrawButton(
     modifier: Modifier = Modifier,
     onWithdraw: () -> Unit,
+    isWithdrawing: Boolean,
     onBack: () -> Unit,
 ) {
     var showDialog by remember { mutableStateOf(false) }
 
     OutlinedButton(
-        onClick = { showDialog = true },
+        onClick = {
+            showDialog = true
+        },
+        enabled = !isWithdrawing,
         modifier = modifier.fillMaxWidth(),
         colors = ButtonDefaults.outlinedButtonColors()
     ) {

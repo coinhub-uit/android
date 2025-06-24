@@ -93,18 +93,22 @@ private fun CreateSourceScreen(
             CreateSourceTopBar(onBack = onBack)
         }, floatingActionButton = {
             if (isFormValid && !isProcessing) {
-                ExtendedFloatingActionButton(onClick = onCreate, icon = {
-                    Icon(
-                        imageVector = Icons.Default.Add, contentDescription = "Create Source"
-                    )
-                }, text = { Text("Create") })
+                ExtendedFloatingActionButton(
+                    onClick = onCreate,
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Add, contentDescription = "Create Source"
+                        )
+                    },
+                    text = { Text("Create") },
+                )
             }
         }, modifier = modifier
     ) { innerPadding ->
         Box(
             modifier = Modifier.padding(innerPadding)
         ) {
-            if (isProcessing || isProcessing) {
+            if (isProcessing) {
                 LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             }
 

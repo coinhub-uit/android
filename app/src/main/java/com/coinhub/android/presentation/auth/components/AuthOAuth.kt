@@ -9,8 +9,12 @@ import androidx.compose.ui.res.vectorResource
 import com.coinhub.android.R
 
 @Composable
-fun AuthOAuth(modifier: Modifier = Modifier, onClick: () -> Unit) {
-    IconButton(modifier = modifier, onClick = onClick) {
+fun AuthOAuth(modifier: Modifier = Modifier, onClick: () -> Unit, isProcessing: Boolean) {
+    IconButton(
+        modifier = modifier,
+        onClick = onClick,
+        enabled = !isProcessing,
+    ) {
         Icon(
             imageVector = ImageVector.vectorResource(R.drawable.google_svg),
             contentDescription = "Google"

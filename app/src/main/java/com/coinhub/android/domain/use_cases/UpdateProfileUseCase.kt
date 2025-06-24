@@ -3,9 +3,9 @@ package com.coinhub.android.domain.use_cases
 import com.coinhub.android.data.api_services.UserApiService
 import com.coinhub.android.data.dtos.request.UpdatePartialUserRequestDto
 import com.coinhub.android.di.IoDispatcher
+import com.coinhub.android.utils.toLocalDate
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import java.sql.Date
 import javax.inject.Inject
 
 class UpdateProfileUseCase @Inject constructor(
@@ -25,7 +25,7 @@ class UpdateProfileUseCase @Inject constructor(
                     userId,
                     UpdatePartialUserRequestDto(
                         fullName = fullName,
-                        birthDate = birthDateInMillis?.let { Date(it) }.toString(),
+                        birthDate = birthDateInMillis?.toLocalDate().toString(),
                         citizenId = citizenId,
                         address = address
                     )

@@ -74,7 +74,7 @@ private fun AiChatScreen(
             )
         },
     ) { innerPadding ->
-        if (isLoading) {
+        if (isLoading || isProcessing) {
             LinearProgressIndicator(
                 modifier = Modifier
                     .padding(innerPadding)

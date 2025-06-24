@@ -103,6 +103,9 @@ class AuthViewModel @Inject constructor(
     private val _toastMessage = MutableSharedFlow<String>()
     var toastMessage = _toastMessage.asSharedFlow()
 
+    private val _isProcessing = MutableStateFlow(false)
+    val isProcessing = _isProcessing.asStateFlow()
+
     @SuppressLint("HardwareIds")
     private val deviceId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
 
@@ -124,6 +127,7 @@ class AuthViewModel @Inject constructor(
 
     fun signInWithCredential(onProfileNotAvailable: () -> Unit) {
         viewModelScope.launch {
+            _isProcessing.value = true
             when (val result = signInWithCredentialUseCase(email = _email.value, password = _password.value)) {
                 is SignInWithCredentialUseCase.Result.Error -> {
                     _toastMessage.emit(result.message)
@@ -131,7 +135,9 @@ class AuthViewModel @Inject constructor(
 
                 is SignInWithCredentialUseCase.Result.Success -> {
                     when (val userProfile = checkProfileAvailableUseCase()) {
-                        is CheckProfileAvailableUseCase.Result.Error -> {}
+                        is CheckProfileAvailableUseCase.Result.Error -> {
+                            _toastMessage.emit(userProfile.message)
+                        }
                         is CheckProfileAvailableUseCase.Result.Success -> {
                             when (userProfile.user) {
                                 is UserModel -> {
@@ -150,6 +156,7 @@ class AuthViewModel @Inject constructor(
                     }
                 }
             }
+            _isProcessing.value = false
         }
     }
 
@@ -157,6 +164,7 @@ class AuthViewModel @Inject constructor(
         onSignedUp: () -> Unit,
     ) {
         viewModelScope.launch {
+            _isProcessing.value = true
             when (val result = signUpWithCredentialUseCase(email = _email.value, password = _password.value)) {
                 is SignUpWithCredentialUseCase.Result.Error -> {
                     _toastMessage.emit(result.message)
@@ -166,6 +174,7 @@ class AuthViewModel @Inject constructor(
                     onSignedUp()
                 }
             }
+            _isProcessing.value = false
         }
     }
 
@@ -175,6 +184,7 @@ class AuthViewModel @Inject constructor(
         onSignedUp: () -> Unit,
     ) {
         viewModelScope.launch {
+            _isProcessing.value = true
             when (val result = signInWithGoogleUseCase(signInResult)) {
                 is SignInWithGoogleUseCase.Result.Error -> {
                     _toastMessage.emit(result.message)
@@ -192,6 +202,7 @@ class AuthViewModel @Inject constructor(
                     }
                 }
             }
+            _isProcessing.value = false
         }
     }
 

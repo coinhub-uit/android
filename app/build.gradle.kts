@@ -135,7 +135,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation(libs.logging.interceptor)
     implementation(platform(libs.supabase.bom))
     implementation(libs.auth.kt)
     implementation(libs.postgrest.kt)
@@ -153,15 +152,16 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
 
-    implementation(libs.squareup.retrofit)
-    implementation(libs.squareup.gson)
-
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.datastore.preferences.core)
 
     implementation(libs.compose.charts)
 
     implementation(libs.bundles.glance)
+
+    implementation(libs.bundles.retrofit)
+    implementation(libs.bundles.okhttp3)
+    implementation(platform(libs.okhttp3.bom))
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)

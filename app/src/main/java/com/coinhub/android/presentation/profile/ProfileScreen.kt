@@ -4,6 +4,7 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -14,6 +15,7 @@ import androidx.compose.material.icons.filled.SensorOccupied
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -59,6 +61,8 @@ fun ProfileScreen(
     val citizenIdCheckState = viewModel.citizenIdCheckState.collectAsStateWithLifecycle().value
     val address = viewModel.address.collectAsStateWithLifecycle().value
     val isFormValid = viewModel.isFormValid.collectAsStateWithLifecycle().value
+    val isLoading = viewModel.isLoading.collectAsStateWithLifecycle().value
+    val isProcessing = viewModel.isProcessing.collectAsStateWithLifecycle().value
 
     val context = LocalContext.current
 
@@ -90,6 +94,8 @@ fun ProfileScreen(
         address = address,
         onAddressChange = viewModel::onAddressChange,
         isFormValid = isFormValid,
+        isLoading = isLoading,
+        isProcessing = isProcessing,
         onCreateProfile = viewModel::onCreateProfile,
         onUpdateProfile = if (onBack != null) {
             { viewModel.onUpdateProfile(onSuccess = onBack) }
@@ -114,6 +120,8 @@ private fun ProfileScreen(
     address: String,
     onAddressChange: (String) -> Unit,
     isFormValid: Boolean,
+    isLoading: Boolean,
+    isProcessing: Boolean,
     onCreateProfile: () -> Unit,
     onUpdateProfile: (() -> Unit)?,
 ) {
@@ -122,20 +130,26 @@ private fun ProfileScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { ProfileTopBar(isEdit = isEdit, onBack = onBack) },
+        topBar = {
+            ProfileTopBar(isEdit = isEdit, onBack = onBack) },
         floatingActionButton = {
-            if (isFormValid) {
+            if (isFormValid && !isLoading && !isProcessing) {
                 ExtendedFloatingActionButton(
                     onClick = if (isEdit) onUpdateProfile!! else onCreateProfile,
                 ) {
                     Text(if (isEdit) "Save" else "Next")
                 }
             }
-        }) { paddingValues ->
+        }) { innerPadding ->
+        if (isLoading || isProcessing) {
+            LinearProgressIndicator(
+                modifier = Modifier.padding(innerPadding).fillMaxWidth()
+            )
+        }
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues), horizontalAlignment = Alignment.CenterHorizontally
+                .padding(innerPadding), horizontalAlignment = Alignment.CenterHorizontally
         ) {
             ProfileAvatarPicker(
                 avatarUri = avatarUri,
@@ -256,6 +270,8 @@ fun CreateProfileScreenPreview() {
             address = "",
             onAddressChange = {},
             isFormValid = true,
+            isLoading = false,
+            isProcessing = false,
             onCreateProfile = {},
             onUpdateProfile = null,
             avatarUri = "https://placehold.co/150".toUri(),

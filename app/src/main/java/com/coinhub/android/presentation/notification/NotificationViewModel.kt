@@ -29,21 +29,32 @@ class NotificationViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing = _isRefreshing.asStateFlow()
+
     private val _toastMessage = MutableSharedFlow<String>()
     val toastMessage = _toastMessage.asSharedFlow()
 
     fun fetch() {
         viewModelScope.launch {
             _isLoading.value = true
-            if (notifications.isNotEmpty()) {
-                notifications.clear()
-            }
-            notifications.addAll(
-                userRepository.getUserNotification(
-                    authRepository.getCurrentUserId(), refresh = true
-                )
+            val fetchedNotifications = userRepository.getUserNotification(
+                authRepository.getCurrentUserId(), refresh = true
             )
+            notifications.addAll(fetchedNotifications)
             _isLoading.value = false
+        }
+    }
+
+    fun refresh() {
+        viewModelScope.launch {
+            _isRefreshing.value = true
+            val fetchedNotifications = userRepository.getUserNotification(
+                authRepository.getCurrentUserId(), refresh = true
+            )
+            notifications.clear()
+            notifications.addAll(fetchedNotifications)
+            _isRefreshing.value = false
         }
     }
 
@@ -53,8 +64,8 @@ class NotificationViewModel @Inject constructor(
             try {
                 notificationApiService.readById(notificationId)
                 notifications.indexOfFirst { it.id == notificationId }.takeIf { it != -1 }?.let { idx ->
-                        notifications[idx] = notifications[idx].copy(isRead = true)
-                    }
+                    notifications[idx] = notifications[idx].copy(isRead = true)
+                }
             } catch (e: HttpException) {
                 _toastMessage.emit(e.message())
             }

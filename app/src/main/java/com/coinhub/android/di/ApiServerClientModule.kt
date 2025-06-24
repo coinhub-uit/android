@@ -14,6 +14,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -26,12 +27,7 @@ object ApiServerClientModule {
     @Singleton
     @Provides
     fun provideHttpClient(supabaseService: SupabaseService): OkHttpClient {
-        val loggingInterceptor = HttpLoggingInterceptor().apply {
-            level = if (BuildConfig.DEBUG)
-                HttpLoggingInterceptor.Level.BODY
-            else
-                HttpLoggingInterceptor.Level.NONE
-        }
+        val loggingInterceptor = HttpLoggingInterceptor().apply { setLevel(HttpLoggingInterceptor.Level.BODY) }
 
         return OkHttpClient.Builder()
             .addInterceptor { chain ->

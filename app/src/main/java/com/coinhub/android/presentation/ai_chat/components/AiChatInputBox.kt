@@ -32,7 +32,8 @@ fun ChatInputField(
     isProcessing: Boolean,
 ) {
     Row(
-        verticalAlignment = Alignment.CenterVertically, modifier = Modifier
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
             .imeNestedScroll()
@@ -48,12 +49,14 @@ fun ChatInputField(
         Spacer(modifier = Modifier.width(8.dp))
 
         IconButton(
-            onClick = onSend, enabled = value.isNotBlank() && !isLoading && !isProcessing, modifier = Modifier
+            onClick = onSend,
+            enabled = value.isNotBlank() && !isLoading && !isProcessing,
+            modifier = Modifier
                 .clip(CircleShape)
                 .background(
                     color = if (value.isNotBlank()) MaterialTheme.colorScheme.primary
                     else MaterialTheme.colorScheme.surfaceVariant
-                )
+                ),
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.Send,

@@ -59,7 +59,6 @@ class CreateSourceViewModel @Inject constructor(
     }
 
     fun createSource(onSuccess: () -> Unit) {
-
         viewModelScope.launch {
             _isProcessing.value = true
 
@@ -94,7 +93,6 @@ class CreateSourceViewModel @Inject constructor(
                     }
                 }
             }
-
         }
     }
 }

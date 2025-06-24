@@ -84,6 +84,9 @@ class CredentialChangeViewModel @Inject constructor(
                 _currentPassword.value.isNotEmpty() && _newPassword.value.isNotEmpty() && _confirmPassword.value.isNotEmpty()
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
+    private val _isProcessing = MutableStateFlow(false)
+    val isProcessing = _isProcessing.asStateFlow()
+
     fun updateCurrentPassword(password: String) {
         _currentPassword.value = password
     }
@@ -102,11 +105,12 @@ class CredentialChangeViewModel @Inject constructor(
 
     fun changeCredential() {
         viewModelScope.launch {
+            _isProcessing.value = true
             when (val result = changeCredentialUseCase(_newPassword.value)) {
                 is ChangeCredentialUseCase.Result.Error -> _toastMessage.emit(result.message)
                 is ChangeCredentialUseCase.Result.Success -> _toastMessage.emit(result.message)
             }
-
+            _isProcessing.value = false
         }
     }
 }

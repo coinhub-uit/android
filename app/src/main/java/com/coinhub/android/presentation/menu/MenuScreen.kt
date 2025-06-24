@@ -162,15 +162,16 @@ private fun MenuScreen(
             isRefreshing = isRefreshing,
             onRefresh = refresh,
         ) {
+            if (isLoading) {
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            }
+
             Column(
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                if (isLoading) {
-                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-                }
                 // Avatar
                 MenuAvatar(user = user)
 

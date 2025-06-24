@@ -13,12 +13,16 @@ fun AuthSignInOrUpButton(
     isFormValid: Boolean,
     onSignIn: () -> Unit,
     onSignUp: () -> Unit,
+    isProcessing: Boolean,
 ) {
     Button(
-        modifier = modifier, enabled = isFormValid, onClick = if (isSignUp) onSignUp else onSignIn
+        modifier = modifier,
+        enabled = isFormValid && !isProcessing,
+        onClick = if (isSignUp) onSignUp else onSignIn,
     ) {
         Text(
             style = MaterialTheme.typography.bodyLarge,
-            text = if (isSignUp) "Sign Up" else "Sign In")
+            text = if (isSignUp) "Sign Up" else "Sign In"
+        )
     }
 }

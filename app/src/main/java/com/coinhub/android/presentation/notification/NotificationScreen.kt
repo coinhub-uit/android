@@ -34,6 +34,7 @@ fun NotificationScreen(
 ) {
     val notifications = viewModel.notifications
     val isLoading = viewModel.isLoading.collectAsStateWithLifecycle().value
+    val isRefreshing = viewModel.isRefreshing.collectAsStateWithLifecycle().value
 
     val context = LocalContext.current
 
@@ -50,7 +51,8 @@ fun NotificationScreen(
     NotificationScreen(
         onBack = onBack,
         isLoading = isLoading,
-        refresh = viewModel::fetch,
+        refresh = viewModel::refresh,
+        isRefreshing = isRefreshing,
         markAsRead = viewModel::markAsRead,
         notifications = notifications,
     )
@@ -62,6 +64,7 @@ fun NotificationScreen(
     onBack: () -> Unit,
     isLoading: Boolean,
     refresh: () -> Unit,
+    isRefreshing: Boolean,
     markAsRead: (Uuid) -> Unit,
     notifications: List<NotificationModel>,
 ) {
@@ -73,7 +76,7 @@ fun NotificationScreen(
         },
     ) { innerPadding ->
         PullToRefreshBox(
-            isRefreshing = isLoading,
+            isRefreshing = isRefreshing,
             onRefresh = refresh,
             modifier = Modifier
                 .padding(innerPadding)
@@ -109,6 +112,7 @@ private fun Preview() {
         onBack = {},
         isLoading = false,
         refresh = {},
+        isRefreshing = false,
         markAsRead = {},
         notifications = listOf(
             NotificationModel(
