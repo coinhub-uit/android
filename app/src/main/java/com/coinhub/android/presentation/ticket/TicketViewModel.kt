@@ -7,7 +7,7 @@ import com.coinhub.android.di.IoDispatcher
 import com.coinhub.android.domain.models.TicketModel
 import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.repositories.PreferenceDataStore
-import com.coinhub.android.domain.repositories.UserRepository
+import com.coinhub.android.data.repositories.UserRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TicketViewModel @Inject constructor(
-    private val userRepository: UserRepository,
+    private val userRepository: UserRepositoryImpl,
     private val authRepository: AuthRepository,
     private val preferenceDataStore: PreferenceDataStore,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,

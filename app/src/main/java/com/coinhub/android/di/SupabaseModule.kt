@@ -3,7 +3,7 @@ package com.coinhub.android.di
 import com.coinhub.android.BuildConfig
 import com.coinhub.android.data.remote.SupabaseService
 import com.coinhub.android.data.repositories.PreferenceDataStoreImpl
-import com.coinhub.android.domain.repositories.UserRepository
+import com.coinhub.android.data.repositories.UserRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -45,6 +45,6 @@ object SupabaseModule {
         supabaseClient: SupabaseClient,
         sharedPreferenceRepositoryImpl: PreferenceDataStoreImpl,
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
-        userRepository: Provider<UserRepository>,
+        userRepository: Provider<UserRepositoryImpl>,
     ) = SupabaseService(supabaseClient, sharedPreferenceRepositoryImpl, userRepository, ioDispatcher)
 }

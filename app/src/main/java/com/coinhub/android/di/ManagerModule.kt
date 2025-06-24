@@ -1,5 +1,7 @@
 package com.coinhub.android.di
 
+import com.coinhub.android.data.api_services.UserApiService
+import com.coinhub.android.data.repositories.UserRepositoryImpl
 import com.coinhub.android.domain.managers.LockHashingManager
 import com.coinhub.android.domain.managers.ThemeManger
 import com.coinhub.android.domain.repositories.PreferenceDataStore
@@ -21,4 +23,12 @@ class SingletonManagerModule {
 
     @Provides
     fun provideLockHashingManager(preferenceDataStore: PreferenceDataStore) = LockHashingManager(preferenceDataStore)
+
+    @Singleton
+    @Provides
+    fun provideUserRepository(userApiService: UserApiService, preferenceDataStore: PreferenceDataStore) =
+        UserRepositoryImpl(
+            userApiService = userApiService,
+            preferenceDataStore = preferenceDataStore
+        )
 }

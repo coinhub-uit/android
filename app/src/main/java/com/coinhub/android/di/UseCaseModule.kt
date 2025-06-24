@@ -6,10 +6,10 @@ import com.coinhub.android.data.api_services.SourceApiService
 import com.coinhub.android.data.api_services.TicketApiService
 import com.coinhub.android.data.api_services.UserApiService
 import com.coinhub.android.data.remote.SupabaseService
+import com.coinhub.android.data.repositories.UserRepositoryImpl
 import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.repositories.PaymentRepository
 import com.coinhub.android.domain.repositories.PreferenceDataStore
-import com.coinhub.android.domain.repositories.UserRepository
 import com.coinhub.android.domain.use_cases.ChangeCredentialUseCase
 import com.coinhub.android.domain.use_cases.CheckProfileAvailableUseCase
 import com.coinhub.android.domain.use_cases.CheckSourceExistedUseCase
@@ -141,7 +141,7 @@ object UseCaseModule {
 
     @Provides
     fun provideCheckUserRegisterProfileUseCase(
-        userRepository: UserRepository,
+        userRepository: UserRepositoryImpl,
         authRepository: AuthRepository,
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
     ) = CheckProfileAvailableUseCase(
@@ -179,7 +179,7 @@ object UseCaseModule {
 
     @Provides
     fun provideRegisterDeviceUseCase(
-        userRepository: UserRepository,
+        userRepository: UserRepositoryImpl,
         authRepository: AuthRepository,
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
     ) = RegisterDeviceUseCase(
@@ -221,7 +221,7 @@ object UseCaseModule {
 
     @Provides
     fun provideCreateProfileUseCase(
-        userRepository: UserRepository,
+        userRepository: UserRepositoryImpl,
         authRepository: AuthRepository,
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
         preferenceDataStore: PreferenceDataStore,

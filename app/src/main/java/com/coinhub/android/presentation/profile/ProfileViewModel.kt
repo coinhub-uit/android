@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.coinhub.android.data.remote.SupabaseService
 import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.repositories.PreferenceDataStore
-import com.coinhub.android.domain.repositories.UserRepository
+import com.coinhub.android.data.repositories.UserRepositoryImpl
 import com.coinhub.android.domain.use_cases.CreateProfileUseCase
 import com.coinhub.android.domain.use_cases.UpdateProfileUseCase
 import com.coinhub.android.domain.use_cases.UploadAvatarUseCase
@@ -43,7 +43,7 @@ class ProfileViewModel @Inject constructor(
     private val supabaseService: SupabaseService,
     private val uploadAvatarUseCase: UploadAvatarUseCase,
     private val authRepository: AuthRepository,
-    private val userRepository: UserRepository,
+    private val userRepository: UserRepositoryImpl,
     private val updateProfileUseCase: UpdateProfileUseCase,
 ) : ViewModel() {
     private var originalAvatar: Uri? = null

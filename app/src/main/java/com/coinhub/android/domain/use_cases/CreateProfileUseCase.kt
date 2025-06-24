@@ -4,7 +4,7 @@ import com.coinhub.android.data.dtos.request.CreateUserRequestDto
 import com.coinhub.android.di.IoDispatcher
 import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.repositories.PreferenceDataStore
-import com.coinhub.android.domain.repositories.UserRepository
+import com.coinhub.android.data.repositories.UserRepositoryImpl
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @ViewModelScoped
 class CreateProfileUseCase @Inject constructor(
-    private val userRepository: UserRepository,
+    private val userRepository: UserRepositoryImpl,
     private val authRepository: AuthRepository,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val preferenceDataStore: PreferenceDataStore,

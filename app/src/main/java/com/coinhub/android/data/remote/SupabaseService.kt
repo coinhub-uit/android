@@ -2,7 +2,7 @@ package com.coinhub.android.data.remote
 
 import com.coinhub.android.di.IoDispatcher
 import com.coinhub.android.domain.repositories.PreferenceDataStore
-import com.coinhub.android.domain.repositories.UserRepository
+import com.coinhub.android.data.repositories.UserRepositoryImpl
 import com.coinhub.android.utils.ACCESS_TOKEN_KEY
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
@@ -21,7 +21,7 @@ import javax.inject.Provider
 class SupabaseService @Inject constructor(
     private val supabaseClient: SupabaseClient,
     private val preferenceDataStore: PreferenceDataStore,
-    private val userRepository: Provider<UserRepository>,
+    private val userRepository: Provider<UserRepositoryImpl>,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) {
     private val supabaseServiceScope = CoroutineScope(SupervisorJob() + ioDispatcher)

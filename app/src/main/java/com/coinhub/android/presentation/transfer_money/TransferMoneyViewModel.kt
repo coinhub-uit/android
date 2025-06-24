@@ -6,7 +6,7 @@ import com.coinhub.android.data.dtos.request.TransferMoneyRequestDto
 import com.coinhub.android.domain.models.SourceModel
 import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.repositories.SourceRepository
-import com.coinhub.android.domain.repositories.UserRepository
+import com.coinhub.android.data.repositories.UserRepositoryImpl
 import com.coinhub.android.domain.use_cases.TransferMoneyUseCase
 import com.coinhub.android.utils.DEBOUNCE_TYPING
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,7 +28,7 @@ import javax.inject.Inject
 class TransferMoneyViewModel @Inject constructor(
     private val sourceRepository: SourceRepository,
     private val authRepository: AuthRepository,
-    private val userRepository: UserRepository,
+    private val userRepository: UserRepositoryImpl,
     private val transferMoneyUseCase: TransferMoneyUseCase,
 ) : ViewModel() {
     private val _sources = MutableStateFlow<List<SourceModel>>(

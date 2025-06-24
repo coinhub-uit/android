@@ -7,7 +7,6 @@ import com.coinhub.android.data.repositories.PlanRepositoryImpl
 import com.coinhub.android.data.repositories.PreferenceDataStoreImpl
 import com.coinhub.android.data.repositories.SourceRepositoryImpl
 import com.coinhub.android.data.repositories.TicketRepositoryImpl
-import com.coinhub.android.data.repositories.UserRepositoryImpl
 import com.coinhub.android.domain.repositories.AiChatRepository
 import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.repositories.PaymentRepository
@@ -15,7 +14,6 @@ import com.coinhub.android.domain.repositories.PlanRepository
 import com.coinhub.android.domain.repositories.PreferenceDataStore
 import com.coinhub.android.domain.repositories.SourceRepository
 import com.coinhub.android.domain.repositories.TicketRepository
-import com.coinhub.android.domain.repositories.UserRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -26,9 +24,6 @@ import dagger.hilt.components.SingletonComponent
 abstract class RepositoryModule {
     @Binds
     abstract fun provideAuthRepositoryImpl(impl: AuthRepositoryImpl): AuthRepository
-
-    @Binds
-    abstract fun provideUserRepository(impl: UserRepositoryImpl): UserRepository
 
     @Binds
     abstract fun provideSourceRepository(impl: SourceRepositoryImpl): SourceRepository

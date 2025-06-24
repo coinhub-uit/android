@@ -9,7 +9,7 @@ import com.coinhub.android.domain.models.MethodEnum
 import com.coinhub.android.domain.models.SourceModel
 import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.repositories.PlanRepository
-import com.coinhub.android.domain.repositories.UserRepository
+import com.coinhub.android.data.repositories.UserRepositoryImpl
 import com.coinhub.android.domain.use_cases.CreateTicketUseCase
 import com.coinhub.android.domain.use_cases.ValidateAmountCreateTicketUseCase
 import com.coinhub.android.utils.DEBOUNCE_TYPING
@@ -36,7 +36,7 @@ class CreateTicketViewModel @Inject constructor(
     private val validateAmountCreateTicketUseCase: ValidateAmountCreateTicketUseCase,
     private val createTicketUseCase: CreateTicketUseCase,
     private val planRepository: PlanRepository,
-    private val userRepository: UserRepository,
+    private val userRepository: UserRepositoryImpl,
     private val authRepository: AuthRepository,
 ) : ViewModel() {
     // TODO: If have time, implement repository to fetch real data

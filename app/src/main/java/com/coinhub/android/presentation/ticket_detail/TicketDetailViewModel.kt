@@ -7,7 +7,7 @@ import com.coinhub.android.domain.models.TicketModel
 import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.repositories.PlanRepository
 import com.coinhub.android.domain.repositories.TicketRepository
-import com.coinhub.android.domain.repositories.UserRepository
+import com.coinhub.android.data.repositories.UserRepositoryImpl
 import com.coinhub.android.domain.use_cases.WithdrawTicketUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -29,7 +29,7 @@ class TicketDetailViewModel @Inject constructor(
     private val withdrawTicketUseCase: WithdrawTicketUseCase,
     private val planRepository: PlanRepository,
     private val authRepository: AuthRepository,
-    private val userRepository: UserRepository,
+    private val userRepository: UserRepositoryImpl,
 ) : ViewModel() {
     private val _ticket = MutableStateFlow<TicketModel?>(null)
     val ticket = _ticket.asStateFlow()

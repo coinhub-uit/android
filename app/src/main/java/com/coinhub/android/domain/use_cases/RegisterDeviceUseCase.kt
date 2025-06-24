@@ -4,7 +4,7 @@ import com.coinhub.android.data.dtos.request.CreateDeviceRequestDto
 import com.coinhub.android.di.IoDispatcher
 import com.coinhub.android.domain.models.DeviceModel
 import com.coinhub.android.domain.repositories.AuthRepository
-import com.coinhub.android.domain.repositories.UserRepository
+import com.coinhub.android.data.repositories.UserRepositoryImpl
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -12,7 +12,7 @@ import dagger.hilt.android.scopes.ViewModelScoped
 
 @ViewModelScoped
 class RegisterDeviceUseCase @Inject constructor(
-    private val userRepository: UserRepository,
+    private val userRepository: UserRepositoryImpl,
     private val authRepository: AuthRepository,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) {

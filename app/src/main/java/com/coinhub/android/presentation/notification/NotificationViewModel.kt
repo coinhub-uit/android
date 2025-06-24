@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.coinhub.android.data.api_services.NotificationApiService
 import com.coinhub.android.domain.models.NotificationModel
 import com.coinhub.android.domain.repositories.AuthRepository
-import com.coinhub.android.domain.repositories.UserRepository
+import com.coinhub.android.data.repositories.UserRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +20,7 @@ import kotlin.uuid.Uuid
 
 @HiltViewModel
 class NotificationViewModel @Inject constructor(
-    private val userRepository: UserRepository,
+    private val userRepository: UserRepositoryImpl,
     private val authRepository: AuthRepository,
     private val notificationApiService: NotificationApiService,
 ) : ViewModel() {

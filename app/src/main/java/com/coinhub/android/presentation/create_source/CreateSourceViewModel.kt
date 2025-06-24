@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.data.dtos.request.CreateSourceRequestDto
 import com.coinhub.android.domain.repositories.AuthRepository
-import com.coinhub.android.domain.repositories.UserRepository
+import com.coinhub.android.data.repositories.UserRepositoryImpl
 import com.coinhub.android.domain.use_cases.CheckSourceExistedUseCase
 import com.coinhub.android.domain.use_cases.CreateSourceUseCase
 import com.coinhub.android.domain.use_cases.ValidateSourceIdUseCase
@@ -29,7 +29,7 @@ import javax.inject.Inject
 class CreateSourceViewModel @Inject constructor(
     private val validateSourceIdUseCase: ValidateSourceIdUseCase,
     private val createSourceUseCase: CreateSourceUseCase,
-    private val userRepository: UserRepository,
+    private val userRepository: UserRepositoryImpl,
     private val authRepository: AuthRepository,
     private val checkSourceExistedUseCase: CheckSourceExistedUseCase,
 ) : ViewModel() {

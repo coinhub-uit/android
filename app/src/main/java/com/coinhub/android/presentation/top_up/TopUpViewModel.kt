@@ -9,7 +9,7 @@ import com.coinhub.android.domain.models.CreateTopUpModel
 import com.coinhub.android.domain.models.SourceModel
 import com.coinhub.android.domain.models.TopUpModel
 import com.coinhub.android.domain.repositories.AuthRepository
-import com.coinhub.android.domain.repositories.UserRepository
+import com.coinhub.android.data.repositories.UserRepositoryImpl
 import com.coinhub.android.domain.use_cases.CreateTopUpUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -25,7 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TopUpViewModel @Inject constructor(
     private val createTopUpUseCase: CreateTopUpUseCase,
-    private val userRepository: UserRepository,
+    private val userRepository: UserRepositoryImpl,
     private val authRepository: AuthRepository,
 ) : ViewModel() {
     init {
