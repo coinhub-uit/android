@@ -149,4 +149,13 @@ class UserRepositoryImpl @Inject constructor(
         preferenceDataStore.saveTotalPrincipal(totalPrincipal)
         preferenceDataStore.saveTotalInterest(totalInterest)
     }
+
+    suspend fun clearCache() {
+        mutex.withLock {
+            userModel = null
+            ticketModels = null
+            sourceModels = null
+            notificationModels = null
+        }
+    }
 }

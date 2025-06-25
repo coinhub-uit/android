@@ -1,8 +1,8 @@
 package com.coinhub.android.data.remote
 
+import com.coinhub.android.data.repositories.UserRepositoryImpl
 import com.coinhub.android.di.IoDispatcher
 import com.coinhub.android.domain.repositories.PreferenceDataStore
-import com.coinhub.android.data.repositories.UserRepositoryImpl
 import com.coinhub.android.utils.ACCESS_TOKEN_KEY
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
@@ -58,6 +58,7 @@ class SupabaseService @Inject constructor(
             try {
                 supabaseClient.auth.signOut()
                 preferenceDataStore.clearPreferences()
+                userRepository.get().clearCache()
                 _isUserSignedIn.value = UserAppState.NOT_SIGNED_IN
             } catch (e: Exception) {
                 throw Exception("Failed to sign out: ${e.message}")
