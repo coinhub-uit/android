@@ -22,7 +22,7 @@ import androidx.core.net.toUri
 import com.coinhub.android.presentation.common.components.Avatar
 
 @Composable
-fun ProfileAvatarPicker(avatarUri: Uri?, onAvatarUriChange: (Uri?) -> Unit, isEdit : Boolean) {
+fun ProfileAvatarPicker(avatarUri: Uri?, onAvatarUriChange: (Uri?) -> Unit) {
     val imagePickerLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.PickVisualMedia()
     ) { uri: Uri? ->
@@ -43,24 +43,21 @@ fun ProfileAvatarPicker(avatarUri: Uri?, onAvatarUriChange: (Uri?) -> Unit, isEd
                 model = avatarUri,
             )
 
-            // Add remove button if in edit mode and avatar exists
-            if (isEdit) {
-                FilledIconButton(
-                    onClick = { onAvatarUriChange(null) },
-                    modifier = Modifier
-                        .size(32.dp)
-                        .offset(x = 48.dp, y = (-48).dp),
-                    colors = IconButtonDefaults.filledIconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.errorContainer,
-                        contentColor = MaterialTheme.colorScheme.onErrorContainer
-                    )
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Cancel,
-                        contentDescription = "Remove avatar",
-                        modifier = Modifier.size(16.dp)
-                    )
-                }
+            FilledIconButton(
+                onClick = { onAvatarUriChange(null) },
+                modifier = Modifier
+                    .size(32.dp)
+                    .offset(x = 48.dp, y = (-48).dp),
+                colors = IconButtonDefaults.filledIconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                    contentColor = MaterialTheme.colorScheme.onErrorContainer
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Cancel,
+                    contentDescription = "Remove avatar",
+                    modifier = Modifier.size(16.dp)
+                )
             }
         } else {
             Avatar(
@@ -80,6 +77,5 @@ private fun Preview() {
     ProfileAvatarPicker(
         avatarUri = "https://placehold.co/150".toUri(),
         onAvatarUriChange = {},
-        isEdit = true
     )
 }

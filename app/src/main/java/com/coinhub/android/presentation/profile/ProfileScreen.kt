@@ -131,7 +131,8 @@ private fun ProfileScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            ProfileTopBar(isEdit = isEdit, onBack = onBack) },
+            ProfileTopBar(isEdit = isEdit, onBack = onBack)
+        },
         floatingActionButton = {
             if (isFormValid && !isLoading && !isProcessing) {
                 ExtendedFloatingActionButton(
@@ -140,21 +141,25 @@ private fun ProfileScreen(
                     Text(if (isEdit) "Save" else "Next")
                 }
             }
-        }) { innerPadding ->
+        },
+    ) { innerPadding ->
         if (isLoading || isProcessing) {
             LinearProgressIndicator(
-                modifier = Modifier.padding(innerPadding).fillMaxWidth()
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxWidth()
             )
         }
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding), horizontalAlignment = Alignment.CenterHorizontally
+                .padding(innerPadding)
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             ProfileAvatarPicker(
                 avatarUri = avatarUri,
                 onAvatarUriChange = onAvatarUriChange,
-                isEdit = isEdit,
             )
             OutlinedTextField(
                 value = fullName,

@@ -107,7 +107,7 @@ class ProfileViewModel @Inject constructor(
         viewModelScope, SharingStarted.WhileSubscribed(5000), false
     )
 
-    private val _isLoading = MutableStateFlow(true)
+    private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
     private val _isProcessing = MutableStateFlow(false)
@@ -163,10 +163,12 @@ class ProfileViewModel @Inject constructor(
                 birthDateInMillis = _birthDateInMillis.value,
                 citizenId = _citizenId.value,
                 address = _address.value.takeIf { it.isNotBlank() },
-                avatar = _avatarUri.value.toString().takeIf {
-                    it.isNotBlank()
-                },
+                avatar = null, // Binary avatar will be uploaded separately
             )
+
+            if (_avatarUri.value != null) {
+                uploadAvatar()
+            }
 
             when (createProfileResult) {
                 is CreateProfileUseCase.Result.Success -> {

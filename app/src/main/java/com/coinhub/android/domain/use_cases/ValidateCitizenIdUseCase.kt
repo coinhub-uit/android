@@ -14,7 +14,7 @@ class ValidateCitizenIdUseCase @Inject constructor(
         return withContext(defaultDispatcher) {
             when {
                 citizenId.isEmpty() -> Result.Error("Citizen ID cannot be empty")
-                citizenId.length != 12 -> Result.Error("Citizen ID must be 12 characters long")
+                citizenId.length != 12 -> Result.Error("Citizen ID is ${citizenId.length}/12 characters long")
                 !citizenId.all { it.isDigit() } -> Result.Error("Citizen ID must contain only digits")
                 else -> Result.Success
             }
