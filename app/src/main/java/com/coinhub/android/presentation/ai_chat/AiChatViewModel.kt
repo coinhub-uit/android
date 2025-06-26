@@ -16,8 +16,9 @@ import javax.inject.Inject
 class AiChatViewModel @Inject constructor(
     private val aiChatRepository: AiChatRepository,
 ) : ViewModel() {
-    private val _messages = mutableStateListOf<AiChatModel>()
-    val messages: List<AiChatModel> get() = _messages
+    private lateinit var rawMessages: List<AiChatModel>
+
+    val messages = mutableStateListOf<AiChatModel>()
 
     private val _message = MutableStateFlow("")
     val message = _message.asStateFlow()
@@ -31,14 +32,13 @@ class AiChatViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             _isLoading.value = true
-            val session = aiChatRepository.getSession()
-            if (session.isEmpty()) {
-                addInitialMessage()
-            } else {
-                _messages.addAll(
-                    session.drop(1) // Drop the system prompt lol
+            messages.add(
+                AiChatModel(
+                    content = "Hello! How can I assist you today?",
+                    role = AiChatModel.Role.ASSISTANT,
                 )
-            }
+            )
+            rawMessages = aiChatRepository.getContext()
             _isLoading.value = false
         }
     }
@@ -49,33 +49,17 @@ class AiChatViewModel @Inject constructor(
         }
     }
 
-    fun deleteSession() {
-        viewModelScope.launch {
-            aiChatRepository.deleteSession()
-        }
-        _messages.clear()
-        _message.value = ""
-        addInitialMessage()
-    }
-
     fun sendMessage() {
         viewModelScope.launch {
             _isProcessing.value = true
-            _messages.add(
-                AiChatModel(message = _message.value, role = AiChatModel.Role.USER)
-            )
+            val newMessage = AiChatModel(content = _message.value, role = AiChatModel.Role.USER)
+            messages.add(newMessage)
+            rawMessages += newMessage
             _message.value = ""
-            val aiChat = aiChatRepository.send(_message.value)
-            _messages.add(aiChat)
+            val aiResponse = aiChatRepository.send(rawMessages)
+            messages.add(aiResponse)
+            rawMessages += aiResponse
             _isProcessing.value = false
         }
-    }
-
-    private fun addInitialMessage() {
-        _messages.add(
-            AiChatModel(
-                message = "Hello! How can I assist you today?", role = AiChatModel.Role.ASSISTANT
-            )
-        )
     }
 }

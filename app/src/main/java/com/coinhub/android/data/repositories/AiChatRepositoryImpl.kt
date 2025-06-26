@@ -10,23 +10,19 @@ import javax.inject.Inject
 class AiChatRepositoryImpl @Inject constructor(
     private val aiChatApiService: AiChatApiService,
 ) : AiChatRepository {
-    override suspend fun getSession(): List<AiChatModel> {
-        val aiChatResponseDtos = aiChatApiService.getSession()
+    override suspend fun getContext(): List<AiChatModel> {
+        val aiChatResponseDtos = aiChatApiService.getContext()
         val aiChatModels = aiChatResponseDtos.map { it.toAiChatModel() }
         return aiChatModels
     }
 
-    override suspend fun send(message: String): AiChatModel {
+    override suspend fun send(messages: List<AiChatModel>): AiChatModel {
         val aiChatResponseDto = aiChatApiService.send(
             AiChatRequestDto(
-                message = message
+                messages = messages
             )
         )
         val aiChatModel = aiChatResponseDto.toAiChatModel()
         return aiChatModel
-    }
-
-    override suspend fun deleteSession() {
-        aiChatApiService.deleteSession()
     }
 }

@@ -17,6 +17,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.time.Duration
 import javax.inject.Singleton
 
 @Module
@@ -30,6 +31,10 @@ object ApiServerClientModule {
         val loggingInterceptor = HttpLoggingInterceptor().apply { setLevel(HttpLoggingInterceptor.Level.BODY) }
 
         return OkHttpClient.Builder()
+            .callTimeout(Duration.ZERO) // FIXME: Too lazy to handle timeout exceptions
+            .connectTimeout(Duration.ZERO)
+            .readTimeout(Duration.ZERO)
+            .writeTimeout(Duration.ZERO)
             .addInterceptor { chain ->
                 val token = supabaseService.getToken().orEmpty()
                 val request = chain.request().newBuilder()

@@ -143,7 +143,7 @@ fun String.toAiChatRoleEnum(): AiChatModel.Role = when (this.lowercase()) {
 }
 
 fun AiChatResponseDto.toAiChatModel() = AiChatModel(
-    message = this.message,
+    content = this.content,
     role = this.role.toAiChatRoleEnum(),
 )
 

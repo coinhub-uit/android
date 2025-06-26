@@ -67,7 +67,7 @@ fun AiChatMessageItem(
                     modifier = Modifier.padding(12.dp)
                 ) {
                     Text(
-                        text = message.message, color = textColor
+                        text = message.content, color = textColor
                     )
                 }
             }

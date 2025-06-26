@@ -1,5 +1,7 @@
 package com.coinhub.android.data.dtos.request
 
+import com.coinhub.android.domain.models.AiChatModel
+
 data class AiChatRequestDto(
-    val message: String
+    val messages: List<AiChatModel>
 )

@@ -42,7 +42,6 @@ fun AiChatScreen(
         isLoading = isLoading,
         isProcessing = isProcessing,
         onBack = onBack,
-        onDeleteSession = viewModel::deleteSession,
     )
 }
 
@@ -55,7 +54,6 @@ private fun AiChatScreen(
     isLoading: Boolean,
     isProcessing: Boolean,
     onBack: () -> Unit,
-    onDeleteSession: () -> Unit,
 ) {
     val listState = rememberLazyListState()
 
@@ -70,7 +68,6 @@ private fun AiChatScreen(
         topBar = {
             AiChatTopBar(
                 onBack = onBack,
-                onDeleteSession = onDeleteSession,
             )
         },
     ) { innerPadding ->
@@ -119,19 +116,19 @@ fun AiChatScreenPreview() {
     CoinhubTheme {
         val messages = listOf(
             AiChatModel(
-                message = "Hello! How can I assist you today?",
+                content = "Hello! How can I assist you today?",
                 role = AiChatModel.Role.ASSISTANT,
             ), AiChatModel(
-                message = "I have a question about cryptocurrency",
+                content = "I have a question about cryptocurrency",
                 role = AiChatModel.Role.USER,
             ), AiChatModel(
-                message = "Sure, I'd be happy to help with your cryptocurrency questions. What would you like to know?",
+                content = "Sure, I'd be happy to help with your cryptocurrency questions. What would you like to know?",
                 role = AiChatModel.Role.ASSISTANT,
             ), AiChatModel(
-                message = "How do I check the current Bitcoin price?",
+                content = "How do I check the current Bitcoin price?",
                 role = AiChatModel.Role.USER,
             ), AiChatModel(
-                message = "To check the current Bitcoin price, you can use the price chart function in the app or go to the markets tab.",
+                content = "To check the current Bitcoin price, you can use the price chart function in the app or go to the markets tab.",
                 role = AiChatModel.Role.ASSISTANT,
             )
         )
@@ -144,6 +141,6 @@ fun AiChatScreenPreview() {
             onMessageChange = { _ -> },
             isLoading = false,
             isProcessing = false,
-            onDeleteSession = {})
+        )
     }
 }
