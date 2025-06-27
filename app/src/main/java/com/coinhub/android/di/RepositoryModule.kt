@@ -5,6 +5,7 @@ import com.coinhub.android.data.repositories.AuthRepositoryImpl
 import com.coinhub.android.data.repositories.PaymentRepositoryImpl
 import com.coinhub.android.data.repositories.PlanRepositoryImpl
 import com.coinhub.android.data.repositories.PreferenceDataStoreImpl
+import com.coinhub.android.data.repositories.SettingRepositoryImpl
 import com.coinhub.android.data.repositories.SourceRepositoryImpl
 import com.coinhub.android.data.repositories.TicketRepositoryImpl
 import com.coinhub.android.domain.repositories.AiChatRepository
@@ -12,6 +13,7 @@ import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.repositories.PaymentRepository
 import com.coinhub.android.domain.repositories.PlanRepository
 import com.coinhub.android.domain.repositories.PreferenceDataStore
+import com.coinhub.android.domain.repositories.SettingRepository
 import com.coinhub.android.domain.repositories.SourceRepository
 import com.coinhub.android.domain.repositories.TicketRepository
 import dagger.Binds
@@ -42,4 +44,7 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun provideSharedPreferencesRepository(impl: PreferenceDataStoreImpl): PreferenceDataStore
+
+    @Binds
+    abstract fun provideSettingRepository(impl: SettingRepositoryImpl): SettingRepository
 }

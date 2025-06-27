@@ -6,6 +6,7 @@ import com.coinhub.android.data.dtos.response.CreateTopUpResponseDto
 import com.coinhub.android.data.dtos.response.DeviceResponseDto
 import com.coinhub.android.data.dtos.response.NotificationResponseDto
 import com.coinhub.android.data.dtos.response.PlanResponseDto
+import com.coinhub.android.data.dtos.response.SettingResponseDto
 import com.coinhub.android.data.dtos.response.SourceResponseDto
 import com.coinhub.android.data.dtos.response.TicketHistoryResponseDto
 import com.coinhub.android.data.dtos.response.TicketResponseDto
@@ -18,6 +19,7 @@ import com.coinhub.android.domain.models.DeviceModel
 import com.coinhub.android.domain.models.MethodEnum
 import com.coinhub.android.domain.models.NotificationModel
 import com.coinhub.android.domain.models.PlanModel
+import com.coinhub.android.domain.models.SettingModel
 import com.coinhub.android.domain.models.SourceModel
 import com.coinhub.android.domain.models.TicketHistoryModel
 import com.coinhub.android.domain.models.TicketModel
@@ -147,3 +149,6 @@ fun AiChatResponseDto.toAiChatModel() = AiChatModel(
     role = this.role.toAiChatRoleEnum(),
 )
 
+fun SettingResponseDto.toSettingsModel() = SettingModel(
+    minAmountOpenTicket = this.minAmountOpenTicket.toLong()
+)

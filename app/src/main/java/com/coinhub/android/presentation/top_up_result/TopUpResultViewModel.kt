@@ -2,8 +2,10 @@ package com.coinhub.android.presentation.top_up_result
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.coinhub.android.data.repositories.UserRepositoryImpl
 import com.coinhub.android.di.IoDispatcher
 import com.coinhub.android.domain.models.TopUpModel
+import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.use_cases.GetTopUpUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -18,6 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TopUpResultViewModel @Inject constructor(
+    private val authRepository: AuthRepository,
+    private val userRepositoryImpl: UserRepositoryImpl,
     private val getTopUpUseCase: GetTopUpUseCase,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
@@ -44,6 +48,7 @@ class TopUpResultViewModel @Inject constructor(
 
                 is GetTopUpUseCase.Result.Success -> {
                     _topUp.update { result.topUp }
+                    userRepositoryImpl.getUserSources(authRepository.getCurrentUserId(), true)
                 }
             }
             _isLoading.value = false

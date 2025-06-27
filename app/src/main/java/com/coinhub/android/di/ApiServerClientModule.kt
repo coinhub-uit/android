@@ -5,6 +5,7 @@ import com.coinhub.android.data.api_services.AiChatApiService
 import com.coinhub.android.data.api_services.NotificationApiService
 import com.coinhub.android.data.api_services.PaymentApiService
 import com.coinhub.android.data.api_services.PlanApiService
+import com.coinhub.android.data.api_services.SettingApiService
 import com.coinhub.android.data.api_services.SourceApiService
 import com.coinhub.android.data.api_services.TicketApiService
 import com.coinhub.android.data.api_services.UserApiService
@@ -81,4 +82,9 @@ object ApiServerClientModule {
     @Provides
     fun provideNotificationApiService(retrofit: Retrofit): NotificationApiService =
         retrofit.create(NotificationApiService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideSettingApiService(retrofit: Retrofit): SettingApiService =
+        retrofit.create(SettingApiService::class.java)
 }

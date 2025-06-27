@@ -4,12 +4,13 @@ import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.data.dtos.request.CreateTicketRequestDto
+import com.coinhub.android.data.repositories.UserRepositoryImpl
 import com.coinhub.android.domain.models.AvailablePlanModel
 import com.coinhub.android.domain.models.MethodEnum
 import com.coinhub.android.domain.models.SourceModel
 import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.repositories.PlanRepository
-import com.coinhub.android.data.repositories.UserRepositoryImpl
+import com.coinhub.android.domain.repositories.SettingRepository
 import com.coinhub.android.domain.use_cases.CreateTicketUseCase
 import com.coinhub.android.domain.use_cases.ValidateAmountCreateTicketUseCase
 import com.coinhub.android.utils.DEBOUNCE_TYPING
@@ -38,9 +39,9 @@ class CreateTicketViewModel @Inject constructor(
     private val planRepository: PlanRepository,
     private val userRepository: UserRepositoryImpl,
     private val authRepository: AuthRepository,
+    private val settingRepository: SettingRepository,
 ) : ViewModel() {
-    // TODO: If have time, implement repository to fetch real data
-    private val _minimumAmount = MutableStateFlow(1_000_000L)
+    private val _minimumAmount = MutableStateFlow(0L)
     val minimumAmount = _minimumAmount.asStateFlow()
 
     private val _availablePlans = MutableStateFlow<List<AvailablePlanModel>>(emptyList())
@@ -140,7 +141,8 @@ class CreateTicketViewModel @Inject constructor(
             _isLoading.value = true
             listOf(
                 async { getAvailablePlans() },
-                async { getUserSources() }
+                async { getUserSources() },
+                async { getGetMinimumAmount() }
             ).awaitAll()
             _isLoading.value = false
         }
@@ -158,5 +160,11 @@ class CreateTicketViewModel @Inject constructor(
     private suspend fun getUserSources() {
         val userId = authRepository.getCurrentUserId()
         _sources.value = userRepository.getUserSources(userId, false)
+    }
+
+    private fun getGetMinimumAmount() {
+        viewModelScope.launch {
+            _minimumAmount.value = settingRepository.getSettings()?.minAmountOpenTicket ?: 0L
+        }
     }
 }
