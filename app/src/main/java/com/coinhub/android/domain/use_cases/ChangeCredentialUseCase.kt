@@ -12,10 +12,11 @@ class ChangeCredentialUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         password: String,
+        currentPassword: String,
     ): Result {
         return withContext(ioDispatcher) {
             try {
-                supabaseService.changeCredential(password)
+                supabaseService.changeCredential(password, currentPassword)
                 Result.Success(message = "Credential changed successfully")
             } catch (e: Exception) {
                 Result.Error(e.message ?: "Unknown error occurred")

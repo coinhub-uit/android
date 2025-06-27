@@ -8,6 +8,7 @@ import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.auth.status.SessionStatus
+import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -15,6 +16,8 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -66,11 +69,25 @@ class SupabaseService @Inject constructor(
         }
     }
 
-    fun changeCredential(password: String) {
+    fun changeCredential(password: String, currentPassword: String) {
         supabaseServiceScope.launch {
             try {
-                supabaseClient.auth.updateUser {
-                    this.password = password
+                val response = supabaseClient.postgrest.rpc(
+                    "update_password", parameters = buildJsonObject {
+                        put("current_id", getCurrentUserId())
+                        put("current_plain_password", currentPassword)
+                        put("new_plain_password", password)
+                    }
+                )
+                when (response.data) {
+                    "success" -> {}
+                    "incorrect" -> {
+                        throw Exception("Incorrect current password")
+                    }
+
+                    else -> {
+                        throw Exception("Failed to change password")
+                    }
                 }
             } catch (e: Exception) {
                 throw Exception("Failed to change credentials: ${e.message}")
