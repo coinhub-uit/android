@@ -3,6 +3,7 @@ package com.coinhub.android.presentation.ticket.components
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -58,6 +59,7 @@ fun TicketList(
 
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(bottom = 80.dp),
         ) {
             items(tickets, key = {
                 it.id
@@ -68,8 +70,6 @@ fun TicketList(
                     onTicketClick = { onTicketDetail(ticket.id) })
             }
         }
-
-        Spacer(modifier = Modifier.height(64.dp)) // Add some space at the bottom bcs the bottom bar of the outer scaffold
     }
 }
 

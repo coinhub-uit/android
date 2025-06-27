@@ -43,7 +43,8 @@ import java.math.BigInteger
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun TicketDetailScreen(
-    ticketId: Int, onBack: () -> Unit,
+    ticketId: Int,
+    onBack: () -> Unit,
     viewModel: TicketDetailViewModel = hiltViewModel(),
 ) {
     val ticket = viewModel.ticket.collectAsStateWithLifecycle().value
@@ -143,7 +144,6 @@ fun TicketDetailScreen(
             TicketDetailWithdrawButton(
                 onWithdraw = onWithdraw,
                 isWithdrawing = isWithdrawing,
-                onBack = onBack,
                 modifier = Modifier.fillMaxWidth(),
             )
 

@@ -15,7 +15,9 @@ fun NavGraphBuilder.ticketDetailNav(navController: NavHostController) {
         CompositionLocalProvider(LocalAnimatedVisibilityScope provides this@composable) {
             TicketDetailScreen(
                 ticketId = ticketDetail.ticketId,
-                onBack = { navController.navigateUp() }
+                onBack = {
+                    navController.navigateUp()
+                }
             )
         }
     }

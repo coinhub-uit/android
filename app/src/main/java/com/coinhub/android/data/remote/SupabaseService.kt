@@ -59,7 +59,9 @@ class SupabaseService @Inject constructor(
     fun signOut() {
         supabaseServiceScope.launch {
             try {
-                supabaseClient.auth.signOut()
+                if (supabaseClient.auth.currentUserOrNull() != null) {
+                    supabaseClient.auth.signOut()
+                }
                 preferenceDataStore.clearPreferences()
                 userRepository.get().clearCache()
                 _isUserSignedIn.value = UserAppState.NOT_SIGNED_IN
@@ -69,29 +71,28 @@ class SupabaseService @Inject constructor(
         }
     }
 
-    fun changeCredential(password: String, currentPassword: String) {
-        supabaseServiceScope.launch {
-            try {
-                val response = supabaseClient.postgrest.rpc(
-                    "update_password", parameters = buildJsonObject {
-                        put("current_id", getCurrentUserId())
-                        put("current_plain_password", currentPassword)
-                        put("new_plain_password", password)
-                    }
-                )
-                when (response.data) {
-                    "success" -> {}
-                    "incorrect" -> {
-                        throw Exception("Incorrect current password")
-                    }
-
-                    else -> {
-                        throw Exception("Failed to change password")
-                    }
+    suspend fun changeCredential(password: String, currentPassword: String) {
+        try {
+            val response = supabaseClient.postgrest.rpc(
+                "update_password", parameters = buildJsonObject {
+                    put("current_id", getCurrentUserId())
+                    put("current_plain_password", currentPassword)
+                    put("new_plain_password", password)
                 }
-            } catch (e: Exception) {
-                throw Exception("Failed to change credentials: ${e.message}")
+            )
+            when (response.data) {
+                // FUCK ???
+                "success", "\"success\"" -> {}
+                "incorrect", "\"incorrect\"" -> {
+                    throw Exception("Incorrect current password")
+                }
+
+                else -> {
+                    throw Exception("Failed to change password")
+                }
             }
+        } catch (e: Exception) {
+            throw Exception("Failed to change credentials: ${e.message}")
         }
     }
 

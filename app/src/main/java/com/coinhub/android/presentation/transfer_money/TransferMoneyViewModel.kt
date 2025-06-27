@@ -65,7 +65,7 @@ class TransferMoneyViewModel @Inject constructor(
         val isSourceIdValid = !sourceId.isNullOrEmpty()
         val isAmountValid = try {
             val amount = amountText.toLongOrNull() ?: 0
-            amount > 0
+            amount > 0 && amount <= _sources.value.find { it.id == sourceId }!!.balance.toLong()
         } catch (e: NumberFormatException) {
             false
         }

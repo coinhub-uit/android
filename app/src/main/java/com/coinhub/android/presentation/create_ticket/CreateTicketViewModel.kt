@@ -128,7 +128,14 @@ class CreateTicketViewModel @Inject constructor(
 
                 is CreateTicketUseCase.Result.Success -> {
                     val userId = authRepository.getCurrentUserId()
-                    userRepository.getUserTickets(userId, true)
+                    listOf(
+                        async {
+                            userRepository.getUserTickets(userId, true)
+                        },
+                        async {
+                            userRepository.getUserSources(userId, true)
+                        },
+                    ).awaitAll()
                     onSuccess()
                 }
             }

@@ -18,7 +18,6 @@ fun TicketDetailWithdrawButton(
     modifier: Modifier = Modifier,
     onWithdraw: () -> Unit,
     isWithdrawing: Boolean,
-    onBack: () -> Unit,
 ) {
     var showDialog by remember { mutableStateOf(false) }
 
@@ -43,7 +42,6 @@ fun TicketDetailWithdrawButton(
                     onClick = {
                         showDialog = false
                         onWithdraw()
-                        onBack()
                     }
                 ) {
                     Text("Confirm")

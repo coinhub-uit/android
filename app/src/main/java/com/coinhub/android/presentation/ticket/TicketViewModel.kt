@@ -1,6 +1,5 @@
 package com.coinhub.android.presentation.ticket
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.di.IoDispatcher
@@ -66,7 +65,6 @@ class TicketViewModel @Inject constructor(
             val userId = authRepository.getCurrentUserId()
             _tickets.value = userRepository.getUserTickets(userId, false)
             _isLoading.value = false
-            Log.d("TicketVM", "Fetched tickets: ${System.identityHashCode(_tickets.value)}")
         }
     }
 

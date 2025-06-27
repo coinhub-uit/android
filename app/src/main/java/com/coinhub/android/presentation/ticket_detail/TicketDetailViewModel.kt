@@ -34,7 +34,7 @@ class TicketDetailViewModel @Inject constructor(
     private val _withdrawPlan = MutableStateFlow<AvailablePlanModel?>(null)
     val withdrawPlan = _withdrawPlan.asStateFlow()
 
-    private val _isLoading = MutableStateFlow(true)
+    private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
     private val _isWithdrawing = MutableStateFlow(false)
@@ -64,21 +64,27 @@ class TicketDetailViewModel @Inject constructor(
 
     fun withdrawTicket(onSuccess: () -> Unit) {
         viewModelScope.launch {
+            if (_ticket.value == null) {
+                return@launch
+            }
             _isWithdrawing.value = true
-            when (val result = _ticket.value?.let {
-                withdrawTicketUseCase(it.id)
-            }) {
+            when (val result = withdrawTicketUseCase(_ticket.value!!.id)) {
                 is WithdrawTicketUseCase.Result.Error -> {
                     _toastMessage.emit(result.message)
                 }
 
                 is WithdrawTicketUseCase.Result.Success -> {
                     val userId = authRepository.getCurrentUserId()
-                    userRepository.getUserTickets(userId, true)
+                    listOf(
+                        async {
+                            userRepository.getUserTickets(userId, true)
+                        },
+                        async {
+                            userRepository.getUserSources(userId, true)
+                        },
+                    ).awaitAll()
                     onSuccess()
                 }
-
-                null -> _toastMessage.emit("Ticket not found")
             }
             _isWithdrawing.value = false
         }

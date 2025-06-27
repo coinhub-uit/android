@@ -2,7 +2,6 @@ package com.coinhub.android.presentation.credential_change
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.coinhub.android.data.remote.SupabaseService
 import com.coinhub.android.domain.use_cases.ChangeCredentialUseCase
 import com.coinhub.android.domain.use_cases.ValidatePasswordUseCase
 import com.coinhub.android.utils.DEBOUNCE_TYPING
@@ -24,7 +23,6 @@ import javax.inject.Inject
 @HiltViewModel
 class CredentialChangeViewModel @Inject constructor(
     private val validatePasswordUseCase: ValidatePasswordUseCase,
-    private val supabaseService: SupabaseService,
     private val changeCredentialUseCase: ChangeCredentialUseCase,
 ) : ViewModel() {
 

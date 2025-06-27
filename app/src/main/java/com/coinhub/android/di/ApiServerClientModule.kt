@@ -29,7 +29,13 @@ object ApiServerClientModule {
     @Singleton
     @Provides
     fun provideHttpClient(supabaseService: SupabaseService): OkHttpClient {
-        val loggingInterceptor = HttpLoggingInterceptor().apply { setLevel(HttpLoggingInterceptor.Level.BODY) }
+        val loggingInterceptor = HttpLoggingInterceptor().apply {
+            level = if (BuildConfig.DEBUG) {
+                HttpLoggingInterceptor.Level.BODY
+            } else {
+                HttpLoggingInterceptor.Level.NONE
+            }
+        }
 
         return OkHttpClient.Builder()
             .callTimeout(Duration.ZERO) // FIXME: Too lazy to handle timeout exceptions
