@@ -13,6 +13,7 @@ import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.compose.auth.ComposeAuth
 import io.github.jan.supabase.compose.auth.googleNativeLogin
 import io.github.jan.supabase.createSupabaseClient
+import io.github.jan.supabase.postgrest.Postgrest
 import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -35,6 +36,7 @@ object SupabaseModule {
             install(ComposeAuth) {
                 googleNativeLogin(serverClientId = BuildConfig.oAuthGoogleAndroidClient)
             }
+            install(Postgrest)
         }
         return client
     }
