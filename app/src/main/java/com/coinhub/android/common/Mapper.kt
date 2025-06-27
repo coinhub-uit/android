@@ -59,8 +59,8 @@ fun TicketHistoryResponseDto.toTicketHistoryModel() = TicketHistoryModel(
 
 fun String.toTicketStatusEnum(): TicketStatus = when (this.lowercase()) {
     "active" -> TicketStatus.ACTIVE
-    "early_with_drawn" -> TicketStatus.EARLY_WITH_DRAWN
-    "matured_with_drawn" -> TicketStatus.MATURED_WITH_DRAWN
+    "earlyWithdrawn" -> TicketStatus.EARLY_WITH_DRAWN
+    "maturedWithdrawn" -> TicketStatus.MATURED_WITH_DRAWN
     else -> throw IllegalArgumentException("Unknown status: $this")
 }
 
