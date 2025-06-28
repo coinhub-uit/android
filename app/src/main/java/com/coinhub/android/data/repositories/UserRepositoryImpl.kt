@@ -64,9 +64,9 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun delete(id: String): UserModel {
+    override suspend fun delete(id: String) {
         return try {
-            userApiService.delete(id).toUserModel()
+            userApiService.delete(id)
         } catch (e: Exception) {
             throw e
         }
