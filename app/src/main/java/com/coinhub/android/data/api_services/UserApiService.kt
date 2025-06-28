@@ -39,7 +39,7 @@ interface UserApiService {
     ): UserResponseDto
 
     @DELETE("users/{id}")
-    suspend fun delete(@Path("id") userId: String): UserResponseDto
+    suspend fun delete(@Path("id") userId: String)
 
     @GET("users/{id}/sources")
     suspend fun getUserSources(@Path("id") userId: String): List<SourceResponseDto>
