@@ -47,9 +47,6 @@ fun CredentialChangeScreen(
     LaunchedEffect(Unit) {
         viewModel.toastMessage.collect { message ->
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-            if (message.contains("success", ignoreCase = true)) {
-                onBack()
-            }
         }
     }
 
@@ -67,7 +64,7 @@ fun CredentialChangeScreen(
         onToggleShowPasswords = viewModel::toggleShowPasswords,
         isFormValid = isFormValid,
         isProcessing = isProcessing,
-        onChangeCredential = viewModel::changeCredential,
+        onChangeCredential = { viewModel.changeCredential(onSuccess = onBack) },
         onBack = onBack
     )
 }

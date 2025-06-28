@@ -211,7 +211,6 @@ class ProfileViewModel @Inject constructor(
                 }
 
                 is UpdateProfileUseCase.Result.Success -> {
-                    _toastMessage.emit("Profile updated successfully")
                     onSuccess()
                 }
             }

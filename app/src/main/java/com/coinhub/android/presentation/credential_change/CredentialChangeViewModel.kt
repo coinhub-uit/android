@@ -101,12 +101,12 @@ class CredentialChangeViewModel @Inject constructor(
         _showPasswords.value = !_showPasswords.value
     }
 
-    fun changeCredential() {
+    fun changeCredential(onSuccess: () -> Unit) {
         viewModelScope.launch {
             _isProcessing.value = true
             when (val result = changeCredentialUseCase(_newPassword.value, currentPassword = _currentPassword.value)) {
                 is ChangeCredentialUseCase.Result.Error -> _toastMessage.emit(result.message)
-                is ChangeCredentialUseCase.Result.Success -> _toastMessage.emit(result.message)
+                is ChangeCredentialUseCase.Result.Success -> onSuccess()
             }
             _isProcessing.value = false
         }

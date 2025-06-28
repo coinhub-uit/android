@@ -17,7 +17,7 @@ class ChangeCredentialUseCase @Inject constructor(
         return withContext(ioDispatcher) {
             try {
                 supabaseService.changeCredential(password, currentPassword)
-                Result.Success(message = "Credential changed successfully")
+                Result.Success
             } catch (e: Exception) {
                 Result.Error(e.message ?: "Unknown error occurred")
             }
@@ -25,7 +25,7 @@ class ChangeCredentialUseCase @Inject constructor(
     }
 
     sealed class Result {
-        data class Success(val message: String) : Result()
+        data object Success : Result()
         data class Error(val message: String) : Result()
     }
 }
