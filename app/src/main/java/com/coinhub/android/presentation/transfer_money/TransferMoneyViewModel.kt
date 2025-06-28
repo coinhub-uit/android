@@ -123,6 +123,8 @@ class TransferMoneyViewModel @Inject constructor(
 
                     TransferMoneyUseCase.Result.Success -> {
                         _isProcessing.value = false
+                        val userId = authRepository.getCurrentUserId()
+                        _sources.value = userRepository.getUserSources(userId, true)
                         onSuccess()
                     }
                 }
