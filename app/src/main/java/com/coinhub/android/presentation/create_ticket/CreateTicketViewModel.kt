@@ -1,6 +1,5 @@
 package com.coinhub.android.presentation.create_ticket
 
-import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.data.dtos.request.CreateTicketRequestDto
@@ -91,9 +90,6 @@ class CreateTicketViewModel @Inject constructor(
     val toastMessage = _toastMessage.asSharedFlow()
 
     fun updateAmount(amount: String) {
-        if (!amount.isDigitsOnly()) {
-            return
-        }
         _amountText.value = amount
     }
 

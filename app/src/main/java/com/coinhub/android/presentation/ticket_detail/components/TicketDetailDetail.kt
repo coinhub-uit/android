@@ -61,7 +61,7 @@ fun TicketDetailDetail(ticket: TicketModel, withdrawPlan: AvailablePlanModel) {
             modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "Original interest:", style = MaterialTheme.typography.bodyMedium
+                text = "Maturity interest:", style = MaterialTheme.typography.bodyMedium
             )
             Text(
                 text = firstHistory.interest.toVndFormat(),
@@ -76,7 +76,7 @@ fun TicketDetailDetail(ticket: TicketModel, withdrawPlan: AvailablePlanModel) {
             modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "Current interest:", style = MaterialTheme.typography.bodyMedium
+                text = "Anticipated interest:", style = MaterialTheme.typography.bodyMedium
             )
             Text(
                 text = currentInterest.toVndFormat(),

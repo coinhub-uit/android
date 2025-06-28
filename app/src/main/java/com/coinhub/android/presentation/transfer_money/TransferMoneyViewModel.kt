@@ -63,13 +63,14 @@ class TransferMoneyViewModel @Inject constructor(
         _amountText
     ) { sourceId, receiptUser, amountText ->
         val isSourceIdValid = !sourceId.isNullOrEmpty()
+        if (!isSourceIdValid) return@combine false
         val isAmountValid = try {
             val amount = amountText.toLongOrNull() ?: 0
             amount > 0 && amount <= _sources.value.find { it.id == sourceId }!!.balance.toLong()
         } catch (e: NumberFormatException) {
             false
         }
-        isSourceIdValid && receiptUser != null && isAmountValid
+        receiptUser != null && isAmountValid
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
@@ -91,10 +92,7 @@ class TransferMoneyViewModel @Inject constructor(
     }
 
     fun updateAmount(amount: String) {
-        // Only allow digits
-        if (amount.isEmpty() || amount.all { it.isDigit() }) {
-            _amountText.value = amount
-        }
+        _amountText.value = amount
     }
 
     init {

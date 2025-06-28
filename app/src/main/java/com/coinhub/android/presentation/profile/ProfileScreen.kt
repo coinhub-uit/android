@@ -2,10 +2,10 @@ package com.coinhub.android.presentation.profile
 
 import android.net.Uri
 import android.widget.Toast
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
@@ -150,95 +150,109 @@ private fun ProfileScreen(
                     .fillMaxWidth()
             )
         }
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            ProfileAvatarPicker(
-                avatarUri = avatarUri,
-                onAvatarUriChange = onAvatarUriChange,
-            )
-            OutlinedTextField(
-                value = fullName,
-                onValueChange = onFullNameChange,
-                label = { Text("Full Name") },
-                singleLine = true,
-                isError = fullNameCheckState.errorMessage != null,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text, imeAction = ImeAction.Next
-                ),
-                supportingText = {
-                    fullNameCheckState.errorMessage?.let { Text(it) }
-                },
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Person, contentDescription = "Full Name"
-                    )
-                },
-                modifier = Modifier
-                    .padding(bottom = 8.dp)
-                    .semantics {
-                        contentType = ContentType.PersonFullName
+            item {
+                ProfileAvatarPicker(
+                    avatarUri = avatarUri,
+                    onAvatarUriChange = onAvatarUriChange,
+                )
+            }
+
+            item {
+                OutlinedTextField(
+                    value = fullName,
+                    onValueChange = onFullNameChange,
+                    label = { Text("Full Name") },
+                    singleLine = true,
+                    isError = fullNameCheckState.errorMessage != null,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text, imeAction = ImeAction.Next
+                    ),
+                    supportingText = {
+                        fullNameCheckState.errorMessage?.let { Text(it) }
                     },
-            )
-            OutlinedTextField(
-                value = birthDateInMillis.toDateString(),
-                onValueChange = {},
-                readOnly = true,
-                label = { Text("Birth Date") },
-                placeholder = { Text(datePattern) },
-                isError = birthDateCheckState.errorMessage != null,
-                supportingText = {
-                    birthDateCheckState.errorMessage?.let {
-                        Text(it)
-                    }
-                },
-                trailingIcon = {
-                    IconButton(onClick = { isDatePickerShowed = true }) {
+                    trailingIcon = {
                         Icon(
-                            imageVector = Icons.Default.DateRange, contentDescription = "Select date"
+                            imageVector = Icons.Default.Person, contentDescription = "Full Name"
                         )
-                    }
-                },
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-            OutlinedTextField(
-                value = citizenId,
-                onValueChange = onCitizenIdChange,
-                label = { Text("Citizen ID") },
-                isError = citizenIdCheckState.errorMessage != null,
-                supportingText = {
-                    citizenIdCheckState.errorMessage?.let { Text(it) }
-                },
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.SensorOccupied, contentDescription = "Citizen ID"
-                    )
-                },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Done,
-                ),
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-            OutlinedTextField(
-                value = address,
-                onValueChange = onAddressChange,
-                label = { Text("Address (Optional)") },
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Home, contentDescription = "Address"
-                    )
-                },
-                modifier = Modifier
-                    .padding(bottom = 8.dp)
-                    .semantics {
-                        contentType = ContentType.AddressStreet
                     },
-            )
+                    modifier = Modifier
+                        .padding(bottom = 8.dp)
+                        .semantics {
+                            contentType = ContentType.PersonFullName
+                        },
+                )
+            }
+
+            item {
+                OutlinedTextField(
+                    value = birthDateInMillis.toDateString(),
+                    onValueChange = {},
+                    readOnly = true,
+                    label = { Text("Birth Date") },
+                    placeholder = { Text(datePattern) },
+                    isError = birthDateCheckState.errorMessage != null,
+                    supportingText = {
+                        birthDateCheckState.errorMessage?.let {
+                            Text(it)
+                        }
+                    },
+                    trailingIcon = {
+                        IconButton(onClick = { isDatePickerShowed = true }) {
+                            Icon(
+                                imageVector = Icons.Default.DateRange, contentDescription = "Select date"
+                            )
+                        }
+                    },
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+            }
+
+            item {
+                OutlinedTextField(
+                    value = citizenId,
+                    onValueChange = onCitizenIdChange,
+                    label = { Text("Citizen ID") },
+                    isError = citizenIdCheckState.errorMessage != null,
+                    supportingText = {
+                        citizenIdCheckState.errorMessage?.let { Text(it) }
+                    },
+                    trailingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.SensorOccupied, contentDescription = "Citizen ID"
+                        )
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done,
+                    ),
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+            }
+
+            item {
+                OutlinedTextField(
+                    value = address,
+                    onValueChange = onAddressChange,
+                    label = { Text("Address (Optional)") },
+                    trailingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Home, contentDescription = "Address"
+                        )
+                    },
+                    modifier = Modifier
+                        .padding(bottom = 8.dp)
+                        .semantics {
+                            contentType = ContentType.AddressStreet
+                        },
+                )
+            }
         }
     }
 

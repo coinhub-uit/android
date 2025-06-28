@@ -1,15 +1,14 @@
 package com.coinhub.android.presentation.top_up
 
-import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.BuildConfig
 import com.coinhub.android.data.dtos.request.CreateTopUpRequestDto
+import com.coinhub.android.data.repositories.UserRepositoryImpl
 import com.coinhub.android.domain.models.CreateTopUpModel
 import com.coinhub.android.domain.models.SourceModel
 import com.coinhub.android.domain.models.TopUpModel
 import com.coinhub.android.domain.repositories.AuthRepository
-import com.coinhub.android.data.repositories.UserRepositoryImpl
 import com.coinhub.android.domain.use_cases.CreateTopUpUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -67,9 +66,6 @@ class TopUpViewModel @Inject constructor(
     }
 
     fun updateAmount(amount: String) {
-        if (!amount.isDigitsOnly()) {
-            return
-        }
         _amount.value = amount
     }
 

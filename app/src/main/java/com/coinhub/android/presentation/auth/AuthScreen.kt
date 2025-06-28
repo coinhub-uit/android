@@ -2,12 +2,12 @@ package com.coinhub.android.presentation.auth
 
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -15,9 +15,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coinhub.android.presentation.auth.components.AuthCredentialInput
@@ -133,20 +133,23 @@ private fun AuthScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
     ) { paddingValues ->
-        Box(
+        LazyColumn(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
             modifier = Modifier
-                .fillMaxSize()
                 .padding(paddingValues)
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 16.dp), contentAlignment = Alignment.Center
+                .padding(horizontal = 16.dp)
+                .fillMaxSize()
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
+            item {
                 AuthHeader(
                     modifier = Modifier
                         .width(128.dp)
                         .padding(bottom = 64.dp)
                 )
+            }
+
+            item {
                 AuthCredentialInput(
                     modifier = Modifier.fillMaxWidth(),
                     isSignUp = isSignUp,
@@ -160,6 +163,9 @@ private fun AuthScreen(
                     onConfirmPasswordChange = onConfirmPasswordChange,
                     confirmPasswordCheckState = confirmPasswordCheckState
                 )
+            }
+
+            item {
                 AuthSignInOrUpButton(
                     modifier = Modifier.fillMaxWidth(),
                     isSignUp = isSignUp,
@@ -168,22 +174,33 @@ private fun AuthScreen(
                     isFormValid = isFormValid,
                     isProcessing = isProcessing,
                 )
+            }
+
+            item {
                 AuthSignInOrUpPrompt(
                     modifier = Modifier.fillMaxWidth(),
                     isSignUp = isSignUp,
                     setIsSignUp = setIsSignUp,
                 )
+            }
+
+            item {
                 AuthOrDivider(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 16.dp, bottom = 16.dp)
                 )
+            }
+
+            item {
                 AuthOAuth(
                     onClick = {
                         googleSignInState?.startFlow()
                     },
                     isProcessing = isProcessing,
-                    modifier = Modifier.padding(16.dp).width(80.dp),
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .width(80.dp),
                 )
             }
         }

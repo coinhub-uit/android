@@ -103,7 +103,7 @@ fun TicketDetailScreen(
         modifier = modifier,
     ) { innerPadding ->
         if (isLoading || isWithdrawing) {
-            LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            LinearProgressIndicator(modifier = Modifier.padding(innerPadding).fillMaxWidth())
         }
 
         if (ticket == null || withdrawPlan == null) {

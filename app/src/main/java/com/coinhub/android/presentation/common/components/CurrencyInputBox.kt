@@ -1,6 +1,5 @@
 package com.coinhub.android.presentation.common.components
 
-import android.util.Log
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -33,8 +32,10 @@ fun CurrencyInputBox(
         label = label,
         value = value,
         onValueChange = {
-            if (it != "00") {
-                onValueChange(it)
+            it.normalize().let { normalizedValue ->
+                if (normalizedValue != null) {
+                    onValueChange(normalizedValue)
+                }
             }
         },
         supportingText = supportingText,
@@ -93,7 +94,6 @@ private class CurrencyVisualTransformation : VisualTransformation {
             return TransformedText(text, OffsetMapping.Identity)
         }
         if (originalText.isDigitsOnly().not()) {
-            Log.w("TAG", "Prize visual transformation require using digits only but found [$originalText]")
             return TransformedText(text, OffsetMapping.Identity)
         }
 
@@ -103,4 +103,14 @@ private class CurrencyVisualTransformation : VisualTransformation {
             CurrencyOffsetMapping(originalText, formattedText)
         )
     }
+}
+
+private fun String.normalize(): String? {
+    if (!this.isDigitsOnly()) {
+        return null
+    }
+    if (this.all { char -> char == '0' }) {
+        return "0"
+    }
+    return this
 }
