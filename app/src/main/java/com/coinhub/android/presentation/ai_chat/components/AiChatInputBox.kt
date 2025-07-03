@@ -48,20 +48,22 @@ fun ChatInputField(
 
         Spacer(modifier = Modifier.width(8.dp))
 
+        val isSendEnabled = value.isNotBlank() && !isLoading && !isProcessing
+
         IconButton(
             onClick = onSend,
-            enabled = value.isNotBlank() && !isLoading && !isProcessing,
+            enabled = isSendEnabled,
             modifier = Modifier
                 .clip(CircleShape)
                 .background(
-                    color = if (value.isNotBlank()) MaterialTheme.colorScheme.primary
+                    color = if (isSendEnabled) MaterialTheme.colorScheme.primary
                     else MaterialTheme.colorScheme.surfaceVariant
                 ),
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.Send,
                 contentDescription = "Send",
-                tint = if (value.isNotBlank()) MaterialTheme.colorScheme.onPrimary
+                tint = if (isSendEnabled) MaterialTheme.colorScheme.onPrimary
                 else MaterialTheme.colorScheme.onSurfaceVariant
             )
         }

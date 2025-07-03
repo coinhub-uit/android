@@ -12,7 +12,6 @@ import com.coinhub.android.domain.repositories.PaymentRepository
 import com.coinhub.android.domain.repositories.PreferenceDataStore
 import com.coinhub.android.domain.use_cases.ChangeCredentialUseCase
 import com.coinhub.android.domain.use_cases.CheckProfileAvailableUseCase
-import com.coinhub.android.domain.use_cases.CheckSourceExistedUseCase
 import com.coinhub.android.domain.use_cases.CheckUserSignedInUseCase
 import com.coinhub.android.domain.use_cases.CloseSourceUseCase
 import com.coinhub.android.domain.use_cases.CreateProfileUseCase
@@ -75,7 +74,8 @@ object UseCaseModule {
     @Provides
     fun provideValidateSourceIdUseCase(
         @DefaultDispatcher defaultDispatcher: CoroutineDispatcher,
-    ) = ValidateSourceIdUseCase(defaultDispatcher)
+        sourceApiService: SourceApiService,
+    ) = ValidateSourceIdUseCase(sourceApiService,defaultDispatcher)
 
     @Provides
     fun provideSignInWithCredentialUseCase(
@@ -185,15 +185,6 @@ object UseCaseModule {
     ) = RegisterDeviceUseCase(
         userRepository = userRepository,
         authRepository = authRepository,
-        ioDispatcher = ioDispatcher
-    )
-
-    @Provides
-    fun provideCheckSourceExistedUseCase(
-        sourceApiService: SourceApiService,
-        @IoDispatcher ioDispatcher: CoroutineDispatcher,
-    ) = CheckSourceExistedUseCase(
-        sourceApiService = sourceApiService,
         ioDispatcher = ioDispatcher
     )
 

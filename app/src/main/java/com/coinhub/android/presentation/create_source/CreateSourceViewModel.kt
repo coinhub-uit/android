@@ -3,9 +3,8 @@ package com.coinhub.android.presentation.create_source
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinhub.android.data.dtos.request.CreateSourceRequestDto
-import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.data.repositories.UserRepositoryImpl
-import com.coinhub.android.domain.use_cases.CheckSourceExistedUseCase
+import com.coinhub.android.domain.repositories.AuthRepository
 import com.coinhub.android.domain.use_cases.CreateSourceUseCase
 import com.coinhub.android.domain.use_cases.ValidateSourceIdUseCase
 import com.coinhub.android.utils.DEBOUNCE_TYPING
@@ -31,7 +30,6 @@ class CreateSourceViewModel @Inject constructor(
     private val createSourceUseCase: CreateSourceUseCase,
     private val userRepository: UserRepositoryImpl,
     private val authRepository: AuthRepository,
-    private val checkSourceExistedUseCase: CheckSourceExistedUseCase,
 ) : ViewModel() {
     private val _sourceId = MutableStateFlow("")
     val sourceId = _sourceId.asStateFlow()
@@ -61,38 +59,20 @@ class CreateSourceViewModel @Inject constructor(
     fun createSource(onSuccess: () -> Unit) {
         viewModelScope.launch {
             _isProcessing.value = true
-
-            checkSourceExistedUseCase(_sourceId.value).let {
-                when (it) {
-                    is CheckSourceExistedUseCase.Result.Error -> {
-                        _isProcessing.value = false
-                        _toastMessage.emit(it.message)
+            createSourceUseCase(CreateSourceRequestDto(id = _sourceId.value)).let { result ->
+                when (result) {
+                    is CreateSourceUseCase.Result.Error -> {
+                        _toastMessage.emit(result.message)
                     }
 
-                    is CheckSourceExistedUseCase.Result.Success -> {
-                        _isProcessing.value = false
-                        _toastMessage.emit(it.message)
-                    }
-
-                    is CheckSourceExistedUseCase.Result.NotFoundError -> {
-                        createSourceUseCase(CreateSourceRequestDto(id = _sourceId.value)).let { result ->
-                            when (result) {
-                                is CreateSourceUseCase.Result.Error -> {
-                                    _isProcessing.value = false
-                                    _toastMessage.emit(result.message)
-                                }
-
-                                is CreateSourceUseCase.Result.Success -> {
-                                    _isProcessing.value = false
-                                    val userId = authRepository.getCurrentUserId()
-                                    userRepository.getUserSources(userId, true)
-                                    onSuccess()
-                                }
-                            }
-                        }
+                    is CreateSourceUseCase.Result.Success -> {
+                        val userId = authRepository.getCurrentUserId()
+                        userRepository.getUserSources(userId, true)
+                        onSuccess()
                     }
                 }
             }
+            _isProcessing.value = false
         }
     }
 }
