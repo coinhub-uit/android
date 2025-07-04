@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.coinhub.android.domain.models.AvailablePlanModel
 import com.coinhub.android.domain.models.TicketModel
+import com.coinhub.android.utils.CurrencySymbol
 import com.coinhub.android.utils.toPercentFormat
 import com.coinhub.android.utils.toVndFormat
 import kotlinx.datetime.Clock
@@ -41,7 +42,7 @@ fun TicketDetailDetail(ticket: TicketModel, withdrawPlan: AvailablePlanModel) {
     val daysInYear = BigDecimal(365)
     val currentInterest =
         principal.multiply((withdrawPlan.rate/100).toBigDecimal()).multiply(BigDecimal(daysPassed))
-            .divide(daysInYear, 2, RoundingMode.HALF_UP)
+            .divide(daysInYear, 0, RoundingMode.HALF_UP)
 
     val originalInterest = BigDecimal(firstHistory.interest)
     val maturityDays = ChronoUnit.DAYS.between(
@@ -64,7 +65,7 @@ fun TicketDetailDetail(ticket: TicketModel, withdrawPlan: AvailablePlanModel) {
                 text = "Maturity interest:", style = MaterialTheme.typography.bodyMedium
             )
             Text(
-                text = firstHistory.interest.toVndFormat(),
+                text = firstHistory.interest.toVndFormat(currencySymbol = CurrencySymbol.VND),
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold
             )
@@ -79,7 +80,7 @@ fun TicketDetailDetail(ticket: TicketModel, withdrawPlan: AvailablePlanModel) {
                 text = "Anticipated interest:", style = MaterialTheme.typography.bodyMedium
             )
             Text(
-                text = currentInterest.toVndFormat(),
+                text = currentInterest.toVndFormat(currencySymbol = CurrencySymbol.VND),
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold
             )
