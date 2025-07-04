@@ -40,7 +40,7 @@ fun TicketDetailDetail(ticket: TicketModel, withdrawPlan: AvailablePlanModel) {
     val principal = BigDecimal(firstHistory.principal)
     val daysInYear = BigDecimal(365)
     val currentInterest =
-        principal.multiply(withdrawPlan.rate.toBigDecimal()).multiply(BigDecimal(daysPassed))
+        principal.multiply((withdrawPlan.rate/100).toBigDecimal()).multiply(BigDecimal(daysPassed))
             .divide(daysInYear, 2, RoundingMode.HALF_UP)
 
     val originalInterest = BigDecimal(firstHistory.interest)
